@@ -1,6 +1,7 @@
 import logo from '../../assets/logo.png';
 import { useState } from 'react';
 import Input from '../Input';
+import Button from '../Button';
 
 const InputArea = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -77,19 +78,37 @@ const InputArea = () => {
     return (
         <div id="inputArea">
             <div id="logo" className='center'>
-                <img src={logo} alt="Logo" />
-                <h2>CONTI</h2>
+                <div className="logo">
+                    <img src={logo} alt="Logo" />
+                    <h2>CONTI</h2>
+                </div>
+                
+                <div className="texto">
+                    {isLogin ? <p>Crie sua conta hoje e comece seus estudos!</p> 
+                    : 
+                    <p>Faça login com suas credenciais.</p>}
+                </div>
             </div>
-            <div className="texto">
-                {isLogin ? <p>Crie sua conta hoje e comece seus estudos!</p> 
-                : 
-                <p>Faça login com suas credenciais.</p>}
-            </div>
+            
             <div id="inputs">
                 <Input name="email" label="Email" onChange={handleEmailChange}/>
                 <Input name="password" label="Senha" onChange={handlePasswordChange}/>
             </div>
-            
+            <div id="options">
+                <div className="moreOptions">
+                    <div>
+                        <input type="checkbox" name="remember" id="remember"/>
+                        <p>Lembrar-me</p>
+                    </div>
+                    <a>Esqueceu a senha?</a>
+                </div>
+                <Button text={isLogin ? 'CADASTRAR' : 'LOGIN'} onClick={() => setIsLogin(!isLogin)} />
+                <p>ou</p>
+                <Button text={'Login com Google'} type={2} onClick={() => {}} />
+            </div>
+            <div className="noAccount">
+                <a>{isLogin ? 'Já tem uma conta? Faça o login!' : 'Não tem uma conta? Faça o Cadastro!'}</a>
+            </div>
             
         </div>
     )
