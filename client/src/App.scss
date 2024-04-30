@@ -1,14 +1,13 @@
-:root{
-  --primary-color: rgba(0, 102, 255, 1);
-  --primary-color-80: rgba(0, 102, 255, 0.7);
-}
+
+
 
 
 #user-background{
-  width: 100dvw;
-  height: 100dvh;
   overflow: hidden;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
 
   //Variaveis
   --c1: #8EBBFF;
@@ -114,5 +113,30 @@
     aspect-ratio: 1;
     top: -40%;
     left: 70%;
+  }
+}
+
+#inputArea{
+  width: 650px;
+  height: 750px;
+  border-radius: 15px;
+  background-color: var(--background-color);
+  padding: 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & > #logo{
+    gap: 25px;
+    & h2{
+      font-weight: 500;
+    }
+  }
+
+  & > .texto{
+    margin-top: 10px;
+  }
+  & > #inputs{
+    width: 100%;
   }
 }

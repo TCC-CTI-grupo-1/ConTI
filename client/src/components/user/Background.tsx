@@ -1,6 +1,6 @@
 const Background = () => {
     return (
-        <div id='user-background'>
+        <div id='user-background' className="full-screen-size">
             <div id="q1"></div>
             <div id="q2"></div>
             <div id="q3"></div>
@@ -16,4 +16,4 @@ const Background = () => {
     );
 }
 
-export { Background };
+export default Background;
