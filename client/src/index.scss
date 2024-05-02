@@ -21,6 +21,7 @@
   --background-color-2: rgb(245, 245, 245);
   --color-green: #369436;
   --color-red: #ff0000;
+  --color-red-50: rgb(255, 70, 70);
 }
 
 *{
@@ -40,63 +41,12 @@
 
 }
 
-#input.valid{
-  & input{
-    border: 1px solid var(--color-green);
-  }
-  & p{
-    color: var(--color-green);
-    top: -15px;
-    left: 0;
-  }
-
-  & input:focus{
-    border: 1px solid var(--color-green);
-  }
-
-  & input:focus + p{
-    color: var(--color-green);
-  }
-}
-
-#input.invalid{
-  & input{
-    border: 1px solid var(--color-red);
-  }
-
-  & p{
-    color: var(--color-red);
-    top: -15px;
-    left: 0;
-  }
-
-  & input:focus{
-    border: 1px solid var(--color-red);
-  }
-
-  & input:focus + p{
-    color: var(--color-red);
-  }
-}
-
-#input.hasContent{
-  
-  & input{
-    border: 1px solid var(--primary-color);
-  }
-  & p{
-    color: var(--primary-color);
-    top: -15px;
-    left: 0;
-  }
-  
-}
 #input{
   position: relative;
   //Esse margin-top é o espaço que o texto irá ocupar
   margin-top: 35px;
-  & div{
-    & > p{
+  & div.options{
+    & .inputFocused > p{
       position: absolute;
       left: 1rem;
       top: 50%;
@@ -116,22 +66,86 @@
       color: black;
       transition: 0.25s;
       outline: none;
+      border: 1px solid var(--primary-color);
     }
     & input:focus{
-      border: 1px solid var(--primary-color);
       background-color: var(--background-color-2)
     }
 
     //Change the texto color when input focused
-    & input:focus + p{
-      color: var(--primary-color);
-      top: -15px;
-      left: 0;
+    & input:focus + .inputFocused{
+      & > p{
+        top: -15px;
+        left: 0;
+      }
+      & div{
+        opacity: 1 !important;
+      }
     }
   }
  
+  &.hasContent .options .inputFocused > p{
+    top: -15px;
+    left: 0;
+  }
 
+  &.basic .options{
+    &.hasContent p{
+      color: var(--primary-color);
+    }
 
+    & input{
+      border: 1px solid var(--primary-color);
+    }
+
+    & input:focus + p{
+      color: var(--primary-color);
+    }
+  }
+
+  &.valid.hasContent .options{
+    & .inputFocused > p{
+      color: var(--color-green);
+    }
+
+    & input{
+      border: 1px solid var(--color-green);
+    }
+  }
+
+  &.valid{
+    & input:focus{
+      border: 1px solid var(--color-green);
+    }
+
+    & input:focus + p{
+      color: var(--color-green);
+    }
+  }
+
+  &.invalid.hasContent .options{
+    & .inputFocused > p{
+      color: var(--color-red);
+    }
+
+    & input{
+      border: 1px solid var(--color-red);
+    }
+  }
+
+  &.invalid{
+    & input:focus{
+      border: 1px solid var(--color-red);
+    }
+
+    & input:focus + .inputFocused > p{
+      color: var(--color-red);
+    }
+  }
+
+  & .children{
+    position: absolute;
+  }
 }
 
 button.secondary{

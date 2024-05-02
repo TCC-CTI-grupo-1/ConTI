@@ -1,13 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface Props{
     name: string;
     label: string;
     valid?: boolean;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    children?: React.ReactNode;
 }
 
-const Input = ({name, label, onChange, valid}: Props) => {
+const Input = ({name, label, onChange, valid, children}: Props) => {
+
 
     const [isEmpty, setIsEmpty] = useState(true);
 
@@ -24,14 +26,20 @@ const Input = ({name, label, onChange, valid}: Props) => {
     }
 
     return (
-        <div id="input" className={valid != null ? 
-            (valid ? 'valid' : 'invalid') : isEmpty ? '' : 'hasContent' }>
-            <div>
-                
+        <div id="input" className={(valid != null ? 
+            (valid ? 'valid' : 'invalid') : 'basic') + ' ' + (isEmpty ? '' : 'hasContent')}>
+            <div className="options">
                 <input type="text" name={name} onChange={handleChange} />
-                <p>{label}</p>
+                <div className="inputFocused">
+                    <p>{label}</p>
+                    {children &&
+                    
+                    <div className="children">
+                        {children}
+                    </div>}
+                </div>
+                
             </div>
-            
         </div>
         
     )

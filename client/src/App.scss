@@ -143,6 +143,20 @@
   }
   & > #inputs{
     width: 100%;
+    & #input .children{
+      background-color: var(--color-red-50);
+      width: 100%;
+      margin-top: 5px;
+      padding: 15px;
+      border-radius: 15px;
+      z-index: 1;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      pointer-events: none;
+      transition: 0.25s;
+    }
+
   }
 
   & > #options{
