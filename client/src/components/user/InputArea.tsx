@@ -1,9 +1,16 @@
 import logo from '../../assets/logo.png';
+import loading from '../../assets/loading.gif';
+
 import { useState } from 'react';
 import Input from '../Input';
 import Button from '../Button';
 
 const InputArea = () => {
+
+    //Fetch options
+    const [loading, setLoading] = useState(false);
+
+
     const [isLogin, setIsLogin] = useState(true);
 
     const[isEmailValid, setIsEmailValid] = useState(['@', '.']);
@@ -17,8 +24,14 @@ const InputArea = () => {
 
     const[isPasswordValid, setIsPasswordValid] = useState([1, 2, 3, 4]);
 
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [remember, setRemember] = useState(false);
+
+    //A ideia e que, se for true, todos os inputs recebem as "caixinhas vermelhas" em volta,
+    //E não só de e-mail e senha, pedindo para que o usuario preencha os outros valores
+    const[isInputsValid, setIsInputsValid] = useState(false);
 
     function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>){
         setEmail(e.target.value);
@@ -44,6 +57,19 @@ const InputArea = () => {
         
     }
 
+    function changeLoginPage(){
+        //Set all constants to default
+
+        setIsLogin(!isLogin);
+        setIsInputsValid(false);
+        setName('');
+        setEmail('');
+        setPassword('');
+        setIsEmailValid(['@', '.']);
+        setIsPasswordValid([1, 2, 3, 4]);
+        setRemember(false);
+        setLoading(false);
+    }
 
     function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>){
         setPassword(e.target.value);
@@ -67,7 +93,7 @@ const InputArea = () => {
             newIsPasswordValid = newIsPasswordValid.filter((rule) => rule !== 4)
             : !newIsPasswordValid.includes(4) && (newIsPasswordValid = [...newIsPasswordValid, 4]);
     
-            console.log(newIsPasswordValid);
+            //console.log(newIsPasswordValid);
             setIsPasswordValid(newIsPasswordValid);
         }
         
@@ -108,6 +134,72 @@ const InputArea = () => {
         });
         return node;
     }
+
+    function handleLogin(){
+        if (email.length == 0 || password.length == 0) {
+            setIsInputsValid(true);
+            alert('Preencha todos os campos');
+            return;
+        }
+        const data = {
+            email: email,
+            password: password,
+            remember: remember
+        }
+        const url = 'http://localhost:3001/login';
+        console.log(data);
+        setLoading(true);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setLoading(false);
+        })
+        .catch(err => {
+            console.log(err);
+            setLoading(false);
+        })
+    }
+
+    function handleSigup(){
+        if (name.length == 0 || isEmailValid.length != 0 || isPasswordValid.length != 0) {
+            setIsInputsValid(true);
+            alert('Preencha todos os campos');
+            return;
+        }
+        const data = {
+            name: name,
+            email: email,
+            password: password,
+            remember: remember
+        }
+        const url = 'http://localhost:3001/signup';
+        console.log(data);
+        setLoading(true);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setLoading(false);
+        })
+        .catch(err => {
+            console.log(err);
+            setLoading(false);
+        })
+    }
+
     return (
         <div id="inputArea">
             <div id="logo" className='center'>
@@ -122,33 +214,46 @@ const InputArea = () => {
                     <p>Faça login com suas credenciais.</p>}
                 </div>
             </div>
-            
+
             <div id="inputs">
                 {/*Botões do login */}
-                {isLogin && <Input name="email" label="Email" onChange={handleEmailChange}/>}
-                {isLogin && <Input name="password" label="Senha" onChange={handlePasswordChange}/>}
+                {isLogin && <Input name="email" label="Email" onChange={handleEmailChange}
+                valid={isInputsValid ? email.length > 0 : undefined}/> }
+                {isLogin && <Input name="password" label="Senha" onChange={handlePasswordChange}
+                type='password'
+                valid={isInputsValid ? password.length > 0 : undefined}/>}
 
                 {/*Botões do Cadastro */}
-                {!isLogin && <Input name="name" label="Nome" onChange={() => {}} />}
+                {!isLogin && <>
+                    <p>O nome que será usado em seu perfil</p>
+                    <Input name="name" label="Nome" onChange={(e) => {setName(e.target.value)}}
+                    valid={isInputsValid ? name.length > 0 : undefined} />
+                </>}
                 {!isLogin && <Input name="email" label="Email" onChange={handleEmailChange} valid={isEmailValid.length == 0}
                 children={getEmailValid()} />}
-                {!isLogin && <Input name="password" label="Senha" onChange={handlePasswordChange} valid={isPasswordValid.length == 0}
+                {!isLogin && <Input name="password" label="Senha" onChange={handlePasswordChange} 
+                valid={isPasswordValid.length == 0} type='password'
                 children={getPasswordValid()} />}
             </div>
             <div id="options">
                 <div className="moreOptions">
                     <div>
-                        <input type="checkbox" name="remember" id="remember"/>
+                        <input type="checkbox" name="remember" id="remember" onClick={
+                            () => setRemember(!remember)
+                        }/>
                         <p>Lembrar-me</p>
                     </div>
                     <a>Esqueceu a senha?</a>
                 </div>
-                <Button text={!isLogin ? 'CADASTRAR' : 'LOGIN'} onClick={() => {}} />
+                {!isLogin && <Button text={'CADASTRAR'} onClick={handleSigup} 
+                loading={loading}/>}
+                {isLogin && <Button text={'LOGIN'} onClick={handleLogin} 
+                loading={loading}/>}
                 <p>ou</p>
                 <Button text={'Login com Google'} type={2} onClick={() => {}} />
             </div>
             <div className="noAccount">
-                <a onClick={() => setIsLogin(!isLogin)}>{!isLogin ? 'Já tem uma conta? Faça o login!' : 'Não tem uma conta? Faça o Cadastro!'}</a>
+                <a onClick={changeLoginPage}>{!isLogin ? 'Já tem uma conta? Faça o login!' : 'Não tem uma conta? Faça o Cadastro!'}</a>
             </div>
             
         </div>

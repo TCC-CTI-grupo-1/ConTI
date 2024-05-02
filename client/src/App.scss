@@ -131,6 +131,7 @@
   & > #logo{
     gap: 10px;
     flex-direction: column;
+    margin-bottom: 10px;
     & .logo{
       display: flex;
       align-items: center;
@@ -155,6 +156,10 @@
       flex-direction: column;
       pointer-events: none;
       transition: 0.25s;
+    }
+    & #input{
+      margin-bottom: 30px;
+      margin-top: 5px;
     }
 
   }

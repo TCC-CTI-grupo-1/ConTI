@@ -1,6 +1,17 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap');
 
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24;
+  user-select: none;
+  cursor: pointer;
+}
+
+
 :root {
   font-family: Lexend, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -44,8 +55,13 @@
 #input{
   position: relative;
   //Esse margin-top é o espaço que o texto irá ocupar
-  margin-top: 35px;
   & div.options{
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    & span{
+      margin-left: 10px;
+    }
     & .inputFocused > p{
       position: absolute;
       left: 1rem;
@@ -89,8 +105,8 @@
     left: 0;
   }
 
-  &.basic .options{
-    &.hasContent p{
+  &.basic.hasContent .options{
+    & .inputFocused > p{
       color: var(--primary-color);
     }
 
@@ -98,9 +114,10 @@
       border: 1px solid var(--primary-color);
     }
 
-    & input:focus + p{
-      color: var(--primary-color);
-    }
+  }
+
+  &.basic input:focus + .inputFocused p{
+    color: var(--primary-color);
   }
 
   &.valid.hasContent .options{
@@ -123,14 +140,11 @@
     }
   }
 
-  &.invalid.hasContent .options{
-    & .inputFocused > p{
-      color: var(--color-red);
-    }
-
-    & input{
+  &.invalid .options input{
       border: 1px solid var(--color-red);
-    }
+  }
+  &.invalid.hasContent .options .inputFocused > p{
+    color: var(--color-red);
   }
 
   &.invalid{
@@ -145,6 +159,8 @@
 
   & .children{
     position: absolute;
+    top: 0;
+    left: calc(100% + 20px);
   }
 }
 
@@ -169,6 +185,14 @@ button{
   }
   transition: 0.25s;
   cursor: pointer;
+  &.loading{
+    padding: 0.5em;
+    & img{
+      //Tamanho de um h3
+      width: 2.5em;
+      aspect-ratio: 1;
+    }
+  }
 }
 
 button:hover{
