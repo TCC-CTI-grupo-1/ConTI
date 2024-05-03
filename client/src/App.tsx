@@ -1,10 +1,10 @@
-import { Login } from './components/user/Login'
+import InputArea from './components/user/InputArea'
 import './App.scss'
 
 function App() {
   return (
 
-    <Login />
+    <InputArea />
   )
 }
 

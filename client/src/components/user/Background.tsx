@@ -1,11 +1,16 @@
-const Background = () => {
+interface Props{
+    signin: boolean
+}
+
+
+const Background = ({signin}: Props) => {
     return (
-        <div id='user-background' className="full-screen-size">
-            <div id="q1"></div>
-            <div id="q2"></div>
-            <div id="q3"></div>
-            <div id="q4"></div>
-            <div id="q5"></div>
+        <div id='user-background' className={"full-screen-size " + (signin ? 'signin' : '')}>
+            <div id="q1" className="risco"></div>
+            <div id="q2" className="risco"></div>
+            <div id="q3" className="risco"></div>
+            <div id="q4" className="risco"></div>
+            <div id="q5" className="risco"></div>
             <div id="q6"></div>
             <div id="q7"></div>
             <div id="q8"></div>

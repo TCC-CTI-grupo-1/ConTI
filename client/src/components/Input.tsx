@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface Props{
     name: string;
@@ -47,11 +47,9 @@ const Input = ({name, label, onChange, valid, children, type="text"}: Props) => 
                     <div className="children">
                         {children}
                     </div>}
+                    {type === 'password' && <span className="material-symbols-outlined"
+                    onClick={showPassword}>visibility</span>}
                 </div>
-
-                {type === 'password' && <span className="material-symbols-outlined"
-                onClick={showPassword}>visibility</span>}
-                
             </div>
         </div>
         

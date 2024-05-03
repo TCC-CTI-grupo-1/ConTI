@@ -1,9 +1,9 @@
 import logo from '../../assets/logo.png';
-import loading from '../../assets/loading.gif';
 
 import { useState } from 'react';
 import Input from '../Input';
 import Button from '../Button';
+import Background from "./Background";
 
 const InputArea = () => {
 
@@ -22,7 +22,7 @@ const InputArea = () => {
     4. Pelo menos um caractere especial
     */
 
-    const[isPasswordValid, setIsPasswordValid] = useState([1, 2, 3, 4]);
+    const[isPasswordValid, setIsPasswordValid] = useState([1, 2, 3]);
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -66,7 +66,7 @@ const InputArea = () => {
         setEmail('');
         setPassword('');
         setIsEmailValid(['@', '.']);
-        setIsPasswordValid([1, 2, 3, 4]);
+        setIsPasswordValid([1, 2, 3]);
         setRemember(false);
         setLoading(false);
     }
@@ -89,9 +89,9 @@ const InputArea = () => {
             newIsPasswordValid = newIsPasswordValid.filter((rule) => rule !== 3)
             : !newIsPasswordValid.includes(3) && (newIsPasswordValid = [...newIsPasswordValid, 3]);
     
-            e.target.value.match(/[!@#$%^&*_]/) ?
+            /*e.target.value.match(/[!@#$%^&*_]/) ?
             newIsPasswordValid = newIsPasswordValid.filter((rule) => rule !== 4)
-            : !newIsPasswordValid.includes(4) && (newIsPasswordValid = [...newIsPasswordValid, 4]);
+            : !newIsPasswordValid.includes(4) && (newIsPasswordValid = [...newIsPasswordValid, 4]);*/
     
             //console.log(newIsPasswordValid);
             setIsPasswordValid(newIsPasswordValid);
@@ -127,9 +127,9 @@ const InputArea = () => {
                 case 3:
                     node = <>{node}<p>A senha deve conter pelo menos um número</p></>;
                     break;
-                case 4:
+                /*case 4:
                     node = <>{node}<p>A senha deve conter pelo menos um caractere especial</p></>;
-                    break;
+                    break;*/
             }
         });
         return node;
@@ -201,61 +201,66 @@ const InputArea = () => {
     }
 
     return (
-        <div id="inputArea">
-            <div id="logo" className='center'>
-                <div className="logo">
-                    <img src={logo} alt="Logo" />
-                    <h2>CONTI</h2>
-                </div>
-                
-                <div className="texto">
-                    {!isLogin ? <p>Crie sua conta hoje e comece seus estudos!</p> 
-                    : 
-                    <p>Faça login com suas credenciais.</p>}
-                </div>
-            </div>
-
-            <div id="inputs">
-                {/*Botões do login */}
-                {isLogin && <Input name="email" label="Email" onChange={handleEmailChange}
-                valid={isInputsValid ? email.length > 0 : undefined}/> }
-                {isLogin && <Input name="password" label="Senha" onChange={handlePasswordChange}
-                type='password'
-                valid={isInputsValid ? password.length > 0 : undefined}/>}
-
-                {/*Botões do Cadastro */}
-                {!isLogin && <>
-                    <p>O nome que será usado em seu perfil</p>
-                    <Input name="name" label="Nome" onChange={(e) => {setName(e.target.value)}}
-                    valid={isInputsValid ? name.length > 0 : undefined} />
-                </>}
-                {!isLogin && <Input name="email" label="Email" onChange={handleEmailChange} valid={isEmailValid.length == 0}
-                children={getEmailValid()} />}
-                {!isLogin && <Input name="password" label="Senha" onChange={handlePasswordChange} 
-                valid={isPasswordValid.length == 0} type='password'
-                children={getPasswordValid()} />}
-            </div>
-            <div id="options">
-                <div className="moreOptions">
-                    <div>
-                        <input type="checkbox" name="remember" id="remember" onClick={
-                            () => setRemember(!remember)
-                        }/>
-                        <p>Lembrar-me</p>
+        <div className="center full-screen-size">
+            <Background signin={!isLogin}/>
+            <div id="inputArea">
+                <div id="logo" className='center'>
+                    <div className="logo">
+                        <img src={logo} alt="Logo" />
+                        <h2>CONTI</h2>
                     </div>
-                    <a>Esqueceu a senha?</a>
+                    
+                    <div className="texto">
+                        {!isLogin ? <p>Crie sua conta hoje e comece seus estudos!</p> 
+                        : 
+                        <p>Faça login com suas credenciais.</p>}
+                    </div>
                 </div>
-                {!isLogin && <Button text={'CADASTRAR'} onClick={handleSigup} 
-                loading={loading}/>}
-                {isLogin && <Button text={'LOGIN'} onClick={handleLogin} 
-                loading={loading}/>}
-                <p>ou</p>
-                <Button text={'Login com Google'} type={2} onClick={() => {}} />
-            </div>
-            <div className="noAccount">
+
+                <div id="inputs">
+                    {/*Botões do login */}
+                    {isLogin && <Input name="email" label="Email" onChange={handleEmailChange}
+                    valid={isInputsValid ? email.length > 0 : undefined}/> }
+                    {isLogin && <Input name="password" label="Senha" onChange={handlePasswordChange}
+                    type='password'
+                    valid={isInputsValid ? password.length > 0 : undefined}/>}
+
+                    {/*Botões do Cadastro */}
+                    {!isLogin && <>
+                        <p>O nome que será usado em seu perfil</p>
+                        <Input name="name" label="Nome" onChange={(e) => {setName(e.target.value)}}
+                        valid={isInputsValid ? name.length > 0 : undefined}
+                        children={<p>O nome que será usado em seu perfil</p>}
+                        />
+                    </>}
+                    {!isLogin && <Input name="email" label="Email" onChange={handleEmailChange} valid={isEmailValid.length == 0}
+                    children={getEmailValid()} />}
+                    {!isLogin && <Input name="password" label="Senha" onChange={handlePasswordChange} 
+                    valid={isPasswordValid.length == 0} type='password'
+                    children={getPasswordValid()} />}
+                </div>
+                <div id="options">
+                    <div className="moreOptions">
+                        <div>
+                            <input type="checkbox" name="remember" id="remember" onClick={
+                                () => setRemember(!remember)
+                            }/>
+                            <p>Lembrar-me</p>
+                        </div>
+                        <a>Esqueceu a senha?</a>
+                    </div>
+                    {!isLogin && <Button text={'CADASTRAR'} onClick={handleSigup} 
+                    loading={loading}/>}
+                    {isLogin && <Button text={'LOGIN'} onClick={handleLogin} 
+                    loading={loading}/>}
+                    <p>ou</p>
+                    <Button text={'Login com Google'} type={2} onClick={() => {}} />
+                </div>
+                <div className="noAccount">
                 <a onClick={changeLoginPage}>{!isLogin ? 'Já tem uma conta? Faça o login!' : 'Não tem uma conta? Faça o Cadastro!'}</a>
-            </div>
+                </div>
             
+            </div>
         </div>
     )
 }
