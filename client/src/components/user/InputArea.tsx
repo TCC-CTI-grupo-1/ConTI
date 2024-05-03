@@ -1,5 +1,5 @@
 import logo from '../../assets/logo.png';
-
+import { showAlert } from '../../App';
 import { useState } from 'react';
 import Input from '../Input';
 import Button from '../Button';
@@ -9,7 +9,6 @@ const InputArea = () => {
 
     //Fetch options
     const [loading, setLoading] = useState(false);
-
 
     const [isLogin, setIsLogin] = useState(true);
 
@@ -163,6 +162,7 @@ const InputArea = () => {
         })
         .catch(err => {
             console.log(err);
+            showAlert("Errro: " + err.message);
             setLoading(false);
         })
     }
@@ -196,6 +196,7 @@ const InputArea = () => {
         })
         .catch(err => {
             console.log(err);
+            showAlert("Errro: " + err.message);
             setLoading(false);
         })
     }
@@ -254,7 +255,7 @@ const InputArea = () => {
                     {isLogin && <Button text={'LOGIN'} onClick={handleLogin} 
                     loading={loading}/>}
                     <p>ou</p>
-                    <Button text={'Login com Google'} type={2} onClick={() => {}} />
+                    <Button text={'Login com Google'} type={2} onClick={() => {showAlert('GOOGLE!')}} />
                 </div>
                 <div className="noAccount">
                 <a onClick={changeLoginPage}>{!isLogin ? 'Já tem uma conta? Faça o login!' : 'Não tem uma conta? Faça o Cadastro!'}</a>
