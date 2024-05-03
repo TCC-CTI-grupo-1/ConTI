@@ -16,6 +16,4 @@ export class ConnectionDAO {
     getConnection(): any {
         return this.client;
     }
-
-
 }
