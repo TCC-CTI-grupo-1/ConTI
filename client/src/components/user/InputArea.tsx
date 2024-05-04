@@ -234,11 +234,11 @@ const InputArea = () => {
                         children={<p>O nome que será usado em seu perfil</p>}
                         />
                     </>}
-                    {!isLogin && <Input name="email" label="Email" onChange={handleEmailChange} valid={isEmailValid.length == 0}
-                    children={getEmailValid()} />}
+                    {!isLogin && <Input name="email" label="Email" onChange={handleEmailChange} valid={email.length > 0 ? isEmailValid.length == 0 : undefined}
+                    children={email.length > 0 ? getEmailValid() : null} />}
                     {!isLogin && <Input name="password" label="Senha" onChange={handlePasswordChange} 
-                    valid={isPasswordValid.length == 0} type='password'
-                    children={getPasswordValid()} />}
+                    valid={password.length > 0? isPasswordValid.length == 0 : undefined} type='password'
+                    children={password.length > 0 ? getPasswordValid() : null} />}
                 </div>
                 <div id="options">
                     <div className="moreOptions">
@@ -246,7 +246,7 @@ const InputArea = () => {
                             <input type="checkbox" name="remember" id="remember" onClick={
                                 () => setRemember(!remember)
                             }/>
-                            <p>Lembrar-me</p>
+                            <label htmlFor="remember">Lembrar de mim</label>
                         </div>
                         <a>Esqueceu a senha?</a>
                     </div>

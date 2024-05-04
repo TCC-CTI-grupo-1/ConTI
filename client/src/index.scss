@@ -151,21 +151,21 @@ input::-ms-clear {
 
   &.valid.hasContent .options{
     & .inputFocused > p{
-      color: var(--color-green);
+      color: var(--primary-color);
     }
 
     & input{
-      border: 1px solid var(--color-green);
+      border: 1px solid var(--primary-color);
     }
   }
 
   &.valid{
     & input:focus{
-      border: 1px solid var(--color-green);
+      border: 1px solid var(--primary-color);
     }
 
     & input:focus + p{
-      color: var(--color-green);
+      color: var(--primary-color);
     }
   }
 
@@ -689,6 +689,9 @@ h2{
       & div{
         display: flex;
         gap: var(--margin-3);
+        & label{
+          user-select: none;
+        }
       }
     }
   }
