@@ -9,6 +9,10 @@ export default defineConfig({
       '/signup': {
         target: 'http://localhost:3001',
         changeOrigin: true
+      },
+      '/login': {
+        target: 'http://localhost:3001',
+        changeOrigin: true
       }
     }
   }

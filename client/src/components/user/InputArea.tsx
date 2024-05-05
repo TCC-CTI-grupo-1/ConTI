@@ -145,24 +145,34 @@ const InputArea = () => {
             password: password,
             remember: remember
         }
-        const url = 'http://localhost:3001/login';
-        console.log(data);
         setLoading(true);
-        fetch(url, {
+        fetch('/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
+        .then(async response => {
+            const responseData = await response.json();
+            if (!response.ok) {
+                if (responseData.message === 'Perfil não encontrado') {
+                    throw new Error('E-mail ou senha incorretos');
+                }
+                throw new Error(response.statusText);
+            } else {
+                console.log('L');
+                window.location.href = "https://www.youtube.com/watch?v=KZzJlyjMJws";
+            }
+            return responseData;
+        })
         .then(data => {
             console.log(data);
             setLoading(false);
         })
         .catch(err => {
             console.log(err);
-            showAlert("Errro: " + err.message);
+            showAlert("Erro: " + err.message);
             setLoading(false);
         })
     }
@@ -179,7 +189,6 @@ const InputArea = () => {
             password: password,
             remember: remember
         }
-        console.log(data);
         setLoading(true);
         fetch('/signup', {
             method: 'POST',
@@ -188,20 +197,19 @@ const InputArea = () => {
             },
             body: JSON.stringify(data)
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Erro ao cadastrar');
+        .then(async response => {
+            const responseData = await response.json();
+            if (!response.ok) {
+                throw new Error(await responseData.message);
             }
+            return responseData;
         })
         .then(data => {
             console.log(data);
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
-            showAlert("Errro: " + err.message);
+            showAlert("Erro: " + err.message);
             setLoading(false);
         })
     }
