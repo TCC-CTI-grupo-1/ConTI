@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import AlertBox from './components/AlertBox';
 import InputArea from './components/user/InputArea';
@@ -18,6 +18,14 @@ const showAlert = (message: string) => {
 
 function App() {
 
+  // const [backendData, setBackendData] = useState([{ }]);
+  // useEffect(() => {
+  //   fetch('/signup')
+  //     .then((response: any) => response.json()).then(data => {
+  //       setBackendData(data);
+  //     }
+  //   )
+  // }, []);
 
   return (
     <>

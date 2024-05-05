@@ -1,4 +1,4 @@
-class ProfileDTO extends UserDTO {
+export class ProfileDTO extends UserDTO {
     total_correct_answers: number;
     total_incorrect_answers: number;
 

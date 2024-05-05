@@ -145,7 +145,7 @@ const InputArea = () => {
             password: password,
             remember: remember
         }
-        const url = 'http://localhost:3001/login';
+        const url = 'http://localhost:3000/login';
         console.log(data);
         setLoading(true);
         fetch(url, {
@@ -167,7 +167,7 @@ const InputArea = () => {
         })
     }
 
-    function handleSigup(){
+    function handleSignup(){
         if (name.length == 0 || isEmailValid.length != 0 || isPasswordValid.length != 0) {
             setIsInputsValid(true);
             alert('Preencha todos os campos');
@@ -179,7 +179,7 @@ const InputArea = () => {
             password: password,
             remember: remember
         }
-        const url = 'http://localhost:3001/signup';
+        const url = 'http://localhost:3000/signup';
         console.log(data);
         setLoading(true);
         fetch(url, {
@@ -189,7 +189,13 @@ const InputArea = () => {
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Erro ao cadastrar');
+            }
+        })
         .then(data => {
             console.log(data);
             setLoading(false);
@@ -250,7 +256,7 @@ const InputArea = () => {
                         </div>
                         <a>Esqueceu a senha?</a>
                     </div>
-                    {!isLogin && <Button text={'CADASTRAR'} onClick={handleSigup} 
+                    {!isLogin && <Button text={'CADASTRAR'} onClick={handleSignup} 
                     loading={loading}/>}
                     {isLogin && <Button text={'LOGIN'} onClick={handleLogin} 
                     loading={loading}/>}

@@ -1,7 +1,7 @@
-import { Router } from 'express';
+// import { Request, Response } from 'express';
 
-export const defaultRoute = Router();
+// const express = require('express');
+// const app = express();
 
-defaultRoute.get('/', (req, res) => {
-  res.send("aaaaaa");
-});
+// app.get('/signup', (req: Request, res: Response) => { 
+//   res.json({ message: 'signup' })});

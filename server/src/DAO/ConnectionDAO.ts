@@ -7,7 +7,7 @@ export class ConnectionDAO {
         this.client = connect({
             host: 'localhost',
             port: 5432,
-            database: 'aula',
+            database: 'testeTCC',
             user: 'postgres',
             password: '123'
         });
