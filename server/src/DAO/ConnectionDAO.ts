@@ -1,7 +1,7 @@
-import { connect } from 'ts-postgres';
+import { connect, Client } from 'ts-postgres';
 
 export class ConnectionDAO {
-    private client: any;
+    private client: Promise<Client>;
 
     constructor() {
         this.client = connect({
@@ -13,7 +13,8 @@ export class ConnectionDAO {
         });
     }
 
-    getConnection(): any {
-        return this.client;
+    async getConnection(): Promise<Client> {
+        const client = await this.client;
+        return client;
     }
 }

@@ -145,7 +145,7 @@ const InputArea = () => {
             password: password,
             remember: remember
         }
-        const url = 'http://localhost:3000/login';
+        const url = 'http://localhost:3001/login';
         console.log(data);
         setLoading(true);
         fetch(url, {
@@ -179,10 +179,9 @@ const InputArea = () => {
             password: password,
             remember: remember
         }
-        const url = 'http://localhost:3000/signup';
         console.log(data);
         setLoading(true);
-        fetch(url, {
+        fetch('/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

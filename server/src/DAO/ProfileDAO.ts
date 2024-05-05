@@ -1,4 +1,4 @@
-import { ResultRow } from 'ts-postgres';
+import { ResultRow, connect } from 'ts-postgres';
 import { ConnectionDAO } from './ConnectionDAO';
 import { ProfileDTO } from '../DTO/ProfileDTO';
 
@@ -7,31 +7,38 @@ const connectionDAO = new ConnectionDAO();
 export class ProfileDAO {
   
     registerProfile = async (profile: ProfileDTO) => {
-        const result = await connectionDAO.getConnection().query(
-            `INSERT INTO profile (name, email, password, total_correct_answers, total_incorrect_answers) VALUES ($1, $2, $3, 0, 0) RETURNING id`,
+        const client = await connectionDAO.getConnection();
+        const result = client.query(
+            `INSERT INTO profile (name, email, password, profile_picture, creation_date, total_correct_answers, total_incorrect_answers) VALUES ($1, $2, $3, null, NOW(), 0, 0) RETURNING id`,
             [profile.name, profile.email, profile.password]
         );
-        return result.rows[0].get('id');
+        return result;
     }
 
     updateprofile = async (profile: ProfileDTO) => {
-        await connectionDAO.getConnection().query(
+        const client = await connectionDAO.getConnection();
+        client.query(
             `UPDATE profile SET name = $1, email = $2, password = $3, total_correct_answers = $4, total_incorrect_answers = $5 WHERE id = $6`,
             [profile.name, profile.email, profile.password, profile.id, profile.total_correct_answers, profile.total_incorrect_answers]
         );
     }
 
     deleteprofile = async (profile: ProfileDTO) => {
-        await connectionDAO.getConnection().query(
+        const client = await connectionDAO.getConnection();
+        client.query(
             `DELETE FROM profile WHERE id = $1`,
             [profile.id]
         );
     }
 
     listprofiles = async () => {
-        const result = await connectionDAO.getConnection().query('SELECT * FROM profile');
-        const profiles: ProfileDTO[] = result.rows.map((row: ResultRow<any>) => {
-            return {
+        
+        const client = await connectionDAO.getConnection();
+        const result = await client.query('SELECT * FROM profile');
+
+        const profiles: ProfileDTO[] = [];
+        for await (const row of result) {
+            const profile: ProfileDTO = {
                 id: row.get('id'),
                 name: row.get('name'),
                 email: row.get('email'),
@@ -40,13 +47,15 @@ export class ProfileDAO {
                 creation_date: row.get('creation_date'),
                 total_correct_answers: row.get('total_correct_answers'),
                 total_incorrect_answers: row.get('total_incorrect_answers')
-            } as ProfileDTO;
-        });
+            };
+            profiles.push(profile);
+        }
         return profiles;
     }
 
     searchprofileById = async (id: number) => {
-        const result = await connectionDAO.getConnection().query('SELECT * FROM profile WHERE id = $1', [id]);
+        const client = await connectionDAO.getConnection();
+        const result = await client.query('SELECT * FROM profile WHERE id = $1', [id]);
         const row = result.rows[0];
         const profile: ProfileDTO = {
             id: row.get('id'),

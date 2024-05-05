@@ -1,3 +1,5 @@
+import { UserDTO } from './UserDTO'; // Add this import statement
+
 export class ProfileDTO extends UserDTO {
     total_correct_answers: number;
     total_incorrect_answers: number;
