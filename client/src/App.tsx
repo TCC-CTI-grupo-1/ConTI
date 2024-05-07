@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import AlertBox from './components/AlertBox';
-import InputArea from './components/user/InputArea';
+import User from './components/user/User';
 
 
 const showAlert = (message: string) => {
@@ -21,7 +21,7 @@ function App() {
   return (
     <>
       <div id="alert-box-container" className="alert-box-container"></div>
-      <InputArea />
+      <User />
     </>
   );
 }
