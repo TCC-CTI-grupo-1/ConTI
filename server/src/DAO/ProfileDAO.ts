@@ -1,4 +1,3 @@
-import { ResultRow, connect } from 'ts-postgres';
 import { ConnectionDAO } from './ConnectionDAO';
 import { ProfileDTO } from '../DTO/ProfileDTO';
 
@@ -9,72 +8,110 @@ export class ProfileDAO {
     registerProfile = async (profile: ProfileDTO) => {  
         try {
             const client = await connectionDAO.getConnection();
-            await client.query(
-                `INSERT INTO profile (name, email, password, profile_picture, creation_date, total_correct_answers, total_incorrect_answers) VALUES ($1, $2, $3, null, NOW(), 0, 0) RETURNING id`,
-                [profile.name, profile.email, profile.password]
-            );
-        } catch (error: any) {
-            if (error.code === '23505') {
-                throw new Error('E-mail já cadastrado');
+            await client.profile.create({
+            data: {
+                name: profile.name,
+                email: profile.email,
+                password: profile.password,
+                profile_picture: profile.profile_picture,
+                creation_date: profile.creation_date,
+                total_correct_answers: profile.total_correct_answers,
+                total_incorrect_answers: profile.total_incorrect_answers
             }
-            throw error;
+        });
+        } catch (error: any) {
+            if (error.code === 'P2002') {
+                throw new Error('Email já cadastrado');
+            }
         }
     }
 
-    updateprofile = async (profile: ProfileDTO) => {
-        const client = await connectionDAO.getConnection();
-        client.query(
-            `UPDATE profile SET name = $1, email = $2, password = $3, total_correct_answers = $4, total_incorrect_answers = $5 WHERE id = $6`,
-            [profile.name, profile.email, profile.password, profile.id, profile.total_correct_answers, profile.total_incorrect_answers]
-        );
+    updateProfile = async (profile: ProfileDTO) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            await client.profile.update({
+            where: {
+                id: profile.id
+            },
+            data: {
+                name: profile.name,
+                email: profile.email,
+                password: profile.password,
+                profile_picture: profile.profile_picture,
+                creation_date: profile.creation_date,
+                total_correct_answers: profile.total_correct_answers,
+                total_incorrect_answers: profile.total_incorrect_answers
+            }
+        });
+        } catch (error: any) {
+            if (error.code === 'P2002') {
+                throw new Error('Email já cadastrado');
+            }
+        }
     }
 
-    deleteprofile = async (profile: ProfileDTO) => {
+    deleteProfile = async (profile: ProfileDTO) => {
         const client = await connectionDAO.getConnection();
-        client.query(
-            `DELETE FROM profile WHERE id = $1`,
-            [profile.id]
-        );
+        await client.profile.delete({
+            where: {
+                id: profile.id
+            }
+        });
     }
 
-    listprofiles = async () => {
+    listProfiles = async () => {
+        try {
+        const client = await connectionDAO.getConnection();
+        const result = await client.profile.findMany();
         
-        const client = await connectionDAO.getConnection();
-        const result = await client.query('SELECT * FROM profile');
-
         const profiles: ProfileDTO[] = [];
-        for await (const row of result) {
+
+        result.forEach((row) => {
             const profile: ProfileDTO = {
-                id: row.get('id'),
-                name: row.get('name'),
-                email: row.get('email'),
-                password: row.get('password'),
-                profile_picture: row.get('profile_picture'),
-                creation_date: row.get('creation_date'),
-                total_correct_answers: row.get('total_correct_answers'),
-                total_incorrect_answers: row.get('total_incorrect_answers')
+                id: row.id,
+                name: row.name,
+                email: row.email,
+                password: row.password,
+                profile_picture: row.profile_picture,
+                creation_date: row.creation_date,
+                total_correct_answers: row.total_correct_answers,
+                total_incorrect_answers: row.total_incorrect_answers
             };
             profiles.push(profile);
-        }
+        });
+
         return profiles;
+
+        } catch (error) {
+            throw error;
+        }
     }
 
     searchprofileById = async (id: number) => {
         try {
             const client = await connectionDAO.getConnection();
-            const result = await client.query('SELECT * FROM profile WHERE id = $1', [id]);
-            const row = result.rows[0];
-            const profile: ProfileDTO = {
-                id: row.get('id'),
-                name: row.get('name'),
-                email: row.get('email'),
-                password: row.get('password'),
-                profile_picture: row.get('profile_picture'),
-                creation_date: row.get('creation_date'),
-                total_correct_answers: row.get('total_correct_answers'),
-                total_incorrect_answers: row.get('total_incorrect_answers')
-            };
-        return profile;
+            const result = await client.profile.findUnique({
+                where: {
+                    id: id
+                }
+            });
+
+            if (result) {
+                const profile: ProfileDTO = {
+                    id: result.id,
+                    name: result.name,
+                    email: result.email,
+                    password: result.password,
+                    profile_picture: result.profile_picture,
+                    creation_date: result.creation_date,
+                    total_correct_answers: result.total_correct_answers,
+                    total_incorrect_answers: result.total_incorrect_answers
+                };
+                return profile;
+            }
+            else {
+                throw new Error('Perfil não encontrado');
+            }
         } catch (error) {
             throw error;
         }
@@ -83,19 +120,29 @@ export class ProfileDAO {
     searchprofileByEmail = async (email: string) => {
         try {
             const client = await connectionDAO.getConnection();
-            const result = await client.query('SELECT * FROM profile WHERE email = $1', [email]);
-            const row = result.rows[0];
-            const profile: ProfileDTO = {
-                id: row.get('id'),
-                name: row.get('name'),
-                email: row.get('email'),
-                password: row.get('password'),
-                profile_picture: row.get('profile_picture'),
-                creation_date: row.get('creation_date'),
-                total_correct_answers: row.get('total_correct_answers'),
-                total_incorrect_answers: row.get('total_incorrect_answers')
-            };
-            return profile;
+            const result = await client.profile.findUnique({
+                where: {
+                    email: email
+                }
+            });
+
+            if (result) {
+                const profile: ProfileDTO = {
+                    id: result.id,
+                    name: result.name,
+                    email: result.email,
+                    password: result.password,
+                    profile_picture: result.profile_picture,
+                    creation_date: result.creation_date,
+                    total_correct_answers: result.total_correct_answers,
+                    total_incorrect_answers: result.total_incorrect_answers
+                };
+                return profile;
+            }
+            else {
+                throw new Error('Perfil não encontrado');
+            }
+
         } catch (error) {
             throw error;
         }
@@ -104,22 +151,30 @@ export class ProfileDAO {
     searchprofileByEmailAndPassword = async (email: string, password: string) => {
         try {
             const client = await connectionDAO.getConnection();
-            const result = await client.query('SELECT * FROM profile WHERE email = $1 AND password = $2', [email, password]);
-            if (result.rows.length === 0) {
+            const result = await client.profile.findUnique({
+                where: {
+                    email: email,
+                    password: password
+                }
+            });
+
+            if (result) {
+                const profile: ProfileDTO = {
+                    id: result.id,
+                    name: result.name,
+                    email: result.email,
+                    password: result.password,
+                    profile_picture: result.profile_picture,
+                    creation_date: result.creation_date,
+                    total_correct_answers: result.total_correct_answers,
+                    total_incorrect_answers: result.total_incorrect_answers
+                };
+                return profile;
+            }
+            else {
                 throw new Error('Perfil não encontrado');
             }
-            const row = result.rows[0];
-            const profile: ProfileDTO = {
-                id: row.get('id'),
-                name: row.get('name'),
-                email: row.get('email'),
-                password: row.get('password'),
-                profile_picture: row.get('profile_picture'),
-                creation_date: row.get('creation_date'),
-                total_correct_answers: row.get('total_correct_answers'),
-                total_incorrect_answers: row.get('total_incorrect_answers')
-            };
-            return profile;
+            
         } catch (error) {
             throw error;
         }

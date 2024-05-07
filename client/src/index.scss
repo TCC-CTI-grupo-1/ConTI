@@ -675,7 +675,6 @@ h2{
   & > #options{
     width: 100%;
     display: flex;
-    gap: var(--margin-3);
     align-items: center;
     flex-direction: column;
     position: relative;
@@ -693,6 +692,10 @@ h2{
           user-select: none;
         }
       }
+    }
+
+    & > .noAccount{
+      margin-top: var(--margin-1);
     }
   }
 }
