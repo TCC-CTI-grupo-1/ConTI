@@ -1,21 +1,14 @@
-import { connect, Client } from 'ts-postgres';
+import { PrismaClient } from "@prisma/client";
 import * as hidden from '../hidden/hidden';
 
 export class ConnectionDAO {
-    private client: Promise<Client>;
+    private prisma: PrismaClient = new PrismaClient();
 
     constructor() {
-        this.client = connect({
-            host: hidden.DBHost(),
-            port: hidden.DBPort(),
-            database: hidden.DBName(),
-            user: hidden.DBUser(),
-            password: hidden.decrypt(hidden.DBPassword())
-        });
+        this.prisma.$connect();
     }
 
-    async getConnection(): Promise<Client> {
-        const client = await this.client;
-        return client;
+    async getConnection(): Promise<PrismaClient> {
+        return this.prisma;
     }
 }
