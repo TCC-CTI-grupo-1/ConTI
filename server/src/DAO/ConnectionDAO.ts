@@ -1,16 +1,16 @@
 import { connect, Client } from 'ts-postgres';
-import DBPassword, { decrypt } from '../hidden/hidden';
+import * as hidden from '../hidden/hidden';
 
 export class ConnectionDAO {
     private client: Promise<Client>;
 
     constructor() {
         this.client = connect({
-            host: 'pgsql.projetoscti.com.br',
-            port: 5432,
-            database: 'projetoscti23',
-            user: 'projetoscti23',
-            password: decrypt(DBPassword())
+            host: hidden.DBHost(),
+            port: hidden.DBPort(),
+            database: hidden.DBName(),
+            user: hidden.DBUser(),
+            password: hidden.decrypt(hidden.DBPassword())
         });
     }
 
