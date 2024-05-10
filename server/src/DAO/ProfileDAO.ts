@@ -21,7 +21,7 @@ export class ProfileDAO {
         });
         } catch (error: any) {
             if (error.code === 'P2002') {
-                throw new Error('Email já cadastrado');
+                throw new Error('E-mail já cadastrado');
             }
         }
     }
@@ -66,7 +66,7 @@ export class ProfileDAO {
         
         const profiles: ProfileDTO[] = [];
 
-        result.forEach((row) => {
+        result.forEach((row: any) => {
             const profile: ProfileDTO = {
                 id: row.id,
                 name: row.name,
@@ -172,7 +172,7 @@ export class ProfileDAO {
                 return profile;
             }
             else {
-                throw new Error('Perfil não encontrado');
+                throw new Error('Senha e/ou email incorretos');
             }
             
         } catch (error) {
