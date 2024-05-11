@@ -21,6 +21,7 @@ const Login = ({changeLoginPage}:Props) => {
     const [password, setPassword] = useState('');
     const [remember, setRemember] = useState(false);
 
+    
     //A ideia e que, se for true, todos os inputs recebem as "caixinhas vermelhas" em volta,
     //E não só de e-mail e senha, pedindo para que o usuario preencha os outros valores
     const[isInputsValid, setIsInputsValid] = useState(false);
@@ -37,7 +38,7 @@ const Login = ({changeLoginPage}:Props) => {
     async function handleLoginButtonClick(){
         if (email.length == 0 || password.length == 0) {
             setIsInputsValid(true);
-            showAlert('Preencha todos os campos');
+            showAlert('Preencha todos os campos', 'warning');
             return;
         }
         else{

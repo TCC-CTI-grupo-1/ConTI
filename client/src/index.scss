@@ -1,6 +1,12 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap');
 
+
+/*mudando o chakra */
+.chakra-alert
+{
+    border-radius: var(--border-radius);
+}
 .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,
@@ -52,6 +58,19 @@ input::-ms-clear {
   --border-radius: 8px;
 
   --font-size: 1rem;
+
+  //Reescrevendo chakra
+  --chakra-colors-blue-50: #ebf8ff !important; /* Mais clara */
+    --chakra-colors-blue-100: #cbe4ff !important;
+    --chakra-colors-blue-200: #aad0ff !important;
+    --chakra-colors-blue-300: #88bbff !important;
+    --chakra-colors-blue-400: #6697ff !important;
+    --chakra-colors-blue-500: #4482ff !important; /* Cor principal */
+    --chakra-colors-blue-600: #3366e6 !important;
+    --chakra-colors-blue-700: #2250cc !important;
+    --chakra-colors-blue-800: #113ab3 !important;
+    --chakra-colors-blue-900: #002699 !important; /* Mais escuro */
+
 }
 
 *{
@@ -193,7 +212,7 @@ input::-ms-clear {
   }
 }
 
-button.secondary{
+/*button.secondary{
   background-color: transparent;
   border: 1px solid var(--primary-color);
   & > h3{
@@ -257,7 +276,7 @@ button{
         left: 600px;
     }
 }
-
+*/
 
 a {
   font-weight: 500;
@@ -298,7 +317,9 @@ h2{
   z-index: 100;
   gap: var(--margin-2);
 }
-
+#alert-box-container > div{
+    animation: alertBoxAnimation 5s forwards;
+}
 #alert-box{
   border-radius: var(--border-radius);
   height: auto;
@@ -307,7 +328,6 @@ h2{
   
   border: 2px solid var(--primary-color);
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-  animation: alertBoxAnimation 5s forwards;
 }
 
 @keyframes alertBoxAnimation{
@@ -393,7 +413,6 @@ h2{
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -1;
 
   //Variaveis
   --c1: #8EBBFF;
@@ -413,7 +432,6 @@ h2{
 
   & > div:not(#color){
     position: absolute;
-    z-index: -1;
     transition: 1s;
   }
 
@@ -632,6 +650,7 @@ h2{
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  z-index: 2;
 
   & > #logo{
     gap: var(--margin-2);
@@ -675,6 +694,7 @@ h2{
   & > #options{
     width: 100%;
     display: flex;
+    gap: 5px;
     align-items: center;
     flex-direction: column;
     position: relative;
