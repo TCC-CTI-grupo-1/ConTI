@@ -51,6 +51,7 @@ input::-ms-clear {
   --padding-1: 18px;
   --padding-2: 6px;
 
+  --margin-0: 40px;
   --margin-1: 30px;
   --margin-2: 10px;
   --margin-3: 5px;
@@ -73,10 +74,60 @@ input::-ms-clear {
 
 }
 
+body{
+  font-family: Lexend, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+  overflow-x: hidden;
+}
+
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.flex-container{
+  display: flex;
+  min-height: 100dvh;
+
+  & > .container{
+    display: flex;
+    flex-direction: column;
+    
+    & > .header{
+      z-index: 2;
+      padding: var(--padding-1);
+    }
+
+    & > .inversed-border{
+      width: 100%;
+      background-color: transparent;
+      height: 40px;
+      border-top-left-radius: 40px;
+      border-left: 2px solid black;
+      border-top: 2px solid black;
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        
+        background-color: transparent;
+        top:-2px;
+        left: -2px;
+        height: 100px;
+        width: 100%; //Somar 2px (Talvez)
+        border-top-left-radius: 40px;
+        box-shadow: 0px -40px 0 0 var(--background-color);
+      }
+    }
+
+    & > .content{
+      flex: 1;
+      border-left: 2px solid black;
+      padding: var(--padding-1);
+    }
+
+  }
 }
 
 .center{
@@ -212,6 +263,32 @@ input::-ms-clear {
   }
 }
 
+#nav{
+  display: flex;
+  position: relative;
+  
+  & > #margin{
+    margin-left: var(--margin-0);
+    padding: var(--padding-1); //decidir entre padding-1 e padding-2
+    height: 100%;
+  }
+  & nav{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-1);
+    padding: var(--padding-1);
+    & > svg{
+      width: var(--margin-0);
+      aspect-ratio: 1;
+      cursor: pointer;
+    }
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+}
+
 /*button.secondary{
   background-color: transparent;
   border: 1px solid var(--primary-color);
@@ -283,10 +360,10 @@ a {
   color: black;
   text-decoration: inherit;
   transition: 0.2s;
-}
-a:hover {
-  color: var(--primary-color);
-  cursor: pointer;
+  &:hover{
+    color: var(--primary-color);
+    cursor: pointer;
+  }
 }
 
 body {
@@ -316,11 +393,13 @@ h2{
   flex-direction: column;
   z-index: 100;
   gap: var(--margin-2);
-}
-#alert-box-container > div{
+  & > div{
     animation: alertBoxAnimation 5s forwards;
+
+  }
 }
-#alert-box{
+
+/*#alert-box{
   border-radius: var(--border-radius);
   height: auto;
   padding: var(--padding-1);
@@ -328,7 +407,7 @@ h2{
   
   border: 2px solid var(--primary-color);
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-}
+}*/
 
 @keyframes alertBoxAnimation{
   0%{
