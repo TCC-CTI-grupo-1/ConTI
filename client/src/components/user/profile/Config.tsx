@@ -6,12 +6,37 @@ import PopupBottom from "../../PopupBottom";
 
 const Config = () => {
     const [loading, setLoading] = useState<boolean>(true);
+    const [updates, setUpdates] = useState<string[]>([]);
+    /*Informações provenientes do BancoDeDados*/
 
+    const nome_BD = 'Mateus';
+    const email_BD = 'mateus@gmail.com';
 
     /*Aqui ficam todas as configurações, as quais o usuario pode alkterar*/
 
-    const [name, setName] = useState<string>('Mateus');
-    const [email, setEmail] = useState<string>('mateus@gmail.com');
+    const [name, setName] = useState<string>(nome_BD);
+    function handleNameChange(e: React.ChangeEvent<HTMLInputElement>){
+        setName(e.target.value);
+        if (e.target.value != nome_BD) {
+            !updates.includes('name') && setUpdates([...updates, 'name']);
+            console.log(updates);
+        }
+        else{
+            setUpdates(updates.filter((item) => item != 'name'));
+        }
+    }
+
+    const [email, setEmail] = useState<string>(email_BD);
+    function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>){
+        setEmail(e.target.value);
+        if (e.target.value != email_BD) {
+            !updates.includes('email') && setUpdates([...updates, 'email']);
+        }
+        else{
+            setUpdates(updates.filter((item) => item != 'email'));
+        }
+    }
+
 
     //Função puramente para testes
     //Na real essa demora vei ser para puxar ainfo do banco
@@ -38,14 +63,18 @@ const Config = () => {
             {!loading && <div id="config">
                 <div>
                     <h1>Informações da conta</h1>
-                    <Input name="nome"color="black" 
+                    <Input name="nome"color={updates.includes('name') ? 'blue' : 'black'}
                     label="Nome" value={name} onChange={(e) => {
-                        setName(e.target.value);
-                    }}/>
-                    <Input name="nome" color="black" 
+                        handleNameChange(e);
+                    }}
+                    valid={updates.includes('name') ? true : undefined}/>
+
+                    <Input name="nome" color={updates.includes('email') ? 'blue' : 'black'}
                     label="Email" value={email} onChange={(e) => {
-                        setEmail(e.target.value);
-                    }}/>
+                        handleEmailChange(e);
+                    }}
+                    valid={updates.includes('email') ? true : undefined}
+                    />
                 </div>
 
                 <div>
@@ -59,7 +88,7 @@ const Config = () => {
                     <p>E para tal feito, necessito ocupar mais espaço</p>
                 </div>
             </div>}
-            <PopupBottom enabled={true}/>
+            <PopupBottom enabled={updates.length > 0}/>
 
         </>
 

@@ -8,13 +8,13 @@ interface Props{
 const PopupBottom = ({enabled}: Props) => {
     return (
         <>
-            {enabled && <div className="popup-bottom">
+            <div className={"popup-bottom " + (enabled && 'enabled')}>
                 <p>Você tem mudanças não salvas</p>
                 <div>
                     <Button text='Descartar' variant='outline' onClick={() => {}}/>
                     <Button text='Salvar' onClick={() => {}}/>
                 </div>
-            </div>}
+            </div>
         </>
     );
 }
