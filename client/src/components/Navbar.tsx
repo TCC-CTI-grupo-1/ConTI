@@ -1,5 +1,6 @@
 import { transform } from "framer-motion";
 import HomeIcon from "../assets/HomeIcon";
+import MenuIcon from "../assets/Menu";
 
 const Navbar = () => {
     return (
@@ -8,6 +9,7 @@ const Navbar = () => {
 
             </div>
             <nav>
+                <MenuIcon />
                 <HomeIcon iconColor='white' />
                 <HomeIcon iconColor='black' />
                 <HomeIcon iconColor='black' />
