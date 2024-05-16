@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import AlertBox from './components/AlertBox';
-import User from './components/user/User';
-import Profile from './components/user/Profile';
+import User from './components/user/login/User';
+import Profile from './components/user/profile/Profile';
 
 const showAlert = (message: string, 
     type?: 'error' | 'success' | 'warning' | 'info',
@@ -24,6 +24,9 @@ function App() {
     <>
       <div id="alert-box-container" className="alert-box-container"></div>
       <Profile />
+      <div className="bottom-popup">
+        
+      </div>
     </>
   );
 }

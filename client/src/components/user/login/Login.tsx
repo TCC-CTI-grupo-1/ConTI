@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Input from '../Input';
+import Input from '../../Input';
 import Options from "./Options";
 import Logo from './Logo';
 
-import { handleLogin } from '../../controllers/userController';
-import { showAlert } from '../../App';
+import { handleLogin } from '../../../controllers/userController';
+import { showAlert } from '../../../App';
 
 
 interface Props{

@@ -1,5 +1,5 @@
-import Button from "../Button"
-import { showAlert } from "../../App"
+import Button from "../../Button"
+import { showAlert } from "../../../App"
 import { Checkbox } from '@chakra-ui/react'
 
 interface Props{
@@ -23,7 +23,7 @@ const Options = ({type, onClick, changeScreen, loading, onRemember}: Props) => {
                     <Button text={type == 'login' ? 'LOGIN' : 'CADASTRAR-SE'} onClick={onClick} 
                     loading={loading}/>
                     <p>ou</p>
-                    <Button text={'Login com Google'} type='outline' onClick={() => {showAlert('GOOGLE!', 'success')}} />
+                    <Button text={'Login com Google'} variant='outline' onClick={() => {showAlert('GOOGLE!', 'success')}} />
 
                     <div className="noAccount">
                         <a onClick={changeScreen}>{type=='signup' ? 'Já tem uma conta? Faça o login!' : 'Não tem uma conta? Faça o Cadastro!'}</a>

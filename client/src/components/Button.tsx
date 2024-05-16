@@ -3,15 +3,18 @@ import { Button } from '@chakra-ui/react';
 
 interface Props{
     text: string;
-    type?: 'solid' | 'outline' | 'ghost' | 'link';
+    variant?: 'solid' | 'outline' | 'ghost' | 'link';
     onClick: () => void;
     loading?: boolean;
     size?: 'lg' | 'md' | 'sm' | 'xs'
+    color?: 'blue' | 'red'
+    width?: '100%' | 'auto' | 'fit-content'
 }
 
-const LocalButton = ({text, onClick, type = 'solid', loading = false, size='lg'}: Props) => {
+const LocalButton = ({text, onClick, variant = 'solid', loading = false, 
+size='lg', color = 'blue', width='100%'}: Props) => {
     return (
-        <Button variant={type} colorScheme='blue' width={'100%'}
+        <Button variant={variant} colorScheme={color} width={width}
         onClick={onClick}
         isLoading={loading}
         size={size}>{text}</Button>

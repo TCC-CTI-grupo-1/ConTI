@@ -56,6 +56,8 @@ input::-ms-clear {
   --margin-2: 10px;
   --margin-3: 5px;
 
+  --margin-smol: 2px;
+
   --border-radius: 8px;
 
   --font-size: 1rem;
@@ -101,8 +103,8 @@ body{
     & > .inversed-border{
       width: 100%;
       background-color: transparent;
-      height: 40px;
-      border-top-left-radius: 40px;
+      min-height: var(--margin-0);
+      border-top-left-radius: var(--margin-0);
       border-left: 2px solid black;
       border-top: 2px solid black;
       position: relative;
@@ -114,9 +116,9 @@ body{
         background-color: transparent;
         top:-2px;
         left: -2px;
-        height: 100px;
+        height: var(--margin-0);
         width: 100%; //Somar 2px (Talvez)
-        border-top-left-radius: 40px;
+        border-top-left-radius: var(--margin-0);
         box-shadow: 0px -40px 0 0 var(--background-color);
       }
     }
@@ -143,11 +145,12 @@ body{
 
 #input{
   position: relative;
+  margin-top: var(--margin-1);
+
   //Esse margin-top é o espaço que o texto irá ocupar
   & div.options{
     display: flex;
     align-items: center;
-    margin-top: var(--margin-1);
     & span{
       margin-left: var(--margin-2);
       position: absolute;
@@ -260,6 +263,18 @@ body{
     position: absolute;
     top: 0;
     left: calc(100% + 20px);
+  }
+
+
+  &.variant-black{
+    & input{
+      color: black;
+      border: 1px solid black !important;
+    }
+    &.hasContent .options .inputFocused > p{
+      color: black;
+    }
+  
   }
 }
 
@@ -837,3 +852,79 @@ h2{
     }
 }
 
+
+.container{
+  width: 100%;
+  & > .header{
+    & > .options{
+      width: 100%;
+      display: flex;
+      & > a{
+        flex: 1;
+        transition: 0.25s;
+        text-align: center;
+
+        &.active{
+          color: var(--primary-color);
+        }
+        //Risco em baixo
+        &::after{
+          content: "";
+          display: block;
+          width: 90%;
+          height: var(--margin-smol);
+          margin-top: var(--margin-3);
+          transition: 0.25s;
+        }
+        &.active::after{
+          background-color: var(--primary-color);
+        }
+      }
+    }
+  }
+}
+
+#config{
+  padding: var(--padding-0);
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-0);
+  margin-bottom: 100px;
+  & > div{
+    border: 1px solid black;
+    border-radius: var(--border-radius);
+    padding: var(--padding-1);
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-1);
+    & > h1{
+      font-size: 2rem;
+      margin-bottom: var(--padding-1);
+    }
+  }
+}
+
+.popup-bottom{
+  position: fixed;
+  z-index: 2;
+  bottom: var(--padding-1);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  background-color: var(--background-color);
+  border: 1px solid black;
+  padding: var(--padding-1);
+  border-radius: var(--border-radius);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+  & > p{
+    width: 100%;
+    text-align: center;
+    margin-bottom: var(--padding-1);
+  }
+
+  & > div{
+    display: flex;
+    gap: var(--padding-1);
+  }
+}
