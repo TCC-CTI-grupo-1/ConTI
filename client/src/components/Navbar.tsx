@@ -10,6 +10,7 @@ const Navbar = () => {
             </div>
             <nav>
                 <MenuIcon />
+                <MenuIcon />
                 <HomeIcon iconColor='white' />
                 <HomeIcon iconColor='black' />
                 <HomeIcon iconColor='black' />
