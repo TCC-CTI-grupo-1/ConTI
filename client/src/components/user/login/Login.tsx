@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Input from '../../Input';
 import Options from "./Options";
 import Logo from './Logo';
+import { useNavigate } from "react-router-dom";
+
 
 import { handleLogin } from '../../../controllers/userController';
 import { showAlert } from '../../../App';
@@ -13,6 +15,9 @@ interface Props{
 }
 
 const Login = ({changeLoginPage}:Props) => {
+
+    //Change URL
+    const navigate = useNavigate();
 
     //Fetch options
     const [loading, setLoading] = useState(false);
@@ -43,8 +48,12 @@ const Login = ({changeLoginPage}:Props) => {
         }
         else{
             setLoading(true);
-            await handleLogin(email, password, remember);
+            const loginSuccess = await handleLogin(email, password, remember);
             setLoading(false);
+
+            if (loginSuccess) {
+                navigate("/profile");
+            }
         }
     }
 

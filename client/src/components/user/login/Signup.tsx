@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Input from '../../Input';
 import Options from "./Options";
 import Logo from './Logo';
+import { useNavigate } from "react-router-dom";
 
 import { validadeEmail, validadePassword, handleSignup } from '../../../controllers/userController';
 import { showAlert } from '../../../App';
@@ -13,6 +14,10 @@ interface Props{
 }
 
 const Signup = ({changeLoginPage}:Props) => {
+
+    //Change URL
+    const navigate = useNavigate();
+
 
     //Fetch options
     const [loading, setLoading] = useState(false);
@@ -89,8 +94,12 @@ const Signup = ({changeLoginPage}:Props) => {
         }
         else{
             setLoading(true);
-            await handleSignup(name, email, password, remember);
+            const signupSuccess = await handleSignup(name, email, password, remember);
             setLoading(false);
+
+            if(signupSuccess){
+                navigate('/profile');
+            }
         }
     }
 
