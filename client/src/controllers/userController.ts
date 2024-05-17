@@ -100,7 +100,6 @@ async function handleLogin(email: string, password: string, remember: boolean): 
             throw new Error(responseData.message);
         } else {
             console.log('L');
-            window.location.href = "https://www.youtube.com/watch?v=KZzJlyjMJws";
             return true;
         }
     } catch (err: any) {

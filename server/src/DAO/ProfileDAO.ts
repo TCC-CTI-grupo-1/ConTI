@@ -1,24 +1,25 @@
 import { ConnectionDAO } from './ConnectionDAO';
 import { ProfileDTO } from '../DTO/ProfileDTO';
+import { hashPassword, comparePasswords } from '../hidden/hidden';
+import { throwDeprecation } from 'process';
 
 const connectionDAO = new ConnectionDAO();
-
 export class ProfileDAO {
   
     registerProfile = async (profile: ProfileDTO) => {  
         try {
             const client = await connectionDAO.getConnection();
             await client.profile.create({
-            data: {
-                name: profile.name,
-                email: profile.email,
-                password: profile.password,
-                profile_picture: profile.profile_picture,
-                creation_date: profile.creation_date,
-                total_correct_answers: profile.total_correct_answers,
-                total_incorrect_answers: profile.total_incorrect_answers
-            }
-        });
+                data: {
+                    name: profile.name,
+                    email: profile.email,
+                    password: await hashPassword(profile.password),
+                    profile_picture: profile.profile_picture,
+                    creation_date: profile.creation_date,
+                    total_correct_answers: profile.total_correct_answers,
+                    total_incorrect_answers: profile.total_incorrect_answers
+                }
+            });
         } catch (error: any) {
             if (error.code === 'P2002') {
                 throw new Error('E-mail já cadastrado');
@@ -36,7 +37,7 @@ export class ProfileDAO {
             data: {
                 name: profile.name,
                 email: profile.email,
-                password: profile.password,
+                password: await hashPassword(profile.password),
                 profile_picture: profile.profile_picture,
                 creation_date: profile.creation_date,
                 total_correct_answers: profile.total_correct_answers,
@@ -66,16 +67,16 @@ export class ProfileDAO {
         
         const profiles: ProfileDTO[] = [];
 
-        result.forEach((row: any) => {
+        result.forEach((result: any) => {
             const profile: ProfileDTO = {
-                id: row.id,
-                name: row.name,
-                email: row.email,
-                password: row.password,
-                profile_picture: row.profile_picture,
-                creation_date: row.creation_date,
-                total_correct_answers: row.total_correct_answers,
-                total_incorrect_answers: row.total_incorrect_answers
+                id: result.id,
+                name: result.name,
+                email: result.email,
+                password: result.password,
+                profile_picture: result.profile_picture,
+                creation_date: result.creation_date,
+                total_correct_answers: result.total_correct_answers,
+                total_incorrect_answers: result.total_incorrect_answers
             };
             profiles.push(profile);
         });
@@ -149,34 +150,17 @@ export class ProfileDAO {
     }
 
     searchprofileByEmailAndPassword = async (email: string, password: string) => {
-        try {
-            const client = await connectionDAO.getConnection();
-            const result = await client.profile.findUnique({
-                where: {
-                    email: email,
-                    password: password
+            this.searchprofileByEmail(email).then(async (profile: ProfileDTO) => {
+                const isPasswordCorrect = await comparePasswords(password, profile.password);
+                if (isPasswordCorrect) {
+                    return profile;
                 }
-            });
-
-            if (result) {
-                const profile: ProfileDTO = {
-                    id: result.id,
-                    name: result.name,
-                    email: result.email,
-                    password: result.password,
-                    profile_picture: result.profile_picture,
-                    creation_date: result.creation_date,
-                    total_correct_answers: result.total_correct_answers,
-                    total_incorrect_answers: result.total_incorrect_answers
-                };
-                return profile;
+                else {
+                    throw new Error('Senha incorreta');
+                }
             }
-            else {
-                throw new Error('Senha e/ou email incorretos');
-            }
-            
-        } catch (error) {
+        ).catch((error) => {
             throw error;
-        }
+        });
     }
 }

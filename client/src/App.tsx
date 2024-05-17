@@ -23,7 +23,7 @@ function App() {
   return (
     <>
       <div id="alert-box-container" className="alert-box-container"></div>
-      <Profile />
+      <User />
       <div className="bottom-popup">
         
       </div>
