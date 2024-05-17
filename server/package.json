@@ -23,11 +23,8 @@
   },
   "dependencies": {
     "@prisma/client": "^5.13.0",
-<<<<<<< HEAD
     "@types/express-session": "^1.18.0",
-=======
     "bcrypt": "^5.1.1",
->>>>>>> a510e4e781b09e7fe26e36a8ea97e213674943c6
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
