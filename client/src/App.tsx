@@ -25,11 +25,19 @@ function App() {
   return (
     <div className='app'>
       <div id="alert-box-container" className="alert-box-container"></div>
+<<<<<<< HEAD
+      <User />
+      <div className="bottom-popup">
+        
+      </div>
+    </>
+=======
       <Routes>
         <Route path='/' element={ <User /> } />
         <Route path='/profile' element={ <Profile /> }></Route>
       </Routes>
     </div>
+>>>>>>> 4acf90bc97b4ee349394a381821cbb19aea33254
   );
 }
 

@@ -1,6 +1,4 @@
 import { showAlert } from "../App";
-import { useNavigate } from "react-router-dom";
-
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.'];
@@ -72,8 +70,6 @@ async function handleSignup(name: string, email: string, password: string, remem
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-
-            showAlert("Cadastro bem sucedido!", "success");
             return true;
         }
     } catch (err: any) {
@@ -84,7 +80,6 @@ async function handleSignup(name: string, email: string, password: string, remem
 }
 
 async function handleLogin(email: string, password: string, remember: boolean): Promise<boolean> {
-    //const navigate = useNavigate();
     try {
         const data = {
             email: email,
@@ -104,12 +99,7 @@ async function handleLogin(email: string, password: string, remember: boolean): 
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            //console.log('L');
-            //window.location.href = "https://www.youtube.com/watch?v=KZzJlyjMJws";
-
-            //navigate("/profile");
-
-            showAlert("Login bem sucedido!", "success");
+            console.log('L');
             return true;
         }
     } catch (err: any) {
