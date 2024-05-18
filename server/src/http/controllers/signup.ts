@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 
 export async function signup(req: Request, res: Response) {
     const profileDAO = new ProfileDAO();
+    //req.session.isLoggedIn;
+
     try { 
       await profileDAO.registerProfile(req.body);
       res.json({ message: 'Perfil cadastrado com sucesso' });

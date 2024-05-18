@@ -37,6 +37,15 @@ const Config = () => {
         }
     }
 
+    
+    async function ghostFetch(){
+        const response = await fetch('http://localhost:3001/teste', {
+            method: 'GET',
+        })
+        const responseData = await response.json();
+        console.log(responseData);
+    }
+
 
     //Função puramente para testes
     //Na real essa demora vei ser para puxar ainfo do banco
@@ -79,7 +88,7 @@ const Config = () => {
 
                 <div>
                     <h1>Configurações da conta</h1>
-                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={() => {}} />
+                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={ghostFetch} />
                     <Button text='Deletar conta' color='red' width="auto" onClick={() => {}} />
                 </div>
                 <div>

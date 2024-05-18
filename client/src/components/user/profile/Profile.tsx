@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import Status from "./Status";
 import Config from "./Config";
 
+
 const Profile = () => {
 
     const [tela, setTela] = useState<number>(0);
