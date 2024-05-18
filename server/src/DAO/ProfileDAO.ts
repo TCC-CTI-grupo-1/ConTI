@@ -150,17 +150,19 @@ export class ProfileDAO {
     }
 
     searchprofileByEmailAndPassword = async (email: string, password: string) => {
-            this.searchprofileByEmail(email).then(async (profile: ProfileDTO) => {
-                const isPasswordCorrect = await comparePasswords(password, profile.password);
-                if (isPasswordCorrect) {
-                    return profile;
-                }
-                else {
-                    throw new Error('Senha incorreta');
-                }
+        try {
+            const profile = await this.searchprofileByEmail(email);
+            const isPasswordCorrect = await comparePasswords(password, profile.password);
+            if (isPasswordCorrect) {
+                return profile;
+            } else {
+                throw new Error('Senha e/ou email incorretos');
             }
-        ).catch((error) => {
+        } catch (error: any) {
+            if (error.message === 'Perfil não encontrado') {
+                throw new Error('Senha e/ou email incorretos');
+            }
             throw error;
-        });
+        }
     }
 }

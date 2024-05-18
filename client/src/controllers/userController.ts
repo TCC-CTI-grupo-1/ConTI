@@ -1,3 +1,4 @@
+import { redirect } from "react-router-dom";
 import { showAlert } from "../App";
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
@@ -99,7 +100,7 @@ async function handleLogin(email: string, password: string, remember: boolean): 
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            console.log('L');
+            window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
             return true;
         }
     } catch (err: any) {
