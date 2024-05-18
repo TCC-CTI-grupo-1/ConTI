@@ -1,6 +1,12 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap');
 
+
+/*mudando o chakra */
+.chakra-alert
+{
+    border-radius: var(--border-radius);
+}
 .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,
@@ -45,19 +51,85 @@ input::-ms-clear {
   --padding-1: 18px;
   --padding-2: 6px;
 
+  --margin-0: 40px;
   --margin-1: 30px;
   --margin-2: 10px;
   --margin-3: 5px;
 
+  --margin-smol: 2px;
+
   --border-radius: 8px;
 
   --font-size: 1rem;
+
+  //Reescrevendo chakra
+  --chakra-colors-blue-50: #ebf8ff !important; /* Mais clara */
+    --chakra-colors-blue-100: #cbe4ff !important;
+    --chakra-colors-blue-200: #aad0ff !important;
+    --chakra-colors-blue-300: #88bbff !important;
+    --chakra-colors-blue-400: #6697ff !important;
+    --chakra-colors-blue-500: #4482ff !important; /* Cor principal */
+    --chakra-colors-blue-600: #3366e6 !important;
+    --chakra-colors-blue-700: #2250cc !important;
+    --chakra-colors-blue-800: #113ab3 !important;
+    --chakra-colors-blue-900: #002699 !important; /* Mais escuro */
+
+}
+
+body{
+  font-family: Lexend, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+  overflow-x: hidden;
 }
 
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.flex-container{
+  display: flex;
+  min-height: 100dvh;
+
+  & > .container{
+    display: flex;
+    flex-direction: column;
+    
+    & > .header{
+      z-index: 2;
+      padding: var(--padding-1);
+    }
+
+    & > .inversed-border{
+      width: 100%;
+      background-color: transparent;
+      min-height: var(--margin-0);
+      border-top-left-radius: var(--margin-0);
+      border-left: 2px solid black;
+      border-top: 2px solid black;
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        
+        background-color: transparent;
+        top:-2px;
+        left: -2px;
+        height: var(--margin-0);
+        width: 100%; //Somar 2px (Talvez)
+        border-top-left-radius: var(--margin-0);
+        box-shadow: 0px -40px 0 0 var(--background-color);
+      }
+    }
+
+    & > .content{
+      flex: 1;
+      border-left: 2px solid black;
+      padding: var(--padding-1);
+    }
+
+  }
 }
 
 .center{
@@ -73,11 +145,12 @@ input::-ms-clear {
 
 #input{
   position: relative;
+  margin-top: var(--margin-1);
+
   //Esse margin-top é o espaço que o texto irá ocupar
   & div.options{
     display: flex;
     align-items: center;
-    margin-top: var(--margin-1);
     & span{
       margin-left: var(--margin-2);
       position: absolute;
@@ -191,9 +264,47 @@ input::-ms-clear {
     top: 0;
     left: calc(100% + 20px);
   }
+
+
+  &.variant-black{
+    & input{
+      color: black;
+      border: 1px solid black !important;
+    }
+    &.hasContent .options .inputFocused > p{
+      color: black;
+    }
+  
+  }
 }
 
-button.secondary{
+#nav{
+  display: flex;
+  position: relative;
+  
+  & > #margin{
+    margin-left: var(--margin-0);
+    padding: var(--padding-1); //decidir entre padding-1 e padding-2
+    height: 100%;
+  }
+  & nav{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-1);
+    padding: var(--padding-1);
+    & > svg{
+      width: var(--margin-0);
+      aspect-ratio: 1;
+      cursor: pointer;
+    }
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+}
+
+/*button.secondary{
   background-color: transparent;
   border: 1px solid var(--primary-color);
   & > h3{
@@ -257,17 +368,17 @@ button{
         left: 600px;
     }
 }
-
+*/
 
 a {
   font-weight: 500;
   color: black;
   text-decoration: inherit;
   transition: 0.2s;
-}
-a:hover {
-  color: var(--primary-color);
-  cursor: pointer;
+  &:hover{
+    color: var(--primary-color);
+    cursor: pointer;
+  }
 }
 
 body {
@@ -297,9 +408,13 @@ h2{
   flex-direction: column;
   z-index: 100;
   gap: var(--margin-2);
+  & > div{
+    animation: alertBoxAnimation 5s forwards;
+
+  }
 }
 
-#alert-box{
+/*#alert-box{
   border-radius: var(--border-radius);
   height: auto;
   padding: var(--padding-1);
@@ -307,8 +422,7 @@ h2{
   
   border: 2px solid var(--primary-color);
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-  animation: alertBoxAnimation 5s forwards;
-}
+}*/
 
 @keyframes alertBoxAnimation{
   0%{
@@ -393,7 +507,6 @@ h2{
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -1;
 
   //Variaveis
   --c1: #8EBBFF;
@@ -413,7 +526,6 @@ h2{
 
   & > div:not(#color){
     position: absolute;
-    z-index: -1;
     transition: 1s;
   }
 
@@ -632,6 +744,7 @@ h2{
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  z-index: 2;
 
   & > #logo{
     gap: var(--margin-2);
@@ -667,7 +780,7 @@ h2{
     }
     & #input{
       margin-bottom: var(--margin-1);
-      margin-top: var(--margin-2);
+      margin-top: var(--margin-1);
     }
 
   }
@@ -675,6 +788,7 @@ h2{
   & > #options{
     width: 100%;
     display: flex;
+    gap: 5px;
     align-items: center;
     flex-direction: column;
     position: relative;
@@ -738,3 +852,87 @@ h2{
     }
 }
 
+
+.container{
+  width: 100%;
+  & > .header{
+    & > .options{
+      width: 100%;
+      display: flex;
+      & > a{
+        flex: 1;
+        transition: 0.25s;
+        text-align: center;
+
+        &.active{
+          color: var(--primary-color);
+        }
+        //Risco em baixo
+        &::after{
+          content: "";
+          display: block;
+          width: 90%;
+          height: var(--margin-smol);
+          margin-top: var(--margin-3);
+          transition: 0.25s;
+        }
+        &.active::after{
+          background-color: var(--primary-color);
+        }
+      }
+    }
+  }
+}
+
+#config{
+  padding: var(--padding-0);
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-0);
+  margin-bottom: 100px;
+  & > div{
+    border: 1px solid black;
+    border-radius: var(--border-radius);
+    padding: var(--padding-1);
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-1);
+    & > h1{
+      font-size: 2rem;
+      margin-bottom: var(--padding-1);
+    }
+  }
+}
+
+.popup-bottom{
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transition: 0.25s;
+  z-index: 2;
+  bottom: var(--padding-1);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  background-color: var(--background-color);
+  border: 1px solid black;
+  padding: var(--padding-1);
+  border-radius: var(--border-radius);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+  & > p{
+    width: 100%;
+    text-align: center;
+    margin-bottom: var(--padding-1);
+  }
+
+  & > div{
+    display: flex;
+    gap: var(--padding-1);
+  }
+
+  &.enabled{
+    opacity: 1;
+    pointer-events: all;
+  }
+}

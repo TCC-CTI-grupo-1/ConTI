@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import * as hidden from '../hidden/hidden';
 
 export class ConnectionDAO {
     private prisma: PrismaClient = new PrismaClient();

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import Input from '../Input';
+import Input from '../../Input';
 import Options from "./Options";
 import Logo from './Logo';
+import { useNavigate } from "react-router-dom";
 
-import { validadeEmail, validadePassword, handleSignup } from '../../controllers/userController';
-import { showAlert } from '../../App';
+import { validadeEmail, validadePassword, handleSignup } from '../../../controllers/userController';
+import { showAlert } from '../../../App';
 
 
 interface Props{
@@ -13,6 +14,10 @@ interface Props{
 }
 
 const Signup = ({changeLoginPage}:Props) => {
+
+    //Change URL
+    const navigate = useNavigate();
+
 
     //Fetch options
     const [loading, setLoading] = useState(false);
@@ -84,13 +89,17 @@ const Signup = ({changeLoginPage}:Props) => {
     async function handleSignupButtonClick(){
         if (name.length == 0 || isEmailValid.length != 0 || isPasswordValid.length != 0) {
             setIsInputsValid(true);
-            showAlert('Preencha todos os campos');
+            showAlert('Preencha todos os campos', 'warning');
             return;
         }
         else{
             setLoading(true);
-            await handleSignup(name, email, password, remember);
+            const signupSuccess = await handleSignup(name, email, password, remember);
             setLoading(false);
+
+            if(signupSuccess){
+                navigate('/profile');
+            }
         }
     }
 
@@ -107,10 +116,11 @@ const Signup = ({changeLoginPage}:Props) => {
                         children={<p>O nome que será usado em seu perfil</p>}
                         />
                     </>
-                    <Input name="email" label="Email" onChange={handleEmailChange} valid={email.length > 0 ? isEmailValid.length == 0 : undefined}
+                    <Input name="email" label="Email" onChange={handleEmailChange} valid={
+                        email.length > 0 || isInputsValid ? isEmailValid.length == 0 : undefined}
                     children={email.length > 0 ? getEmailValid() : null} />
                     <Input name="password" label="Senha" onChange={handlePasswordChange} 
-                    valid={password.length > 0? isPasswordValid.length == 0 : undefined} type='password'
+                    valid={password.length > 0 || isInputsValid ? isPasswordValid.length == 0 : undefined} type='password'
                     children={password.length > 0 ? getPasswordValid() : null} />
                 </div>
 

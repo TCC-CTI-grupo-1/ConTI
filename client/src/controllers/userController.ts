@@ -1,3 +1,4 @@
+import { redirect } from "react-router-dom";
 import { showAlert } from "../App";
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
@@ -58,7 +59,7 @@ async function handleSignup(name: string, email: string, password: string, remem
             remember: remember
         };
 
-        const response = await fetch('/signup', {
+        const response = await fetch('http://localhost:3001/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -68,10 +69,7 @@ async function handleSignup(name: string, email: string, password: string, remem
 
         const responseData = await response.json();
         if (!response.ok) {
-            if (responseData.message === 'Perfil já existe') {
-                throw new Error('Perfil já existe');
-            }
-            throw new Error(response.statusText);
+            throw new Error(responseData.message);
         } else {
             return true;
         }
@@ -83,8 +81,6 @@ async function handleSignup(name: string, email: string, password: string, remem
 }
 
 async function handleLogin(email: string, password: string, remember: boolean): Promise<boolean> {
-        //await new Promise(resolve => setTimeout(resolve, 3000));
-        //return true;
     try {
         const data = {
             email: email,
@@ -92,7 +88,7 @@ async function handleLogin(email: string, password: string, remember: boolean): 
             remember: remember
         };
 
-        const response = await fetch('/login', {
+        const response = await fetch('http://localhost:3001/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -102,13 +98,9 @@ async function handleLogin(email: string, password: string, remember: boolean): 
 
         const responseData = await response.json();
         if (!response.ok) {
-            if (responseData.message === 'Perfil não encontrado') {
-                throw new Error('E-mail ou senha incorretos');
-            }
-            throw new Error(response.statusText);
+            throw new Error(responseData.message);
         } else {
-            //console.log('L');
-            //window.location.href = "https://www.youtube.com/watch?v=KZzJlyjMJws";
+            window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
             return true;
         }
     } catch (err: any) {

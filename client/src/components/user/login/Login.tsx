@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import Input from '../Input';
+import Input from '../../Input';
 import Options from "./Options";
 import Logo from './Logo';
+import { useNavigate } from "react-router-dom";
 
-import { handleLogin } from '../../controllers/userController';
-import { showAlert } from '../../App';
+
+import { handleLogin } from '../../../controllers/userController';
+import { showAlert } from '../../../App';
 
 
 interface Props{
@@ -14,6 +16,9 @@ interface Props{
 
 const Login = ({changeLoginPage}:Props) => {
 
+    //Change URL
+    const navigate = useNavigate();
+
     //Fetch options
     const [loading, setLoading] = useState(false);
 
@@ -21,6 +26,7 @@ const Login = ({changeLoginPage}:Props) => {
     const [password, setPassword] = useState('');
     const [remember, setRemember] = useState(false);
 
+    
     //A ideia e que, se for true, todos os inputs recebem as "caixinhas vermelhas" em volta,
     //E não só de e-mail e senha, pedindo para que o usuario preencha os outros valores
     const[isInputsValid, setIsInputsValid] = useState(false);
@@ -37,13 +43,17 @@ const Login = ({changeLoginPage}:Props) => {
     async function handleLoginButtonClick(){
         if (email.length == 0 || password.length == 0) {
             setIsInputsValid(true);
-            showAlert('Preencha todos os campos');
+            showAlert('Preencha todos os campos', 'warning');
             return;
         }
         else{
             setLoading(true);
-            await handleLogin(email, password, remember);
+            const loginSuccess = await handleLogin(email, password, remember);
             setLoading(false);
+
+            if (loginSuccess) {
+                navigate("/profile");
+            }
         }
     }
 
