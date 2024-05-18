@@ -24,11 +24,10 @@ function App() {
 
   return (
     <div className='app'>
-      <div id="alert-box-container" className="alert-box-container"></div>
-      <User />
-      <div className="bottom-popup">
-        
-      </div>
+      <Routes>
+        <Route path='/' element={ <User /> } />
+        <Route path='/profile' element={ <Profile /> }></Route>
+      </Routes>
     </div>
   );
 }

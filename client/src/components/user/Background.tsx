@@ -1,9 +1,10 @@
 interface Props{
-    signin: boolean
+    signin?: boolean
+    variant?: 'blue' | 'white'
 }
 
 
-const Background = ({signin}: Props) => {
+const Background = ({signin=false, variant='blue'}: Props) => {
     return (
         <div id='user-background' className={"full-screen-size " + (signin ? 'signin' : '')}>
             <div id="q1" className="risco"></div>
@@ -16,7 +17,7 @@ const Background = ({signin}: Props) => {
             <div id="q8"></div>
             <div id="q9"></div>
             <div id="q10"></div>
-            <div id="color"></div>
+            <div id="color" className={variant}></div>
         </div>
     );
 }

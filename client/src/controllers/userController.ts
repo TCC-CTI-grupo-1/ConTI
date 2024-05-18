@@ -75,7 +75,7 @@ async function handleSignup(name: string, email: string, password: string, remem
         }
     } catch (err: any) {
         console.log(err);
-        showAlert("Erro: " + err.message);
+        //showAlert("Erro: " + err.message);
         return false;
     }
 }
@@ -100,12 +100,12 @@ async function handleLogin(email: string, password: string, remember: boolean): 
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
+            //window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
             return true;
         }
     } catch (err: any) {
         console.log(err);
-        showAlert("Erro: " + err.message);
+        //showAlert("Erro: " + err.message);
         return false;
     }
 }

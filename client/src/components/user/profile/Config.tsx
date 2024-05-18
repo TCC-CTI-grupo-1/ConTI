@@ -91,6 +91,11 @@ const Config = () => {
                     <Button text='Log-out' color='red' width="auto" variant='outline' onClick={ghostFetch} />
                     <Button text='Deletar conta' color='red' width="auto" onClick={() => {}} />
                 </div>
+
+                <div>
+                    <h1>Informações adicionais</h1>
+                </div>
+
                 <div>
                     <h1>Vamos ocupar espaço</h1>
                     <p>Precisava ver como o scroll se comporta</p>
