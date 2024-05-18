@@ -490,7 +490,10 @@ h2{
 
 
 
+
 */
+
+
 
 #user-background{
   overflow: hidden;
@@ -510,6 +513,7 @@ h2{
     height: 100%;
 
     background-color: var(--primary-color-80);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     &.white{
         background-color: var(--background-color-50);
@@ -522,10 +526,10 @@ h2{
   }
 
   & > div:nth-child(even){
-    animation: littleMovement 5s infinite linear;
+    animation: littleMovement 10s infinite linear;
   }
   & > div:nth-child(odd):not(#color){
-    animation: littleMovement2 5s infinite linear;
+    animation: littleMovement2 10s infinite linear;
   }
 
   & .risco{
@@ -930,4 +934,17 @@ h2{
     opacity: 1;
     pointer-events: all;
   }
+}
+.header {
+  position:relative;
+    .selected-line {
+      position: absolute;
+      bottom: 15px;
+      width: 25%;
+      height: 1.5px;
+      left:50%;
+      transition:0.4s;
+      background-color: var(--primary-color);
+    }
+  
 }
