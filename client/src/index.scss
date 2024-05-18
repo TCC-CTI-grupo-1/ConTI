@@ -490,7 +490,10 @@ h2{
 
 
 
+
 */
+
+
 
 #user-background{
   overflow: hidden;
@@ -931,4 +934,17 @@ h2{
     opacity: 1;
     pointer-events: all;
   }
+}
+.header {
+  position:relative;
+    .selected-line {
+      position: absolute;
+      bottom: 15px;
+      width: 25%;
+      height: 1.5px;
+      left:50%;
+      transition:0.4s;
+      background-color: var(--primary-color);
+    }
+  
 }
