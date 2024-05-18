@@ -84,17 +84,16 @@ const Config = () => {
                     }}
                     valid={updates.includes('email') ? true : undefined}
                     />
+                    <p>Data de criação da conta: 18/05/2024</p>
                 </div>
-
+                
                 <div>
                     <h1>Configurações da conta</h1>
                     <Button text='Log-out' color='red' width="auto" variant='outline' onClick={ghostFetch} />
                     <Button text='Deletar conta' color='red' width="auto" onClick={() => {}} />
                 </div>
 
-                <div>
-                    <h1>Informações adicionais</h1>
-                </div>
+                
 
                 <div>
                     <h1>Vamos ocupar espaço</h1>

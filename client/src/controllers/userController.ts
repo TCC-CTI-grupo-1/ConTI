@@ -1,5 +1,3 @@
-import { redirect } from "react-router-dom";
-import { showAlert } from "../App";
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.'];

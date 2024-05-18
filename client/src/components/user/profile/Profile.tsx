@@ -42,7 +42,7 @@ const Profile = () => {
             <Navbar />
             <div className="container">
                 <div className="header">
-                    <h1>Titulo</h1>
+                    <h1>Perfil</h1>
                     <div className="options" ref={options}>
                         <a className="active">Status do usuario</a>
                         <a>Configurações da conta</a>
