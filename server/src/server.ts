@@ -20,5 +20,10 @@ app.use(session({
     saveUninitialized: false,
 }))
 
+
 app.listen(3001, () => { console.log("Server is running on port 3001")} );
+
+app.on('listening', function() {
+    
+});
 routes(app);

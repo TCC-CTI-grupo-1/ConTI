@@ -108,25 +108,14 @@ body{
       border-left: 2px solid black;
       border-top: 2px solid black;
       position: relative;
-
-      &::before {
-        content: "";
-        position: absolute;
-        
-        background-color: transparent;
-        top:-2px;
-        left: -2px;
-        height: var(--margin-0);
-        width: 100%; //Somar 2px (Talvez)
-        border-top-left-radius: var(--margin-0);
-        box-shadow: 0px -40px 0 0 var(--background-color);
-      }
+        box-shadow: 0px -10px 0px 10px var(--background-color);
     }
 
     & > .content{
       flex: 1;
       border-left: 2px solid black;
       padding: var(--padding-1);
+      z-index: 2;
     }
 
   }
@@ -281,7 +270,7 @@ body{
 #nav{
   display: flex;
   position: relative;
-  
+
   & > #margin{
     margin-left: var(--margin-0);
     padding: var(--padding-1); //decidir entre padding-1 e padding-2
@@ -301,6 +290,7 @@ body{
     position: fixed;
     top: 0;
     left: 0;
+    background-color: var(--background-color);
   }
 }
 
@@ -504,7 +494,7 @@ h2{
 
 #user-background{
   overflow: hidden;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
 
@@ -522,7 +512,9 @@ h2{
     background-color: var(--primary-color-80);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-
+    &.white{
+        background-color: var(--background-color-50);
+    }
   }
 
   & > div:not(#color){
@@ -857,6 +849,7 @@ h2{
 .container{
   width: 100%;
   & > .header{
+    background-color: var(--background-color);
     & > .options{
       width: 100%;
       display: flex;
@@ -899,6 +892,8 @@ h2{
     display: flex;
     flex-direction: column;
     gap: var(--padding-1);
+    z-index: 2;
+    background-color: var(--background-color);
     & > h1{
       font-size: 2rem;
       margin-bottom: var(--padding-1);

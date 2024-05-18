@@ -110,7 +110,7 @@ const Signup = ({changeLoginPage}:Props) => {
 
                 <div id="inputs">               
                     <>
-                        <p>O nome que será usado em seu perfil</p>
+                        <p style={{display: 'none'}}>O nome que será usado em seu perfil</p>
                         <Input name="name" label="Nome" onChange={(e) => {setName(e.target.value)}}
                         valid={isInputsValid ? name.length > 0 : undefined}
                         children={<p>O nome que será usado em seu perfil</p>}

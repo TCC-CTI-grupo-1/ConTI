@@ -52,7 +52,13 @@ const Login = ({changeLoginPage}:Props) => {
             setLoading(false);
 
             if (loginSuccess) {
+                showAlert("Login bem sucedido!", "success");
+                console.log("L");
                 navigate("/profile");
+
+            }
+            else{
+                showAlert("Erro no login");
             }
         }
     }
