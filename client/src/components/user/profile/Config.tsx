@@ -63,40 +63,15 @@ const Config = () => {
     return (
         <>
             {loading && <div id="config">
-                <Skeleton>
-                    <div>
-                        <h2>Vamos ocupar espaço</h2>
-                        <p>Precisava ver como o scroll se comporta</p>
-                        <p>E para tal feito, necessito ocupar mais espaço</p>
-                    </div>
-                </Skeleton>
-                <Skeleton>
-                    <div>
-                        <h2>Vamos ocupar espaço</h2>
-                        <p>Precisava ver como o scroll se comporta</p>
-                        <p>E para tal feito, necessito ocupar mais espaço</p>
-                    </div>
-                </Skeleton>
-                <Skeleton>
-                    <div>
-                        <h2>Vamos ocupar espaço</h2>
-                        <p>Precisava ver como o scroll se comporta</p>
-                        <p>E para tal feito, necessito ocupar mais espaço</p>
-                    </div>
-                </Skeleton>
-                <Skeleton>
-                    <div>
-                        <h2>Vamos ocupar espaço</h2>
-                        <p>Precisava ver como o scroll se comporta</p>
-                        <p>E para tal feito, necessito ocupar mais espaço</p>
-                    </div>
-                </Skeleton>
+                <Skeleton height='100px' />
+                <Skeleton height='100px' />
+                <Skeleton height='100px' />
                 
             </div>}
 
             {!loading && <div id="config">
                 <div>
-                    <h2>Informações da conta</h2>
+                    <h1>Informações da conta</h1>
                     <Input name="nome"color={updates.includes('name') ? 'blue' : 'black'}
                     label="Nome" value={name} onChange={(e) => {
                         handleNameChange(e);
@@ -113,7 +88,7 @@ const Config = () => {
                 </div>
                 
                 <div>
-                    <h2>Configurações da conta</h2>
+                    <h1>Configurações da conta</h1>
                     <Button text='Log-out' color='red' width="auto" variant='outline' onClick={ghostFetch} />
                     <Button text='Deletar conta' color='red' width="auto" onClick={() => {}} />
                 </div>
@@ -121,7 +96,7 @@ const Config = () => {
                 
 
                 <div>
-                    <h2>Vamos ocupar espaço</h2>
+                    <h1>Vamos ocupar espaço</h1>
                     <p>Precisava ver como o scroll se comporta</p>
                     <p>E para tal feito, necessito ocupar mais espaço</p>
                 </div>
