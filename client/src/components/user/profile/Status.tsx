@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Skeleton } from "@chakra-ui/react";
+import { ProgressBar } from "../../ProgressBar";
 
 import mat from '../../../assets/mat.png';
 import port from '../../../assets/port.png';
@@ -52,7 +53,7 @@ const Status = () => {
     }
 
     const profileInformation: ProfileInformation = {
-        percentage: 0.42,
+        percentage: 0.46,
         totalTests: 42,
         totalQuestions: 2246,
         totalSuccess: 8765887765,
@@ -242,7 +243,7 @@ const Status = () => {
                 <div className="info-geral">
                     <div id="porcentagem">
                         <h3>Taxa de acerto nos simulados</h3>
-                        <div id="percentage"></div>
+                        <ProgressBar color="#0000FF" radius={150} filledPercentage={profileInformation.percentage*100} />
                     </div>
                     <div id="info">
                         <div><h2>{profileInformation.totalTests}</h2><h3>Provas já feitas</h3></div>

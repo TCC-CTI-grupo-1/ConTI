@@ -4,6 +4,7 @@ import Button from "../../Button"
 import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
 
+
 const Config = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [updates, setUpdates] = useState<string[]>([]);
