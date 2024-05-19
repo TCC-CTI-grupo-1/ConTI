@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import Status from "./Status";
 import Config from "./Config";
-
+import Background from "../Background";
 
 const Profile = () => {
 
@@ -38,13 +38,16 @@ const Profile = () => {
     return (
         //Não sei se botar a classe full-screen-size é uma boa ideia
         <div id="profile" className="flex-container full-screen-size">
+            <Background variant='white'/>
             <Navbar />
             <div className="container">
                 <div className="header">
-                    <h1>Titulo</h1>
+                    <h1>Perfil</h1>
                     <div className="options" ref={options}>
                         <a className="active">Status do usuario</a>
                         <a>Configurações da conta</a>
+                        <a>Area do administrador</a>
+                        {/*<div className='selected-line'></div>*/}
                     </div>
                 </div>
                 <div className="inversed-border"></div>
