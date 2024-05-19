@@ -47,7 +47,7 @@ const Profile = () => {
                         <a className="active">Status do usuario</a>
                         <a>Configurações da conta</a>
                         <a>Area do administrador</a>
-                        <div className='selected-line'></div>
+                        {/*<div className='selected-line'></div>*/}
                     </div>
                 </div>
                 <div className="inversed-border"></div>

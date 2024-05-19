@@ -24,6 +24,7 @@ function App() {
 
   return (
     <div className='app'>
+      <div id='alert-box-container'></div>
       <Routes>
         <Route path='/' element={ <User /> } />
         <Route path='/profile' element={ <Profile /> }></Route>
