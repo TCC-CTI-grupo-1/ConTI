@@ -47,14 +47,18 @@ input::-ms-clear {
 
   --text-white:white;
 
+  --margin-big: 100px;
   --padding-0: 45px;
-  --padding-1: 18px;
-  --padding-2: 6px;
+  --padding-1: 40px;
+  --padding-2: 30px;
+  --padding-3: 18px;
+  --padding-4: 10px;
+  --padding-5: 6px;
+  --padding-6: 5px;
 
-  --margin-0: 40px;
-  --margin-1: 30px;
-  --margin-2: 10px;
-  --margin-3: 5px;
+
+
+
 
   --margin-smol: 2px;
 
@@ -81,6 +85,14 @@ body{
   overflow-x: hidden;
 }
 
+h2{
+  font-size: 2rem;
+}
+h3{
+  font-size: 1.5rem;
+
+}
+
 *{
   margin: 0;
   padding: 0;
@@ -97,14 +109,14 @@ body{
     
     & > .header{
       z-index: 2;
-      padding: var(--padding-1);
+      padding: var(--padding-3);
     }
 
     & > .inversed-border{
       width: 100%;
       background-color: transparent;
-      min-height: var(--margin-0);
-      border-top-left-radius: var(--margin-0);
+      min-height: var(--padding-1);
+      border-top-left-radius: var(--padding-1);
       border-left: 2px solid black;
       border-top: 2px solid black;
       position: relative;
@@ -114,7 +126,7 @@ body{
     & > .content{
       flex: 1;
       border-left: 2px solid black;
-      padding: var(--padding-1);
+      padding: var(--padding-3);
       z-index: 2;
     }
 
@@ -134,25 +146,25 @@ body{
 
 #input{
   position: relative;
-  margin-top: var(--margin-1);
+  margin-top: var(--padding-2);
 
   //Esse margin-top é o espaço que o texto irá ocupar
   & div.options{
     display: flex;
     align-items: center;
     & span{
-      margin-left: var(--margin-2);
+      margin-left: var(--padding-4);
       position: absolute;
       top: 50%;
-      right: var(--margin-2);
+      right: var(--padding-4);
       transform: translateY(-50%);
       background-color: var(--text-white);
-      padding: var(--padding-2);
+      padding: var(--padding-5);
       transition: 0.25s;
     }
     & .inputFocused > p{
       position: absolute;
-      left: var(--padding-1);
+      left: var(--padding-3);
       top: 50%;
       transform: translateY(-50%);
       transition: 0.25s;
@@ -160,7 +172,7 @@ body{
     }
     & input{
       width: 100%;
-      padding: var(--padding-1);
+      padding: var(--padding-3);
       border-radius: var(--border-radius);
       border: 1px solid black;
       font-size: var(--font-size);
@@ -272,17 +284,17 @@ body{
   position: relative;
 
   & > #margin{
-    margin-left: var(--margin-0);
-    padding: var(--padding-1); //decidir entre padding-1 e padding-2
+    margin-left: var(--padding-1);
+    padding: var(--padding-3); //decidir entre padding-3 e padding-5
     height: 100%;
   }
   & nav{
     display: flex;
     flex-direction: column;
-    gap: var(--padding-1);
-    padding: var(--padding-1);
+    gap: var(--padding-3);
+    padding: var(--padding-3);
     & > svg{
-      width: var(--margin-0);
+      width: var(--padding-1);
       aspect-ratio: 1;
       cursor: pointer;
     }
@@ -310,7 +322,7 @@ button.secondary:hover{
 
 button{
   width: 100%;
-  padding: var(--padding-1);
+  padding: var(--padding-3);
   border-radius: var(--border-radius);
   border: none;
   position: relative;
@@ -325,7 +337,7 @@ button{
   transition: 0.25s;
   cursor: pointer;
   &.loading{
-    padding: var(--padding-2);
+    padding: var(--padding-5);
     & img{
       //Tamanho de um h3
       width: 2.5em;
@@ -391,13 +403,13 @@ h2{
 
 #alert-box-container{
   position: absolute;
-  top: var(--margin-1);
+  top: var(--padding-2);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   z-index: 100;
-  gap: var(--margin-2);
+  gap: var(--padding-4);
   & > div{
     animation: alertBoxAnimation 5s forwards;
 
@@ -407,7 +419,7 @@ h2{
 /*#alert-box{
   border-radius: var(--border-radius);
   height: auto;
-  padding: var(--padding-1);
+  padding: var(--padding-3);
   background-color: var(--background-color);
   
   border: 2px solid var(--primary-color);
@@ -743,14 +755,14 @@ h2{
   z-index: 2;
 
   & > #logo{
-    gap: var(--margin-2);
+    gap: var(--padding-4);
     flex-direction: column;
-    margin-bottom: var(--margin-2);
+    margin-bottom: var(--padding-4);
     & .logo{
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: var(--margin-1);
+      gap: var(--padding-2);
     }
     & h2{
       font-weight: 500;
@@ -761,7 +773,7 @@ h2{
     & #input .children{
       background-color: var(--color-red-50);
       width: 100%;
-      padding: var(--padding-1);
+      padding: var(--padding-3);
       border-radius: 15px;
       z-index: 1;
       opacity: 0;
@@ -775,8 +787,8 @@ h2{
         border: 1px solid var(--primary-color);
     }
     & #input{
-      margin-bottom: var(--margin-1);
-      margin-top: var(--margin-1);
+      margin-bottom: var(--padding-2);
+      margin-top: var(--padding-2);
     }
 
   }
@@ -797,7 +809,7 @@ h2{
       width: 100%;
       & div{
         display: flex;
-        gap: var(--margin-3);
+        gap: var(--padding-6);
         & label{
           user-select: none;
         }
@@ -805,7 +817,7 @@ h2{
     }
 
     & > .noAccount{
-      margin-top: var(--margin-1);
+      margin-top: var(--padding-2);
     }
   }
 }
@@ -826,12 +838,12 @@ h2{
 @media (max-width: 1400px){
     :root{
         --padding-0: 40px;
-        --padding-1: 15px;
-        --padding-2: 5px;
+        --padding-3: 15px;
+        --padding-5: 5px;
 
-        --margin-1: 25px;
-        --margin-2: 8px;
-        --margin-3: 4px;
+        --padding-2: 25px;
+        --padding-4: 8px;
+        --padding-6: 4px;
 
         --border-radius: 8px;
 
@@ -870,7 +882,7 @@ h2{
           display: block;
           width: 90%;
           height: var(--margin-smol);
-          margin-top: var(--margin-3);
+          margin-top: var(--padding-6);
           transition: 0.25s;
         }
         &.active::after{
@@ -891,15 +903,14 @@ h2{
   & > div{
     border: 1px solid black;
     border-radius: var(--border-radius);
-    padding: var(--padding-1);
+    padding: var(--padding-3);
     display: flex;
     flex-direction: column;
-    gap: var(--padding-1);
+    gap: var(--padding-3);
     z-index: 2;
     background-color: var(--background-color);
-    & > h1{
-      font-size: 2rem;
-      margin-bottom: var(--padding-1);
+    & > h2{
+      margin-bottom: var(--padding-3);
     }
   }
 }
@@ -910,24 +921,24 @@ h2{
   position: fixed;
   transition: 0.25s;
   z-index: 2;
-  bottom: var(--padding-1);
+  bottom: var(--padding-3);
   left: 50%;
   transform: translateX(-50%);
   width: 50%;
   background-color: var(--background-color);
   border: 1px solid black;
-  padding: var(--padding-1);
+  padding: var(--padding-3);
   border-radius: var(--border-radius);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
   & > p{
     width: 100%;
     text-align: center;
-    margin-bottom: var(--padding-1);
+    margin-bottom: var(--padding-3);
   }
 
   & > div{
     display: flex;
-    gap: var(--padding-1);
+    gap: var(--padding-3);
   }
 
   &.enabled{
@@ -948,3 +959,195 @@ h2{
     }
   
 }
+
+#status{
+  padding: var(--padding-0);
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--margin-big);
+  & .info-geral{
+    display: flex;
+    gap: var(--padding-0);
+    & > #porcentagem{
+      background-color: var(--background-color);
+      border: 1px solid black;
+      padding: var(--padding-2);
+      gap: var(--padding-3);
+      border-radius: var(--border-radius);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+    }
+    & > #info{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--padding-3);
+      & > div{
+        display: flex;
+        align-items: center;
+        gap: var(--padding-3);
+        background-color: var(--background-color);
+        padding: var(--padding-2);
+        border-radius: var(--border-radius);
+        z-index: 2;
+        border: 1px solid black;
+      }
+    }
+
+
+  }
+
+  & .info-area{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-1);
+    & > #header{
+      padding: var(--padding-2);
+      background-color: var(--background-color);
+      border: 1px solid black;
+      border-radius: var(--border-radius);
+    }
+
+    & > #content{
+      display: flex;
+      gap: var(--padding-3);
+      & > #materias{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: var(--padding-3);
+        & > div#active{
+          max-height: 100%;
+          & > #header > img.expand{
+            opacity: 0;
+          }
+          & > #content{
+            opacity: 1;
+            
+          }
+        }
+        & > div{
+          transition: 0.5s;
+          display: flex;
+          flex-direction: column;
+          gap: var(--padding-3);
+          align-items: center;
+          background-color: var(--background-color);
+          padding: var(--padding-3);
+          border-radius: var(--border-radius);
+          z-index: 2;
+          border: 1px solid black;
+          overflow: hidden;
+          max-height: calc(var(--padding-3) + 2rem + var(--padding-3));
+          & > #header{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: var(--padding-6);
+            & > img{
+              width: 2rem;
+              aspect-ratio: 1;
+              transition: 0.25s;
+              cursor: pointer;
+            }
+            & > h3{
+              flex: 1;
+            }
+          }
+
+          & > #content{
+            transition: 0.25s;
+            opacity: 0;
+          }
+        }
+      }
+      & > #info{
+        width: 70%;
+        background-color: var(--background-color);
+        padding: var(--padding-1);
+        border-radius: var(--border-radius);
+        z-index: 2;
+        border: 1px solid black;
+        height: fit-content;
+        min-height: calc((var(--padding-3) + 2rem + var(--padding-3))*4 + var(--padding-3) * 5 + 150px);
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--padding-3);
+        & > #header{
+          display: flex;
+          flex-direction: column;
+          gap: var(--padding-5);
+          & > #title{
+            display: flex;
+            & > h2.title{
+              flex: 1;
+            }
+          }
+
+          & > #progress-bar{
+            width: 100%;
+            height: var(--padding-6);
+            background-color: gray;
+            border-radius: var(--padding-6);
+            & > #progress{
+              height: 100%;
+              background-color: var(--primary-color);
+              border-radius: var(--padding-6);
+              transition: 0.25s;
+            
+            }
+          }
+        }
+
+        & > #content{
+          display: flex;
+          flex-direction: column;
+          gap: var(--padding-0);
+          & > #total-questions{
+            display: flex;
+            justify-content: space-between;
+          }
+
+          & > #sub-subjects{
+            display: flex;
+            flex-direction: column;
+            gap: var(--padding-3);
+            & > .sub-subject{
+              display: grid;
+              grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+              & > p{
+                text-align: center;
+              
+              }
+            }
+            & > .sub-subject.header{
+              margin-bottom: var(--padding-5);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+#percentage{
+  width: 200px;
+  height: 200px;
+  border: 10px solid var(--primary-color);
+  border-radius: 50%;
+}
+
+#percentage-2{
+  width: 150px;
+  height: 150px;
+  border: 10px solid var(--primary-color);
+  border-radius: 50%;
+}
+
+
