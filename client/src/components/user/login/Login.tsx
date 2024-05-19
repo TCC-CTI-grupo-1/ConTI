@@ -41,7 +41,6 @@ const Login = ({changeLoginPage}:Props) => {
 
 
     async function handleLoginButtonClick(){
-        //showAlert("Clicou", "success");
         if (email.length == 0 || password.length == 0) {
             setIsInputsValid(true);
             showAlert('Preencha todos os campos', 'warning');
@@ -49,19 +48,17 @@ const Login = ({changeLoginPage}:Props) => {
         }
         else{
             setLoading(true);
-            const [loginSuccess, loginMessage] = await handleLogin(email, password, remember);
+            const loginSuccess = await handleLogin(email, password, remember);
             setLoading(false);
 
-            console.log(loginSuccess);
             if (loginSuccess) {
                 showAlert("Login bem sucedido!", "success");
-                //console.log("L");
+                console.log("L");
                 navigate("/profile");
 
             }
             else{
-                //console.log("E");
-                showAlert(loginMessage, "error");
+                showAlert("Erro no login");
             }
         }
     }

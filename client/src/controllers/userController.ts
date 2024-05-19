@@ -5,11 +5,11 @@ const validadeEmail = (email: string): string[] => { //Deveria mudar string[] pa
     //Deve ter só 1 '@'
     if (email.split('@').length - 1 == 1) {
         newIsEmailValid = newIsEmailValid.filter((char) => char !== '@');
-    }
+    } 
 
-    if (email.includes('.')) {
+    if (email.includes('.')){
         newIsEmailValid = newIsEmailValid.filter((char) => char !== '.')
-    }
+    } 
 
     return newIsEmailValid;
 }
@@ -24,15 +24,15 @@ const validadePassword = (password: string): number[] => {
     */
 
     let newIsPasswordValid = [1, 2, 3];
-    if (password.length >= 8) {
+    if(password.length >= 8){
         newIsPasswordValid = newIsPasswordValid.filter((rule) => rule !== 1)
     }
 
-    if (password.match(/[A-Z]/)) {
+    if(password.match(/[A-Z]/)) {
         newIsPasswordValid = newIsPasswordValid.filter((rule) => rule !== 2)
     }
 
-    if (password.match(/[0-9]/)) {
+    if(password.match(/[0-9]/)) {
         newIsPasswordValid = newIsPasswordValid.filter((rule) => rule !== 3)
 
     }
@@ -78,7 +78,7 @@ async function handleSignup(name: string, email: string, password: string, remem
     }
 }
 
-async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, string]> {
+async function handleLogin(email: string, password: string, remember: boolean): Promise<boolean> {
     try {
         const data = {
             email: email,
@@ -99,16 +99,14 @@ async function handleLogin(email: string, password: string, remember: boolean): 
             throw new Error(responseData.message);
         } else {
             //window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
-            return [true, "Login bem sucedido"];
+            return true;
         }
     } catch (err: any) {
         console.log(err);
         //showAlert("Erro: " + err.message);
-        //console.log("False12345");
-        return [false, err.message];
-
+        return false;
     }
 }
 
 
-export { validadeEmail, validadePassword, handleLogin, handleSignup }
+export {validadeEmail, validadePassword, handleLogin, handleSignup}
