@@ -1,25 +1,24 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap');
 
 
 /*mudando o chakra */
-.chakra-alert
-{
-    border-radius: var(--border-radius);
+.chakra-alert {
+  border-radius: var(--border-radius);
 }
+
 .material-symbols-outlined {
   font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24;
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
   user-select: none;
   cursor: pointer;
 }
 
 input::-ms-reveal,
 input::-ms-clear {
-    display: none;
+  display: none;
 }
 
 :root {
@@ -45,7 +44,7 @@ input::-ms-clear {
   --color-red: #ff0000;
   --color-red-50: rgb(255, 70, 70);
 
-  --text-white:white;
+  --text-white: white;
 
   --margin-big: 100px;
   --padding-0: 45px;
@@ -67,52 +66,56 @@ input::-ms-clear {
   --font-size: 1rem;
 
   //Reescrevendo chakra
-  --chakra-colors-blue-50: #ebf8ff !important; /* Mais clara */
-    --chakra-colors-blue-100: #cbe4ff !important;
-    --chakra-colors-blue-200: #aad0ff !important;
-    --chakra-colors-blue-300: #88bbff !important;
-    --chakra-colors-blue-400: #6697ff !important;
-    --chakra-colors-blue-500: #4482ff !important; /* Cor principal */
-    --chakra-colors-blue-600: #3366e6 !important;
-    --chakra-colors-blue-700: #2250cc !important;
-    --chakra-colors-blue-800: #113ab3 !important;
-    --chakra-colors-blue-900: #002699 !important; /* Mais escuro */
+  --chakra-colors-blue-50: #ebf8ff !important;
+  /* Mais clara */
+  --chakra-colors-blue-100: #cbe4ff !important;
+  --chakra-colors-blue-200: #aad0ff !important;
+  --chakra-colors-blue-300: #88bbff !important;
+  --chakra-colors-blue-400: #6697ff !important;
+  --chakra-colors-blue-500: #4482ff !important;
+  /* Cor principal */
+  --chakra-colors-blue-600: #3366e6 !important;
+  --chakra-colors-blue-700: #2250cc !important;
+  --chakra-colors-blue-800: #113ab3 !important;
+  --chakra-colors-blue-900: #002699 !important;
+  /* Mais escuro */
 
 }
 
-body{
+body {
   font-family: Lexend, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
   overflow-x: hidden;
 }
 
-h2{
+h2 {
   font-size: 2rem;
 }
-h3{
+
+h3 {
   font-size: 1.5rem;
 
 }
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-.flex-container{
+.flex-container {
   display: flex;
   min-height: 100dvh;
 
-  & > .container{
+  &>.container {
     display: flex;
     flex-direction: column;
-    
-    & > .header{
+
+    &>.header {
       z-index: 2;
       padding: var(--padding-3);
     }
 
-    & > .inversed-border{
+    &>.inversed-border {
       width: 100%;
       background-color: transparent;
       min-height: var(--padding-1);
@@ -120,10 +123,10 @@ h3{
       border-left: 2px solid black;
       border-top: 2px solid black;
       position: relative;
-        box-shadow: 0px -10px 0px 10px var(--background-color);
+      box-shadow: 0px -10px 0px 10px var(--background-color);
     }
 
-    & > .content{
+    &>.content {
       flex: 1;
       border-left: 2px solid black;
       padding: var(--padding-3);
@@ -133,26 +136,28 @@ h3{
   }
 }
 
-.center{
+.center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.full-screen-size{
+
+.full-screen-size {
   width: 100dvw;
   height: 100dvh;
 
 }
 
-#input{
+#input {
   position: relative;
   margin-top: var(--padding-2);
 
   //Esse margin-top é o espaço que o texto irá ocupar
-  & div.options{
+  & div.options {
     display: flex;
     align-items: center;
-    & span{
+
+    & span {
       margin-left: var(--padding-4);
       position: absolute;
       top: 50%;
@@ -162,7 +167,8 @@ h3{
       padding: var(--padding-5);
       transition: 0.25s;
     }
-    & .inputFocused > p{
+
+    & .inputFocused>p {
       position: absolute;
       left: var(--padding-3);
       top: 50%;
@@ -170,7 +176,8 @@ h3{
       transition: 0.25s;
       pointer-events: none;
     }
-    & input{
+
+    & input {
       width: 100%;
       padding: var(--padding-3);
       border-radius: var(--border-radius);
@@ -184,120 +191,128 @@ h3{
       outline: none;
       border: 1px solid var(--primary-color);
     }
-    & input:focus{
+
+    & input:focus {
       background-color: var(--background-color-2);
     }
 
     //Change the texto color when input focused
-    & input:focus + .inputFocused{
-      & > p{
+    & input:focus+.inputFocused {
+      &>p {
         top: -15px;
         left: 0;
       }
-      & div{
+
+      & div {
         opacity: 1 !important;
       }
-      & span{
+
+      & span {
         background-color: var(--background-color-2);
       }
     }
   }
- 
-  &.hasContent .options .inputFocused > p{
+
+  &.hasContent .options .inputFocused>p {
     top: -15px;
     left: 0;
   }
 
-  &.basic.hasContent .options{
-    & .inputFocused > p{
+  &.basic.hasContent .options {
+    & .inputFocused>p {
       color: var(--primary-color);
     }
 
-    & input{
+    & input {
       border: 1px solid var(--primary-color);
     }
 
   }
 
-  &.basic input:focus + .inputFocused p{
+  &.basic input:focus+.inputFocused p {
     color: var(--primary-color);
   }
 
-  &.valid.hasContent .options{
-    & .inputFocused > p{
+  &.valid.hasContent .options {
+    & .inputFocused>p {
       color: var(--primary-color);
     }
 
-    & input{
+    & input {
       border: 1px solid var(--primary-color);
     }
   }
 
-  &.valid{
-    & input:focus{
+  &.valid {
+    & input:focus {
       border: 1px solid var(--primary-color);
     }
 
-    & input:focus + p{
+    & input:focus+p {
       color: var(--primary-color);
     }
   }
 
-  &.invalid .options input{
-      border: 1px solid var(--color-red);
+  &.invalid .options input {
+    border: 1px solid var(--color-red);
   }
-  &.invalid.hasContent .options .inputFocused > p{
+
+  &.invalid.hasContent .options .inputFocused>p {
     color: var(--color-red);
   }
 
-  &.invalid{
-    & input:focus{
+  &.invalid {
+    & input:focus {
       border: 1px solid var(--color-red);
     }
 
-    & input:focus + .inputFocused > p{
+    & input:focus+.inputFocused>p {
       color: var(--color-red);
     }
   }
 
-  & .children{
+  & .children {
     position: absolute;
     top: 0;
     left: calc(100% + 20px);
   }
 
 
-  &.variant-black{
-    & input{
+  &.variant-black {
+    & input {
       color: black;
       border: 1px solid black !important;
     }
-    &.hasContent .options .inputFocused > p{
+
+    &.hasContent .options .inputFocused>p {
       color: black;
     }
-  
+
   }
 }
 
-#nav{
+#nav {
   display: flex;
   position: relative;
 
-  & > #margin{
+  &>#margin {
     margin-left: var(--padding-1);
     padding: var(--padding-3); //decidir entre padding-3 e padding-5
     height: 100%;
   }
-  & nav{
+
+  & nav {
     display: flex;
     flex-direction: column;
     gap: var(--padding-3);
     padding: var(--padding-3);
-    & > svg{
+
+    &>svg {
       width: var(--padding-1);
       aspect-ratio: 1;
       cursor: pointer;
     }
+
     height: 100vh;
     position: fixed;
     top: 0;
@@ -377,7 +392,8 @@ a {
   color: black;
   text-decoration: inherit;
   transition: 0.2s;
-  &:hover{
+
+  &:hover {
     color: var(--primary-color);
     cursor: pointer;
   }
@@ -395,13 +411,14 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-h2{
+
+h2 {
   font-size: 2.5em;
   line-height: 1.1;
 
 }
 
-#alert-box-container{
+#alert-box-container {
   position: absolute;
   top: var(--padding-2);
   left: 50%;
@@ -410,7 +427,8 @@ h2{
   flex-direction: column;
   z-index: 100;
   gap: var(--padding-4);
-  & > div{
+
+  &>div {
     animation: alertBoxAnimation 5s forwards;
 
   }
@@ -426,20 +444,23 @@ h2{
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
 }*/
 
-@keyframes alertBoxAnimation{
-  0%{
+@keyframes alertBoxAnimation {
+  0% {
     transform: translateY(-10%);
     opacity: 0;
   }
-  10%{
+
+  10% {
     transform: translateY(0);
     opacity: 1;
   }
-  90%{
+
+  90% {
     transform: translateY(0);
     opacity: 1;
   }
-  100%{
+
+  100% {
     transform: translateY(-10%);
     opacity: 0;
   }
@@ -507,7 +528,7 @@ h2{
 
 
 
-#user-background{
+#user-background {
   overflow: hidden;
   position: fixed;
   top: 0;
@@ -520,36 +541,38 @@ h2{
   --c2: #6690CF;
 
 
-  & > #color{
+  &>#color {
     width: 100%;
     height: 100%;
 
     background-color: var(--primary-color-80);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    &.white{
-        background-color: var(--background-color-50);
+
+    &.white {
+      background-color: var(--background-color-50);
     }
   }
 
-  & > div:not(#color){
+  &>div:not(#color) {
     position: absolute;
     transition: 1s;
   }
 
-  & > div:nth-child(even){
+  &>div:nth-child(even) {
     animation: littleMovement 10s infinite linear;
   }
-  & > div:nth-child(odd):not(#color){
+
+  &>div:nth-child(odd):not(#color) {
     animation: littleMovement2 10s infinite linear;
   }
 
-  & .risco{
+  & .risco {
     rotate: 45deg;
     border-radius: 1000px;
   }
 
-  & > #q1{
+  &>#q1 {
     background-color: var(--primary-color);
     height: 80%;
     width: 4%;
@@ -557,7 +580,7 @@ h2{
     left: 0%;
   }
 
-  & > #q2{
+  &>#q2 {
     background-color: var(--c2);
     height: 80%;
     width: 2%;
@@ -565,7 +588,7 @@ h2{
     left: 20%;
   }
 
-  & > #q3{
+  &>#q3 {
     background-color: var(--c2);
     height: 80%;
     width: 1.8%;
@@ -573,7 +596,7 @@ h2{
     left: 73%;
   }
 
-  & > #q4{
+  &>#q4 {
     background-color: var(--primary-color);
     height: 70%;
     width: 3%;
@@ -581,7 +604,7 @@ h2{
     left: 75%;
   }
 
-  & > #q5{
+  &>#q5 {
     background-color: var(--c2);
     height: 60%;
     width: 2.5%;
@@ -589,7 +612,7 @@ h2{
     left: 40%;
   }
 
-  & > #q6{
+  &>#q6 {
     background-color: var(--c1);
     border-radius: 100%;
     width: 14%;
@@ -598,7 +621,7 @@ h2{
     left: 3%;
   }
 
-  & > #q7{
+  &>#q7 {
     background-color: var(--c1-25);
     border-radius: 100%;
     width: 31%;
@@ -607,7 +630,7 @@ h2{
     left: 20%;
   }
 
-  & > #q8{
+  &>#q8 {
     background-color: var(--c1);
     border-radius: 100%;
     width: 8%;
@@ -616,7 +639,7 @@ h2{
     left: 55%;
   }
 
-  & > #q9{
+  &>#q9 {
     background-color: var(--c1-50);
     border-radius: 100%;
     width: 40%;
@@ -626,8 +649,8 @@ h2{
   }
 }
 
-#user-background.signin{
-  & > #q1{
+#user-background.signin {
+  &>#q1 {
     background-color: var(--primary-color);
     height: 80%;
     width: 4%;
@@ -635,7 +658,7 @@ h2{
     left: 20%;
   }
 
-  & > #q2{
+  &>#q2 {
     background-color: var(--c2);
     height: 80%;
     width: 2%;
@@ -643,7 +666,7 @@ h2{
     left: 40%;
   }
 
-  & > #q3{
+  &>#q3 {
     background-color: var(--c2);
     height: 80%;
     width: 1.8%;
@@ -651,7 +674,7 @@ h2{
     left: 93%;
   }
 
-  & > #q4{
+  &>#q4 {
     background-color: var(--primary-color);
     height: 70%;
     width: 3%;
@@ -659,7 +682,7 @@ h2{
     left: 95%;
   }
 
-  & > #q5{
+  &>#q5 {
     background-color: var(--c2);
     height: 60%;
     width: 2.5%;
@@ -667,7 +690,7 @@ h2{
     left: 60%;
   }
 
-  & > #q6{
+  &>#q6 {
     background-color: var(--c1);
     border-radius: 100%;
     width: 14%;
@@ -676,7 +699,7 @@ h2{
     left: 10%;
   }
 
-  & > #q7{
+  &>#q7 {
     background-color: var(--c1-25);
     border-radius: 100%;
     width: 31%;
@@ -685,7 +708,7 @@ h2{
     left: 5%;
   }
 
-  & > #q8{
+  &>#q8 {
     background-color: var(--c1);
     border-radius: 100%;
     width: 8%;
@@ -694,7 +717,7 @@ h2{
     left: 75%;
   }
 
-  & > #q9{
+  &>#q9 {
     background-color: var(--c1-50);
     border-radius: 100%;
     width: 40%;
@@ -704,44 +727,52 @@ h2{
   }
 }
 
-@keyframes littleMovement{
-  0%{
+@keyframes littleMovement {
+  0% {
     transform: translate(0, 0);
   }
-  25%{
+
+  25% {
     transform: translate(10px, 10px);
   }
-  50%{
+
+  50% {
     transform: translate(20px, -5px);
   }
-  75%{
+
+  75% {
     transform: translate(5px, 15px);
   }
-  100%{
+
+  100% {
     transform: translate(0, 0);
   }
 }
 
-@keyframes littleMovement2{
-  0%{
+@keyframes littleMovement2 {
+  0% {
     transform: translate(0, 0);
   }
-  25%{
+
+  25% {
     transform: translate(-10px, -10px);
   }
-  50%{
+
+  50% {
     transform: translate(-20px, 10px);
   }
-  75%{
+
+  75% {
     transform: translate(5px, -8px);
   }
-  100%{
+
+  100% {
     transform: translate(0, 0);
   }
 
 }
 
-#inputArea{
+#inputArea {
 
   width: 650px;
   height: 750px;
@@ -754,23 +785,27 @@ h2{
   justify-content: space-between;
   z-index: 2;
 
-  & > #logo{
+  &>#logo {
     gap: var(--padding-4);
     flex-direction: column;
     margin-bottom: var(--padding-4);
-    & .logo{
+
+    & .logo {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: var(--padding-2);
     }
-    & h2{
+
+    & h2 {
       font-weight: 500;
     }
   }
-  & > #inputs{
+
+  &>#inputs {
     width: 100%;
-    & #input .children{
+
+    & #input .children {
       background-color: var(--color-red-50);
       width: 100%;
       padding: var(--padding-3);
@@ -782,41 +817,47 @@ h2{
       pointer-events: none;
       transition: 0.25s;
     }
-    & #input:nth-child(2) .children{
-        background-color: var(--background-color-50);
-        border: 1px solid var(--primary-color);
+
+    & #input:nth-child(2) .children {
+      background-color: var(--background-color-50);
+      border: 1px solid var(--primary-color);
     }
-    & #input{
+
+    & #input {
       margin-bottom: var(--padding-2);
       margin-top: var(--padding-2);
     }
 
   }
 
-  & > #options{
+  &>#options {
     width: 100%;
     display: flex;
     gap: 5px;
     align-items: center;
     flex-direction: column;
     position: relative;
-    & > p{
+
+    &>p {
       opacity: 80%;
     }
-    & > .moreOptions{
+
+    &>.moreOptions {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      & div{
+
+      & div {
         display: flex;
         gap: var(--padding-6);
-        & label{
+
+        & label {
           user-select: none;
         }
       }
     }
 
-    & > .noAccount{
+    &>.noAccount {
       margin-top: var(--padding-2);
     }
   }
@@ -824,60 +865,66 @@ h2{
 
 
 
-@media (max-width: 1400px){
-  #inputArea{
-      width: 550px;
-      height: 650px;
+@media (max-width: 1400px) {
+  #inputArea {
+    width: 550px;
+    height: 650px;
   }
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: light) {}
 
+@media (max-width: 1400px) {
+  :root {
+    --padding-0: 40px;
+    --padding-3: 15px;
+    --padding-5: 5px;
+
+    --padding-2: 25px;
+    --padding-4: 8px;
+    --padding-6: 4px;
+
+    --border-radius: 8px;
+
+    --font-size: 0.9rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
+
+  p,
+  a {
+    font-size: 0.9rem;
+  }
 }
 
-@media (max-width: 1400px){
-    :root{
-        --padding-0: 40px;
-        --padding-3: 15px;
-        --padding-5: 5px;
 
-        --padding-2: 25px;
-        --padding-4: 8px;
-        --padding-6: 4px;
-
-        --border-radius: 8px;
-
-        --font-size: 0.9rem;
-    }
-    h2{
-        font-size: 2rem;
-    }
-    h3{
-        font-size: 1rem;
-    }
-    p, a{
-        font-size: 0.9rem;
-    }
-}
-
-
-.container{
+.container {
   width: 100%;
-  & > .header{
+
+  &>.header {
     background-color: var(--background-color);
-    & > .options{
+
+    &>.options {
       width: 100%;
       display: flex;
-      & > a{
+
+      &>a {
         flex: 1;
         transition: 0.25s;
         text-align: center;
 
-        &.active{
+        &.active {
           color: var(--primary-color);
         }
+
         //Risco em baixo
-        &::after{
+        &::after {
           content: "";
           display: block;
           width: 90%;
@@ -885,7 +932,8 @@ h2{
           margin-top: var(--padding-6);
           transition: 0.25s;
         }
-        &.active::after{
+
+        &.active::after {
           background-color: var(--primary-color);
         }
       }
@@ -893,14 +941,15 @@ h2{
   }
 }
 
-#config{
+#config {
   padding: var(--padding-0);
   padding-top: 0;
   display: flex;
   flex-direction: column;
   gap: var(--padding-0);
   margin-bottom: 100px;
-  & > div{
+
+  &>div {
     border: 1px solid black;
     border-radius: var(--border-radius);
     padding: var(--padding-3);
@@ -909,13 +958,14 @@ h2{
     gap: var(--padding-3);
     z-index: 2;
     background-color: var(--background-color);
-    & > h2{
+
+    &>h2 {
       margin-bottom: var(--padding-3);
     }
   }
 }
 
-.popup-bottom{
+.popup-bottom {
   opacity: 0;
   pointer-events: none;
   position: fixed;
@@ -930,18 +980,19 @@ h2{
   padding: var(--padding-3);
   border-radius: var(--border-radius);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
-  & > p{
+
+  &>p {
     width: 100%;
     text-align: center;
     margin-bottom: var(--padding-3);
   }
 
-  & > div{
+  &>div {
     display: flex;
     gap: var(--padding-3);
   }
 
-  &.enabled{
+  &.enabled {
     opacity: 1;
     pointer-events: all;
   }
@@ -992,29 +1043,32 @@ COMPONENTES GERAIS DO FERNANDO
   }
 }
 .header {
-  position:relative;
-    .selected-line {
-      position: absolute;
-      bottom: 15px;
-      width: 25%;
-      height: 1.5px;
-      left:50%;
-      transition:0.4s;
-      background-color: var(--primary-color);
-    }
-  
+  position: relative;
+
+  .selected-line {
+    position: absolute;
+    bottom: 15px;
+    width: 25%;
+    height: 1.5px;
+    left: 50%;
+    transition: 0.4s;
+    background-color: var(--primary-color);
+  }
+
 }
 
-#status{
+#status {
   padding: var(--padding-0);
   padding-top: 0;
   display: flex;
   flex-direction: column;
   gap: var(--margin-big);
-  & .info-geral{
+
+  & .info-geral {
     display: flex;
     gap: var(--padding-0);
-    & > #porcentagem{
+
+    &>#porcentagem {
       background-color: var(--background-color);
       border: 1px solid black;
       padding: var(--padding-2);
@@ -1025,13 +1079,15 @@ COMPONENTES GERAIS DO FERNANDO
       align-items: center;
       justify-content: space-around;
     }
-    & > #info{
+
+    &>#info {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       gap: var(--padding-3);
-      & > div{
+
+      &>div {
         display: flex;
         align-items: center;
         gap: var(--padding-3);
@@ -1046,36 +1102,42 @@ COMPONENTES GERAIS DO FERNANDO
 
   }
 
-  & .info-area{
+  & .info-area {
     display: flex;
     flex-direction: column;
     gap: var(--padding-1);
-    & > #header{
+
+    &>#header {
       padding: var(--padding-2);
       background-color: var(--background-color);
       border: 1px solid black;
       border-radius: var(--border-radius);
     }
 
-    & > #content{
+    &>#content {
       display: flex;
       gap: var(--padding-3);
-      & > #materias{
+
+      &>#materias {
         flex: 1;
         display: flex;
         flex-direction: column;
         gap: var(--padding-3);
-        & > div#active{
+
+        &>div#active {
           max-height: 100%;
-          & > #header > img.expand{
+
+          &>#header>img.expand {
             opacity: 0;
           }
-          & > #content{
+
+          &>#content {
             opacity: 1;
-            
+
           }
         }
-        & > div{
+
+        &>div {
           transition: 0.5s;
           display: flex;
           flex-direction: column;
@@ -1088,29 +1150,33 @@ COMPONENTES GERAIS DO FERNANDO
           border: 1px solid black;
           overflow: hidden;
           max-height: calc(var(--padding-3) + 2rem + var(--padding-3));
-          & > #header{
+
+          &>#header {
             width: 100%;
             display: flex;
             align-items: center;
             gap: var(--padding-6);
-            & > img{
+
+            &>img {
               width: 2rem;
               aspect-ratio: 1;
               transition: 0.25s;
               cursor: pointer;
             }
-            & > h3{
+
+            &>h3 {
               flex: 1;
             }
           }
 
-          & > #content{
+          &>#content {
             transition: 0.25s;
             opacity: 0;
           }
         }
       }
-      & > #info{
+
+      &>#info {
         width: 70%;
         background-color: var(--background-color);
         padding: var(--padding-1);
@@ -1123,54 +1189,62 @@ COMPONENTES GERAIS DO FERNANDO
         display: flex;
         flex-direction: column;
         gap: var(--padding-3);
-        & > #header{
+
+        &>#header {
           display: flex;
           flex-direction: column;
           gap: var(--padding-5);
-          & > #title{
+
+          &>#title {
             display: flex;
-            & > h2.title{
+
+            &>h2.title {
               flex: 1;
             }
           }
 
-          & > #progress-bar{
+          &>#progress-bar {
             width: 100%;
             height: var(--padding-6);
             background-color: gray;
             border-radius: var(--padding-6);
-            & > #progress{
+
+            &>#progress {
               height: 100%;
               background-color: var(--primary-color);
               border-radius: var(--padding-6);
               transition: 0.25s;
-            
+
             }
           }
         }
 
-        & > #content{
+        &>#content {
           display: flex;
           flex-direction: column;
           gap: var(--padding-0);
-          & > #total-questions{
+
+          &>#total-questions {
             display: flex;
             justify-content: space-between;
           }
 
-          & > #sub-subjects{
+          &>#sub-subjects {
             display: flex;
             flex-direction: column;
             gap: var(--padding-3);
-            & > .sub-subject{
+
+            &>.sub-subject {
               display: grid;
               grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-              & > p{
+
+              &>p {
                 text-align: center;
-              
+
               }
             }
-            & > .sub-subject.header{
+
+            &>.sub-subject.header {
               margin-bottom: var(--padding-5);
             }
           }
@@ -1181,14 +1255,14 @@ COMPONENTES GERAIS DO FERNANDO
 }
 
 
-#percentage{
+#percentage {
   width: 200px;
   height: 200px;
   border: 10px solid var(--primary-color);
   border-radius: 50%;
 }
 
-#percentage-2{
+#percentage-2 {
   width: 150px;
   height: 150px;
   border: 10px solid var(--primary-color);
@@ -1196,3 +1270,56 @@ COMPONENTES GERAIS DO FERNANDO
 }
 
 
+
+
+/*
+-----------------------------------------
+COMPONENTES GERAIS DO FERNANDO
+-----------------------------------------
+*/
+
+.progress-bar-container {
+  width: 200px;
+  height: 200px;
+  position: relative;
+
+  & div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    //border: 1px solid black;
+    border-radius: 50%;
+  }
+
+  .progress-bar-outline {
+    width: 100%;
+    height: 100%;
+
+    //background-color: var(--primary-color);
+    .progress-bar-inner-circle {
+      width: 90%;
+      height: 90%;
+      background: none;
+
+      .progress-bar-text {
+        font-size: 1.5em;
+        font-weight: 600;
+      }
+    }
+  }
+
+  svg {
+    fill: none;
+    stroke-linecap: round;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  circle {
+    fill: none;
+    stroke-linecap: round;
+    stroke-width: 10;
+  }
+}

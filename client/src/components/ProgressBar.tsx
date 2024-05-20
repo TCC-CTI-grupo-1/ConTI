@@ -1,4 +1,3 @@
-
 interface Props{
     size?: string | "medium";
     color: string;
@@ -7,8 +6,9 @@ interface Props{
     animation?: string | "";
 }
 
-function percentageToCircle(filledPercentage: number){
-    return 450 * filledPercentage;
+const PI = 3.14159265358979323846264338327950288419716339375105820974944592307816406862089
+function percentageToCircle(filledPercentage: number, radius: number){
+    return radius * PI * 2 * filledPercentage/100;
 }
 function buildInlineSizeString(size:string){
     let val = "";
@@ -31,17 +31,22 @@ function buildInlineSizeString(size:string){
 
 
 
-const ProgressBar = () =>  {
-    return ( {size='medium',color, radius, filledPercentage, animation = ""}: Props) => (
-        <div className='progress-bar-container' style={eval(buildInlineSizeString(size))}>
+const ProgressBar = ({size='medium',color, radius, filledPercentage, animation = ""}: Props) =>  {
+
+    const progressSize = radius*2+20;
+    console.log(filledPercentage)
+    console.log(percentageToCircle(filledPercentage, radius))
+    return (
+        <div className='progress-bar-container' style={{width: (progressSize + 'px'), height: (progressSize + 'px')}}>
             <div className='progress-bar-outline'>
                 <div className='progress-bar-inner-circle'>
                     <span className='progress-bar-text'>{filledPercentage}%</span>
                 </div>
             </div>
-            <svg viewBox="0 0 100 100" version="1.1" xmlns="https://www.w3.org/2000/svg" width={radius} height = {radius}>  
+            <svg viewBox={"0 0 " + (progressSize) + ' ' + (progressSize)} version="1.1" xmlns="https://www.w3.org/2000/svg" 
+            width={progressSize} height = {progressSize}>  
                 <circle className = {animation} cx= "50%" cy ="50%" r = {radius} 
-                stroke={color} strokeDasharray = {percentageToCircle(filledPercentage)}></circle>
+                stroke={color} strokeDasharray = {percentageToCircle(filledPercentage, radius) + ' 1000000000'}></circle>
             </svg>
         </div>
     )
