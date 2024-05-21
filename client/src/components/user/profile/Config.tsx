@@ -9,10 +9,26 @@ const Config = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [updates, setUpdates] = useState<string[]>([]);
     /*Informações provenientes do BancoDeDados*/
+    let nome_BD = '';
+    let email_BD = '';
+    const response = fetch('http://localhost:3001/user', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        nome_BD = data.name;
+        email_BD = data.email;
+        console.log(data);
+    })
+    .catch((error) => {
+        console.error('Erro:', error);
+    });
 
-    const nome_BD = 'Mateus';
-    const email_BD = 'mateus@gmail.com';
-
+    
     /*Aqui ficam todas as configurações, as quais o usuario pode alkterar*/
 
     const [name, setName] = useState<string>(nome_BD);

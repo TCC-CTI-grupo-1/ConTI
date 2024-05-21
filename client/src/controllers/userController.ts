@@ -94,6 +94,7 @@ async function handleLogin(email: string, password: string, remember: boolean): 
             body: JSON.stringify(data)
         });
 
+
         const responseData = await response.json();
         if (!response.ok) {
             throw new Error(responseData.message);

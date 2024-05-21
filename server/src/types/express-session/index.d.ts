@@ -1,12 +1,14 @@
 import { SessionData } from "express-session"
 
-interface User{
+interface Profile {
     id: number;
+    name: string;
+    email: string;
 }
 
 declare module "express-session" {
     interface SessionData {
         isLoggedIn: boolean;
-        user:User;
+        profile:Profile;
     }
 }
