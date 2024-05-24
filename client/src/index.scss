@@ -1023,7 +1023,6 @@ COMPONENTES GERAIS DO FERNANDO
   .progress-bar-outline{
     width:100%;
     height:100%;
-    background-color: var(--primary-color);
     .progress-bar-inner-circle{
       width:90%;
       height:90%;
@@ -1320,6 +1319,6 @@ COMPONENTES GERAIS DO FERNANDO
   circle {
     fill: none;
     stroke-linecap: round;
-    stroke-width: 10;
+    stroke-width: 15;
   }
 }
