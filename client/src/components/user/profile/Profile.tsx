@@ -13,21 +13,6 @@ const Profile = () => {
 
     let elements:HTMLAnchorElement[] = [];
 
-    const response = fetch('http://localhost:3001/user', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch((error) => {
-        console.error('Erro:', error);
-    });
-
     //Talvez mover isso para um componente próprio
     useEffect(() => {
         elements?.forEach((element, index) => {
