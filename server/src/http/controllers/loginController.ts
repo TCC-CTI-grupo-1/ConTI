@@ -18,17 +18,10 @@ export async function loginController(req: Request, res: Response) {
     credentials: 'include', // Include cookies
 })
 .then(response => response.json())
-.then(data => {
-    console.log(data);
-})
 .catch((error) => {
     console.error('Erro:', error);
 });
       res.json({ message: 'Login sucesso', profile: req.session });
-
-      console.log("-----------------------------------------\n")
-      console.log(req.session)
-
       
     } catch (error: any) {
       res.status(400).json({ message: error.message });
