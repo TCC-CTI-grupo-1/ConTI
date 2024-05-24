@@ -218,6 +218,8 @@ const Status = () => {
     }, [materiaAtiva]);
 
 
+    const primaryColor = '#0066FF';
+
     return (
         <>
         {loading && <div id="status">
@@ -243,7 +245,7 @@ const Status = () => {
                 <div className="info-geral">
                     <div id="porcentagem">
                         <h3>Taxa de acerto nos simulados</h3>
-                        <ProgressBar color="#0000FF" radius={150} filledPercentage={profileInformation.percentage*100} />
+                        <ProgressBar color={primaryColor} radius={150} filledPercentage={profileInformation.percentage*100} />
                     </div>
                     <div id="info">
                         <div><h2>{profileInformation.totalTests}</h2><h3>Provas já feitas</h3></div>
@@ -268,7 +270,7 @@ const Status = () => {
                                     <img src={expand} className="expand"></img>
                                 </div>
                                 <div id="content">
-                                    <div id="percentage-2"></div>
+                                    <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.math.percentage*100} />
                                 </div>
                             </div>
                             <div className="port"
@@ -281,7 +283,7 @@ const Status = () => {
                                     <img src={expand} className="expand"></img>
                                 </div>
                                 <div id="content">
-                                    <div id="percentage-2"></div>
+                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.port.percentage*100} />
                                 </div>
                             </div>
                             <div className="naturais"
@@ -294,7 +296,7 @@ const Status = () => {
                                     <img src={expand} className="expand"></img>
                                 </div>
                                 <div id="content">
-                                    <div id="percentage-2"></div>
+                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.naturais.percentage*100} />
                                 </div>
                             </div>
                             <div className="humanas"
@@ -307,7 +309,7 @@ const Status = () => {
                                     <img src={expand} className="expand"></img>
                                 </div>
                                 <div id="content">
-                                    <div id="percentage-2"></div>
+                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.humanas.percentage*100} />
                                 </div>
                             </div>
                         </div>

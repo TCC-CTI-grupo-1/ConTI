@@ -907,9 +907,12 @@ h2 {
 .container {
   width: 100%;
 
-  &>.header {
-    background-color: var(--background-color);
 
+  & > .header {
+    background-color: var(--background-color);
+    & > h1{
+        margin-bottom: var(--padding-4);
+        }
     &>.options {
       width: 100%;
       display: flex;
@@ -929,7 +932,7 @@ h2 {
           display: block;
           width: 90%;
           height: var(--margin-smol);
-          margin-top: var(--padding-6);
+
           transition: 0.25s;
         }
 
@@ -1140,7 +1143,6 @@ h2 {
         z-index: 2;
         border: 1px solid black;
         height: fit-content;
-        min-height: calc((var(--padding-3) + 2rem + var(--padding-3))*4 + var(--padding-3) * 5 + 150px);
 
         display: flex;
         flex-direction: column;
