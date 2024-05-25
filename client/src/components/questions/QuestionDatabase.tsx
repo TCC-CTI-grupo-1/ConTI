@@ -1,7 +1,7 @@
-import React from 'react'
+
 import Background from '../user/Background'
 import Navbar from '../Navbar'
-
+import Filters from './Filters'
 
 const QuestionDatabase = () => {
   return (
@@ -15,7 +15,7 @@ const QuestionDatabase = () => {
                 </div>
                 <div className="inversed-border"></div>
                 <div className="content">
-                    <p>Conteudo aqui</p>
+                    <Filters />
                 </div>
             </div>
         </div>

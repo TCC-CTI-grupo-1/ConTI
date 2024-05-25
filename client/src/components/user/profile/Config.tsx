@@ -15,6 +15,7 @@ const Config = () => {
         let user = await getUser();
         setUser(user);
     }
+    
     useEffect(() => {
         handleGetUser();
     }, []);
@@ -26,7 +27,7 @@ const Config = () => {
     }, [user]);
 
     
-    /*Aqui ficam todas as configurações, as quais o usuario pode alkterar*/
+    /*Aqui ficam todas as configurações, as quais o usuario pode alterar*/
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
 
@@ -57,14 +58,6 @@ const Config = () => {
         }
     }
 
-    
-    async function ghostFetch(){
-        const response = await fetch('http://localhost:3001/teste', {
-            method: 'GET',
-        })
-        const responseData = await response.json();
-        console.log(responseData);
-    }
 
 
     //Função puramente para testes

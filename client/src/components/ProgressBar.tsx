@@ -1,5 +1,4 @@
 interface Props{
-    size?: string | "medium";
     color: string;
     radius: number;
     filledPercentage: number;
@@ -10,28 +9,8 @@ const PI = 3.1415926535897932384626433832795028841971633937510582097494459230781
 function percentageToCircle(filledPercentage: number, radius: number){
     return radius * PI * 2 * filledPercentage/100;
 }
-function buildInlineSizeString(size:string){
-    let val = "";
-    switch(size){
-        case "small":
-            val = "50";
-            break;
-        case "medium":
-            val = "100";
-            break;
-        case "large":
-            val = "150";
-            break;
-        default:
-            val = "100";
-    }
-    return "width: " + val + "px; height: " + val + "px;";
-    }
 
-
-
-
-const ProgressBar = ({size='medium',color, radius, filledPercentage, animation = ""}: Props) =>  {
+const ProgressBar = ({color, radius, filledPercentage, animation = ""}: Props) =>  {
 
     const progressSize = radius*2+20;
     console.log(filledPercentage)
