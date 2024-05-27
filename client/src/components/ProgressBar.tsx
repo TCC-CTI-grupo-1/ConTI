@@ -5,7 +5,7 @@ interface Props{
     animation?: string | "";
 }
 
-const PI = 3.14159265358979323846264338327950288419716339375105820974944592307816406862089
+const PI = 3.1415926535897932384;
 function percentageToCircle(filledPercentage: number, radius: number){
     return radius * PI * 2 * filledPercentage/100;
 }
