@@ -11,8 +11,8 @@ import {
 import { showAlert } from '../../App';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
-import Question from './Question';
-import { name } from 'file-loader';
+import Question from './QuestionBox';
+import { useNavigate } from 'react-router-dom';
 
 interface options{
     ano: string[];
@@ -23,6 +23,8 @@ interface options{
 }
 
 const Filters = () => {
+
+    const navegate = useNavigate();
 
     const [options, setOptions] = useState<options>({
         ano: ['2024', '2023', '2022'],
@@ -139,7 +141,10 @@ const Filters = () => {
             <div className="buttons">
                 <Button colorScheme='blue' variant={'solid'} size={'lg'}>Aplicar filtros</Button>
                 <p>ou</p>
-                <Button colorScheme='gray' variant={'outline'} size={'lg'}>Voltar ao padrão</Button>
+                <Button colorScheme='gray' variant={'outline'} size={'lg'}
+                onClick={() => {
+                    navegate('/alltests');
+                }}>Ver todas as provas</Button>
             </div>
         </div>
         <div className="results">

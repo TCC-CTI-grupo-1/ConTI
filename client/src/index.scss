@@ -296,7 +296,6 @@ h3 {
 #nav {
   display: flex;
   position: relative;
-
   &>#margin {
     margin-left: var(--padding-1);
     padding: var(--padding-3); //decidir entre padding-3 e padding-5
@@ -304,16 +303,45 @@ h3 {
   }
 
   & nav {
+    transition: 0.5s;
+    z-index: 10;
+    &.active{
+        width: 300px;
+        border-right: 1px solid black;
+        & .icon p{
+            opacity: 1;
+        }
+    }
+
+    width: calc(var(--padding-3) + var(--padding-3) + var(--padding-1));
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: var(--padding-3);
     padding: var(--padding-3);
 
-    &>svg {
-      width: var(--padding-1);
-      aspect-ratio: 1;
-      cursor: pointer;
+    & > .icon{
+        & > svg {
+            width: var(--padding-1);
+            aspect-ratio: 1;
+            cursor: pointer;
+          }
+          width: fit-content;
+          display: flex;
+          justify-content: flex-start;
+          gap: var(--padding-3);
+          align-items: center;
+        & > p{
+            white-space: nowrap;
+            transition: 0.25s;
+            opacity: 0;
+        }
+        & > p.white{
+            color: var(--primary-color);
+            transition: 0.25s;
+        }
     }
+    
 
     height: 100vh;
     position: fixed;
