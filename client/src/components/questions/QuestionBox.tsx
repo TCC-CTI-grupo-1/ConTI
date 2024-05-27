@@ -25,7 +25,7 @@ interface SubjectCategory {
     return elements;
   };
   
-  const Question = ({ id, subject, difficulty, year }: Props) => {
+  const QuestionBox = ({ id, subject, difficulty, year }: Props) => {
     return (
       <div className="question-box">
         <div className="q-id">
@@ -49,5 +49,5 @@ interface SubjectCategory {
     );
   };
   
-  export default Question;
+  export default QuestionBox;
   
