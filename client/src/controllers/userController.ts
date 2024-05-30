@@ -1,3 +1,8 @@
+export interface Profile {
+    id: number;
+    name: string;
+    email: string;
+}
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.'];
@@ -88,11 +93,13 @@ async function handleLogin(email: string, password: string, remember: boolean): 
 
         const response = await fetch('http://localhost:3001/login', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
+
 
         const responseData = await response.json();
         if (!response.ok) {
@@ -102,13 +109,32 @@ async function handleLogin(email: string, password: string, remember: boolean): 
             return [true, "Login bem sucedido"];
         }
     } catch (err: any) {
-        console.log(err);
-        //showAlert("Erro: " + err.message);
-        //console.log("False12345");
         return [false, err.message];
 
     }
 }
 
+async function getUser(): Promise<Profile | null> {
+    try {
+        const response = await fetch('http://localhost:3001/user', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-export { validadeEmail, validadePassword, handleLogin, handleSignup }
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData;
+        }
+    }catch (err: any){
+        console.log(err);
+        return null;
+    }
+}
+
+
+export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser };

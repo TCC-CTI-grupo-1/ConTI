@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client';
 import AlertBox from './components/AlertBox';
 import User from './components/user/login/User';
 import Profile from './components/user/profile/Profile';
+import QuestionDatabase from './components/questions/QuestionDatabase';
 import { Routes, Route } from "react-router-dom"
 
 
@@ -27,7 +28,8 @@ function App() {
       <div id='alert-box-container'></div>
       <Routes>
         <Route path='/' element={ <User /> } />
-        <Route path='/profile' element={ <Profile /> }></Route>
+        <Route path='/profile' element={ <Profile /> } />
+        <Route path='/questions' element={ <QuestionDatabase /> } />
       </Routes>
     </div>
   );

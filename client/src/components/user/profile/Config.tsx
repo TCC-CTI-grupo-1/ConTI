@@ -3,22 +3,42 @@ import { useState, useEffect } from "react";
 import Button from "../../Button"
 import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
-
+import { getUser, Profile } from "../../../controllers/userController";
 
 const Config = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [updates, setUpdates] = useState<string[]>([]);
+    const [user, setUser] = useState<Profile | null>(null);
     /*Informações provenientes do BancoDeDados*/
 
-    const nome_BD = 'Mateus';
-    const email_BD = 'mateus@gmail.com';
+    async function handleGetUser(){
+        let user = await getUser();
+        setUser(user);
+    }
+    useEffect(() => {
+        handleGetUser();
+    }, []);
 
+    useEffect(() => {
+        if (user != null) {
+            setLoading(false);
+        }
+    }, [user]);
+
+    
     /*Aqui ficam todas as configurações, as quais o usuario pode alkterar*/
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
 
-    const [name, setName] = useState<string>(nome_BD);
+    useEffect(() => {
+        if (user) {
+            setName(user.name);
+            setEmail(user.email);
+        }
+    }, [user]);
     function handleNameChange(e: React.ChangeEvent<HTMLInputElement>){
         setName(e.target.value);
-        if (e.target.value != nome_BD) {
+        if (e.target.value != user?.name) {
             !updates.includes('name') && setUpdates([...updates, 'name']);
             console.log(updates);
         }
@@ -27,10 +47,9 @@ const Config = () => {
         }
     }
 
-    const [email, setEmail] = useState<string>(email_BD);
     function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>){
         setEmail(e.target.value);
-        if (e.target.value != email_BD) {
+        if (e.target.value != user?.email) {
             !updates.includes('email') && setUpdates([...updates, 'email']);
         }
         else{
@@ -49,16 +68,16 @@ const Config = () => {
 
 
     //Função puramente para testes
-    //Na real essa demora vei ser para puxar ainfo do banco
+    /*Na real essa demora vei ser para puxar ainfo do banco
     async function loadConfig():Promise<boolean> {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 10));
         return true;
     }
 
 
     useEffect(() => {
         loadConfig().then(() => setLoading(false));
-    }, []);
+    }, []);*/
 
 
     return (
@@ -115,8 +134,8 @@ const Config = () => {
                 
                 <div>
                     <h2>Configurações da conta</h2>
-                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={ghostFetch} />
-                    <Button text='Deletar conta' color='red' width="auto" onClick={() => {}} />
+                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={handleGetUser} />
+                    <Button text='Deletar conta' color='red' width="auto" onClick={handleGetUser} />
                 </div>
 
                 
