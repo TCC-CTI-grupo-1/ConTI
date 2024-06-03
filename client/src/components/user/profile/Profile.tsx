@@ -38,7 +38,6 @@ const Profile = () => {
     return (
         //Não sei se botar a classe full-screen-size é uma boa ideia
         <div id="profile" className="flex-container full-screen-size">
-            <Background variant='white'/>
             <Navbar screen="profile"/>
             <div className="container">
                 <div className="header">
