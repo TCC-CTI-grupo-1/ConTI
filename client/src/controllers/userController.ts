@@ -158,4 +158,17 @@ async function handleChange(name: string, email: string): Promise<boolean> {
 }
 
 
-export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange };
+function handleSaveChanges(){
+    alert("Mudancas salvas!")
+}
+
+function handleLogout(){
+    alert("Logout");
+}
+function handleDeleteAccount(){
+    alert("Conta deletada");
+}
+
+
+
+export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange, handleDeleteAccount, handleLogout, handleSaveChanges };

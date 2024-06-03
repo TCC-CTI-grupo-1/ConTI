@@ -5,7 +5,7 @@ import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
 import { getUser } from "../../../controllers/userController";
 import { Profile } from "../../../../../server/src/types/express-session";
-import { showAlert } from "../../../App";
+import { handleDeleteAccount, handleLogout, handleSaveChanges } from "../../../controllers/userController";
 
 const Config = () => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -65,17 +65,6 @@ const Config = () => {
         else{
             setUpdates(updates.filter((item) => item != 'email'));
         }
-    }
-
-    function saveChanges(){
-        showAlert("Mudancas salvas!" , 'success')
-    }
-
-    function logout(){
-        showAlert("Logout");
-    }
-    function deleteAccount(){
-        showAlert("Conta deletada");
     }
 
 
@@ -146,8 +135,8 @@ const Config = () => {
                 
                 <div>
                     <h2>Configurações da conta</h2>
-                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={logout} />
-                    <Button text='Deletar conta' color='red' width="auto" onClick={deleteAccount} />
+                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={handleLogout} />
+                    <Button text='Deletar conta' color='red' width="auto" onClick={handleDeleteAccount} />
                 </div>
 
                 
@@ -160,7 +149,7 @@ const Config = () => {
             </div>}
             <PopupBottom 
             enabled={updates.length > 0}
-            handleSalvar={saveChanges}
+            handleSalvar={handleSaveChanges}
             handleDescartar={setDefaultInfo}
             />
 
