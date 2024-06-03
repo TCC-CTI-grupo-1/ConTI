@@ -1,11 +1,9 @@
 import PyPDF2
-from generative_ai import GenerativeModel
 
 # Replace with your Gemini API key
 api_key = "AIzaSyAAdzjF9ni3c3va9f6_s6oIYp-bgvl3iHE"
 
 # Initialize Gemini model
-model = GenerativeModel(model="gemini-1.5-flash", api_key=api_key)
 
 
 def extract_text_from_pdf(pdf_path):
