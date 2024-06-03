@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import Button from "../../Button"
 import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
-import { getUser, Profile } from "../../../controllers/userController";
+import { getUser } from "../../../controllers/userController";
+import { Profile } from "../../../../../server/src/types/express-session";
 import { showAlert } from "../../../App";
 
 const Config = () => {
@@ -16,7 +17,6 @@ const Config = () => {
         let user = await getUser();
         setUser(user);
     }
-    
     useEffect(() => {
         handleGetUser();
     }, []);
@@ -28,14 +28,16 @@ const Config = () => {
     }, [user]);
 
     
-    /*Aqui ficam todas as configurações, as quais o usuario pode alterar*/
+    /*Aqui ficam todas as configurações, as quais o usuario pode alkterar*/
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
+    const [creationDate, setCreationDate] = useState<Date>(new Date());
 
     function setDefaultInfo(){
         if (user) {
             setName(user.name);
             setEmail(user.email);
+            setCreationDate(new Date(user.creation_date));
         }
         setUpdates([]);
     }
@@ -43,7 +45,7 @@ const Config = () => {
     useEffect(() => {
         setDefaultInfo();
     }, [user]);
-
+    
     function handleNameChange(e: React.ChangeEvent<HTMLInputElement>){
         setName(e.target.value);
         if (e.target.value != user?.name) {
@@ -133,7 +135,7 @@ const Config = () => {
                     }}
                     valid={updates.includes('email') ? true : undefined}
                     />
-                    <p>Data de criação da conta: 18/05/2024</p>
+                    <p>Data de criação da conta: {creationDate.toLocaleDateString()}</p>
                 </div>
                 
                 <div>

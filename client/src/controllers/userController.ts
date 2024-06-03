@@ -1,8 +1,4 @@
-export interface Profile {
-    id: number;
-    name: string;
-    email: string;
-}
+import { Profile } from '../../../server/src/types/express-session';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.'];
@@ -77,7 +73,6 @@ async function handleSignup(name: string, email: string, password: string, remem
             return true;
         }
     } catch (err: any) {
-        console.log(err);
         //showAlert("Erro: " + err.message);
         return false;
     }
@@ -131,10 +126,36 @@ async function getUser(): Promise<Profile | null> {
             return responseData;
         }
     }catch (err: any){
-        console.log(err);
         return null;
     }
 }
 
+async function handleChange(name: string, email: string): Promise<boolean> {
+    try {
+        const data = {
+            name: name,
+            email: email
+        };
 
-export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser };
+        const response = await fetch('http://localhost:3001/updateUser', {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        return false;
+    }
+}
+
+
+export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange };

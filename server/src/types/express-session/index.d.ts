@@ -4,6 +4,7 @@ export interface Profile extends SessionData {
     id: number;
     name: string;
     email: string;
+    creation_date: Date;
 }
 
 declare module "express-session" {
