@@ -245,11 +245,7 @@ const Status = () => {
                 <div className="info-geral">
                     <div id="porcentagem">
                         <h3>Taxa de acerto nos simulados</h3>
-<<<<<<< HEAD
                         <ProgressBar color={primaryColor} radius={150} filledPercentage={profileInformation.percentage*100} />
-=======
-                        <ProgressBar color="#0066ffd9" radius={150} filledPercentage={profileInformation.percentage*100} />
->>>>>>> 228a4616692148dda4796d239cc1e9c937b63df9
                     </div>
                     <div id="info">
                         <div><h2>{profileInformation.totalTests}</h2><h3>Provas já feitas</h3></div>

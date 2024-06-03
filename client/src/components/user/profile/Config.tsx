@@ -4,6 +4,7 @@ import Button from "../../Button"
 import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
 import { getUser, Profile } from "../../../controllers/userController";
+import { showAlert } from "../../../App";
 
 const Config = () => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -31,12 +32,18 @@ const Config = () => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
 
-    useEffect(() => {
+    function setDefaultInfo(){
         if (user) {
             setName(user.name);
             setEmail(user.email);
         }
+        setUpdates([]);
+    }
+
+    useEffect(() => {
+        setDefaultInfo();
     }, [user]);
+
     function handleNameChange(e: React.ChangeEvent<HTMLInputElement>){
         setName(e.target.value);
         if (e.target.value != user?.name) {
@@ -56,6 +63,10 @@ const Config = () => {
         else{
             setUpdates(updates.filter((item) => item != 'email'));
         }
+    }
+
+    function saveChanges(){
+        showAlert("Mudancas salvas!" , 'success')
     }
 
 
@@ -139,7 +150,11 @@ const Config = () => {
                     <p>E para tal feito, necessito ocupar mais espaço</p>
                 </div>
             </div>}
-            <PopupBottom enabled={updates.length > 0}/>
+            <PopupBottom 
+            enabled={updates.length > 0}
+            handleSalvar={saveChanges}
+            handleDescartar={setDefaultInfo}
+            />
 
         </>
 
