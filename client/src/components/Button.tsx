@@ -17,7 +17,8 @@ size='lg', color = 'blue', width='100%'}: Props) => {
         <Button variant={variant} colorScheme={color} width={width}
         onClick={onClick}
         isLoading={loading}
-        size={size}>{text}</Button>
+        size={size}>{text}
+        </Button>
     )
 }
 

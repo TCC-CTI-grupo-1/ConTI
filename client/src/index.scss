@@ -37,6 +37,7 @@ input::-ms-clear {
 
   --primary-color: rgba(0, 102, 255, 1);
   --primary-color-80: rgba(0, 102, 255, 0.7);
+  --primary-color-30: rgba(0, 102, 255, 0.3);
   --background-color: white;
   --background-color-50: rgba(255, 255, 255, 0.863);
   --background-color-2: rgb(245, 245, 245);
@@ -47,6 +48,7 @@ input::-ms-clear {
   --text-white: white;
 
   --margin-big: 100px;
+  --margin-medium: 60px;
   --padding-0: 45px;
   --padding-1: 40px;
   --padding-2: 30px;
@@ -72,12 +74,12 @@ input::-ms-clear {
   --chakra-colors-blue-200: #aad0ff !important;
   --chakra-colors-blue-300: #88bbff !important;
   --chakra-colors-blue-400: #6697ff !important;
-  --chakra-colors-blue-500: #4482ff !important;
+  --chakra-colors-blue-500: #0066FF !important;
   /* Cor principal */
-  --chakra-colors-blue-600: #3366e6 !important;
-  --chakra-colors-blue-700: #2250cc !important;
-  --chakra-colors-blue-800: #113ab3 !important;
-  --chakra-colors-blue-900: #002699 !important;
+  --chakra-colors-blue-600: #035fe9 !important;
+  --chakra-colors-blue-700: #0050c9 !important;
+  --chakra-colors-blue-800: #0046b0 !important;
+  --chakra-colors-blue-900: #0041a2 !important;
   /* Mais escuro */
 
 }
@@ -294,7 +296,6 @@ h3 {
 #nav {
   display: flex;
   position: relative;
-
   &>#margin {
     margin-left: var(--padding-1);
     padding: var(--padding-3); //decidir entre padding-3 e padding-5
@@ -302,16 +303,45 @@ h3 {
   }
 
   & nav {
+    transition: 0.5s;
+    z-index: 10;
+    &.active{
+        width: 300px;
+        border-right: 1px solid black;
+        & .icon p{
+            opacity: 1;
+        }
+    }
+
+    width: calc(var(--padding-3) + var(--padding-3) + var(--padding-1));
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: var(--padding-3);
     padding: var(--padding-3);
 
-    &>svg {
-      width: var(--padding-1);
-      aspect-ratio: 1;
-      cursor: pointer;
+    & > .icon{
+        & > svg {
+            width: var(--padding-1);
+            aspect-ratio: 1;
+            cursor: pointer;
+          }
+          width: fit-content;
+          display: flex;
+          justify-content: flex-start;
+          gap: var(--padding-3);
+          align-items: center;
+        & > p{
+            white-space: nowrap;
+            transition: 0.25s;
+            opacity: 0;
+        }
+        & > p.white{
+            color: var(--primary-color);
+            transition: 0.25s;
+        }
     }
+    
 
     height: 100vh;
     position: fixed;
@@ -1323,4 +1353,144 @@ COMPONENTES GERAIS DO FERNANDO
     stroke-linecap: round;
     stroke-width: 15;
   }
+}
+
+.box{
+  background-color: var(--background-color);
+  padding: var(--padding-3);
+  margin: var(--padding-2);
+  border-radius: var(--border-radius);
+  border: 1px solid black;
+
+}
+
+#questions{
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-2);
+  
+  & > .filters{
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+    gap: var(--padding-3);
+    justify-content: space-between;
+  
+    & > h3{
+      text-align: center;
+      width: 100%;
+    }
+    & > .options{
+      display: flex;
+      gap: var(--padding-0);
+      padding: 0 var(--padding-2);
+      width: 100%;
+      & > div{
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: var(--padding-3);
+        justify-content: center;
+        position: relative;
+        & > button{
+          width: 100%;
+        }
+        & > div{
+          width: 100%;
+        }
+      }
+    }
+    & > .more-options{
+      display: flex;
+      gap: var(--padding-3);
+      align-items: center;
+      & > p{
+        font-weight: 600;
+      }
+    }
+  
+    & > .buttons{
+      display: flex;
+      gap: var(--padding-3);
+      align-items: center;
+      width: 100%;
+      padding: var(--padding-2) 0 0 0;
+      border-top: 1px solid black;
+      & > button{
+        width: 100%;
+      }
+    }
+  
+  }
+
+  & > .results{
+    & > .header{
+      display: flex;
+      align-items: center;
+      gap: var(--padding-3);
+      & > p{
+        flex: 1;
+      }
+    }
+    & > .content{
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-3);
+    }
+  }
+}
+
+.question-box{
+
+  background-color: var(--background-color);
+  display: flex;
+  align-items: center;
+  margin: 0 var(--margin-medium);
+  cursor: pointer;
+  & > div{
+    padding: var(--padding-4);
+  }
+  & > .q-id{
+    background-color: var(--primary-color-30);
+    border: 1px solid var(--primary-color);
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+  }
+  & > .category{
+    display: flex;
+    flex: 1;
+    gap: var(--padding-3);
+
+    border-top: 1px solid var(--primary-color);
+    border-bottom: 1px solid var(--primary-color);
+  }
+  & > .year{
+    color: var(--primary-color);
+    padding: var(--padding-4) var(--padding-3);
+    border-top: 1px solid var(--primary-color);
+    border-bottom: 1px solid var(--primary-color);
+  }
+  & > .difficulty{
+    background-color: var(--color-red-50);
+    color: white;
+    border: 1px solid var(--color-red);
+    padding: var(--padding-4);
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    width: 10%;
+    text-align: center;
+    &.easy{
+      background-color: var(--color-green);
+      border: 1px solid var(--color-green);
+    }
+    &.medium{
+      background-color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+    &.hard{
+      background-color: var(--color-red-50);
+      border: 1px solid var(--color-red);
+    }
+  }
+
 }
