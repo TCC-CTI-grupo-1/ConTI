@@ -38,6 +38,7 @@ input::-ms-clear {
   --primary-color: rgba(0, 102, 255, 1);
   --primary-color-80: rgba(0, 102, 255, 0.7);
   --primary-color-30: rgba(0, 102, 255, 0.3);
+  --primary-color-10: rgba(0, 102, 255, 0.1);
   --background-color: white;
   --background-color-50: rgba(255, 255, 255, 0.863);
   --background-color-2: rgb(245, 245, 245);
@@ -107,17 +108,17 @@ h3 {
 .flex-container {
   display: flex;
   min-height: 100dvh;
-
-  &>.container {
+ 
+  & > .container {
     display: flex;
     flex-direction: column;
 
-    &>.header {
+    & > .header {
       z-index: 2;
       padding: var(--padding-3);
     }
 
-    &>.inversed-border {
+    & > .inversed-border {
       width: 100%;
       background-color: transparent;
       min-height: var(--padding-1);
@@ -128,14 +129,66 @@ h3 {
       box-shadow: 0px -10px 0px 10px var(--background-color);
     }
 
-    &>.content {
+    & > .content {
       flex: 1;
       border-left: 2px solid black;
       padding: var(--padding-3);
-      z-index: 2;
-    }
 
+      z-index: 2;
+
+      & > .question{
+        & > .alternatives{
+          margin: var(--padding-2) 0;
+          display: flex;
+          flex-direction: column;
+
+          & > div{
+            display: flex;
+            align-items: center;
+            gap: var(--padding-3);
+            padding: var(--padding-4);
+            transition: 0.25s;
+            border-radius: var(--border-radius);
+            margin: var(--margin-smol);
+            & > span{
+              border: 2px solid black;
+              width: var(--padding-0);
+              aspect-ratio: 1/1;
+              border-radius: 50%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            &:hover{
+              background-color: var(--background-color-2);
+              cursor: pointer;
+            }
+            &.active{
+              background-color: var(--primary-color-10);
+              & > span{
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+              }
+            }
+          }
+        }
+        & > .options{
+          display: flex;
+          gap: var(--padding-3);
+          justify-content: flex-end;
+        }
+      }
+
+    }
   }
+}
+
+.box{
+  background-color: var(--background-color);
+  padding: var(--padding-3);
+  margin: var(--padding-2);
+  border-radius: var(--border-radius);
+  border: 1px solid black;
 }
 
 .center {
@@ -1355,14 +1408,7 @@ COMPONENTES GERAIS DO FERNANDO
   }
 }
 
-.box{
-  background-color: var(--background-color);
-  padding: var(--padding-3);
-  margin: var(--padding-2);
-  border-radius: var(--border-radius);
-  border: 1px solid black;
 
-}
 
 #questions{
   display: flex;

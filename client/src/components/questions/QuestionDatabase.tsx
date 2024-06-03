@@ -4,6 +4,7 @@ import Navbar from '../Navbar'
 import Filters from './Filters'
 
 const QuestionDatabase = () => {
+    
   return (
     <div id="database" className="flex-container full-screen-size">
             <Background variant='white'/>
