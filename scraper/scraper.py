@@ -86,3 +86,4 @@ with open(filename, 'w', encoding='utf-8') as f:
 # Matéria -> .q-question-breadcrumb>a 
 # Conteúdo -> .q-question-breadcrumb:not(q-question-beadcrumb>a)
 # Texto associado -> .q-question-text--print-hide collapse p
+

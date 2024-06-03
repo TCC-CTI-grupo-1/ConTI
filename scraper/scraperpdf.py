@@ -1,5 +1,12 @@
 import pdfplumber
 import os
+import PyPDF2
+
+# Replace with your Gemini API key
+api_key = "AIzaSyAAdzjF9ni3c3va9f6_s6oIYp-bgvl3iHE"
+
+# Initialize Gemini model
+
 
 def extract_text_from_pdf(pdf_path):
     text = ""
