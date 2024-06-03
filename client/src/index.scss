@@ -449,7 +449,7 @@ h2 {
 }
 
 #alert-box-container {
-  position: absolute;
+  position: fixed;
   top: var(--padding-2);
   left: 50%;
   transform: translateX(-50%);

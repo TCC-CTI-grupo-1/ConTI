@@ -71,6 +71,12 @@ const Config = () => {
         showAlert("Mudancas salvas!" , 'success')
     }
 
+    function logout(){
+        showAlert("Logout");
+    }
+    function deleteAccount(){
+        showAlert("Conta deletada");
+    }
 
 
     //Função puramente para testes
@@ -88,7 +94,7 @@ const Config = () => {
 
     return (
         <>
-            {loading && <div id="config">
+            {!loading && <div id="config">
                 <Skeleton>
                     <div>
                         <h2>Vamos ocupar espaço</h2>
@@ -120,7 +126,7 @@ const Config = () => {
                 
             </div>}
 
-            {!loading && <div id="config">
+            {loading && <div id="config">
                 <div>
                     <h2>Informações da conta</h2>
                     <Input name="nome"color={updates.includes('name') ? 'blue' : 'black'}
@@ -140,8 +146,8 @@ const Config = () => {
                 
                 <div>
                     <h2>Configurações da conta</h2>
-                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={handleGetUser} />
-                    <Button text='Deletar conta' color='red' width="auto" onClick={handleGetUser} />
+                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={logout} />
+                    <Button text='Deletar conta' color='red' width="auto" onClick={deleteAccount} />
                 </div>
 
                 
