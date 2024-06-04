@@ -42,9 +42,10 @@ input::-ms-clear {
   --background-color: white;
   --background-color-50: rgba(255, 255, 255, 0.863);
   --background-color-2: rgb(245, 245, 245);
-  --color-green: #369436;
+  --color-green: rgb(80, 226, 80);
+  --color-green-20: rgba(80, 226, 80, 0.2);
   --color-red: #ff0000;
-  --color-red-50: rgb(255, 70, 70);
+  --color-red-20: rgba(255, 70, 70, 0.2);
 
   --text-white: white;
 
@@ -138,6 +139,29 @@ h3 {
 
       &>.question {
         &>.alternatives {
+          &.showCorrect {
+            &>div {
+              cursor: default;
+              &:hover{
+                background-color: var(--background-color);
+              }
+              &.correct{
+                background-color: var(--color-green-20) !important;
+                &>span{
+                  border-color: var(--color-green) !important;
+                  color: var(--color-green) !important;
+                }
+              }
+              &.active{
+                background-color: var(--color-red-20);
+                &>span{
+                  border-color: var(--color-red);
+                  color: var(--color-red);
+                }
+              
+              }
+            }
+          }
           margin: var(--padding-2) 0;
           display: flex;
           flex-direction: column;
@@ -150,8 +174,10 @@ h3 {
             transition: 0.25s;
             border-radius: var(--border-radius);
             margin: var(--margin-smol);
+            cursor: pointer;
 
             &>span {
+              transition: 0.25s;
               border: 2px solid black;
               width: var(--padding-0);
               aspect-ratio: 1/1;
@@ -163,7 +189,7 @@ h3 {
 
             &:hover {
               background-color: var(--background-color-2);
-              cursor: pointer;
+
             }
 
             &.active {

@@ -13,7 +13,7 @@ const Status = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     async function loadConfig():Promise<boolean> {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 10));
         return true;
     }
 
