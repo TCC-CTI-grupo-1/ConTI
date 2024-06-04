@@ -4,7 +4,6 @@ import User from './components/user/login/User';
 import Profile from './components/user/profile/Profile';
 import QuestionDatabase from './components/questions/QuestionDatabase';
 import AllTests from './components/questions/AllTests';
-import QuestionDetail from './components/questions/QuestionDetail';
 import { Routes, Route } from "react-router-dom"
 
 
@@ -31,9 +30,9 @@ function App() {
       <Routes>
         <Route path='/' element={ <User /> } />
         <Route path='/profile' element={ <Profile /> } />
-        <Route path='/questions' element={ <QuestionDatabase /> } />
-        <Route path='/alltests' element={ <AllTests /> } />
-        <Route path='/questions/:id' element={<QuestionDetail />} />
+        <Route path='/alltests' element={ <AllTests /> } />   
+        <Route path='/questions' element={<QuestionDatabase />} />
+        <Route path='/questions/:id' element={<QuestionDatabase />} />
       </Routes>
     </div>
   );
