@@ -1,73 +1,23 @@
-import re
-from bs4 import BeautifulSoup
+import json
 
-class Question:
-    def __init__(self, enunciation, associated_text=None):
-        self.enunciation = enunciation
-        self.associated_text = associated_text
-        self.alternatives = {}
+# Read the input file containing the malformed JSON
+with open('marcos.json', 'r',encoding='utf-8') as file:
+    data = file.read()
 
-filename = "caderno-de-questoes-2022.html"
+# Split the data into individual JSON objects
+json_objects = data.split('\n')
 
-with open(filename, 'r', encoding='utf-8') as file:
-    html = file.read()
+# Initialize an empty dictionary to hold the combined JSON object
+combined_json = {}
 
-soup = BeautifulSoup(html, 'html.parser')
+# Loop through each JSON object and update the combined dictionary
+for obj in json_objects:
+    if obj.strip():  # Skip any empty lines
+        json_obj = json.loads(obj)
+        combined_json.update(json_obj)
 
-questions = {}
+# Write the combined JSON object to a new file
+with open('output.json', 'w',encoding='utf-8') as file:
+    json.dump(combined_json, file, indent=4)
 
-text_selector = '.t.m0.ha'
-question_number_selector = '.t.m0.hd'
-question_elements = soup.select(question_number_selector)
-
-current_associated_text = None
-associated_text_start = False
-
-for i, question_element in enumerate(question_elements):
-    match = re.search(r'\d+', question_element.get_text())
-    if match:
-        question_number = match.group()
-
-    enunciation = ""
-    current_alternative = None
-    next_sibling = question_element.find_next_sibling()
-
-    questions[question_number] = Question(enunciation)
-
-    while next_sibling and (i+1 == len(question_elements) or next_sibling != question_elements[i+1]):
-        if next_sibling in soup.select(text_selector):
-            match = re.match(r'\s*\((\w)\)\s*(.*)', next_sibling.get_text())
-            if match:
-                current_alternative = match.group(1)
-                alternative_text = match.group(2)
-                questions[question_number].alternatives[current_alternative] = alternative_text
-            elif current_alternative is not None:
-                if not questions[question_number].alternatives[current_alternative].endswith('.'):
-                    questions[question_number].alternatives[current_alternative] += ' ' + next_sibling.get_text().strip()
-            else:
-                if "Leia" in next_sibling.get_text() and "para responder" in next_sibling.get_text():
-                    associated_text_start = True
-                    current_associated_text = next_sibling.get_text().strip()
-                elif associated_text_start:
-                    current_associated_text += ' ' + next_sibling.get_text().strip()
-                else:
-                    enunciation += ' ' + next_sibling.get_text().strip()
-
-        next_sibling = next_sibling.find_next_sibling()
-
-    questions[question_number].enunciation = enunciation.strip()
-    if current_associated_text:
-        match = re.search(r'Leia\[(\d+)\] para responder\[(\d+)\]\+(\d) \.\. \+(\d)', current_associated_text)
-        if match:
-            start_question = int(match.group(1))
-            end_question = int(match.group(2))
-            for i in range(start_question, end_question + 1):
-                if str(i) in questions:
-                    questions[str(i)].associated_text = current_associated_text
-
-for question_number, question in questions.items():
-    print(f"Question {question_number}: {question.enunciation}")
-    for alternative_letter, alternative_text in question.alternatives.items():
-        print(f"  ({alternative_letter}) {alternative_text}")
-    if question.associated_text:
-        print(f"Associated text: {question.associated_text}")
+print("JSON objects have been combined successfully!")
