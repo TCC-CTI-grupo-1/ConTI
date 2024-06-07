@@ -1,10 +1,15 @@
 import { ProfileDAO } from "../../DAO/ProfileDAO";
 import { Request, Response } from "express";
-import { ProfileDTO } from "../../DTO/ProfileDTO";
 
 export async function updateProfileController(req: Request, res: Response) {
     const profileDAO = new ProfileDAO();
     try {
+      if (!req.body.name || !req.body.email) {
+        throw new Error('Preencha todos os campos');
+      }
+      else if (!req.body.email.includes('@') || !req.body.email.includes('.') || req.body.email.indexOf('@') > req.body.email.indexOf('.')) {
+          throw new Error('E-mail inválido');
+      }
       await profileDAO.updateProfileSession(req.body);
       const sessionProfile = {
         id: req.body.id,
