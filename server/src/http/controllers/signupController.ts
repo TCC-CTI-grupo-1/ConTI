@@ -7,10 +7,16 @@ export async function signupController(req: Request, res: Response) {
 
     try { 
       await profileDAO.registerProfile(req.body);
-      const profileDTO: ProfileDTO = req.body;
+      const profileDTO: ProfileDTO = await profileDAO.searchprofileByEmail(req.body.email);
       req.session.isLoggedIn = true;
-      req.session.profile = profileDTO;
-
+      const sessionProfile = {
+        id: profileDTO.id,
+        name: profileDTO.name,
+        email: profileDTO.email,
+        creation_date: profileDTO.creation_date
+      }
+      req.session.profile = sessionProfile;
+      
     
       res.json({ message: 'Perfil cadastrado com sucesso' });
     } catch (error: any) {

@@ -57,7 +57,6 @@ const Login = ({changeLoginPage}:Props) => {
                 showAlert("Login bem sucedido!", "success");
                 //console.log("L");
                 navigate("/profile");
-
             }
             else{
                 //console.log("E");

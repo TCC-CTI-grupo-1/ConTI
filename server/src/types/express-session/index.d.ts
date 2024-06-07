@@ -1,6 +1,6 @@
 import { SessionData } from "express-session"
 
-export interface Profile extends SessionData {
+export interface Profile {
     id: number;
     name: string;
     email: string;

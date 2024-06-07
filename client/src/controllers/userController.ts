@@ -60,6 +60,7 @@ async function handleSignup(name: string, email: string, password: string, remem
 
         const response = await fetch('http://localhost:3001/signup', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -181,11 +182,62 @@ async function handleSaveChanges(Profile : Profile): Promise<boolean> {
     }
 }
 
-function handleLogout(){
-    alert("Logout");
+async function handleLogout(){
+    try {
+        const response = await fetch('http://localhost:3001/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            window.location.href = 'http://localhost:5173/';
+            // return [true, "Logout bem sucedido"];
+        }
+    } catch (err: any) {
+        return [false, "Logout falhou"];
+    }
+    
 }
-function handleDeleteAccount(){
-    alert("Conta deletada");
+async function handleDeleteAccount(){
+    try {
+        const response = await fetch('http://localhost:3001/deleteUser', {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            window.location.href = 'http://localhost:5173/';
+            // return [true, "Conta deletada com sucesso"];
+        }
+
+        const responseLogout = await fetch('http://localhost:3001/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseDataLogout = await responseLogout.json();
+        if (!responseLogout.ok) {
+            throw new Error(responseDataLogout.message);
+        } else {
+            window.location.href = 'http://localhost:5173/';
+            // return [true, "Logout bem sucedido"];
+        }
+        
+    } catch (err: any) {
+        return [false, "Erro ao deletar conta"];
+    }
 }
 
 
