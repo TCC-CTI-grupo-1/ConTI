@@ -153,6 +153,7 @@ export class ProfileDAO {
         try {
             const profile = await this.searchprofileByEmail(email);
             const isPasswordCorrect = await comparePasswords(password, profile.password);
+
             if (isPasswordCorrect) {
                 return profile;
             } else {

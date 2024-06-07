@@ -5,7 +5,7 @@ import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
 import { getUser } from "../../../controllers/userController";
 import { Profile } from "../../../../../server/src/types/express-session";
-import { handleDeleteAccount, handleLogout, handleSaveChanges } from "../../../controllers/userController";
+import { handleDeleteAccount, handleLogout } from "../../../controllers/userController";
 
 const Config = () => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -30,14 +30,13 @@ const Config = () => {
 
     
     /*Aqui ficam todas as configurações, as quais o usuario pode alkterar*/
-    const [name, setName] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
+    const [updatedUser, setUpdatedUser] = useState<Profile>();
     const [creationDate, setCreationDate] = useState<Date>(new Date());
 
     function setDefaultInfo(){
         if (user) {
-            setName(user.name);
-            setEmail(user.email);
+            setUpdatedUser(user);
+
             setCreationDate(new Date(user.creation_date));
         }
         setUpdates([]);
@@ -48,7 +47,11 @@ const Config = () => {
     }, [user]);
     
     function handleNameChange(e: React.ChangeEvent<HTMLInputElement>){
-        setName(e.target.value);
+        if(!updatedUser) return;
+        let newUser:Profile = {...updatedUser};
+        newUser.name = e.target.value;
+        setUpdatedUser(newUser);
+        
         if (e.target.value != user?.name) {
             !updates.includes('name') && setUpdates([...updates, 'name']);
             console.log(updates);
@@ -59,7 +62,11 @@ const Config = () => {
     }
 
     function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>){
-        setEmail(e.target.value);
+        if(!updatedUser) return;
+        let newUser:Profile = {...updatedUser};
+        newUser.email = e.target.value;
+        setUpdatedUser(newUser);
+
         if (e.target.value != user?.email) {
             !updates.includes('email') && setUpdates([...updates, 'email']);
         }
@@ -120,13 +127,13 @@ const Config = () => {
                 <div>
                     <h2>Informações da conta</h2>
                     <Input name="nome"color={updates.includes('name') ? 'blue' : 'black'}
-                    label="Nome" value={name} onChange={(e) => {
+                    label="Nome" value={updatedUser?.name} onChange={(e) => {
                         handleNameChange(e);
                     }}
                     valid={updates.includes('name') ? true : undefined}/>
 
                     <Input name="nome" color={updates.includes('email') ? 'blue' : 'black'}
-                    label="Email" value={email} onChange={(e) => {
+                    label="Email" value={updatedUser?.email} onChange={(e) => {
                         handleEmailChange(e);
                     }}
                     valid={updates.includes('email') ? true : undefined}
@@ -149,9 +156,9 @@ const Config = () => {
                 </div>
             </div>}
             <PopupBottom 
-            enabled={updates.length > 0}
-            handleSalvar={handleSaveChanges}
-            handleDescartar={setDefaultInfo}
+                enabled={updates.length > 0}
+                handleDescartar={setDefaultInfo}
+                profile={updatedUser}
             />
 
         </>

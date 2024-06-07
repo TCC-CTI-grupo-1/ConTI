@@ -158,8 +158,27 @@ async function handleChange(name: string, email: string): Promise<boolean> {
 }
 
 
-function handleSaveChanges(){
-    alert("Mudancas salvas!")
+async function handleSaveChanges(Profile : Profile): Promise<boolean> {
+    try {
+        const response = await fetch('http://localhost:3001/updateUser', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Profile)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    
+    } catch (err: any) {
+        return false;
+    }
 }
 
 function handleLogout(){

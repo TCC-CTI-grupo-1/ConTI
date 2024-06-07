@@ -2,7 +2,7 @@ import { getProfileController } from './controllers/getProfileController';
 import { loginController } from './controllers/loginController';
 import { signupController } from './controllers/signupController';
 import { Request, Response } from "express";
-import { updateController } from './controllers/updateController';
+import { updateUserController } from './controllers/updateUserController';
 
 
 export async function routes(app: any) {
@@ -13,6 +13,6 @@ export async function routes(app: any) {
         res.json({'isLoggedIn': true});
     });
     app.get('/user', getProfileController);
-    app.get('/updateUser', updateController);
+    app.post('/updateUser', updateUserController);
     
 }
