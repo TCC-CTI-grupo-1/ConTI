@@ -22,6 +22,7 @@ const Config = () => {
     }, []);
 
     useEffect(() => {
+        console.log(user);
         if (user != null) {
             setLoading(false);
         }
@@ -83,7 +84,7 @@ const Config = () => {
 
     return (
         <>
-            {!loading && <div id="config">
+            {loading && <div id="config">
                 <Skeleton>
                     <div>
                         <h2>Vamos ocupar espaço</h2>
@@ -115,7 +116,7 @@ const Config = () => {
                 
             </div>}
 
-            {loading && <div id="config">
+            {!loading && <div id="config">
                 <div>
                     <h2>Informações da conta</h2>
                     <Input name="nome"color={updates.includes('name') ? 'blue' : 'black'}
