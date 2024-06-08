@@ -45,7 +45,7 @@ const validadePassword = (password: string): number[] => {
     return newIsPasswordValid;
 }
 
-async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<boolean> {
+async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<string | null> {
 
     //await new Promise(resolve => setTimeout(resolve, 3000));
     //return true;
@@ -71,11 +71,10 @@ async function handleSignup(name: string, email: string, password: string, remem
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return true;
+            return null;
         }
     } catch (err: any) {
-        //showAlert("Erro: " + err.message);
-        return false;
+        return err.message;
     }
 }
 
