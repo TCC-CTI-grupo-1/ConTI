@@ -1,7 +1,7 @@
 import { Profile } from '../../../server/src/types/express-session';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
-    let newIsEmailValid = ['@', '.'];
+    let newIsEmailValid = ['@', '.', 't'];
 
     //Deve ter só 1 '@'
     if (email.split('@').length - 1 == 1) {
@@ -9,7 +9,11 @@ const validadeEmail = (email: string): string[] => { //Deveria mudar string[] pa
     }
 
     if (email.includes('.')) {
-        newIsEmailValid = newIsEmailValid.filter((char) => char !== '.')
+        newIsEmailValid = newIsEmailValid.filter((char) => char !== '.');
+    }
+
+    if (email.indexOf('@') < email.lastIndexOf('.')){
+        newIsEmailValid = newIsEmailValid.filter((char) => char !== 't');
     }
 
     return newIsEmailValid;
