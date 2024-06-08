@@ -5,6 +5,7 @@ export async function logoutController(req: Request, res: Response) {
         if (err) {
             res.status(400).json({ message: err.message });
         } else {
+            res.clearCookie('sid');
             res.json({ message: 'Logout sucesso' });
         }
     });
