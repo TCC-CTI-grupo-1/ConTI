@@ -97,8 +97,12 @@ const Signup = ({changeLoginPage}:Props) => {
             const signupSuccess = await handleSignup(name, email, password, remember);
             setLoading(false);
 
-            if(signupSuccess){
+            if(signupSuccess == null){
+                showAlert("Cadastro efetuado com sucesso", 'success')
                 navigate('/profile');
+            }
+            else{
+                showAlert("Erro: " + signupSuccess);
             }
         }
     }
