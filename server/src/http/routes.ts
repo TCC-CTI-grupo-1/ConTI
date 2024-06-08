@@ -5,7 +5,7 @@ import { logoutController } from './controllers/logoutController';
 import { deleteProfileController } from './controllers/deleteProfileController';
 import { Request, Response } from "express";
 import { updateProfileController } from './controllers/updateProfileController';
-
+import { getProfileController } from './controllers/getProfileController';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
@@ -14,8 +14,9 @@ export async function routes(app: any) {
         let isLoggedIn: boolean = req.session.isLoggedIn ?? false;
         res.json({'isLoggedIn': true});
     });
-    app.get('/user', getProfileSessionController);
+    app.get('/userSession', getProfileSessionController);
     app.post('/updateUser', updateProfileController);
     app.post('/logout', logoutController);
     app.delete('/deleteUser', deleteProfileController);
+    app.get('/user', getProfileController);
 }
