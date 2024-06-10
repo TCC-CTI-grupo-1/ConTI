@@ -65,9 +65,16 @@ const Login = ({changeLoginPage}:Props) => {
         }
     }
 
+    //Ver se pode ficar na window
 
     return (
-        <div id="inputArea">
+        <div id="inputArea"
+        onKeyUp={(e) =>{
+            if(e.key ==="Enter")
+                {
+                    handleLoginButtonClick();
+                }
+        }}>
                 <Logo type={'login'}/>
 
                 <div id="inputs">               

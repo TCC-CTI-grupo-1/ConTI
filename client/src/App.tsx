@@ -21,21 +21,31 @@ const showAlert = (message: string,
   }
 };
 
+
+
+
 function App() {
 
 
-  return (
-    <div className='app'>
-      <div id='alert-box-container'></div>
-      <Routes>
-        <Route path='/' element={ <User /> } />
-        <Route path='/profile' element={ <Profile /> } />
-        <Route path='/alltests' element={ <AllTests /> } />   
-        <Route path='/questions' element={<QuestionDatabase />} />
-        <Route path='/questions/:id' element={<QuestionDatabase />} />
-      </Routes>
-    </div>
-  );
+    const debugging = true;
+
+    if(!debugging)
+    {
+        console.log = function(){}
+    }
+
+    return (
+        <div className='app'>
+        <div id='alert-box-container'></div>
+        <Routes>
+            <Route path='/' element={ <User /> } />
+            <Route path='/profile' element={ <Profile /> } />
+            <Route path='/alltests' element={ <AllTests /> } />   
+            <Route path='/questions' element={<QuestionDatabase />} />
+            <Route path='/questions/:id' element={<QuestionDatabase />} />
+        </Routes>
+        </div>
+    );
 }
 
 export default App;

@@ -5,7 +5,8 @@ import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
 import { getUser } from "../../../controllers/userController";
 import { Profile } from "../../../../../server/src/types/express-session";
-import { handleDeleteAccount, handleLogout } from "../../../controllers/userController";
+import { handleDeleteAccount, handleLogout, handleSaveChanges } from "../../../controllers/userController";
+import { showAlert } from "../../../App";
 
 const Config = () => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -89,6 +90,18 @@ const Config = () => {
     }, []);*/
 
 
+    async function handleSaveChangesButtonClick(){
+        if(!updatedUser){
+            showAlert("Erro ao salvar as alterções");
+            return;
+        }
+        const isSavedChanges = await handleSaveChanges(updatedUser);
+        if(isSavedChanges){
+            showAlert("Alterações salvas com sucesso", 'success');
+            setUser(updatedUser);
+        }
+    }
+
     return (
         <>
             {loading && <div id="config">
@@ -158,7 +171,7 @@ const Config = () => {
             <PopupBottom 
                 enabled={updates.length > 0}
                 handleDescartar={setDefaultInfo}
-                profile={updatedUser}
+                handleSaveChanges={handleSaveChangesButtonClick}
             />
 
         </>
