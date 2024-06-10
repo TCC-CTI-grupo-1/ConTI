@@ -115,7 +115,7 @@ async function handleLogin(email: string, password: string, remember: boolean): 
 
 async function getUser(): Promise<Profile | null> {
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch('http://localhost:3001/userSession', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -123,11 +123,12 @@ async function getUser(): Promise<Profile | null> {
             }
         });
 
+        console.log("DAAAAAAAAAAAAAAAAAAAAAAAA")
         const responseData = await response.json();
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return responseData;
+            return responseData.profile;
         }
     }catch (err: any){
         return null;
