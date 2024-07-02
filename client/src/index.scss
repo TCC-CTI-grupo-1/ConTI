@@ -1611,7 +1611,7 @@ COMPONENTES GERAIS DO FERNANDO
   align-items: center;
   & > #allQuestions{
     position: fixed;
-    height: 90vh;
+    height: 95vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -1655,5 +1655,13 @@ COMPONENTES GERAIS DO FERNANDO
   & > #allQuestionsMargin{
     height: 100%;
     width: 200px;
+  }
+  & > .content{
+    & > #buttons{
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 var(--padding-2);
+    }
   }
 }

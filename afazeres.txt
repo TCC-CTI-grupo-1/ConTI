@@ -9,6 +9,7 @@ EM questionBox.tsx
 Em simulado.tsx
 - Arrumar questionDeil, não está com o funcionamento corrreto
 - Ver se as questões (A esquerda) estão ocupando muito espaço.
+- ver porque quando a pagina carrega ele vai sem nenhuma questão selecionada
 
 Geral;
 - Mudar rotas para o protugues (talvez) [/profile -> /perfil]

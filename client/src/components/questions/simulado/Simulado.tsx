@@ -18,7 +18,9 @@ const Simulado = ({questionsList, isSimulado}:Props) => {
         const questions = [];
 
         (1+(page-1)*10) > 1 ? questions.push(<ArrowIcon direction="top"
-        onClick={()=>{setPage(page-1)}}/>) : null;
+        onClick={()=>{setPage(page-1)}}/>)
+         : 
+         questions.push(<ArrowIcon direction="top" disabled />);
 
         for(let i = (1+(page-1)*10); i <= (10+(page-1)*10); i++){
             questionsList[i - 1] != null ? questions.push(<span onClick={() => {
@@ -64,18 +66,28 @@ const Simulado = ({questionsList, isSimulado}:Props) => {
                 }
             </div>
             <div id="allQuestionsMargin"></div>
-            <QuestionDetail question={questionsHashMap.get(questionsList[activeQuestion])}/>
-            <div id="buttons">
-                <Button onClick={() => {
-                    if(activeQuestion > 0){
-                        handleQuestionNumberClick(activeQuestion);
-                    }
-                }}>Anterior</Button>
-                <Button onClick={() => {
-                    if(activeQuestion < questionsList.length - 1){
-                        handleQuestionNumberClick(activeQuestion + 2);
-                    }
-                }}>Próxima</Button>
+            <div className="content">
+                <QuestionDetail question={questionsHashMap.get(questionsList[activeQuestion])}/>
+                <div id="buttons">
+                    <Button colorScheme="blue" size="lg" variant='outline'
+                    onClick={() => {
+                        if(activeQuestion > 0){
+                            handleQuestionNumberClick(activeQuestion);
+                        }
+                    }}>
+                        <ArrowIcon direction="left" colorScheme="primary"/>
+                        &nbsp;Anterior
+                        </Button>
+                    <Button colorScheme="blue" size="lg" variant='outline' 
+                    onClick={() => {
+                        if(activeQuestion < questionsList.length - 1){
+                            handleQuestionNumberClick(activeQuestion + 2);
+                        }
+                    }}>
+                        Próxima&nbsp;
+                        <ArrowIcon direction="right" colorScheme="primary"/>
+                    </Button>
+                </div>
             </div>
         </div>
     )
