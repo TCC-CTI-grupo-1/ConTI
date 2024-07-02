@@ -60,6 +60,9 @@ const Signup = ({changeLoginPage}:Props) => {
                 case '.':
                     node = <>{node}<p>O email deve conter pelo menos um '.'</p></>;
                     break;
+                case 't':
+                    node = <>{node}<p>O ponto deve estar apos o email [example@email.com]</p></>
+                    break;
             }
         });
         return node;
@@ -97,8 +100,12 @@ const Signup = ({changeLoginPage}:Props) => {
             const signupSuccess = await handleSignup(name, email, password, remember);
             setLoading(false);
 
-            if(signupSuccess){
+            if(signupSuccess == null){
+                showAlert("Cadastro efetuado com sucesso", 'success')
                 navigate('/profile');
+            }
+            else{
+                showAlert("Erro: " + signupSuccess);
             }
         }
     }

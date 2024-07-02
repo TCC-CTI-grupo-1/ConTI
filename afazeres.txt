@@ -1,0 +1,5 @@
+Em Login.tsx:
+- Ver se o event listener de "keyup" pode fiar em window.
+
+Em config.tsx:
+- abrir uma caixa de confirmação se deseja mesmo deletar a conta

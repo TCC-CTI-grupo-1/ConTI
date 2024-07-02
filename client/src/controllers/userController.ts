@@ -1,7 +1,7 @@
 import { Profile } from '../../../server/src/types/express-session';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
-    let newIsEmailValid = ['@', '.'];
+    let newIsEmailValid = ['@', '.', 't'];
 
     //Deve ter só 1 '@'
     if (email.split('@').length - 1 == 1) {
@@ -9,7 +9,11 @@ const validadeEmail = (email: string): string[] => { //Deveria mudar string[] pa
     }
 
     if (email.includes('.')) {
-        newIsEmailValid = newIsEmailValid.filter((char) => char !== '.')
+        newIsEmailValid = newIsEmailValid.filter((char) => char !== '.');
+    }
+
+    if (email.indexOf('@') < email.lastIndexOf('.')){
+        newIsEmailValid = newIsEmailValid.filter((char) => char !== 't');
     }
 
     return newIsEmailValid;
@@ -45,7 +49,7 @@ const validadePassword = (password: string): number[] => {
     return newIsPasswordValid;
 }
 
-async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<boolean> {
+async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<string | null> {
 
     //await new Promise(resolve => setTimeout(resolve, 3000));
     //return true;
@@ -60,6 +64,7 @@ async function handleSignup(name: string, email: string, password: string, remem
 
         const response = await fetch('http://localhost:3001/signup', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -70,11 +75,10 @@ async function handleSignup(name: string, email: string, password: string, remem
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return true;
+            return null;
         }
     } catch (err: any) {
-        //showAlert("Erro: " + err.message);
-        return false;
+        return err.message;
     }
 }
 
@@ -111,7 +115,7 @@ async function handleLogin(email: string, password: string, remember: boolean): 
 
 async function getUser(): Promise<Profile | null> {
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch('http://localhost:3001/userSession', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -119,11 +123,12 @@ async function getUser(): Promise<Profile | null> {
             }
         });
 
+        console.log("DAAAAAAAAAAAAAAAAAAAAAAAA")
         const responseData = await response.json();
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return responseData;
+            return responseData.profile;
         }
     }catch (err: any){
         return null;
@@ -158,15 +163,85 @@ async function handleChange(name: string, email: string): Promise<boolean> {
 }
 
 
-function handleSaveChanges(){
-    alert("Mudancas salvas!")
+async function handleSaveChanges(Profile : Profile): Promise<boolean> {
+    try {
+        const response = await fetch('http://localhost:3001/updateUser', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Profile)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    
+    } catch (err: any) {
+        return false;
+    }
 }
 
-function handleLogout(){
-    alert("Logout");
+async function handleLogout(){
+    try {
+        const response = await fetch('http://localhost:3001/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            window.location.href = 'http://localhost:5173/';
+            // return [true, "Logout bem sucedido"];
+        }
+    } catch (err: any) {
+        return [false, "Logout falhou"];
+    }
+    
 }
-function handleDeleteAccount(){
-    alert("Conta deletada");
+async function handleDeleteAccount(){
+    try {
+        const response = await fetch('http://localhost:3001/deleteUser', {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            window.location.href = 'http://localhost:5173/';
+            // return [true, "Conta deletada com sucesso"];
+        }
+
+        const responseLogout = await fetch('http://localhost:3001/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseDataLogout = await responseLogout.json();
+        if (!responseLogout.ok) {
+            throw new Error(responseDataLogout.message);
+        } else {
+            window.location.href = 'http://localhost:5173/';
+            // return [true, "Logout bem sucedido"];
+        }
+        
+    } catch (err: any) {
+        return [false, "Erro ao deletar conta"];
+    }
 }
 
 
