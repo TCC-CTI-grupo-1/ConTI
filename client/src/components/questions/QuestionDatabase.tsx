@@ -4,8 +4,9 @@ import Navbar from '../Navbar'
 import Filters from './Filters'
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import QuestionDetail from './QuestionDetail';
+import QuestionDetail from './simulado/QuestionDetail';
 import { useNavigate } from 'react-router-dom';
+
 
 const QuestionDatabase = () => {
     const { id } = useParams(); // Acessando o ID da pergunta da rota
@@ -42,7 +43,7 @@ const QuestionDatabase = () => {
                 </div>
                 <div className="inversed-border"></div>
                 <div className="content">
-                    {hasQuestion ? <QuestionDetail questionID={id as string}/> : <Filters />}
+                    {hasQuestion ? <QuestionDetail /> : <Filters />}
                 </div>
             </div>
         </div>

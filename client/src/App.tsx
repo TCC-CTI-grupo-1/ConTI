@@ -5,6 +5,7 @@ import Profile from './components/user/profile/Profile';
 import QuestionDatabase from './components/questions/QuestionDatabase';
 import AllTests from './components/questions/AllTests';
 import { Routes, Route } from "react-router-dom"
+import Simulado from './components/questions/simulado/Simulado';
 
 
 const showAlert = (message: string, 
@@ -43,6 +44,7 @@ function App() {
             <Route path='/alltests' element={ <AllTests /> } />   
             <Route path='/questions' element={<QuestionDatabase />} />
             <Route path='/questions/:id' element={<QuestionDatabase />} />
+            <Route path='/test' element={<Simulado questionsList={[1,2,3,4,5,6,7,8,9,10,11,12,13]}/>} />
         </Routes>
         </div>
     );

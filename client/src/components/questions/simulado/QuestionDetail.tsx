@@ -1,11 +1,12 @@
 import { Button } from '@chakra-ui/react';
 import { useRef, useEffect, useState, useCallback } from 'react';
+import { questionInterface } from '../../../controllers/interfaces';
 
 interface Props {
-    questionID: string;
+    question?: questionInterface;
 }
 
-function QuestionDetail({ questionID }: Props) {
+function QuestionDetail({ question }: Props) {
 
     const questionRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +60,7 @@ function QuestionDetail({ questionID }: Props) {
     return (
     <>
         <div className='box question'>
+            <h1>Questão {question?.id}</h1>
             <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>
             <h3>O aumento da demanda global por recursos energéticos tem gerado preocupações quanto à segurança energética 
                 e um maior interesse em buscar fontes de energia  consideradas  sustentáveis e renováveis.  Diante desse cenário, 
@@ -104,13 +106,7 @@ function QuestionDetail({ questionID }: Props) {
                 <Button colorScheme="blue" size="lg" variant='outline'>Ver resolução comentada</Button>
             </div>
         </div>
-        <div className="more-options">
-            <p>Explorar questões similares</p>
-            <div>
-                <Button colorScheme="blue" size="lg" variant='outline'>Anterior</Button>
-                <Button colorScheme="blue" size="lg" variant='outline'>Próxima</Button>
-            </div>
-        </div>
+
     </>
     );
 }

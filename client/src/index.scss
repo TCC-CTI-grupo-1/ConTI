@@ -138,94 +138,6 @@ h3 {
 
       z-index: 2;
 
-      &>.question {
-        &>.alternatives {
-          &.showCorrect {
-            &>div {
-              cursor: default;
-              &:hover{
-                background-color: var(--background-color);
-              }
-              &.correct{
-                background-color: var(--color-green-20) !important;
-                &>span{
-                  border-color: var(--color-green) !important;
-                  color: var(--color-green) !important;
-                }
-              }
-              &.active{
-                background-color: var(--color-red-50);
-                &>span{
-                  border-color: var(--color-red);
-                  color: var(--color-red);
-                }
-              
-              }
-            }
-          }
-          margin: var(--padding-2) 0;
-          display: flex;
-          flex-direction: column;
-
-          &>div {
-            display: flex;
-            align-items: center;
-            gap: var(--padding-3);
-            padding: var(--padding-4);
-            transition: 0.25s;
-            border-radius: var(--border-radius);
-            margin: var(--margin-smol);
-            cursor: pointer;
-
-            &>span {
-              transition: 0.25s;
-              border: 2px solid black;
-              width: var(--padding-0);
-              aspect-ratio: 1/1;
-              border-radius: 50%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-
-            &:hover {
-              background-color: var(--background-color-2);
-
-            }
-
-            &.active {
-              background-color: var(--primary-color-10);
-
-              &>span {
-                border-color: var(--primary-color);
-                color: var(--primary-color);
-              }
-            }
-          }
-        }
-
-        &>.options {
-          display: flex;
-          gap: var(--padding-3);
-          justify-content: flex-end;
-        }
-      }
-
-      &>.more-options {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        gap: var(--padding-3);
-        width: 100%;
-
-        &>div {
-           width: 100%;
-          display: flex;
-          justify-content: space-around;
-        }
-      }
-
     }
   }
 }
@@ -1618,4 +1530,130 @@ COMPONENTES GERAIS DO FERNANDO
     }
   }
 
+}
+
+.question {
+  &>.alternatives {
+    &.showCorrect {
+      &>div {
+        cursor: default;
+        &:hover{
+          background-color: var(--background-color);
+        }
+        &.correct{
+          background-color: var(--color-green-20) !important;
+          &>span{
+            border-color: var(--color-green) !important;
+            color: var(--color-green) !important;
+          }
+        }
+        &.active{
+          background-color: var(--color-red-50);
+          &>span{
+            border-color: var(--color-red);
+            color: var(--color-red);
+          }
+        
+        }
+      }
+    }
+    margin: var(--padding-2) 0;
+    display: flex;
+    flex-direction: column;
+
+    &>div {
+      display: flex;
+      align-items: center;
+      gap: var(--padding-3);
+      padding: var(--padding-4);
+      transition: 0.25s;
+      border-radius: var(--border-radius);
+      margin: var(--margin-smol);
+      cursor: pointer;
+
+      &>span {
+        transition: 0.25s;
+        border: 2px solid black;
+        width: var(--padding-0);
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &:hover {
+        background-color: var(--background-color-2);
+
+      }
+
+      &.active {
+        background-color: var(--primary-color-10);
+
+        &>span {
+          border-color: var(--primary-color);
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+
+  &>.options {
+    display: flex;
+    gap: var(--padding-3);
+    justify-content: flex-end;
+  }
+}
+
+#simulado{
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  & > #allQuestions{
+    position: fixed;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--padding-3);
+    padding: var(--padding-3);
+
+    border: 1px solid black;
+    border-left: none;
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+
+    & > span{
+      border-radius: 100%;
+      border: 1px solid black;
+      cursor: pointer;
+      width: calc(var(--padding-2)*2);
+      aspect-ratio: 1/1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.25s;
+
+      &.active{
+        background-color: var(--primary-color-10);
+        border-color: var(--primary-color);
+        &>h3{
+          color: var(--primary-color);
+        }
+      }
+      & > h3{
+        height: auto;
+      }
+    }
+
+    &>svg{
+      width: 50%;
+      height: auto;
+    }
+  }
+  & > #allQuestionsMargin{
+    height: 100%;
+    width: 200px;
+  }
 }

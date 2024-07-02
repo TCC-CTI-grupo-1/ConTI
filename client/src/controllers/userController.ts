@@ -1,4 +1,5 @@
 import { Profile } from '../../../server/src/types/express-session';
+import { questionInterface } from './interfaces';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.', 't'];
@@ -12,7 +13,7 @@ const validadeEmail = (email: string): string[] => { //Deveria mudar string[] pa
         newIsEmailValid = newIsEmailValid.filter((char) => char !== '.');
     }
 
-    if (email.indexOf('@') < email.lastIndexOf('.')){
+    if (email.indexOf('@') < email.lastIndexOf('.')) {
         newIsEmailValid = newIsEmailValid.filter((char) => char !== 't');
     }
 
@@ -130,7 +131,7 @@ async function getUser(): Promise<Profile | null> {
         } else {
             return responseData.profile;
         }
-    }catch (err: any){
+    } catch (err: any) {
         return null;
     }
 }
@@ -163,7 +164,7 @@ async function handleChange(name: string, email: string): Promise<boolean> {
 }
 
 
-async function handleSaveChanges(Profile : Profile): Promise<boolean> {
+async function handleSaveChanges(Profile: Profile): Promise<boolean> {
     try {
         const response = await fetch('http://localhost:3001/updateUser', {
             method: 'POST',
@@ -180,13 +181,13 @@ async function handleSaveChanges(Profile : Profile): Promise<boolean> {
         } else {
             return true;
         }
-    
+
     } catch (err: any) {
         return false;
     }
 }
 
-async function handleLogout(){
+async function handleLogout() {
     try {
         const response = await fetch('http://localhost:3001/logout', {
             method: 'POST',
@@ -205,9 +206,9 @@ async function handleLogout(){
     } catch (err: any) {
         return [false, "Logout falhou"];
     }
-    
+
 }
-async function handleDeleteAccount(){
+async function handleDeleteAccount() {
     try {
         const response = await fetch('http://localhost:3001/deleteUser', {
             method: 'DELETE',
@@ -238,12 +239,37 @@ async function handleDeleteAccount(){
             window.location.href = 'http://localhost:5173/';
             // return [true, "Logout bem sucedido"];
         }
-        
+
     } catch (err: any) {
         return [false, "Erro ao deletar conta"];
     }
 }
 
+function generateQuestionsHashMap(questionsList: number[]): Map<number, questionInterface> {
+    const questionsHashMap = new Map<number, questionInterface>();
+    questionsList.forEach(questionID => {
+        handleGetQuestion(questionID).then(question => {
+            questionsHashMap.set(questionID, question);
+        });
+    });
+    return questionsHashMap;
+}
 
+async function handleGetQuestion(questionID: number): Promise<questionInterface> {
+    //Fazer um timeout de 300ms:
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return {
+        id: questionID,
+        subject: 'Matemática',
+        difficulty: 'Fácil',
+        year: 2021,
+        enunciado: 'Qual é a raiz quadrada de 49?',
+        alternativas: ['1', '7', '9', '5'],
+        alternativaCorreta: '7'
+    };
 
-export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange, handleDeleteAccount, handleLogout, handleSaveChanges };
+}
+
+export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange, handleDeleteAccount, handleLogout, handleSaveChanges,
+    generateQuestionsHashMap, handleGetQuestion
+ };
