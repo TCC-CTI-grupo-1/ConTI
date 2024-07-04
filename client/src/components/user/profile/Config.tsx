@@ -14,6 +14,7 @@ const Config = () => {
     const [user, setUser] = useState<Profile | null>(null);
     /*Informações provenientes do BancoDeDados*/
 
+    //Esse é o famoso se funciona não mexe.
     async function handleGetUser(){
         let user = await getUser();
         setUser(user);

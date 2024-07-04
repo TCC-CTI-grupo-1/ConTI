@@ -3,10 +3,11 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { questionInterface } from '../../../controllers/interfaces';
 
 interface Props {
-    question?: questionInterface;
+    question: questionInterface;
+    isSimulado?: boolean;
 }
 
-function QuestionDetail({ question }: Props) {
+function QuestionDetail({ question, isSimulado=false }: Props) {
 
     const questionRef = useRef<HTMLDivElement>(null);
 
@@ -57,15 +58,21 @@ function QuestionDetail({ question }: Props) {
         };
     }, [showAnswer, handleClick]);
 
+
+
     return (
     <>
         <div className='box question'>
             <h1>Questão {question?.id}</h1>
             <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>
-            <h3>O aumento da demanda global por recursos energéticos tem gerado preocupações quanto à segurança energética 
-                e um maior interesse em buscar fontes de energia  consideradas  sustentáveis e renováveis.  Diante desse cenário, 
-                são exemplos de fontes sustentáveis e renováveis as que constam em: 
-            </h3>
+            {question?.enunciado.split('\n').map((line, index) => (
+                <h3 key={index}>
+                    {line.length > 30 ? '\n\n\n' + line : line
+                        //Fazer isso funcionar.
+                        //Ele deve cortar o texto em 30 caracteres e pular a linha
+                    }
+                </h3>
+            ))}
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 <div>
                     <span>
@@ -98,6 +105,7 @@ function QuestionDetail({ question }: Props) {
                     <p>Também acho</p>
                 </div>
             </div>
+            {!isSimulado && 
             <div className="options">
                 <Button colorScheme="blue" size="lg"
                 onClick={() => {
@@ -105,6 +113,7 @@ function QuestionDetail({ question }: Props) {
                 }}>{showAnswer ? 'Ocultar' : 'Responder'}</Button>
                 <Button colorScheme="blue" size="lg" variant='outline'>Ver resolução comentada</Button>
             </div>
+            }
         </div>
 
     </>

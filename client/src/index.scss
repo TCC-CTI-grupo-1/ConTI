@@ -145,7 +145,6 @@ h3 {
 .box {
   background-color: var(--background-color);
   padding: var(--padding-3);
-  margin: var(--padding-2);
   border-radius: var(--border-radius);
   border: 1px solid black;
   transform: translate(0px, 0px);
@@ -1533,6 +1532,7 @@ COMPONENTES GERAIS DO FERNANDO
 }
 
 .question {
+  min-width: 100%;
   &>.alternatives {
     &.showCorrect {
       &>div {
@@ -1607,61 +1607,78 @@ COMPONENTES GERAIS DO FERNANDO
 
 #simulado{
   display: flex;
+  min-width: 100vw;
   min-height: 100vh;
   align-items: center;
   & > #allQuestions{
     position: fixed;
-    height: 95vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: var(--padding-3);
-    padding: var(--padding-3);
-
-    border: 1px solid black;
-    border-left: none;
-    border-top-right-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
-
-    & > span{
-      border-radius: 100%;
-      border: 1px solid black;
-      cursor: pointer;
-      width: calc(var(--padding-2)*2);
-      aspect-ratio: 1/1;
+    height: 100vh;
+    border-right: 1px solid black;
+    padding: var(--padding-1) 0;
+    & > div{
+      height: 100%;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: flex-start;
       align-items: center;
-      transition: 0.25s;
+      gap: var(--padding-3);
+      padding: 0 var(--padding-3);
 
-      &.active{
-        background-color: var(--primary-color-10);
-        border-color: var(--primary-color);
-        &>h3{
-          color: var(--primary-color);
+
+
+      & > span{
+        border-radius: 100%;
+        border: 1px solid black;
+        cursor: pointer;
+        width: calc(var(--padding-2)*2);
+        aspect-ratio: 1/1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: 0.25s;
+
+        &.active{
+          background-color: var(--primary-color-10);
+          border-color: var(--primary-color);
+          &>h3{
+            color: var(--primary-color);
+          }
+        }
+        & > h3{
+          height: auto;
         }
       }
-      & > h3{
+
+      & > svg{
+        width: 50%;
         height: auto;
       }
     }
-
-    &>svg{
-      width: 50%;
-      height: auto;
-    }
   }
+
   & > #allQuestionsMargin{
     height: 100%;
-    width: 200px;
+    width: calc(calc(var(--padding-2)*2) + calc(var(--padding-3)*2));
   }
   & > .content{
+    height: 100vh;
+    padding: 0 var(--padding-1);
+    flex: 1;
+    gap: var(--padding-3);
+    display: flex;
+    flex-direction: column;
     & > #buttons{
       width: 100%;
       display: flex;
       justify-content: space-around;
       padding: 0 var(--padding-2);
+    }
+    & > .infoTop{
+      display: flex;
+      gap: var(--padding-3);
+      align-items: center;
+      justify-content: center;
+      padding: var(--padding-2);
     }
   }
 }

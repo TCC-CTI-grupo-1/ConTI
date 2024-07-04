@@ -245,31 +245,34 @@ async function handleDeleteAccount() {
     }
 }
 
-function generateQuestionsHashMap(questionsList: number[]): Map<number, questionInterface> {
-    const questionsHashMap = new Map<number, questionInterface>();
-    questionsList.forEach(questionID => {
-        handleGetQuestion(questionID).then(question => {
-            questionsHashMap.set(questionID, question);
-        });
-    });
-    return questionsHashMap;
-}
-
 async function handleGetQuestion(questionID: number): Promise<questionInterface> {
     //Fazer um timeout de 300ms:
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return {
-        id: questionID,
-        subject: 'Matemática',
-        difficulty: 'Fácil',
-        year: 2021,
-        enunciado: 'Qual é a raiz quadrada de 49?',
-        alternativas: ['1', '7', '9', '5'],
-        alternativaCorreta: '7'
-    };
+    await new Promise(resolve => setTimeout(resolve, 10));
+    if (questionID % 2 === 0) {
+        return {
+            id: questionID * 100,
+            subject: 'Matemática',
+            difficulty: 'Fácil',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['1', '7', '9', '5'],
+            alternativaCorreta: '7'
+        };
+    } else {
+        return {
+            id: questionID * 100,
+            subject: 'Português',
+            difficulty: 'Médio',
+            year: 2021,
+            enunciado: 'Qual é o antônimo de "alegre"? (DICA: Não é JORGE< juro pra vc, nunca foi e nunca será JORGE.) '+
+            'AKAKAKAKAKAKAKAKAKAKAKAKAKAKAAKAKAKKAKAKAKAAKKAKAKAKAKKAKAKAKAAKAKAKAKAKAKAKOEOEOOEOEOEKSKAKOEJIHCOUREWYHU',
+            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo'],
+            alternativaCorreta: 'Triste'
+        };
+    }
 
 }
 
 export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange, handleDeleteAccount, handleLogout, handleSaveChanges,
-    generateQuestionsHashMap, handleGetQuestion
+ handleGetQuestion
  };
