@@ -6,7 +6,7 @@ import { showAlert } from '../../../App';
 interface Props {
     question: questionInterface;
     isSimulado?: boolean;
-    isAwnserSelected?: (value: boolean) => void; // Define the prop for the function
+    isAwnserSelected?: (value: string | null) => void; // Define the prop for the function
 }
 
 function QuestionDetail({ question, isSimulado=false, isAwnserSelected }: Props) {
@@ -14,7 +14,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected }: Props)
     const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
 
     useEffect(() => {
-        isAwnserSelected && isAwnserSelected(selectedAwnser != null ? true : false); // Call the function and pass the value from the state
+        isAwnserSelected && isAwnserSelected(selectedAwnser); // Call the function and pass the value from the state
     }, [selectedAwnser]);
 
 

@@ -16,6 +16,7 @@ Em simulado.tsx
 Geral;
 - Mudar rotas para o protugues (talvez) [/profile -> /perfil]
 - Alterar TONS de verde e vermelho
+- Fazer um feedback dahorinha nos botão se der
 
 Em config.tsx:
 - abrir uma caixa de confirmação se deseja mesmo deletar a conta

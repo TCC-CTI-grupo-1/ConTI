@@ -1692,6 +1692,10 @@ COMPONENTES GERAIS DO FERNANDO
       align-items: center;
       justify-content: center;
       padding: var(--padding-2);
+      & > h3{
+        flex: 1;
+        text-align: center;
+      }
     }
   }
 }

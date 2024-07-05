@@ -1,8 +1,19 @@
 import QuestionDetail from "./QuestionDetail";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Button } from "@chakra-ui/react";
 import ArrowIcon from "../../../assets/ArrowIcon";
 import { questionInterface } from "../../../controllers/interfaces";
+import {
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
+    AlertDialogCloseButton,
+    useDisclosure,
+  } from '@chakra-ui/react'
+
 
 interface Props {
     questionsHashMap: Map<number, questionInterface>;
@@ -11,6 +22,9 @@ interface Props {
 
 const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
     const [activeQuestion, setActiveQuestion] = useState(0);
+
+    const [resultsHashMap, setResultsHashMap] = useState<Map<number, string | null>>(new Map());
+    //Mapa que vai guardar as respostas do usuário
 
     const getQuestionsNumbers = (questionsHashMap: Map<number, questionInterface>) => {
         const questions: JSX.Element[] = [];
@@ -31,6 +45,21 @@ const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
 
         return questions;
     };
+
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const cancelRef = useRef<HTMLButtonElement | null>(null);
+
+    const nQuestoesRestantes = () => {
+        let cont = 0;
+        resultsHashMap.forEach((value, index) => {
+            if(value == null)
+            {
+                cont++;
+            }
+        });
+        return cont;
+    }
 
     function handleQuestionNumberClick(questionNumber: number) {
         setActiveQuestion(questionNumber - 1);
@@ -68,8 +97,15 @@ const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
                     <QuestionDetail 
                         isSimulado 
                         question={questionMap} 
-                        isAwnserSelected={(value: boolean) => {
-                            markQuestionAsSelected(index + 1, value);
+                        isAwnserSelected={(value: string | null) => {
+                            setResultsHashMap(new Map(resultsHashMap.set(index + 1, value)));
+                            if(value != null)
+                            {
+                                markQuestionAsSelected(index + 1, true);
+                            }
+                            else{
+                                markQuestionAsSelected(index + 1, false);
+                            }
                         }}
                     />
                 </div>
@@ -92,6 +128,12 @@ const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
             <div className="content">
                 <div className="infoTop">
                     <h3>Tempo decorrido: 43:22 | 100:00</h3>
+                    <Button colorScheme="black" size="lg" variant="outline"
+                    onClick={()=>{
+                        onOpen();
+                    }}>
+                        Finalizar Simulado
+                    </Button>
                 </div>
                 {returnQuestionDetail()}
                 <div id="buttons">
@@ -123,7 +165,37 @@ const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
                     </Button>
                 </div>
             </div>
+                <AlertDialog
+                    motionPreset='slideInBottom'
+                    leastDestructiveRef={cancelRef}
+                    onClose={onClose}
+                    isOpen={isOpen}
+                    isCentered
+                >
+                    <AlertDialogOverlay />
+
+                    <AlertDialogContent>
+                    <AlertDialogHeader>Finalizar simulado?</AlertDialogHeader>
+                    <AlertDialogCloseButton />
+                    <AlertDialogBody>
+                       {nQuestoesRestantes() > 0 ? <>Ainda restam { nQuestoesRestantes() } questões sem resposta. Deseja mesmo finalizar o simulado?</> :
+                          <>Deseja finalizar o simulado?</>}
+                    </AlertDialogBody>
+                    <AlertDialogFooter>
+                        <Button ref={cancelRef} onClick={onClose}>
+                        Não
+                        </Button>
+                        <Button colorScheme={nQuestoesRestantes() > 0 ? 'red' : 'green'} ml={3}>
+                        Sim
+                        </Button>
+                    </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
         </div>
+
+
+        
+
     );
 };
 

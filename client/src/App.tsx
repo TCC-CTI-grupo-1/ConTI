@@ -44,7 +44,7 @@ function App() {
             <Route path='/alltests' element={ <AllTests /> } />   
             <Route path='/questions' element={<QuestionDatabase />} />
             <Route path='/questions/:id' element={<QuestionDatabase />} />
-            <Route path='/test' element={<SimuladoFrame questionsList={[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]}/>} />
+            <Route path='/test' element={<SimuladoFrame questionsList={[1,2,3,4,5]}/>} />
         </Routes>
         </div>
     );
