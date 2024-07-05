@@ -10,30 +10,24 @@ interface Props {
 }
 
 const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
-    const [page, setPage] = useState(1);
     const [activeQuestion, setActiveQuestion] = useState(0);
-    const n_questoes = 10;
 
     const getQuestionsNumbers = (questionsHashMap: Map<number, questionInterface>) => {
-        const questions = [];
+        const questions: JSX.Element[] = [];
 
-        (1 + (page - 1) * n_questoes) > 1
-            ? questions.push(<ArrowIcon direction="top" onClick={() => { setPage(page - 1); }} />)
-            : questions.push(<ArrowIcon direction="top" disabled />);
-
-        for (let i = 1 + (page - 1) * n_questoes; i <= n_questoes + (page - 1) * n_questoes; i++) {
-            questionsHashMap.get(i - 1) != null
-                ? questions.push(
-                    <span onClick={() => { handleQuestionNumberClick(i); }}>
-                        <h3>{i}</h3>
-                    </span>
-                )
-                : null;
-        }
-
-        questionsHashMap.size > 9 + (page - 1) * n_questoes
-            ? questions.push(<ArrowIcon direction="bottom" onClick={() => { setPage(page + 1); }} />)
-            : null;
+        questionsHashMap.forEach((question, index) => {
+            questions.push(
+                <span
+                    key={index}
+                    id={`question-${index + 1}`}
+                    onClick={() => {
+                        handleQuestionNumberClick(index + 1);
+                    }}
+                >
+                    <h3>{index + 1}</h3>
+                </span>
+            );
+        });
 
         return questions;
     };
@@ -49,6 +43,17 @@ const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
         });
     }
 
+    function markQuestionAsSelected(questionNumber: number, selected: boolean) {
+        const questionSpan = document.getElementById(`question-${questionNumber}`);
+        if (questionSpan) {
+            if (selected) {
+                questionSpan.classList.add("selected");
+            } else {
+                questionSpan.classList.remove("selected");
+            }
+        }
+    }
+
     const returnQuestionDetail = () => {
         let cont = 0;
         const questionsDetail: JSX.Element[] = [];
@@ -60,7 +65,13 @@ const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
                     key={cont}
                     style={{ display: activeQuestion === index ? "block" : "none" }}
                 >
-                    <QuestionDetail isSimulado question={questionMap} />
+                    <QuestionDetail 
+                        isSimulado 
+                        question={questionMap} 
+                        isAwnserSelected={(value: boolean) => {
+                            markQuestionAsSelected(index + 1, value);
+                        }}
+                    />
                 </div>
             );
         });
@@ -68,14 +79,14 @@ const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
         return questionsDetail;
     };
 
-    useEffect(() => {
-        handleQuestionNumberClick(activeQuestion + 1);
-    }, [page]);
-
     return (
         <div id="simulado">
             <div id="allQuestions">
+                <ArrowIcon direction="top" />
+
                 <div>{getQuestionsNumbers(questionsHashMap)}</div>
+
+                <ArrowIcon direction="bottom" />
             </div>
             <div id="allQuestionsMargin"></div>
             <div className="content">

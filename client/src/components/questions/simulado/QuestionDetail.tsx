@@ -1,13 +1,22 @@
 import { Button } from '@chakra-ui/react';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { questionInterface } from '../../../controllers/interfaces';
+import { showAlert } from '../../../App';
 
 interface Props {
     question: questionInterface;
     isSimulado?: boolean;
+    isAwnserSelected?: (value: boolean) => void; // Define the prop for the function
 }
 
-function QuestionDetail({ question, isSimulado=false }: Props) {
+function QuestionDetail({ question, isSimulado=false, isAwnserSelected }: Props) {
+
+    const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
+
+    useEffect(() => {
+        isAwnserSelected && isAwnserSelected(selectedAwnser != null ? true : false); // Call the function and pass the value from the state
+    }, [selectedAwnser]);
+
 
     const questionRef = useRef<HTMLDivElement>(null);
 
@@ -21,11 +30,19 @@ function QuestionDetail({ question, isSimulado=false }: Props) {
 
         if (target.classList.contains('active')) {
             target.classList.remove('active');
+            setSelectedAwnser(null);
         } else {
-            alternatives?.forEach((alternative) => {
-                alternative.classList.remove('active');
-            });
-            target.classList.add('active');
+            let selected = target.querySelector('h3')?.textContent;
+            if(typeof(selected) == 'string'){
+                alternatives?.forEach((alternative) => {
+                    alternative.classList.remove('active');
+                });
+                target.classList.add('active');
+                setSelectedAwnser(selected);
+            }
+            else{
+                showAlert('Ocorreu um erro ao computar a alternativa. Tente novamente.');
+            }
         }
 
     }, []);
@@ -58,21 +75,35 @@ function QuestionDetail({ question, isSimulado=false }: Props) {
         };
     }, [showAnswer, handleClick]);
 
+    function validateWordText(word: string): string {
+        //aqui está como "line" mas na verdade é cada palavra.
+        let n_caracteres = 120;
+        let returnedWord = '';
+        if (word.length > n_caracteres) {
+            returnedWord = word.substring(0, n_caracteres) + '- ' + word.substring(n_caracteres);
+        }
+        else{
+            returnedWord = word;
+        }
+        return returnedWord;
+    }
 
+    function validateTextText(text: string): string {
+        let text22 = ''
+        text.split(' ').map((line: string, index) => (
+            text22 += validateWordText(line) + ' '
+        ));
+        return text22;
+    }
 
     return (
     <>
         <div className='box question'>
             <h1>Questão {question?.id}</h1>
             <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>
-            {question?.enunciado.split('\n').map((line, index) => (
-                <h3 key={index}>
-                    {line.length > 30 ? '\n\n\n' + line : line
-                        //Fazer isso funcionar.
-                        //Ele deve cortar o texto em 30 caracteres e pular a linha
-                    }
-                </h3>
-            ))}
+            <h3>
+            {validateTextText(question?.enunciado)}
+            </h3>
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 <div>
                     <span>

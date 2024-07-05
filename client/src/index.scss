@@ -47,6 +47,7 @@ input::-ms-clear {
   --color-red: #ff0000;
   --color-red-50: rgb(255, 70, 70);
   --color-red-20: rgba(255, 70, 70, 0.2);
+  --color-black-20: rgba(0, 0, 0, 0.1);
 
   --text-white: white;
 
@@ -1615,6 +1616,15 @@ COMPONENTES GERAIS DO FERNANDO
     height: 100vh;
     border-right: 1px solid black;
     padding: var(--padding-1) 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--padding-3);
+    & > svg{
+      width: 30%;
+      height: auto;
+    }
     & > div{
       height: 100%;
       display: flex;
@@ -1623,36 +1633,39 @@ COMPONENTES GERAIS DO FERNANDO
       align-items: center;
       gap: var(--padding-3);
       padding: 0 var(--padding-3);
-
-
+      overflow: auto;
+      overflow-x: hidden;
+      &::-webkit-scrollbar {
+        width: 0px;
+      }
 
       & > span{
         border-radius: 100%;
         border: 1px solid black;
         cursor: pointer;
-        width: calc(var(--padding-2)*2);
         aspect-ratio: 1/1;
         display: flex;
         justify-content: center;
         align-items: center;
         transition: 0.25s;
+        width: calc(var(--padding-2)*2);
+        min-height: calc(var(--padding-2)*2);
 
         &.active{
-          background-color: var(--primary-color-10);
+          background-color: var(--primary-color-10) !important;
           border-color: var(--primary-color);
           &>h3{
             color: var(--primary-color);
           }
+        }
+        &.selected{
+          background-color: var(--color-black-20);
         }
         & > h3{
           height: auto;
         }
       }
 
-      & > svg{
-        width: 50%;
-        height: auto;
-      }
     }
   }
 

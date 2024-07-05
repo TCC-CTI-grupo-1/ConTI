@@ -264,8 +264,8 @@ async function handleGetQuestion(questionID: number): Promise<questionInterface>
             subject: 'Português',
             difficulty: 'Médio',
             year: 2021,
-            enunciado: 'Qual é o antônimo de "alegre"? (DICA: Não é JORGE< juro pra vc, nunca foi e nunca será JORGE.) '+
-            'AKAKAKAKAKAKAKAKAKAKAKAKAKAKAAKAKAKKAKAKAKAAKKAKAKAKAKKAKAKAKAAKAKAKAKAKAKAKOEOEOOEOEOEKSKAKOEJIHCOUREWYHU',
+            enunciado: 'TesteDaPrimeiraLinha:11111111111111111111111111111111111111111111111111111 '+
+            'SegundaLinha:222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
             alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo'],
             alternativaCorreta: 'Triste'
         };

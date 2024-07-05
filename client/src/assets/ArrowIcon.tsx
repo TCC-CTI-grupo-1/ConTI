@@ -19,7 +19,12 @@ const ArrowIcon = ({direction, onClick, disabled, colorScheme = "black"}:Props) 
   }
 
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={onClick}>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={() => {
+      if (!disabled){
+        onClick && onClick()
+      }
+    }
+    }>
       {direction === 'bottom' && (
         <path d="M7.29289 11.7071C7.68342 12.0976 8.31658 12.0976 8.70711 11.7071L15.0711 5.34315C15.4616 4.95262 15.4616 4.31946 15.0711 3.92893C14.6805 3.53841 14.0474 3.53841 13.6569 3.92893L8 9.58579L2.34315 3.92893C1.95262 3.53841 1.31946 3.53841 0.928932 3.92893C0.538408 4.31946 0.538408 4.95262 0.928932 5.34315L7.29289 11.7071ZM7 10V11H9V10H7Z" fill={color}/>
       )}
