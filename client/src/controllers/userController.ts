@@ -1,5 +1,5 @@
 import { Profile } from '../../../server/src/types/express-session';
-import { questionInterface } from './interfaces';
+import { questionInterface, simuladoSimpleInterface, simuladoInterface } from './interfaces';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.', 't'];
@@ -272,7 +272,74 @@ async function handleGetQuestion(questionID: number): Promise<questionInterface>
     }
 
 }
+async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInterface[]> {
+    await new Promise(resolve => setTimeout(resolve, 500));
 
+    return [
+        {
+            id: 1,
+            totalQuestions: 10,
+            totalCorrect: 8,
+            date: new Date(2021, 4, 1),
+            time: 60,
+            subjects: {
+                'Matemática': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                },
+                'Português': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                }
+            }
+        },
+        {
+            id: 2,
+            totalQuestions: 10,
+            totalCorrect: 8,
+            date: new Date(2021, 4, 1),
+            time: 60,
+            subjects: {
+                'Matemática': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                },
+                'Português': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                }
+            }
+        },
+        {
+            id: 3,
+            totalQuestions: 10,
+            totalCorrect: 8,
+            date: new Date(2021, 4, 1),
+            time: 60,
+            subjects: {
+                'Matemática': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                },
+                'Português': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                }
+            }
+        }
+    ];
+
+}
+async function handlePostSimulado(questionsList: Map<number, string | null>): Promise<boolean> {
+    //Código PLACEHOLDER.
+    try {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        return true;
+
+    } catch (err: any) {
+        return false;
+    }
+}
 export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange, handleDeleteAccount, handleLogout, handleSaveChanges,
- handleGetQuestion
+ handleGetQuestion, handlePostSimulado, handleGetSimpleSimulados
  };

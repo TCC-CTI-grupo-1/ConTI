@@ -1699,3 +1699,86 @@ COMPONENTES GERAIS DO FERNANDO
     }
   }
 }
+
+#history{
+  & .provaCard{
+    transition: 0.2s;
+    border: 1px solid black;
+    padding: var(--padding-3);
+    border-radius: var(--border-radius);
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-5);
+    & .progress{
+      width: 100%;
+      height: var(--padding-6);
+      border-radius: var(--padding-6);
+      & > div{
+        height: var(--padding-6);
+        border-radius: var(--padding-6);
+        background-color: var(--primary-color);
+      }
+      background-color: gray;
+    }
+    & > .materias {
+      margin-top: var(--padding-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-3);
+      & > div{
+        display: grid;
+        grid-template-rows: auto auto;
+        grid-template-columns: auto auto; 
+        gap: var(--padding-5);
+
+        & h4{
+          text-align: right;
+        }
+        & .progress{
+          grid-column: 1/3;
+        }
+      }
+    }
+    &:hover{
+      cursor: pointer;
+      background-color: var(--background-color-2);
+    }
+  }
+
+  & > .container > .content{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-0);
+    align-items: center; & > h3{
+      width: 100%;
+    }
+    & > #daySelector{
+      user-select: none;
+      display: flex;
+      align-items: center;
+      width: 80%;
+      background-color: var(--primary-color-30);
+      border-radius: var(--border-radius);
+      justify-content: space-between;
+      padding: var(--padding-4);
+    }
+    & > div{
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--padding-3);
+      width: 80%;
+      & > div{
+        min-width: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: var(--padding-3);
+        & > div{
+          display: flex;
+          gap: var(--padding-3);
+        }
+      }
+    }
+  }
+}
+

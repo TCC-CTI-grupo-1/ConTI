@@ -3,11 +3,12 @@ import HomeIcon from "../assets/HomeIcon";
 import UserIcon from "../assets/UserIcon";
 import DatabaseIcon from "../assets/DatabaseIcon";
 import MenuIcon from "../assets/MenuIcon";
+import HistoryIcon from "../assets/HistoryIcon";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 interface Props{
-    screen: 'home' | 'profile' | 'database'
+    screen: 'home' | 'profile' | 'database' | 'history';
 }
 
 const Navbar = ({screen}:Props) => {
@@ -56,6 +57,13 @@ const Navbar = ({screen}:Props) => {
                     <p className={checkActiveScreen('profile')}>Perfil</p>
                 </div>
                 
+                <div className="icon">
+                        <HistoryIcon iconColor={checkActiveScreen('history')}
+                        onIconClick={() => {navegate('/history')}}/>
+                        <p className={checkActiveScreen('history')}>Histórico</p>
+                </div>
+                
+
             </nav>
 
         </div>

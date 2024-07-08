@@ -17,10 +17,10 @@ import {
 
 interface Props {
     questionsHashMap: Map<number, questionInterface>;
-    isSimulado?: boolean;
+    handleFinishSimulado: (respostas: Map<number, string | null>) => void;
 }
 
-const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
+const Simulado = ({ questionsHashMap, handleFinishSimulado }: Props) => {
     const [activeQuestion, setActiveQuestion] = useState(0);
 
     const [resultsHashMap, setResultsHashMap] = useState<Map<number, string | null>>(new Map());
@@ -185,7 +185,11 @@ const Simulado = ({ questionsHashMap, isSimulado }: Props) => {
                         <Button ref={cancelRef} onClick={onClose}>
                         Não
                         </Button>
-                        <Button colorScheme={nQuestoesRestantes() > 0 ? 'red' : 'green'} ml={3}>
+                        <Button colorScheme={nQuestoesRestantes() > 0 ? 'red' : 'green'} ml={3}
+                        onClick={()=>{
+                            handleFinishSimulado(resultsHashMap);
+                        }}    
+                        >
                         Sim
                         </Button>
                     </AlertDialogFooter>
