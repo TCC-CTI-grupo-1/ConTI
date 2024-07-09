@@ -24,7 +24,7 @@ const History = () => {
 
     const [activeDay, setActiveDay] = useState('01/01/2024');
 
-    const [simuladosAndListas, setSimuladosAndListas] = useState<[simuladoSimpleInterface[], simuladoSimpleInterface[]]>([[], []]); //[simulados, listas]
+    const [simuladosAndListas, setSimuladosAndListas] = useState<[simuladoSimpleInterface[], simuladoSimpleInterface[]] | null>(null); //[simulados, listas]
 
     const [activeQuestionOverlay, setActiveQuestionOverlay] = useState<number>(11); //[simulados, listas
 
@@ -58,6 +58,50 @@ const History = () => {
         setActiveQuestionOverlay(questionClicked);
     }
 
+    function returnJSXOverlay(): JSX.Element{
+
+        //Retorna o JSX do overlay
+        let i = activeQuestionOverlay % 10 === 1 ? 0 : 1;
+        let j = Math.floor(activeQuestionOverlay/10) - 1;
+        if (simuladosAndListas)
+        {
+            return (
+                <div id="historyOverlay">
+                    <h2>Simulado #{simuladosAndListas[i][j].id}</h2>
+                    <p>Tempo consumudo: {simuladosAndListas[i][j].time} minutos</p>
+                    <p>Feito dia: {date.format(simuladosAndListas[i][j].date, 'DD/MM/YYYY')}</p>
+                    <h3>{simuladosAndListas[i][j].totalCorrect}/{simuladosAndListas[i][j].totalQuestions}</h3>
+                    <div className="progress">
+                        <div style={{width: (simuladosAndListas[i][j].totalCorrect * 100 / simuladosAndListas[i][j].totalQuestions ) + '%'}}></div>
+                    </div>
+                    <div className="materias">
+                        {
+                            Object.keys(simuladosAndListas[i][j].subjects).map((subject, index) => {
+                                return (
+                                    <div key={index}>
+                                        <p>{subject} [{simuladosAndListas[i][j].subjects[subject].totalCorrect}/{simuladosAndListas[i][j].subjects[subject].totalQuestions}]</p>
+                                        <div className="progress">
+                                            <div style={{width: (simuladosAndListas[i][j].subjects[subject].totalCorrect * 100 / simuladosAndListas[i][j].subjects[subject].totalQuestions ) + '%'}} />
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+            )
+        }
+        else{
+            return (
+                <div>
+                    <h1>Ops! Ocorreu um erro.</h1>
+                    <p>Favor recarregar a pagina.</p>
+                </div>
+            )
+        }
+
+    }
+
     return (
         <>
             <div id="history" className="flex-container full-screen-size">
@@ -80,7 +124,7 @@ const History = () => {
                                             <h2>Simulados</h2>
                                             <div>        
                                                 {
-                                                    simuladosAndListas[0].map((simulado, index) => {
+                                                    simuladosAndListas && simuladosAndListas[0].map((simulado, index) => {
                                                         return (
                                                             <div key={index} className="provaCard"
                                                             onClick={() => {
@@ -119,7 +163,7 @@ const History = () => {
                                             <h2>Listas</h2>
                                             <div>
                                                 {
-                                                    simuladosAndListas[1].map((lista, index) => {
+                                                    simuladosAndListas && simuladosAndListas[1].map((lista, index) => {
                                                         return (
                                                             <div key={index} className="provaCard"
                                                             onClick={() => {
@@ -167,28 +211,17 @@ const History = () => {
             >
                 <ModalOverlay />
                 <ModalContent>
-                <ModalHeader>Modal Title</ModalHeader>
+                <ModalHeader>Informações detalhadas</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    {
-                        <h1>{activeQuestionOverlay}</h1>
-                    }
-                    {
-                        activeQuestionOverlay % 10 === 1 ?
-                        <h2>Simulado: {simuladosAndListas[0][
-                            (Math.floor(activeQuestionOverlay/10) - 1)
-                        ].id}</h2>
-                        :
-                        <h2>Lista: {simuladosAndListas[1][
-                            (Math.floor(activeQuestionOverlay/10) - 1)
-                        ].id}</h2>
-                    }
+                    {returnJSXOverlay()}
                 </ModalBody>
                 <ModalFooter>
-                    <Button colorScheme='blue' mr={3} onClick={onClose}>
-                    Close
+                    <Button variant='ghost' mr={3}>Fechar</Button>
+                    <Button colorScheme='blue' onClick={onClose}>
+                    Ver prova
                     </Button>
-                    <Button variant='ghost'>Secondary Action</Button>
+
                 </ModalFooter>
                 </ModalContent>
             </Modal>

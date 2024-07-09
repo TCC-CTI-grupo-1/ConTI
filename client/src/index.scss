@@ -108,6 +108,18 @@ h3 {
   box-sizing: border-box;
 }
 
+.progress{
+  width: 100%;
+  height: var(--padding-6);
+  border-radius: var(--padding-6);
+  & > div{
+    height: var(--padding-6);
+    border-radius: var(--padding-6);
+    background-color: var(--primary-color);
+  }
+  background-color: gray;
+}
+
 .flex-container {
   display: flex;
   min-height: 100dvh;
@@ -1702,6 +1714,7 @@ COMPONENTES GERAIS DO FERNANDO
 
 #history{
   & .provaCard{
+    //height: fit-content;
     transition: 0.2s;
     border: 1px solid black;
     padding: var(--padding-3);
@@ -1710,17 +1723,7 @@ COMPONENTES GERAIS DO FERNANDO
     display: flex;
     flex-direction: column;
     gap: var(--padding-5);
-    & .progress{
-      width: 100%;
-      height: var(--padding-6);
-      border-radius: var(--padding-6);
-      & > div{
-        height: var(--padding-6);
-        border-radius: var(--padding-6);
-        background-color: var(--primary-color);
-      }
-      background-color: gray;
-    }
+    padding-bottom: var(--padding-2);
     & > .materias {
       margin-top: var(--padding-3);
       display: flex;
@@ -1782,3 +1785,30 @@ COMPONENTES GERAIS DO FERNANDO
   }
 }
 
+#historyOverlay{
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-4);
+  & .materias{
+    margin-top: var(--padding-3);
+    padding: var(--padding-3);
+    border-top: 1px solid black;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--padding-3);
+    & > div{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-3);
+    }
+  }
+
+  & > #loading{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-3);
+    align-items: center;
+  }
+}

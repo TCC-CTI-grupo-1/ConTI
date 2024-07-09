@@ -4,6 +4,7 @@ import User from './components/user/login/User';
 import Home from './components/home/Home';
 import Profile from './components/user/profile/Profile';
 import History from './components/history/History';
+import SimuladoVer from './components/questions/simulado/SimuladoVer';
 import QuestionDatabase from './components/questions/QuestionDatabase';
 import AllTests from './components/questions/AllTests';
 import { Routes, Route } from "react-router-dom"
@@ -49,6 +50,7 @@ function App() {
             <Route path='/questions' element={<QuestionDatabase />} />
             <Route path='/questions/:id' element={<QuestionDatabase />} />
             <Route path='/test' element={<SimuladoFrame questionsList={[1,2,3,4,5]}/>} />
+            <Route path='/simulados/:id' element={<SimuladoVer />} />
         </Routes>
         </div>
     );

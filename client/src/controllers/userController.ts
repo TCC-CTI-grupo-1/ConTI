@@ -272,6 +272,7 @@ async function handleGetQuestion(questionID: number): Promise<questionInterface>
     }
 
 }
+
 async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInterface[]> {
     await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -279,7 +280,7 @@ async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInter
         {
             id: 1,
             totalQuestions: 10,
-            totalCorrect: 8,
+            totalCorrect: 7,
             date: new Date(2021, 4, 1),
             time: 60,
             subjects: {
@@ -290,7 +291,16 @@ async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInter
                 'Português': {
                     totalQuestions: 5,
                     totalCorrect: 4
+                },
+                'Ciencias': {
+                    totalQuestions: 5,
+                    totalCorrect: 2
+                },
+                'História': {
+                    totalQuestions: 5,
+                    totalCorrect: 3
                 }
+                
             }
         },
         {
@@ -330,16 +340,60 @@ async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInter
     ];
 
 }
-async function handlePostSimulado(questionsList: Map<number, string | null>): Promise<boolean> {
+
+//Retorna o simulado que foi adicionado
+async function handlePostSimulado(questionsList: Map<number, string | null>): Promise<simuladoSimpleInterface | null> {
     //Código PLACEHOLDER.
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
-        return true;
-
+        return {
+            id: 1,
+            totalQuestions: 10,
+            totalCorrect: 7,
+            date: new Date(2021, 4, 1),
+            time: 60,
+            subjects: {
+                'Matemática': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                },
+                'Português': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                }
+            }
+        }
     } catch (err: any) {
-        return false;
+        return null;
     }
 }
+
+async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {
+    //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
+    try {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        return {
+            id: 1,
+            questions: new Map<number, string | null>([
+                [1, 'A'],
+                [2, 'B'],
+                [3, 'C'],
+                [4, 'D'],
+                [5, 'E'],
+                [6, 'A'],
+                [7, 'B'],
+                [8, 'C'],
+                [9, 'D'],
+                [10, 'E']
+            ]),
+            date: new Date(2021, 4, 1),
+            time: 60
+        }
+    } catch (err: any) {
+        return null;
+    }
+}
+
 export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange, handleDeleteAccount, handleLogout, handleSaveChanges,
- handleGetQuestion, handlePostSimulado, handleGetSimpleSimulados
+ handleGetQuestion, handlePostSimulado, handleGetSimpleSimulados, handleGetSimulado
  };

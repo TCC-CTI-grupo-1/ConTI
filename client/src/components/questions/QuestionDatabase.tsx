@@ -43,7 +43,7 @@ const QuestionDatabase = () => {
                 </div>
                 <div className="inversed-border"></div>
                 <div className="content">
-                    {hasQuestion ? <QuestionDetail /> : <Filters />}
+                    <Filters />
                 </div>
             </div>
         </div>

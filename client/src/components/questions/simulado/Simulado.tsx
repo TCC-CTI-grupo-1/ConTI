@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { Button } from "@chakra-ui/react";
 import ArrowIcon from "../../../assets/ArrowIcon";
 import { questionInterface } from "../../../controllers/interfaces";
+import { useNavigate } from "react-router-dom";
+
 import {
     AlertDialog,
     AlertDialogBody,
@@ -13,14 +15,14 @@ import {
     AlertDialogCloseButton,
     useDisclosure,
   } from '@chakra-ui/react'
-
-
+  
 interface Props {
     questionsHashMap: Map<number, questionInterface>;
     handleFinishSimulado: (respostas: Map<number, string | null>) => void;
+    isSimuladoFinished?: boolean;
 }
 
-const Simulado = ({ questionsHashMap, handleFinishSimulado }: Props) => {
+const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=false }: Props) => {
     const [activeQuestion, setActiveQuestion] = useState(0);
 
     const [resultsHashMap, setResultsHashMap] = useState<Map<number, string | null>>(new Map());
@@ -115,6 +117,8 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado }: Props) => {
         return questionsDetail;
     };
 
+    const navegate = useNavigate();
+
     return (
         <div id="simulado">
             <div id="allQuestions">
@@ -128,12 +132,18 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado }: Props) => {
             <div className="content">
                 <div className="infoTop">
                     <h3>Tempo decorrido: 43:22 | 100:00</h3>
-                    <Button colorScheme="black" size="lg" variant="outline"
+                    {!isSimuladoFinished ? <Button colorScheme="black" size="lg" variant="outline"
                     onClick={()=>{
                         onOpen();
                     }}>
                         Finalizar Simulado
                     </Button>
+                    : <Button colorScheme="blue" size="lg" variant="solid" onClick={() => {
+                        navegate('/');
+                    }}>
+                        Voltar ao home
+                    </Button>
+                    }
                 </div>
                 {returnQuestionDetail()}
                 <div id="buttons">
@@ -187,7 +197,11 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado }: Props) => {
                         </Button>
                         <Button colorScheme={nQuestoesRestantes() > 0 ? 'red' : 'green'} ml={3}
                         onClick={()=>{
-                            handleFinishSimulado(resultsHashMap);
+                            onClose();
+                            if(!isSimuladoFinished)
+                            {
+                                handleFinishSimulado(resultsHashMap);
+                            }   
                         }}    
                         >
                         Sim
