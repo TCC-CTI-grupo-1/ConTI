@@ -4,11 +4,11 @@ import User from './components/user/login/User';
 import Home from './components/home/Home';
 import Profile from './components/user/profile/Profile';
 import History from './components/history/History';
-import SimuladoVer from './components/questions/simulado/SimuladoVer';
+import SimuladoVer from './components/questions/simulado/VerSimulado';
 import QuestionDatabase from './components/questions/QuestionDatabase';
 import AllTests from './components/questions/AllTests';
 import { Routes, Route } from "react-router-dom"
-import SimuladoFrame from './components/questions/simulado/SimuladoFrame';
+import SimuladoFrame from './components/questions/simulado/FrameSimulado';
 
 
 const showAlert = (message: string, 

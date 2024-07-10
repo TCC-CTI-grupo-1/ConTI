@@ -50,7 +50,10 @@ const validadePassword = (password: string): number[] => {
     return newIsPasswordValid;
 }
 
-async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<string | null> {
+
+//Funções assincronas
+
+export async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<string | null> {
 
     //await new Promise(resolve => setTimeout(resolve, 3000));
     //return true;
@@ -83,7 +86,7 @@ async function handleSignup(name: string, email: string, password: string, remem
     }
 }
 
-async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, string]> {
+export async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, string]> {
     try {
         const data = {
             email: email,
@@ -114,7 +117,7 @@ async function handleLogin(email: string, password: string, remember: boolean): 
     }
 }
 
-async function getUser(): Promise<Profile | null> {
+export async function handleGetUser(): Promise<Profile | null> {
     try {
         const response = await fetch('http://localhost:3001/userSession', {
             method: 'GET',
@@ -136,7 +139,7 @@ async function getUser(): Promise<Profile | null> {
     }
 }
 
-async function handleChange(name: string, email: string): Promise<boolean> {
+export async function handleChange(name: string, email: string): Promise<boolean> {
     try {
         const data = {
             name: name,
@@ -164,7 +167,7 @@ async function handleChange(name: string, email: string): Promise<boolean> {
 }
 
 
-async function handleSaveChanges(Profile: Profile): Promise<boolean> {
+export async function handleSaveChanges(Profile: Profile): Promise<boolean> {
     try {
         const response = await fetch('http://localhost:3001/updateUser', {
             method: 'POST',
@@ -187,7 +190,7 @@ async function handleSaveChanges(Profile: Profile): Promise<boolean> {
     }
 }
 
-async function handleLogout() {
+export async function handleLogout() {
     try {
         const response = await fetch('http://localhost:3001/logout', {
             method: 'POST',
@@ -208,7 +211,7 @@ async function handleLogout() {
     }
 
 }
-async function handleDeleteAccount() {
+export async function handleDeleteAccount() {
     try {
         const response = await fetch('http://localhost:3001/deleteUser', {
             method: 'DELETE',
@@ -245,7 +248,7 @@ async function handleDeleteAccount() {
     }
 }
 
-async function handleGetQuestion(questionID: number): Promise<questionInterface> {
+export async function handleGetQuestion(questionID: number): Promise<questionInterface> {
     //Fazer um timeout de 300ms:
     await new Promise(resolve => setTimeout(resolve, 10));
     if (questionID % 2 === 0) {
@@ -273,7 +276,7 @@ async function handleGetQuestion(questionID: number): Promise<questionInterface>
 
 }
 
-async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInterface[]> {
+export async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInterface[]> {
     await new Promise(resolve => setTimeout(resolve, 500));
 
     return [
@@ -341,8 +344,11 @@ async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInter
 
 }
 
+type questionMapInterface = questionInterface[];
+type questionMapResultInterface =(string | null)[];  
+
 //Retorna o simulado que foi adicionado
-async function handlePostSimulado(questionsList: Map<number, string | null>): Promise<simuladoSimpleInterface | null> {
+export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoSimpleInterface | null> {
     //Código PLACEHOLDER.
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -368,7 +374,7 @@ async function handlePostSimulado(questionsList: Map<number, string | null>): Pr
     }
 }
 
-async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {
+export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {
     //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -394,6 +400,4 @@ async function handleGetSimulado(id: number): Promise<simuladoInterface | null> 
     }
 }
 
-export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange, handleDeleteAccount, handleLogout, handleSaveChanges,
- handleGetQuestion, handlePostSimulado, handleGetSimpleSimulados, handleGetSimulado
- };
+export { validadeEmail, validadePassword }

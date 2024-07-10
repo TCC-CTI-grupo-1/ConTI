@@ -1,9 +1,11 @@
 import QuestionDetail from "./QuestionDetail";
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@chakra-ui/react";
 import ArrowIcon from "../../../assets/ArrowIcon";
 import { questionInterface } from "../../../controllers/interfaces";
 import { useNavigate } from "react-router-dom";
+import Numbers from "./Numbers";
+import { handleQuestionNumberClick } from "./Numbers";
 
 import {
     AlertDialog,
@@ -16,38 +18,27 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
   
+type questionMapInterface = questionInterface[];
+type questionMapResultInterface = (string | null)[]; 
+
 interface Props {
-    questionsHashMap: Map<number, questionInterface>;
-    handleFinishSimulado: (respostas: Map<number, string | null>) => void;
+    questionsHashMap: questionMapInterface;
+    handleFinishSimulado: (respostas: questionMapResultInterface) => void;
     isSimuladoFinished?: boolean;
 }
 
+//Tudo aqui dentro é baseado no número da questão, e não no ID.
+
 const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=false }: Props) => {
+
+    console.log("SIMULADO!!!");
+    console.log(questionsHashMap);
+
+
     const [activeQuestion, setActiveQuestion] = useState(0);
 
-    const [resultsHashMap, setResultsHashMap] = useState<Map<number, string | null>>(new Map());
-    //Mapa que vai guardar as respostas do usuário
-
-    const getQuestionsNumbers = (questionsHashMap: Map<number, questionInterface>) => {
-        const questions: JSX.Element[] = [];
-
-        questionsHashMap.forEach((question, index) => {
-            questions.push(
-                <span
-                    key={index}
-                    id={`question-${index + 1}`}
-                    onClick={() => {
-                        handleQuestionNumberClick(index + 1);
-                    }}
-                >
-                    <h3>{index + 1}</h3>
-                </span>
-            );
-        });
-
-        return questions;
-    };
-
+    //Mapa que vai guardar as respostas do usuário (ou as respostas para vizualização)
+    const [resultsHashMap, setResultsHashMap] = useState<questionMapResultInterface>([]);
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -61,17 +52,6 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             }
         });
         return cont;
-    }
-
-    function handleQuestionNumberClick(questionNumber: number) {
-        setActiveQuestion(questionNumber - 1);
-        const questions = document.querySelectorAll("#allQuestions span");
-        questions.forEach((question) => {
-            question.classList.remove("active");
-            if (question.querySelector("h3")?.textContent == questionNumber.toString()) {
-                question.classList.add("active");
-            }
-        });
     }
 
     function markQuestionAsSelected(questionNumber: number, selected: boolean) {
@@ -100,13 +80,14 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                         isSimulado 
                         question={questionMap} 
                         isAwnserSelected={(value: string | null) => {
-                            setResultsHashMap(new Map(resultsHashMap.set(index + 1, value)));
+                            const newResultsHashMap = resultsHashMap;
+                            newResultsHashMap[index] = value;
                             if(value != null)
                             {
-                                markQuestionAsSelected(index + 1, true);
+                                markQuestionAsSelected(index, true);
                             }
                             else{
-                                markQuestionAsSelected(index + 1, false);
+                                markQuestionAsSelected(index, false);
                             }
                         }}
                     />
@@ -121,13 +102,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
 
     return (
         <div id="simulado">
-            <div id="allQuestions">
-                <ArrowIcon direction="top" />
-
-                <div>{getQuestionsNumbers(questionsHashMap)}</div>
-
-                <ArrowIcon direction="bottom" />
-            </div>
+            <Numbers questionsHashMap={questionsHashMap} setActiveQuestion={setActiveQuestion} />
             <div id="allQuestionsMargin"></div>
             <div className="content">
                 <div className="infoTop">
@@ -153,7 +128,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                         variant="outline"
                         onClick={() => {
                             if (activeQuestion > 0) {
-                                handleQuestionNumberClick(activeQuestion);
+                                handleQuestionNumberClick(activeQuestion - 1, setActiveQuestion);
                             }
                         }}
                     >
@@ -165,8 +140,8 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                         size="lg"
                         variant="outline"
                         onClick={() => {
-                            if (activeQuestion < questionsHashMap.size - 1) {
-                                handleQuestionNumberClick(activeQuestion + 2);
+                            if (activeQuestion < questionsHashMap.length - 1) {
+                                handleQuestionNumberClick(activeQuestion + 1, setActiveQuestion);
                             }
                         }}
                     >
@@ -210,9 +185,6 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                     </AlertDialogContent>
                 </AlertDialog>
         </div>
-
-
-        
 
     );
 };

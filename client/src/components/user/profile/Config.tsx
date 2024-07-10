@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Button from "../../Button"
 import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
-import { getUser } from "../../../controllers/userController";
+import { handleGetUser } from "../../../controllers/userController";
 import { Profile } from "../../../../../server/src/types/express-session";
 import { handleDeleteAccount, handleLogout, handleSaveChanges } from "../../../controllers/userController";
 import { showAlert } from "../../../App";
@@ -15,12 +15,12 @@ const Config = () => {
     /*Informações provenientes do BancoDeDados*/
 
     //Esse é o famoso se funciona não mexe.
-    async function handleGetUser(){
-        let user = await getUser();
+    async function handleGetUserBySession(){
+        let user = await handleGetUser();
         setUser(user);
     }
     useEffect(() => {
-        handleGetUser();
+        handleGetUserBySession();
     }, []);
 
     useEffect(() => {

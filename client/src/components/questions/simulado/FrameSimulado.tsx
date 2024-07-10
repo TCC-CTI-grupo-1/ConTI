@@ -18,6 +18,8 @@ import {
     Spinner
   } from '@chakra-ui/react'
 
+type questionMapInterface = questionInterface[];
+type questionMapResultInterface = (string | null)[];  
 
 interface Props{
     questionsList: number[],
@@ -26,7 +28,7 @@ interface Props{
 const SimuladoFrame = ({questionsList}:Props) => {
     const {onOpen, onClose, isOpen} = useDisclosure();
 
-    const [questionsHashMap, setQuestionsHashMap] = useState(new Map<number, questionInterface>());
+    const [questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface | null>(null);
     const [loading, setLoading] = useState(true);
     const [completeSimulado, setCompleteSimulado] = useState<simuladoSimpleInterface | null>(null);
 
@@ -35,11 +37,12 @@ const SimuladoFrame = ({questionsList}:Props) => {
 
     const navegate = useNavigate();
 
-    function handleGetRespostas(questionsResult: Map<number, string | null>) {
-        let respostas: Map<number, string | null> = new Map();
-        questionsResult.forEach((value, key) => {
-            if(questionsHashMap.get(key) !== undefined) {
-                respostas.set(questionsHashMap.get(key)!.id, value)
+    function handleGetRespostas(questionsResult: questionMapResultInterface) {
+        let respostas: questionMapResultInterface = [];
+        if(questionsHashMap === null) return;
+        questionsResult.forEach((value, index) => {
+            if(questionsHashMap.at(index) !== undefined) {
+                respostas.push(value);
             }
             else{
                 console.log('Error');
@@ -49,19 +52,20 @@ const SimuladoFrame = ({questionsList}:Props) => {
         handleFinishSimulado(respostas);
     }
 
-    async function handleFinishSimulado(respostas: Map<number, string | null>){
+    async function handleFinishSimulado(respostas: questionMapResultInterface){
         onOpen();
         setIsSimuladoAwaitActive(true);
         const simulado = await handlePostSimulado(respostas);
         setCompleteSimulado(simulado);
+        console.log(respostas);
     }
 
     useEffect(() => {
         const getQuestions = async () => {
-            const questionsHashMap = new Map<number, questionInterface>();
+            const questionsHashMap: questionMapInterface = [];
             for(let i = 0; i < questionsList.length; i++){
                 const question = await handleGetQuestion(questionsList[i]);
-                questionsHashMap.set(i, question);
+                questionsHashMap.push(question);
             }
             setQuestionsHashMap(questionsHashMap);
             setLoading(false);
@@ -116,9 +120,11 @@ const SimuladoFrame = ({questionsList}:Props) => {
     return (
         loading ? <h2>Aguarde enquanto finalizamos o seu simulado... </h2> :
         <>
-            <Simulado questionsHashMap={questionsHashMap} handleFinishSimulado={handleGetRespostas} 
-            isSimuladoFinished={isSimuladoAwaitActive}     
-            /> 
+            {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
+                <Simulado questionsHashMap={questionsHashMap} handleFinishSimulado={handleGetRespostas} 
+                isSimuladoFinished={isSimuladoAwaitActive}     
+                /> 
+            }
             <Modal
                 isCentered
                 onClose={onClose}
