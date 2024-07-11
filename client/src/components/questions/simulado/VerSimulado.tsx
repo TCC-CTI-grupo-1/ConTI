@@ -1,71 +1,62 @@
-import React from 'react'
-import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { handleGetSimulado } from '../../../controllers/userController';
-import { showAlert } from '../../../App';
-import { questionInterface, simuladoInterface } from '../../../controllers/interfaces';
-import Simulado from './Respostas';
-import { handleGetQuestion } from '../../../controllers/userController';
+import Simulado from "./Respostas"
+import { useState, useEffect } from "react"
+import { questionInterface, simuladoSimpleInterface } from "../../../controllers/interfaces"
+import { handleGetQuestion, handlePostSimulado } from "../../../controllers/userController"
+import date from 'date-and-time'
+import { useNavigate } from "react-router-dom"
+import { handleGetSimulado } from "../../../controllers/userController"
+import { useParams } from "react-router-dom"
+import { simuladoInterface } from "../../../controllers/interfaces"
 
-const SimuladoVer = () => {
+
+  type questionResultsInterface = [questionInterface, (string | null)][];
+
+const SimuladoFrame = () => {
     const { id } = useParams();
 
+    const [questionsHashMap, setQuestionsHashMap] = useState<questionResultsInterface | null>(null);
     const [loading, setLoading] = useState(true);
-    const [simulado, setSimulado] = useState<simuladoInterface | null>(null);
-    const [questionsHashMap, setQuestionsHashMap] = useState<[number, questionInterface, string | null][] | null>(null);
-    
 
-    async function handleGetUsuarioSimulado(){
-        if(id){
-            let idSimulado = parseInt(id);
-            const simulado = await handleGetSimulado(idSimulado);
-            
-            setSimulado(simulado);
-            
-            //console.log(simulado);
-
-            const questionsHashMap = await getQuestionsHashMap(simulado);
-            setQuestionsHashMap(questionsHashMap);
-
-            setLoading(false);
-            
-        }
-        else{
-            showAlert('Ocorreu um erro. Favor recarregar a pagina.', 'error');
-        }
-    }
+    const navegate = useNavigate();
 
     useEffect(() => {
-        handleGetUsuarioSimulado();
-    }, []);
-
-    async function getQuestionsHashMap(simulado: simuladoInterface | null): Promise<[number, questionInterface, string | null][]> {
-        const questionsHashMap: [number, questionInterface, string | null][] = [];
-        
-        if(simulado){
-            let cont = 1;
-            simulado.questions.forEach(async (q, index) => {
-                const question = await handleGetQuestion(index);
-                questionsHashMap.push([cont, question, q]);
-                cont++;
-            });
-        }
-        return questionsHashMap;
-    }
-
-    return (
-        <>
-        {
-            loading ? <h1>Loading...</h1> : 
-            simulado ? 
-            <>
-                <Simulado questionsHashMap={questionsHashMap!}/>      
-            </> 
+        const getSimulado = async () => {
             
-            : <h1>Simulado não encontrado</h1>
+            let newQuestionsHashMap: questionResultsInterface = [];
+
+            const simulado = await handleGetSimulado(Number(id));
+
+            console.log(typeof(simulado));
+
+            if(simulado === null){
+                console.log("SUICIDIO")
+                return;
+            }
+
+            await Promise.all(simulado.questions.map(async (question, index) => {
+                const questionData = await handleGetQuestion(question[0]);
+                newQuestionsHashMap.push([questionData, question[1]]);
+            }));
+
+            setQuestionsHashMap(newQuestionsHashMap);
+            setLoading(false);
         }
+
+        console.log(id);
+
+        getSimulado();
+    }, []);
+  
+    return (
+        loading ? <h2>Aguarde enquanto finalizamos o seu simulado... </h2> :
+        <>
+            {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
+                <Simulado questionsHashMap={questionsHashMap}     
+                /> 
+            }
         </>
-    )
+        
+  )
 }
 
-export default SimuladoVer
+export default SimuladoFrame

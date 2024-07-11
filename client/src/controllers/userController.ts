@@ -380,7 +380,8 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
         await new Promise(resolve => setTimeout(resolve, 3000));
         return {
             id: 1,
-            questions: new Map<number, string | null>([
+            questions: 
+            [
                 [1, 'A'],
                 [2, 'B'],
                 [3, 'C'],
@@ -391,7 +392,7 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
                 [8, 'C'],
                 [9, 'D'],
                 [10, 'E']
-            ]),
+            ],
             date: new Date(2021, 4, 1),
             time: 60
         }

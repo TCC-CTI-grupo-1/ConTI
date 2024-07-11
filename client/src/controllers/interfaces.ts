@@ -26,7 +26,7 @@ export interface simuladoSimpleInterface{
 //Usado quando carregamos o simulado em si (Com os id's das questões a as letras marcadas)
 export interface simuladoInterface{
     id: number,
-    questions: Map<number, string | null>,
+    questions: [number, string | null][],
     date: Date,
     time: number,
 }

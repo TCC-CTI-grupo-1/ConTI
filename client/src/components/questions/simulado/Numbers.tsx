@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ArrowIcon from '../../../assets/ArrowIcon'
 import { questionInterface } from '../../../controllers/interfaces'
 
@@ -9,6 +9,7 @@ type questionMapResultInterface = (string | null)[];
 interface Props{
     questionsHashMap: questionMapInterface;
     setActiveQuestion: (questionNumber: number) => void;
+    defaultQuestion?: number;
 }
 
 export function handleQuestionNumberClick(questionNumber: number, setActiveQuestion: (questionNumber: number) => void) {
@@ -22,7 +23,7 @@ export function handleQuestionNumberClick(questionNumber: number, setActiveQuest
     });
 }
 
-const Numbers = ({questionsHashMap, setActiveQuestion}: Props) => {
+const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0}: Props) => {
 
     const getQuestionsNumbers = (questionsHashMap: questionMapInterface) => {
         const questions: JSX.Element[] = [];
@@ -45,7 +46,9 @@ const Numbers = ({questionsHashMap, setActiveQuestion}: Props) => {
     };
 
 
-    
+    useEffect(() => {
+        handleQuestionNumberClick(defaultQuestion, setActiveQuestion);
+    }, []);
 
     return (
         <div id="allQuestions">

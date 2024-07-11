@@ -98,6 +98,8 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
         return questionsDetail;
     };
 
+
+
     const navegate = useNavigate();
 
     return (
