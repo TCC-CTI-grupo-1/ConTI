@@ -42,10 +42,10 @@ input::-ms-clear {
   --background-color: white;
   --background-color-50: rgba(255, 255, 255, 0.863);
   --background-color-2: rgb(245, 245, 245);
-  --color-green: rgba(80, 226, 80, 0.8);
-  --color-green-20: rgba(80, 226, 80, 0.2);
+  --color-green: rgba(7, 158, 7, 0.8);
+  --color-green-20: rgba(7, 158, 7, 0.2);
   --color-red: #ff0000;
-  --color-red-50: rgb(255, 70, 70);
+  --color-red-50: rgba(255, 70, 70, 0.5);
   --color-red-20: rgba(255, 70, 70, 0.2);
   --color-black-20: rgba(0, 0, 0, 0.1);
 
@@ -1545,6 +1545,7 @@ COMPONENTES GERAIS DO FERNANDO
 }
 
 .question {
+
   min-width: 100%;
   &>.alternatives {
     &.showCorrect {
@@ -1554,19 +1555,27 @@ COMPONENTES GERAIS DO FERNANDO
           background-color: var(--background-color);
         }
         &.correct{
-          background-color: var(--color-green-20) !important;
+          color: var(--color-green);
           &>span{
-            border-color: var(--color-green) !important;
-            color: var(--color-green) !important;
+            border-color: var(--color-green);
+            color: var(--color-green);
           }
         }
         &.active{
           background-color: var(--color-red-50);
+          color: var(--color-red);
           &>span{
             border-color: var(--color-red);
             color: var(--color-red);
           }
-        
+        }
+        &.correct.active{
+          background-color: var(--color-green-20);
+          color: var(--color-green);
+          &>span{
+            border-color: var(--color-green);
+            color: var(--color-green);
+          }
         }
       }
     }
@@ -1665,14 +1674,33 @@ COMPONENTES GERAIS DO FERNANDO
 
         &.active{
           background-color: var(--primary-color-10) !important;
-          border-color: var(--primary-color);
+          border-color: var(--primary-color) !important;
           &>h3{
-            color: var(--primary-color);
+            color: var(--primary-color) !important;
           }
         }
         &.selected{
           background-color: var(--color-black-20);
         }
+
+        &.correct{
+          opacity: 0.8;
+          background-color: var(--color-green-20);
+          border-color: var(--color-green);
+          &>h3{
+            color: var(--color-green);
+          }
+        }
+
+        &.incorrect{
+          opacity: 0.8;
+          background-color: var(--color-red-20);
+          border-color: var(--color-red);
+          &>h3{
+            color: var(--color-red);
+          }
+        }
+
         & > h3{
           height: auto;
         }

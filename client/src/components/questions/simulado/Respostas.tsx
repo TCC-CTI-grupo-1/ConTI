@@ -12,11 +12,12 @@ type questionResultsInterface = [questionInterface, (string | null)][];
 
 interface Props {
     questionsHashMap: questionResultsInterface;
+    pontuacao: boolean[];
 }
 
 //Tudo aqui dentro é baseado no número da questão, e não no ID.
 
-const Simulado = ({ questionsHashMap }: Props) => {
+const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
 
 
     const [activeQuestion, setActiveQuestion] = useState(0);
@@ -45,6 +46,7 @@ const Simulado = ({ questionsHashMap }: Props) => {
                 >
                     <QuestionDetail 
                         question={questionMap[0]} 
+                        isCorrecao={questionMap[1]}
                     />
                 </div>
             );
@@ -58,15 +60,20 @@ const Simulado = ({ questionsHashMap }: Props) => {
 
     return (
         <div id="simulado">
-            <Numbers questionsHashMap={questionsHashMap.map((q)=> {return q[0]})} setActiveQuestion={setActiveQuestion} />
+            <Numbers questionsHashMap={questionsHashMap.map((q)=> {return q[0].id})} 
+            setActiveQuestion={setActiveQuestion}
+            respostasCorretas={pontuacao}
+            />
             <div id="allQuestionsMargin"></div>
             <div className="content">
                 <div className="infoTop">
-                    <h3>Tempo decorrido: 43:22 | 100:00</h3>
+                    <h3>Pontuação final: {pontuacao.filter((p) => p).length} / {questionsHashMap.length}</h3>
                     <Button colorScheme="blue" size="lg" variant="solid" onClick={() => {
-                        navegate('/');
+                        //Voltar para a tela anterior
+                        navegate('/history');
+
                     }}>
-                        Voltar ao home
+                        Voltar ao historico
                     </Button>
                 </div>
                 {returnQuestionDetail()}

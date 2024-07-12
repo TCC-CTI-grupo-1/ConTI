@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import ArrowIcon from '../../../assets/ArrowIcon'
 import { questionInterface } from '../../../controllers/interfaces'
 
-type questionMapInterface = questionInterface[];
-type questionMapResultInterface = (string | null)[]; 
+type questionMapInterface = number[];
 
 
 interface Props{
     questionsHashMap: questionMapInterface;
     setActiveQuestion: (questionNumber: number) => void;
     defaultQuestion?: number;
+    respostasCorretas?: boolean[] | null;
 }
 
 export function handleQuestionNumberClick(questionNumber: number, setActiveQuestion: (questionNumber: number) => void) {
@@ -23,7 +23,7 @@ export function handleQuestionNumberClick(questionNumber: number, setActiveQuest
     });
 }
 
-const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0}: Props) => {
+const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0, respostasCorretas = null}: Props) => {
 
     const getQuestionsNumbers = (questionsHashMap: questionMapInterface) => {
         const questions: JSX.Element[] = [];
@@ -33,6 +33,7 @@ const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0}: Pro
                 <span
                     key={index}
                     id={`question-${index}`}
+                    className={`${respostasCorretas ? respostasCorretas[index] ? "correct" : "incorrect" : ""}`}
                     onClick={() => {
                         handleQuestionNumberClick(index, setActiveQuestion);
                     }}

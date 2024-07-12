@@ -16,6 +16,7 @@ const SimuladoFrame = () => {
 
     const [questionsHashMap, setQuestionsHashMap] = useState<questionResultsInterface | null>(null);
     const [loading, setLoading] = useState(true);
+    const [pontuacao, setPontuacao] = useState<boolean[]>([]);
 
     const navegate = useNavigate();
 
@@ -33,13 +34,22 @@ const SimuladoFrame = () => {
                 return;
             }
 
+            let newPontuacao: boolean[] = [];
             await Promise.all(simulado.questions.map(async (question, index) => {
                 const questionData = await handleGetQuestion(question[0]);
                 newQuestionsHashMap.push([questionData, question[1]]);
+
+                if(questionData.alternativaCorreta.toUpperCase() === question[1]?.toUpperCase()){
+                    newPontuacao.push(true);
+                }
+                else{
+                    newPontuacao.push(false);
+                }
             }));
 
             setQuestionsHashMap(newQuestionsHashMap);
             setLoading(false);
+            setPontuacao(newPontuacao);
         }
 
         console.log(id);
@@ -51,7 +61,7 @@ const SimuladoFrame = () => {
         loading ? <h2>Aguarde enquanto finalizamos o seu simulado... </h2> :
         <>
             {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
-                <Simulado questionsHashMap={questionsHashMap}     
+                <Simulado questionsHashMap={questionsHashMap} pontuacao={pontuacao}    
                 /> 
             }
         </>

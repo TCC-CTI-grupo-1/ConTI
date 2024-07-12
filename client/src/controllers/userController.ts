@@ -258,8 +258,8 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
             difficulty: 'Fácil',
             year: 2021,
             enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['1', '7', '9', '5'],
-            alternativaCorreta: '7'
+            alternativas: ['1', '7', '9', '5', '49'],
+            alternativaCorreta: 'a'
         };
     } else {
         return {
@@ -269,8 +269,8 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
             year: 2021,
             enunciado: 'TesteDaPrimeiraLinha:11111111111111111111111111111111111111111111111111111 '+
             'SegundaLinha:222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo'],
-            alternativaCorreta: 'Triste'
+            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
+            alternativaCorreta: 'B'
         };
     }
 

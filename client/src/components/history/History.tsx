@@ -5,6 +5,7 @@ import { useState } from 'react'
 import date from 'date-and-time'
 import { handleGetSimpleSimulados } from '../../controllers/userController'
 import { simuladoSimpleInterface } from '../../controllers/interfaces'
+import { useNavigate } from 'react-router-dom'
 
 import {
     Modal,
@@ -29,6 +30,8 @@ const History = () => {
     const [activeQuestionOverlay, setActiveQuestionOverlay] = useState<number>(11); //[simulados, listas
 
     const [loading, setLoading] = useState(true);
+
+    const navegate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -56,6 +59,13 @@ const History = () => {
         //Abre o overlay com a questão clicada
         onOpen();
         setActiveQuestionOverlay(questionClicked);
+    }
+
+    function retrurnActiveQuestionId(): number{
+        //Retorna o id da questão clicada
+        let i = activeQuestionOverlay % 10 === 1 ? 0 : 1;
+        let j = Math.floor(activeQuestionOverlay/10) - 1;
+        return simuladosAndListas ? simuladosAndListas[i][j].id : 0;
     }
 
     function returnJSXOverlay(): JSX.Element{
@@ -217,8 +227,10 @@ const History = () => {
                     {returnJSXOverlay()}
                 </ModalBody>
                 <ModalFooter>
-                    <Button variant='ghost' mr={3}>Fechar</Button>
-                    <Button colorScheme='blue' onClick={onClose}>
+                    <Button variant='ghost' mr={3} onClick={onClose}>Fechar</Button>
+                    <Button colorScheme='blue' onClick={() => {
+                        navegate(`/simulado/${retrurnActiveQuestionId()}`);
+                    }}>
                     Ver prova
                     </Button>
 

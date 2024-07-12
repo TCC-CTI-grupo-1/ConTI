@@ -6,15 +6,16 @@ import { showAlert } from '../../../App';
 interface Props {
     question: questionInterface;
     isSimulado?: boolean;
-    isAwnserSelected?: (value: string | null) => void; // Define the prop for the function
+    isAwnserSelected?: (value: string | null) => void; //Executado quando o usuario marca/desmarca uma alternativa
+    isCorrecao?: string | null | undefined; //Se o usuario está vendo a correção de uma prova - passa a alternativa
 }
 
-function QuestionDetail({ question, isSimulado=false, isAwnserSelected }: Props) {
+function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrecao = undefined }: Props) {
 
     const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
 
     useEffect(() => {
-        isAwnserSelected && isAwnserSelected(selectedAwnser); // Call the function and pass the value from the state
+        isAwnserSelected && isAwnserSelected(selectedAwnser);
     }, [selectedAwnser]);
 
 
@@ -22,35 +23,41 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected }: Props)
 
     const [showAnswer, setShowAnswer] = useState(false);
 
-    const correctAnswer = 'C';
+    const correctAnswer = isCorrecao !== undefined ? question.alternativaCorreta.toUpperCase() : null;
+
+    const addClassToAlternative = useCallback((letter: string) => {
+        if (questionRef.current === null) return showAlert('Ocorreu um erro ao computar a alternativa. Tente novamente.');
+
+        const alternatives = questionRef.current.querySelectorAll('.alternatives div');
+
+        alternatives.forEach((alternative) => {
+            alternative.classList.remove('active');
+            const alternativeLetter = alternative.querySelector('h3')?.textContent;
+            if (alternativeLetter === letter) {
+                alternative.classList.add('active');
+                setSelectedAwnser(letter);
+            }
+        });
+    }, []);
 
     const handleClick = useCallback((event: Event) => {
         const target = event.currentTarget as HTMLElement;
-        const alternatives = questionRef.current?.querySelectorAll('.alternatives div');
 
-        if (target.classList.contains('active')) {
-            target.classList.remove('active');
-            setSelectedAwnser(null);
+        if (questionRef.current === null) return showAlert('Ocorreu um erro ao computar a alternativa. Tente novamente.');
+
+        const selectedLetter = target.querySelector('h3')?.textContent;
+        if (typeof (selectedLetter) === 'string') {
+            addClassToAlternative(selectedLetter);
         } else {
-            let selected = target.querySelector('h3')?.textContent;
-            if(typeof(selected) == 'string'){
-                alternatives?.forEach((alternative) => {
-                    alternative.classList.remove('active');
-                });
-                target.classList.add('active');
-                setSelectedAwnser(selected);
-            }
-            else{
-                showAlert('Ocorreu um erro ao computar a alternativa. Tente novamente.');
-            }
+            showAlert('Ocorreu um erro ao computar a alternativa. Tente novamente.');
         }
+    }, [addClassToAlternative]);
 
-    }, []);
 
-    useEffect(() => {
+    function checkAlternativas(){
         const alternatives = questionRef.current?.querySelectorAll('.alternatives div');
         if (!showAnswer) {
-            console.log('add click event listener');
+            //console.log('add click event listener');
             alternatives?.forEach((alternative) => {
                 alternative.addEventListener('click', handleClick);
                 
@@ -60,20 +67,35 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected }: Props)
             });
         } else {
             // remove click event listener
-            console.log('remove click event listener');
+            //console.log('remove click event listener');
             alternatives?.forEach((alternative) => {
                 alternative.removeEventListener('click', handleClick);
             });
         }
 
-        // Cleanup function to remove event listeners when the component unmounts or when showAnswer changes
         return () => {
-            console.log('cleanup event listeners');
+            //console.log('cleanup event listeners');
             alternatives?.forEach((alternative) => {
                 alternative.removeEventListener('click', handleClick);
             });
         };
+    }
+
+    useEffect(() => {
+        
+        checkAlternativas();
+
+        // Cleanup function to remove event listeners when the component unmounts or when showAnswer changes
+        
     }, [showAnswer, handleClick]);
+
+    useEffect(() => {
+        if (isCorrecao !== undefined) {
+            setSelectedAwnser(isCorrecao);
+            addClassToAlternative(isCorrecao === null ? '' : isCorrecao);
+            setShowAnswer(true);
+        }
+    }, []);
 
     function validateWordText(word: string): string {
         //aqui está como "line" mas na verdade é cada palavra.
@@ -98,56 +120,41 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected }: Props)
 
     return (
     <>
+        {question === undefined ? <h1>Erro ao carregar questão</h1> : 
         <div className='box question'>
-            <h1>Questão {question?.id}</h1>
+            <h1>Questão {question.id}</h1>
             <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>
             <h3>
-            {validateTextText(question?.enunciado)}
+            {validateTextText(question.enunciado)}
             </h3>
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
-                <div>
-                    <span>
-                        <h3>A</h3>
-                    </span>
-                    <p>Também acho</p>
-                </div>
-                <div>
-                    <span>
-                        <h3>B</h3>
-                    </span>
-                    <p>Também acho</p>
-                </div>
-                <div>
-                    <span>
-                        <h3>C</h3>
-                    </span>
-                    <p>Também acho</p>
-                </div>
-                <div>
-                    <span>
-                        <h3>D</h3>
-                    </span>
-                    <p>Também acho</p>
-                </div>
-                <div>
-                    <span>
-                        <h3>E</h3>
-                    </span>
-                    <p>Também acho</p>
-                </div>
+                
+                {question.alternativas.map((alternative, index) => (
+                    <div key={index}>
+                        <span>
+                            <h3>{String.fromCharCode(65 + index)}</h3>
+                        </span>
+                        <p>{validateTextText(alternative)}</p>
+                    </div>
+                ))}
+
             </div>
             {!isSimulado && 
             <div className="options">
-                <Button colorScheme="blue" size="lg"
-                onClick={() => {
-                    setShowAnswer(!showAnswer);
-                }}>{showAnswer ? 'Ocultar' : 'Responder'}</Button>
-                <Button colorScheme="blue" size="lg" variant='outline'>Ver resolução comentada</Button>
+                {isCorrecao === undefined &&
+                    <Button colorScheme="blue" size="lg"
+                    onClick={() => {
+                        setShowAnswer(!showAnswer);
+                    }}>{showAnswer ? 'Ocultar' : 'Responder'}</Button>
+                }
+                    <Button colorScheme="blue" size="lg" variant='outline'>Ver resolução comentada</Button>
+                
             </div>
             }
         </div>
-
+        }
     </>
+    
     );
 }
 
