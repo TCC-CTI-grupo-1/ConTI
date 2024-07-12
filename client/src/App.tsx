@@ -7,6 +7,8 @@ import History from './components/history/History';
 import SimuladoVer from './components/questions/simulado/VerSimulado';
 import QuestionDatabase from './components/questions/QuestionDatabase';
 import AllTests from './components/questions/AllTests';
+import NewTest from './components/newtest/NewTest';
+
 import { Routes, Route } from "react-router-dom"
 import SimuladoFrame from './components/questions/simulado/FrameSimulado';
 
@@ -43,6 +45,7 @@ function App() {
         <div id='alert-box-container'></div>
         <Routes>
             <Route path='/' element={ <Home /> } />
+            <Route path='/newtest' element={ <NewTest /> } />
             <Route path='/login' element={ <User /> } />
             <Route path='/profile' element={ <Profile /> } />
             <Route path='/history' element={ <History /> } />

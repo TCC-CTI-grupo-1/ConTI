@@ -1840,3 +1840,58 @@ COMPONENTES GERAIS DO FERNANDO
     align-items: center;
   }
 }
+
+
+#newtest{
+  & .container{
+    overflow: hidden;
+  }
+  & .container > .header{
+    z-index: 10;
+  }
+  & .container > .inversed-border{
+    z-index: 9;
+  }
+  & .container > .content{
+
+    display: flex;
+    & > div{
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      position: relative;
+      & button{
+        width: fit-content;
+      }
+
+      &:hover::after{
+        opacity: 1;
+      }
+
+      &::after{
+        content: '';
+        display: block;
+        opacity: 0;
+        transition: 0.5s;
+        width: calc(100% + var(--padding-3)*2);
+        height: calc(100% + var(--padding-1)*3);
+        background-color: var(--primary-color-10);
+        position: absolute;
+        z-index: -1;
+      }
+      &:nth-child(1){
+        &::after{
+          transform: translate(calc(var(--padding-3)*(-1)), calc(var(--padding-1) * (-1)));
+        }
+      }
+      &:nth-child(2){
+        &::after{
+          transform: translate(calc(var(--padding-3)), calc(var(--padding-1) * (-1)));
+        }
+      }
+    }
+    
+  }
+}

@@ -7,6 +7,7 @@ import { handleGetSimpleSimulados } from '../../controllers/userController'
 import { simuladoSimpleInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
+
 import {
     Modal,
     ModalOverlay,
@@ -17,6 +18,7 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
+    Spinner
   } from '@chakra-ui/react'
 
 const History = () => {
