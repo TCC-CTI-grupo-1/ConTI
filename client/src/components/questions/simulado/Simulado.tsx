@@ -19,7 +19,7 @@ import {
   } from '@chakra-ui/react'
   
 type questionMapInterface = questionInterface[];
-type questionMapResultInterface = (string | null)[]; 
+type questionMapResultInterface = [number, (string | null)][]; 
 
 interface Props {
     questionsHashMap: questionMapInterface;
@@ -81,7 +81,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                         question={questionMap} 
                         isAwnserSelected={(value: string | null) => {
                             const newResultsHashMap = resultsHashMap;
-                            newResultsHashMap[index] = value;
+                            newResultsHashMap[index] = [questionMap.id, value];
                             if(value != null)
                             {
                                 markQuestionAsSelected(index, true);
@@ -104,7 +104,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
 
     return (
         <div id="simulado">
-            <Numbers questionsHashMap={questionsHashMap} setActiveQuestion={setActiveQuestion} />
+            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.id})} setActiveQuestion={setActiveQuestion} />
             <div id="allQuestionsMargin"></div>
             <div className="content">
                 <div className="infoTop">

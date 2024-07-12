@@ -19,7 +19,7 @@ import {
   } from '@chakra-ui/react'
 
 type questionMapInterface = questionInterface[];
-type questionMapResultInterface = (string | null)[];  
+type questionMapResultInterface = [number, (string | null)][];  
 
 interface Props{
     questionsList: number[],

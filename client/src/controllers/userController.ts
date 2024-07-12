@@ -345,7 +345,8 @@ export async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimp
 }
 
 type questionMapInterface = questionInterface[];
-type questionMapResultInterface =(string | null)[];  
+//ID e Alternativa (O index é o número da questão na prova.)
+type questionMapResultInterface = [number, (string | null)][];  
 
 //Retorna o simulado que foi adicionado
 export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoSimpleInterface | null> {

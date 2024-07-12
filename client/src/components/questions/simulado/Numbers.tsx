@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react'
 import ArrowIcon from '../../../assets/ArrowIcon'
 import { questionInterface } from '../../../controllers/interfaces'
 
-type questionMapInterface = number[];
-
-
 interface Props{
-    questionsHashMap: questionMapInterface;
+    questionsHashMap: number[];
     setActiveQuestion: (questionNumber: number) => void;
     defaultQuestion?: number;
     respostasCorretas?: boolean[] | null;
@@ -25,7 +22,7 @@ export function handleQuestionNumberClick(questionNumber: number, setActiveQuest
 
 const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0, respostasCorretas = null}: Props) => {
 
-    const getQuestionsNumbers = (questionsHashMap: questionMapInterface) => {
+    const getQuestionsNumbers = (questionsHashMap: number[]) => {
         const questions: JSX.Element[] = [];
 
         questionsHashMap.forEach((question, index) => {
