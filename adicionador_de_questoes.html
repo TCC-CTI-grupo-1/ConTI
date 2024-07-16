@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+            width: 50%;
+            gap: 10px;
+            margin: 0 auto;
+        }
+        label {
+            display: flex;
+            flex-direction: column;
+            margin: 10px 0;
+        }
+        #bastazini label {
+            display: flex;
+            flex-direction: row;
+            align-items:center;
+            gap:5px;
+            margin: -2px 0;
+        }
+        input {
+            margin: 5px 0;
+        }
+
+    </style>
+</head>
+<body>  
+    <h1>Adicionar questão</h1>
+    <h1 id="numbershower">Questões adicionadas: 0</h1>
+    <div>
+        <label>
+            Ano: 
+            <input type="number" required id="ano" value="2013">
+        </label>
+        <label>
+            Número da questão:
+            <input type="number" required id="numero">
+        </label>
+        <label>
+            Questão inteira (opcional):
+            <textarea id="questao-inteira"></textarea>
+        </label>
+            <div style="display:flex;flex-direction:column;gap:5px;" id="bastazini">
+            <label>
+                Matéria:
+            </label>
+            <label>
+                <input type="radio" name="materia" value="Matemática"> Matemática
+            </label>
+            <label>
+                <input type="radio" name="materia" value="Língua Portuguesa"> Língua Portuguesa
+            </label>
+            <label>
+                <input type="radio" name="materia" value="Ciências Humanas"> Ciências Humanas
+            </label>
+            <label>
+                <input type="radio" name="materia" value="Ciências da Natureza"> Ciências da Natureza
+            </label>
+        </div>
+        <label>
+            Enunciado:
+            <textarea required id="enunciado"> </textarea>
+        </label>
+        <label>
+            Alternativa A:
+            <textarea required id="a"> </textarea>
+        </label>
+        <label>
+            Alternativa B:
+            <textarea required id="b"> </textarea>
+        </label>
+        <label>
+            Alternativa C:
+            <textarea required id="c"> </textarea>
+        </label>
+        <label>
+            Alternativa D:
+            <textarea required id="d"> </textarea>
+        </label>
+        <label>
+            Texto adicional
+            <textarea id="texto_adicional"> </textarea>
+        </label>
+        <label>
+            Imagem:
+            <input type="file" id="imagem">
+        </label>
+        <button id="enviar" onclick="marcos()">Adicionar questão</button>
+        <button onclick="baixar()" type="submit" value="Baixar json">
+        </div>
+    <script>
+            const anoV = document.querySelector('#ano');
+            const numeroV = document.querySelector('#numero');
+            const materiaV = document.querySelector('input[name="materia"]:checked');
+            const enunciadoV = document.querySelector('#enunciado');
+            const alternativaAV = document.querySelector('#a');
+            const alternativaBV = document.querySelector('#b');
+            const alternativaCV = document.querySelector('#c');
+            const alternativaDV = document.querySelector('#d');
+            const textoAdicionalV = document.querySelector('#texto_adicional');
+            const imagemV = document.querySelector('#imagem');
+        let bigstring = ""
+        let cont = 0
+        const quest = document.getElementById('numbershower');
+        const form = document.querySelector('form');
+        const questao_inteira = document.getElementById('questao-inteira');
+        questao_inteira.addEventListener('blur', function() {
+            const questao = document.getElementById('questao-inteira').value;
+            const regex = /(\d+)\s*([\S\s]*)\s*\(A\)([\S\s]*)\s*\(B\)([\S\s]*)\s*\(C\)([\S\s]*)\s*\(D\)([\S\s]*)\s*/gm;
+            const matches = regex.exec(questao);
+            console.log(matches)
+            for(match in matches) {
+                numeroV.value = matches[1];
+                enunciadoV.value = matches[2];
+                alternativaAV.value = matches[3];
+                alternativaBV.value = matches[4];
+                alternativaCV.value = matches[5];
+                alternativaDV.value = matches[6];
+            }
+        });
+        function marcos(normal=true)
+            {
+            const ano = document.querySelector('#ano').value;
+            const numero = document.querySelector('#numero').value;
+            const materia = document.querySelector('input[name="materia"]:checked').value;
+            const enunciado = document.querySelector('#enunciado').value;
+            const alternativaA = document.querySelector('#a').value;
+            const alternativaB = document.querySelector('#b').value;
+            const alternativaC = document.querySelector('#c').value;
+            const alternativaD = document.querySelector('#d').value;
+            const textoAdicional = document.querySelector('#texto_adicional').value;
+            const imagem = document.querySelector('#imagem').value;
+
+            const question = {
+                ano: ano,
+                numero: numero,
+                materia: materia,
+                enunciado: enunciado,
+                alternativaA: alternativaA,
+                alternativaB: alternativaB,
+                alternativaC: alternativaC,
+                alternativaD: alternativaD,
+                textoAdicional: textoAdicional,
+                imagem: imagem,
+            };
+
+            const jsonQuestion = JSON.stringify(question,null,4);
+            //const fileData = JSON.stringify([jsonQuestion],null,4).slice(0,-1).slice(1);
+            bigstring += jsonQuestion
+            if(normal) bigstring += ",\n"
+            cont++
+            quest.innerHTML = `Questões adicionadas: ${cont}`;
+
+            }
+        function baixar() {
+            const ano = document.querySelector('#ano').value;
+            const numero = document.querySelector('#numero').value;
+            const materia = document.querySelector('input[name="materia"]:checked').value;
+            const enunciado = document.querySelector('#enunciado').value;
+            const alternativaA = document.querySelector('#a').value;
+            const alternativaB = document.querySelector('#b').value;
+            const alternativaC = document.querySelector('#c').value;
+            const alternativaD = document.querySelector('#d').value;
+            const textoAdicional = document.querySelector('#texto_adicional').value;
+            const imagem = document.querySelector('#imagem').value;
+            event.preventDefault();
+            marcos(false)
+            bigstring += "]";
+            bigstring = "[\n" + bigstring
+            //const fileData = JSON.stringify([bigstring],null,4);
+            const blob = new Blob([bigstring], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${ano}-exam-questions.json`;
+            a.click();
+        }
+    </script>
+</body>
+</html>
