@@ -9,7 +9,7 @@ export class ProfileDAO {
     registerProfile = async (profile: ProfileDTO) => {  
         try {
             const client = await connectionDAO.getConnection();
-            await client.profile.create({
+            const createdProfile = await client.profile.create({
                 data: {
                     name: profile.name,
                     email: profile.email,
@@ -20,6 +20,7 @@ export class ProfileDAO {
                     total_incorrect_answers: profile.total_incorrect_answers
                 }
             });
+            return createdProfile;
         } catch (error: any) {
             if (error.code === 'P2002') {
                 throw new Error('E-mail já cadastrado');
@@ -42,6 +43,25 @@ export class ProfileDAO {
                 creation_date: profile.creation_date,
                 total_correct_answers: profile.total_correct_answers,
                 total_incorrect_answers: profile.total_incorrect_answers
+            }
+        });
+        } catch (error: any) {
+            if (error.code === 'P2002') {
+                throw new Error('Email já cadastrado');
+            }
+        }
+    }
+
+    updateProfileSession = async (profile: ProfileDTO) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            await client.profile.update({
+            where: {
+                id: profile.id
+            },
+            data: {
+                name: profile.name,
+                email: profile.email
             }
         });
         } catch (error: any) {
@@ -153,6 +173,7 @@ export class ProfileDAO {
         try {
             const profile = await this.searchprofileByEmail(email);
             const isPasswordCorrect = await comparePasswords(password, profile.password);
+
             if (isPasswordCorrect) {
                 return profile;
             } else {

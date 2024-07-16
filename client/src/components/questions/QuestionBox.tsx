@@ -28,6 +28,7 @@ interface SubjectCategory {
   const QuestionBox = ({ id, subject, difficulty, year }: Props) => {
     return (
       <div className="question-box">
+
         <div className="q-id">
           <p>Q{id}</p>
         </div>

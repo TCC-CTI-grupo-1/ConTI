@@ -42,9 +42,12 @@ input::-ms-clear {
   --background-color: white;
   --background-color-50: rgba(255, 255, 255, 0.863);
   --background-color-2: rgb(245, 245, 245);
-  --color-green: #369436;
+  --color-green: rgba(7, 158, 7, 0.8);
+  --color-green-20: rgba(7, 158, 7, 0.2);
   --color-red: #ff0000;
-  --color-red-50: rgb(255, 70, 70);
+  --color-red-50: rgba(255, 70, 70, 0.5);
+  --color-red-20: rgba(255, 70, 70, 0.2);
+  --color-black-20: rgba(0, 0, 0, 0.1);
 
   --text-white: white;
 
@@ -105,6 +108,18 @@ h3 {
   box-sizing: border-box;
 }
 
+.progress{
+  width: 100%;
+  height: var(--padding-6);
+  border-radius: var(--padding-6);
+  & > div{
+    height: var(--padding-6);
+    border-radius: var(--padding-6);
+    background-color: var(--primary-color);
+  }
+  background-color: gray;
+}
+
 .flex-container {
   display: flex;
   min-height: 100dvh;
@@ -136,69 +151,6 @@ h3 {
 
       z-index: 2;
 
-      &>.question {
-        &>.alternatives {
-          margin: var(--padding-2) 0;
-          display: flex;
-          flex-direction: column;
-
-          &>div {
-            display: flex;
-            align-items: center;
-            gap: var(--padding-3);
-            padding: var(--padding-4);
-            transition: 0.25s;
-            border-radius: var(--border-radius);
-            margin: var(--margin-smol);
-
-            &>span {
-              border: 2px solid black;
-              width: var(--padding-0);
-              aspect-ratio: 1/1;
-              border-radius: 50%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-
-            &:hover {
-              background-color: var(--background-color-2);
-              cursor: pointer;
-            }
-
-            &.active {
-              background-color: var(--primary-color-10);
-
-              &>span {
-                border-color: var(--primary-color);
-                color: var(--primary-color);
-              }
-            }
-          }
-        }
-
-        &>.options {
-          display: flex;
-          gap: var(--padding-3);
-          justify-content: flex-end;
-        }
-      }
-
-      &>.more-options {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        gap: var(--padding-3);
-        width: 100%;
-
-        &>div {
-           width: 100%;
-          display: flex;
-          justify-content: space-around;
-        }
-      }
-
     }
   }
 }
@@ -206,7 +158,6 @@ h3 {
 .box {
   background-color: var(--background-color);
   padding: var(--padding-3);
-  margin: var(--padding-2);
   border-radius: var(--border-radius);
   border: 1px solid black;
   transform: translate(0px, 0px);
@@ -1591,4 +1542,356 @@ COMPONENTES GERAIS DO FERNANDO
     }
   }
 
+}
+
+.question {
+
+  min-width: 100%;
+  &>.alternatives {
+    &.showCorrect {
+      &>div {
+        cursor: default;
+        &:hover{
+          background-color: var(--background-color);
+        }
+        &.correct{
+          color: var(--color-green);
+          &>span{
+            border-color: var(--color-green);
+            color: var(--color-green);
+          }
+        }
+        &.active{
+          background-color: var(--color-red-50);
+          color: var(--color-red);
+          &>span{
+            border-color: var(--color-red);
+            color: var(--color-red);
+          }
+        }
+        &.correct.active{
+          background-color: var(--color-green-20);
+          color: var(--color-green);
+          &>span{
+            border-color: var(--color-green);
+            color: var(--color-green);
+          }
+        }
+      }
+    }
+    margin: var(--padding-2) 0;
+    display: flex;
+    flex-direction: column;
+
+    &>div {
+      display: flex;
+      align-items: center;
+      gap: var(--padding-3);
+      padding: var(--padding-4);
+      transition: 0.25s;
+      border-radius: var(--border-radius);
+      margin: var(--margin-smol);
+      cursor: pointer;
+
+      &>span {
+        transition: 0.25s;
+        border: 2px solid black;
+        width: var(--padding-0);
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &:hover {
+        background-color: var(--background-color-2);
+
+      }
+
+      &.active {
+        background-color: var(--primary-color-10);
+
+        &>span {
+          border-color: var(--primary-color);
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+
+  &>.options {
+    display: flex;
+    gap: var(--padding-3);
+    justify-content: flex-end;
+  }
+}
+
+#simulado{
+  display: flex;
+  min-width: 100vw;
+  min-height: 100vh;
+  align-items: center;
+  & > #allQuestions{
+    position: fixed;
+    height: 100vh;
+    border-right: 1px solid black;
+    padding: var(--padding-1) 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--padding-3);
+    & > svg{
+      width: 30%;
+      height: auto;
+    }
+    & > div{
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--padding-3);
+      padding: 0 var(--padding-3);
+      overflow: auto;
+      overflow-x: hidden;
+      &::-webkit-scrollbar {
+        width: 0px;
+      }
+
+      & > span{
+        border-radius: 100%;
+        border: 1px solid black;
+        cursor: pointer;
+        aspect-ratio: 1/1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: 0.25s;
+        width: calc(var(--padding-2)*2);
+        min-height: calc(var(--padding-2)*2);
+
+        &.active{
+          background-color: var(--primary-color-10) !important;
+          border-color: var(--primary-color) !important;
+          &>h3{
+            color: var(--primary-color) !important;
+          }
+        }
+        &.selected{
+          background-color: var(--color-black-20);
+        }
+
+        &.correct{
+          opacity: 0.8;
+          background-color: var(--color-green-20);
+          border-color: var(--color-green);
+          &>h3{
+            color: var(--color-green);
+          }
+        }
+
+        &.incorrect{
+          opacity: 0.8;
+          background-color: var(--color-red-20);
+          border-color: var(--color-red);
+          &>h3{
+            color: var(--color-red);
+          }
+        }
+
+        & > h3{
+          height: auto;
+        }
+      }
+
+    }
+  }
+
+  & > #allQuestionsMargin{
+    height: 100%;
+    width: calc(calc(var(--padding-2)*2) + calc(var(--padding-3)*2));
+  }
+  & > .content{
+    height: 100vh;
+    padding: 0 var(--padding-1);
+    flex: 1;
+    gap: var(--padding-3);
+    display: flex;
+    flex-direction: column;
+    & > #buttons{
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 var(--padding-2);
+    }
+    & > .infoTop{
+      display: flex;
+      gap: var(--padding-3);
+      align-items: center;
+      justify-content: center;
+      padding: var(--padding-2);
+      & > h3{
+        flex: 1;
+        text-align: center;
+      }
+    }
+  }
+}
+
+#history{
+  & .provaCard{
+    //height: fit-content;
+    transition: 0.2s;
+    border: 1px solid black;
+    padding: var(--padding-3);
+    border-radius: var(--border-radius);
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-5);
+    padding-bottom: var(--padding-2);
+    & > .materias {
+      margin-top: var(--padding-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-3);
+      & > div{
+        display: grid;
+        grid-template-rows: auto auto;
+        grid-template-columns: auto auto; 
+        gap: var(--padding-5);
+
+        & h4{
+          text-align: right;
+        }
+        & .progress{
+          grid-column: 1/3;
+        }
+      }
+    }
+    &:hover{
+      cursor: pointer;
+      background-color: var(--background-color-2);
+    }
+  }
+
+  & > .container > .content{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-0);
+    align-items: center; & > h3{
+      width: 100%;
+    }
+    & > #daySelector{
+      user-select: none;
+      display: flex;
+      align-items: center;
+      width: 80%;
+      background-color: var(--primary-color-30);
+      border-radius: var(--border-radius);
+      justify-content: space-between;
+      padding: var(--padding-4);
+    }
+    & > div{
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--padding-3);
+      width: 80%;
+      & > div{
+        min-width: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: var(--padding-3);
+        & > div{
+          display: flex;
+          gap: var(--padding-3);
+        }
+      }
+    }
+  }
+}
+
+#historyOverlay{
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-4);
+  & .materias{
+    margin-top: var(--padding-3);
+    padding: var(--padding-3);
+    border-top: 1px solid black;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--padding-3);
+    & > div{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-3);
+    }
+  }
+
+  & > #loading{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-3);
+    align-items: center;
+  }
+}
+
+
+#newtest{
+  & .container{
+    overflow: hidden;
+  }
+  & .container > .header{
+    z-index: 10;
+  }
+  & .container > .inversed-border{
+    z-index: 9;
+  }
+  & .container > .content{
+
+    display: flex;
+    & > div{
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      position: relative;
+      & button{
+        width: fit-content;
+      }
+
+      &:hover::after{
+        opacity: 1;
+      }
+
+      &::after{
+        content: '';
+        display: block;
+        opacity: 0;
+        transition: 0.5s;
+        width: calc(100% + var(--padding-3)*2);
+        height: calc(100% + var(--padding-1)*3);
+        background-color: var(--primary-color-10);
+        position: absolute;
+        z-index: -1;
+      }
+      &:nth-child(1){
+        &::after{
+          transform: translate(calc(var(--padding-3)*(-1)), calc(var(--padding-1) * (-1)));
+        }
+      }
+      &:nth-child(2){
+        &::after{
+          transform: translate(calc(var(--padding-3)), calc(var(--padding-1) * (-1)));
+        }
+      }
+    }
+    
+  }
 }

@@ -20,9 +20,9 @@ app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    name: 'session',
+    name: 'sid',
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24
+        maxAge: 1000 * 60 * 60 * 12
     }
 }))
 

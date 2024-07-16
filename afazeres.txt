@@ -1,0 +1,22 @@
+Em Login.tsx:
+- Ver se o event listener de "keyup" pode fiar em window.
+- Ver se o "enter" ainda funciona
+
+
+EM questionBox.tsx
+- colocar numero da questão alem do ID
+
+Em simulado.tsx
+- Arrumar questionDeil, não está com o funcionamento corrreto
+- Ver se as questões (A esquerda) estão ocupando muito espaço.
+- ver porque quando a pagina carrega ele vai sem nenhuma questão selecionada
+- Mudara s setas para (Ao lado, seletor de questtões) ser com scroll
+- Arrumar a porra do CSS desses numeros a esquerda (A margem em baixo e em cima são diferentes)
+
+Geral;
+- Mudar rotas para o protugues (talvez) [/profile -> /perfil]
+- Alterar TONS de verde e vermelho
+- Fazer um feedback dahorinha nos botão se der
+
+Em config.tsx:
+- abrir uma caixa de confirmação se deseja mesmo deletar a conta
