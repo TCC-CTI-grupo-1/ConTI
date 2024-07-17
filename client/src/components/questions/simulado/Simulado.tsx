@@ -45,12 +45,13 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
 
     const nQuestoesRestantes = () => {
         let cont = 0;
-        resultsHashMap.forEach((value, index) => {
-            if(value == null)
+        for(let i = 0; i < questionsHashMap.length; i++)
+        {
+            if(resultsHashMap[i] == undefined || resultsHashMap[i][1] == null)
             {
                 cont++;
             }
-        });
+        }
         return cont;
     }
 

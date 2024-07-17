@@ -1,5 +1,6 @@
 import { Profile } from '../../../server/src/types/express-session';
 import { questionInterface, simuladoSimpleInterface, simuladoInterface } from './interfaces';
+import { questionFilters } from './interfaces';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.', 't'];
@@ -250,12 +251,20 @@ export async function handleDeleteAccount() {
 
 export async function handleGetQuestion(questionID: number): Promise<questionInterface> {
     //Fazer um timeout de 300ms:
-    await new Promise(resolve => setTimeout(resolve, 10));
+    
     if (questionID % 2 === 0) {
         return {
             id: questionID * 100,
-            subject: 'Matemática',
-            difficulty: 'Fácil',
+            subject: {
+                name: 'Matemática',
+                sub: {
+                    name: 'Álgebra',
+                    sub: {
+                        name: 'Equações'
+                    }
+                }
+            },
+            difficulty: 'easy',
             year: 2021,
             enunciado: 'Qual é a raiz quadrada de 49?',
             alternativas: ['1', '7', '9', '5', '49'],
@@ -264,8 +273,16 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
     } else {
         return {
             id: questionID * 100,
-            subject: 'Português',
-            difficulty: 'Médio',
+            subject: {
+                name: 'Português',
+                sub: {
+                    name: 'Gramática',
+                    sub: {
+                        name: 'Sintaxe'
+                    }
+                }
+            },
+            difficulty: 'medium',
             year: 2021,
             enunciado: 'TesteDaPrimeiraLinha:11111111111111111111111111111111111111111111111111111 '+
             'SegundaLinha:222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
@@ -274,6 +291,80 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
         };
     }
 
+}
+
+export async function handleGetQuestions(filters: questionFilters): Promise<questionInterface[]> {
+    await new Promise(resolve => setTimeout(resolve, 10));
+    return [
+        {
+            id: 1,
+            subject: {
+                name: 'Matemática',
+                sub: {
+                    name: 'Álgebra',
+                    sub: {
+                        name: 'Equações'
+                    }
+                }
+            },
+            difficulty: 'easy',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['1', '7', '9', '5', '49'],
+            alternativaCorreta: 'a'
+        },
+        {
+            id: 2,
+            subject: {
+                name: 'Português',
+                sub: {
+                    name: 'Gramática',
+                    sub: {
+                        name: 'Sintaxe'
+                    }
+                }
+            },
+            difficulty: 'medium',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
+            alternativaCorreta: 'b'
+        },
+        {
+            id: 3,
+            subject: {
+                name: 'Matemática',
+                sub: {
+                    name: 'Álgebra',
+                    sub: {
+                        name: 'Equações'
+                    }
+                }
+            },
+            difficulty: 'hard',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['1', '7', '9', '5', '49'],
+            alternativaCorreta: 'c'
+        },
+        {
+            id: 4,
+            subject: {
+                name: 'Português',
+                sub: {
+                    name: 'Gramática',
+                    sub: {
+                        name: 'Sintaxe'
+                    }
+                }
+            },
+            difficulty: 'hard',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
+            alternativaCorreta: 'd'
+        }
+    ];
 }
 
 export async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInterface[]> {
@@ -401,5 +492,14 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
         return null;
     }
 }
+
+//Atenção, a magica acontece aqui:
+
+export async function generateNewSimulado(): Promise<string>{
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    //UID do simulado (talvez não vamos usar, ai retorne booleano)
+    return '34ghGTH33EDWF@#wfdw';
+}
+
 
 export { validadeEmail, validadePassword }

@@ -1,7 +1,20 @@
+
+
+export interface SubjectCategory {
+    name: string;
+    sub?: SubjectCategory; // Tornando `sub` opcional
+}
+export interface questionFilters{
+    ano?: string[];
+    dificuldade?: string[];
+    disciplina?: string[];
+    alreadyAnswered?: boolean;
+    mySimulations?: boolean;
+}
 export interface questionInterface{
     id: number,
-    subject: string,
-    difficulty: string,
+    subject: SubjectCategory,
+    difficulty: 'easy' | 'medium' | 'hard',
     year: number,
     enunciado: string,
     alternativas: string[],
