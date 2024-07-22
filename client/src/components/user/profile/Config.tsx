@@ -97,9 +97,12 @@ const Config = () => {
             return;
         }
         const isSavedChanges = await handleSaveChanges(updatedUser);
-        if(isSavedChanges){
+        if(isSavedChanges === true){
             showAlert("Alterações salvas com sucesso", 'success');
             setUser(updatedUser);
+        }
+        else{
+            showAlert("Erro: " + isSavedChanges)
         }
     }
 

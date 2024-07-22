@@ -168,7 +168,7 @@ export async function handleChange(name: string, email: string): Promise<boolean
 }
 
 
-export async function handleSaveChanges(Profile: Profile): Promise<boolean> {
+export async function handleSaveChanges(Profile: Profile): Promise<string | true> {
     try {
         const response = await fetch('http://localhost:3001/updateUser', {
             method: 'POST',
@@ -187,7 +187,7 @@ export async function handleSaveChanges(Profile: Profile): Promise<boolean> {
         }
 
     } catch (err: any) {
-        return false;
+        return err.message;
     }
 }
 
