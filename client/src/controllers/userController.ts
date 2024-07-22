@@ -1,7 +1,9 @@
 import { Profile } from '../../../server/src/types/express-session';
+import { questionInterface, simuladoSimpleInterface, simuladoInterface } from './interfaces';
+import { questionFilters } from './interfaces';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
-    let newIsEmailValid = ['@', '.'];
+    let newIsEmailValid = ['@', '.', 't'];
 
     //Deve ter só 1 '@'
     if (email.split('@').length - 1 == 1) {
@@ -9,7 +11,11 @@ const validadeEmail = (email: string): string[] => { //Deveria mudar string[] pa
     }
 
     if (email.includes('.')) {
-        newIsEmailValid = newIsEmailValid.filter((char) => char !== '.')
+        newIsEmailValid = newIsEmailValid.filter((char) => char !== '.');
+    }
+
+    if (email.indexOf('@') < email.lastIndexOf('.')) {
+        newIsEmailValid = newIsEmailValid.filter((char) => char !== 't');
     }
 
     return newIsEmailValid;
@@ -45,7 +51,10 @@ const validadePassword = (password: string): number[] => {
     return newIsPasswordValid;
 }
 
-async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<string | null> {
+
+//Funções assincronas
+
+export async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<string | null> {
 
     //await new Promise(resolve => setTimeout(resolve, 3000));
     //return true;
@@ -78,7 +87,7 @@ async function handleSignup(name: string, email: string, password: string, remem
     }
 }
 
-async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, string]> {
+export async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, string]> {
     try {
         const data = {
             email: email,
@@ -109,7 +118,7 @@ async function handleLogin(email: string, password: string, remember: boolean): 
     }
 }
 
-async function getUser(): Promise<Profile | null> {
+export async function handleGetUser(): Promise<Profile | null> {
     try {
         const response = await fetch('http://localhost:3001/userSession', {
             method: 'GET',
@@ -126,12 +135,12 @@ async function getUser(): Promise<Profile | null> {
         } else {
             return responseData.profile;
         }
-    }catch (err: any){
+    } catch (err: any) {
         return null;
     }
 }
 
-async function handleChange(name: string, email: string): Promise<boolean> {
+export async function handleChange(name: string, email: string): Promise<boolean> {
     try {
         const data = {
             name: name,
@@ -159,7 +168,7 @@ async function handleChange(name: string, email: string): Promise<boolean> {
 }
 
 
-async function handleSaveChanges(Profile : Profile): Promise<boolean> {
+export async function handleSaveChanges(Profile: Profile): Promise<boolean> {
     try {
         const response = await fetch('http://localhost:3001/updateUser', {
             method: 'POST',
@@ -176,13 +185,13 @@ async function handleSaveChanges(Profile : Profile): Promise<boolean> {
         } else {
             return true;
         }
-    
+
     } catch (err: any) {
         return false;
     }
 }
 
-async function handleLogout(){
+export async function handleLogout() {
     try {
         const response = await fetch('http://localhost:3001/logout', {
             method: 'POST',
@@ -201,9 +210,9 @@ async function handleLogout(){
     } catch (err: any) {
         return [false, "Logout falhou"];
     }
-    
+
 }
-async function handleDeleteAccount(){
+export async function handleDeleteAccount() {
     try {
         const response = await fetch('http://localhost:3001/deleteUser', {
             method: 'DELETE',
@@ -234,12 +243,263 @@ async function handleDeleteAccount(){
             window.location.href = 'http://localhost:5173/';
             // return [true, "Logout bem sucedido"];
         }
-        
+
     } catch (err: any) {
         return [false, "Erro ao deletar conta"];
     }
 }
 
+export async function handleGetQuestion(questionID: number): Promise<questionInterface> {
+    //Fazer um timeout de 300ms:
+    
+    if (questionID % 2 === 0) {
+        return {
+            id: questionID * 100,
+            subject: {
+                name: 'Matemática',
+                sub: {
+                    name: 'Álgebra',
+                    sub: {
+                        name: 'Equações'
+                    }
+                }
+            },
+            difficulty: 'easy',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['1', '7', '9', '5', '49'],
+            alternativaCorreta: 'a'
+        };
+    } else {
+        return {
+            id: questionID * 100,
+            subject: {
+                name: 'Português',
+                sub: {
+                    name: 'Gramática',
+                    sub: {
+                        name: 'Sintaxe'
+                    }
+                }
+            },
+            difficulty: 'medium',
+            year: 2021,
+            enunciado: 'TesteDaPrimeiraLinha:11111111111111111111111111111111111111111111111111111 '+
+            'SegundaLinha:222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
+            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
+            alternativaCorreta: 'B'
+        };
+    }
+
+}
+
+export async function handleGetQuestions(filters: questionFilters): Promise<questionInterface[]> {
+    await new Promise(resolve => setTimeout(resolve, 10));
+    return [
+        {
+            id: 1,
+            subject: {
+                name: 'Matemática',
+                sub: {
+                    name: 'Álgebra',
+                    sub: {
+                        name: 'Equações'
+                    }
+                }
+            },
+            difficulty: 'easy',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['1', '7', '9', '5', '49'],
+            alternativaCorreta: 'a'
+        },
+        {
+            id: 2,
+            subject: {
+                name: 'Português',
+                sub: {
+                    name: 'Gramática',
+                    sub: {
+                        name: 'Sintaxe'
+                    }
+                }
+            },
+            difficulty: 'medium',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
+            alternativaCorreta: 'b'
+        },
+        {
+            id: 3,
+            subject: {
+                name: 'Matemática',
+                sub: {
+                    name: 'Álgebra',
+                    sub: {
+                        name: 'Equações'
+                    }
+                }
+            },
+            difficulty: 'hard',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['1', '7', '9', '5', '49'],
+            alternativaCorreta: 'c'
+        },
+        {
+            id: 4,
+            subject: {
+                name: 'Português',
+                sub: {
+                    name: 'Gramática',
+                    sub: {
+                        name: 'Sintaxe'
+                    }
+                }
+            },
+            difficulty: 'hard',
+            year: 2021,
+            enunciado: 'Qual é a raiz quadrada de 49?',
+            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
+            alternativaCorreta: 'd'
+        }
+    ];
+}
+
+export async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInterface[]> {
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    return [
+        {
+            id: 1,
+            totalQuestions: 10,
+            totalCorrect: 7,
+            date: new Date(2021, 4, 1),
+            time: 60,
+            subjects: {
+                'Matemática': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                },
+                'Português': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                },
+                'Ciencias': {
+                    totalQuestions: 5,
+                    totalCorrect: 2
+                },
+                'História': {
+                    totalQuestions: 5,
+                    totalCorrect: 3
+                }
+                
+            }
+        },
+        {
+            id: 2,
+            totalQuestions: 10,
+            totalCorrect: 8,
+            date: new Date(2021, 4, 1),
+            time: 60,
+            subjects: {
+                'Matemática': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                },
+                'Português': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                }
+            }
+        },
+        {
+            id: 3,
+            totalQuestions: 10,
+            totalCorrect: 8,
+            date: new Date(2021, 4, 1),
+            time: 60,
+            subjects: {
+                'Matemática': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                },
+                'Português': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                }
+            }
+        }
+    ];
+
+}
+
+type questionMapInterface = questionInterface[];
+//ID e Alternativa (O index é o número da questão na prova.)
+type questionMapResultInterface = [number, (string | null)][];  
+
+//Retorna o simulado que foi adicionado
+export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoSimpleInterface | null> {
+    //Código PLACEHOLDER.
+    try {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        return {
+            id: 1,
+            totalQuestions: 10,
+            totalCorrect: 7,
+            date: new Date(2021, 4, 1),
+            time: 60,
+            subjects: {
+                'Matemática': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                },
+                'Português': {
+                    totalQuestions: 5,
+                    totalCorrect: 4
+                }
+            }
+        }
+    } catch (err: any) {
+        return null;
+    }
+}
+
+export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {
+    //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
+    try {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        return {
+            id: 1,
+            questions: 
+            [
+                [1, 'A'],
+                [2, 'B'],
+                [3, 'C'],
+                [4, 'D'],
+                [5, 'E'],
+                [6, 'A'],
+                [7, 'B'],
+                [8, 'C'],
+                [9, 'D'],
+                [10, 'E']
+            ],
+            date: new Date(2021, 4, 1),
+            time: 60
+        }
+    } catch (err: any) {
+        return null;
+    }
+}
+
+//Atenção, a magica acontece aqui:
+
+export async function generateNewSimulado(): Promise<string>{
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    //UID do simulado (talvez não vamos usar, ai retorne booleano)
+    return '34ghGTH33EDWF@#wfdw';
+}
 
 
-export { validadeEmail, validadePassword, handleLogin, handleSignup, getUser, handleChange, handleDeleteAccount, handleLogout, handleSaveChanges };
+export { validadeEmail, validadePassword }

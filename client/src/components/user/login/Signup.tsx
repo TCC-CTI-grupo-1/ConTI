@@ -60,6 +60,9 @@ const Signup = ({changeLoginPage}:Props) => {
                 case '.':
                     node = <>{node}<p>O email deve conter pelo menos um '.'</p></>;
                     break;
+                case 't':
+                    node = <>{node}<p>O ponto deve estar apos o email [example@email.com]</p></>
+                    break;
             }
         });
         return node;
