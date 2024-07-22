@@ -7,7 +7,7 @@ export async function updateProfileController(req: Request, res: Response) {
       if (!req.body.name || !req.body.email) {
         throw new Error('Preencha todos os campos');
       }
-      else if (!req.body.email.includes('@') || !req.body.email.includes('.') || req.body.email.indexOf('@') > req.body.email.indexOf('.')) {
+      else if (!req.body.email.includes('@') || !req.body.email.includes('.') || req.body.email.indexOf('@') > req.body.email.lastIndexOf('.')) {
           throw new Error('E-mail inválido');
       }
       await profileDAO.updateProfileSession(req.body);
