@@ -107,6 +107,7 @@ const NewTest = () => {
             <ModalBody>
                 <div className="centered">
                     <h3>Aguarde enquanto preparamos seu simulado...</h3>
+                    <br></br>
                     <Spinner size="xl" />
                 </div>
                 

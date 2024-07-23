@@ -35,7 +35,7 @@ const QuestionBox = ({  question }: Props) => {
       <div className="year">
         <p>Ano: {question.year}</p>
       </div>
-      <div className={"difficulty " + question.difficulty}>
+      <div className={"difficulty " + question.difficulty}><p>
         {question.difficulty === "easy"
           ? "Fácil"
           : question.difficulty === "medium"
@@ -43,6 +43,7 @@ const QuestionBox = ({  question }: Props) => {
           : question.difficulty === "hard"
           ? "Difícil"
           : "Faz o L"}
+        </p>
       </div>
     </div>
   );
