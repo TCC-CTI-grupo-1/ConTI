@@ -8,6 +8,7 @@ import {
   Button,
   Checkbox,
 } from "@chakra-ui/react";
+import LocalButton from "../Button";
 import { showAlert } from "../../App";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { useState } from "react";
@@ -110,9 +111,6 @@ const Filters = () => {
                       <MenuItemOption value="easy">Fácil</MenuItemOption>
                       <MenuItemOption value="medium">Médio</MenuItemOption>
                       <MenuItemOption value="hard">Difícil</MenuItemOption>
-                      <MenuItemOption value="take-the-l">
-                        Faz o L
-                      </MenuItemOption>
                     </MenuOptionGroup>
                   </MenuList>
                 </>
@@ -170,7 +168,7 @@ const Filters = () => {
           >
             Já respondidas
           </Checkbox>
-          <Button
+          <LocalButton
             colorScheme="red"
             variant={"outline"}
             onClick={() => {
@@ -182,30 +180,29 @@ const Filters = () => {
             }}
           >
             Limpar filtros
-          </Button>
+          </LocalButton>
         </div>
         <div className="buttons">
 
 
-          <Button colorScheme="blue" variant={"solid"} size={"lg"}
+          <LocalButton colorScheme="blue" variant={"solid"}
           onClick={
             handleGetFilteredQuestions
           }>
             Aplicar filtros
-          </Button>
+          </LocalButton>
 
 
           <p>ou</p>
-          <Button
+          <LocalButton
             colorScheme="gray"
             variant={"outline"}
-            size={"lg"}
             onClick={() => {
               navegate("/alltests");
             }}
           >
             Ver todas as provas
-          </Button>
+          </LocalButton>
         </div>
       </div>
       <div className="results">
