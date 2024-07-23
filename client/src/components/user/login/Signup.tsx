@@ -112,7 +112,13 @@ const Signup = ({changeLoginPage}:Props) => {
 
 
     return (
-        <div id="inputArea">
+        <div id="inputArea"
+            onKeyUp={(e) =>{
+                if(e.key ==="Enter")
+                    {
+                        handleSignupButtonClick();
+                    }
+        }}>
                 <Logo type={'signup'}/>
 
                 <div id="inputs">               

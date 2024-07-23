@@ -844,7 +844,8 @@ h2 {
 #inputArea {
 
   width: 30%;
-  height: 80%;
+  min-height: 70%;
+  max-height: 90%;
   border-radius: 15px;
   background-color: var(--background-color);
   padding: var(--padding-0);
@@ -1905,6 +1906,10 @@ COMPONENTES GERAIS DO FERNANDO
   p,
   a {
     font-size: 0.8rem;
+  }
+
+  input{
+    font-size: 0.9rem !important;
   }
 
   //para o chakra

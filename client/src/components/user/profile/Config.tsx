@@ -160,8 +160,8 @@ const Config = () => {
                 
                 <div>
                     <h2>Configurações da conta</h2>
-                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={handleLogout} />
-                    <Button text='Deletar conta' color='red' width="auto" onClick={handleDeleteAccount} />
+                    <Button colorScheme='red' width="auto" variant='outline' onClick={handleLogout} >Log-out</Button>
+                    <Button colorScheme='red' width="auto" onClick={handleDeleteAccount} >Deletar conta </Button>
                 </div>
 
                 
