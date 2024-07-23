@@ -44,10 +44,12 @@ input::-ms-clear {
   --background-color-50: rgba(255, 255, 255, 0.863);
   --background-color-2: rgb(245, 245, 245);
   --color-green: rgba(7, 158, 7, 0.8);
+  --color-green-80: rgba(7, 158, 7, 0.75);
   --color-green-50: rgba(7, 158, 7, 0.5);
   --color-green-20: rgba(7, 158, 7, 0.2);
   --color-green-10: rgba(7, 158, 7, 0.1);
   --color-red: #ff0000;
+  --color-red-80: rgba(255, 70, 70, 0.9);
   --color-red-50: rgba(255, 70, 70, 0.5);
   --color-red-20: rgba(255, 70, 70, 0.2);
   --color-black-20: rgba(0, 0, 0, 0.1);
@@ -1622,6 +1624,7 @@ COMPONENTES GERAIS DO FERNANDO
     & > svg{
       width: 30%;
       height: auto;
+      cursor: pointer;
     }
     & > div{
       height: 100%;
@@ -1873,6 +1876,33 @@ COMPONENTES GERAIS DO FERNANDO
   }
 }
 
+.allQuestionsModal{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: var(--padding-2);
+  justify-content: center;
+  & > h3{
+    width: var(--padding-0);
+    cursor: pointer;
+    transition: 0.1s;
+    &.correct{
+      color: var(--color-green);
+      opacity: 0.7;
+    }
+    &.wrong{
+      color: var(--color-red);
+      opacity: 0.7;
+    }
+    &.active{
+      color: var(--primary-color);
+      opacity: 0.7;
+    }
+    &:hover{
+      opacity: 1;
+    }
+  }
+}
 
 @media (max-width: 1500px) {
   :root {
@@ -1899,9 +1929,13 @@ COMPONENTES GERAIS DO FERNANDO
     font-size: 2.5rem;
   }
 
+  h1 > a{
+    font-size: inherit;
+  }
+
 
   h3 {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
   }
 
   p,

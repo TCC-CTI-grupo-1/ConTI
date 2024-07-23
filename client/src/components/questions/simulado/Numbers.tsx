@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import ArrowIcon from '../../../assets/ArrowIcon'
 import { questionInterface } from '../../../controllers/interfaces'
+import MenuIcon from '../../../assets/MenuIcon'
 
 interface Props{
     questionsHashMap: number[];
     setActiveQuestion: (questionNumber: number) => void;
     defaultQuestion?: number;
     respostasCorretas?: boolean[] | null;
+    onMenuIconClick: () => void;
 }
 
 export function handleQuestionNumberClick(questionNumber: number, setActiveQuestion: (questionNumber: number) => void) {
@@ -20,7 +22,8 @@ export function handleQuestionNumberClick(questionNumber: number, setActiveQuest
     });
 }
 
-const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0, respostasCorretas = null}: Props) => {
+const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0, 
+    respostasCorretas = null, onMenuIconClick}: Props) => {
 
     const getQuestionsNumbers = (questionsHashMap: number[]) => {
         const questions: JSX.Element[] = [];
@@ -50,11 +53,11 @@ const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0, resp
 
     return (
         <div id="allQuestions">
-            <ArrowIcon direction="top" />
+
+            <MenuIcon onClick={onMenuIconClick}/>
 
             <div>{getQuestionsNumbers(questionsHashMap)}</div>
 
-            <ArrowIcon direction="bottom" />
         </div>
     )
 }

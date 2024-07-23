@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, useBreakpointValue, ChakraProvider, extendTheme } from '@chakra-ui/react';
 
 interface Props {
-    children: string;
+    children: any;
     variant?: 'solid' | 'outline' | 'ghost' | 'link';
     onClick: () => void;
     loading?: boolean;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const LocalButton = ({ children, onClick, variant = 'solid', loading = false, 
-    colorScheme = 'blue', width = '100%', rightIcon }: Props) => {
+    colorScheme = 'blue', width = 'fit-content', rightIcon }: Props) => {
     
     const size = useBreakpointValue({ base: 'xs', sm: 'xs', md: 'sm', lg: 'md' });
 
@@ -26,6 +26,7 @@ const LocalButton = ({ children, onClick, variant = 'solid', loading = false,
             isLoading={loading}
             size={size}
             rightIcon={rightIcon}
+            
         >
             {children}
         </Button>

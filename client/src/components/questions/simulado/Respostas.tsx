@@ -1,12 +1,21 @@
 import QuestionDetail from "./QuestionDetail";
 import { useState, useRef } from "react";
-import { Button } from "@chakra-ui/react";
+import Button from "../../Button";
 import ArrowIcon from "../../../assets/ArrowIcon";
 import { questionInterface } from "../../../controllers/interfaces";
 import { useNavigate } from "react-router-dom";
 import Numbers from "./Numbers";
 import { handleQuestionNumberClick } from "./Numbers";
-
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+  } from '@chakra-ui/react'
   
 type questionResultsInterface = [questionInterface, (string | null)][];
 
@@ -19,6 +28,7 @@ interface Props {
 
 const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
 
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [activeQuestion, setActiveQuestion] = useState(0);
 
@@ -59,16 +69,18 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
     const navegate = useNavigate();
 
     return (
+        <>
         <div id="simulado">
             <Numbers questionsHashMap={questionsHashMap.map((q)=> {return q[0].id})} 
             setActiveQuestion={setActiveQuestion}
             respostasCorretas={pontuacao}
+            onMenuIconClick={onOpen}
             />
             <div id="allQuestionsMargin"></div>
             <div className="content">
                 <div className="infoTop">
                     <h3>Pontuação final: {pontuacao.filter((p) => p).length} / {questionsHashMap.length}</h3>
-                    <Button colorScheme="blue" size="lg" variant="solid" onClick={() => {
+                    <Button colorScheme="blue" variant="solid" onClick={() => {
                         //Voltar para a tela anterior
                         navegate('/history');
 
@@ -80,7 +92,6 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                 <div id="buttons">
                     <Button
                         colorScheme="blue"
-                        size="lg"
                         variant="outline"
                         onClick={() => {
                             if (activeQuestion > 0) {
@@ -93,7 +104,6 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                     </Button>
                     <Button
                         colorScheme="blue"
-                        size="lg"
                         variant="outline"
                         onClick={() => {
                             if (activeQuestion < questionsHashMap.length - 1) {
@@ -108,6 +118,44 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
             </div>
         </div>
 
+        <Modal
+        isCentered
+        onClose={onClose}
+        isOpen={isOpen}
+        motionPreset='slideInBottom'
+        >
+        <ModalOverlay />
+        <ModalContent>
+        <ModalHeader>Todas as questões</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+        <p>Clique em uma questão para ir até ela</p>    
+        <div className="allQuestionsModal">
+            
+            {
+                questionsHashMap.map((question, index) => {
+                    return <h3 key={question[0].id} className={
+                        (question[1]?.toUpperCase() === question[0].alternativaCorreta.toUpperCase() ?
+                        'correct' : 'wrong') + ' ' +
+                        (activeQuestion == index ? 'active' : '')
+                    }
+                    onClick={() => {
+                        handleQuestionNumberClick(index, setActiveQuestion);
+                        onClose();
+                    }}
+                    >{index + 1}</h3>;
+                })
+            }
+        </div>
+        </ModalBody>
+        <ModalFooter>
+            <Button colorScheme='blue' onClick={onClose}>
+            Fechar
+            </Button>
+        </ModalFooter>
+        </ModalContent>
+        </Modal>
+        </>
     );
 };
 

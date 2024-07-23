@@ -99,7 +99,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
 
     function validateWordText(word: string): string {
         //aqui está como "line" mas na verdade é cada palavra.
-        let n_caracteres = 120;
+        let n_caracteres = 100;
         let returnedWord = '';
         if (word.length > n_caracteres) {
             returnedWord = word.substring(0, n_caracteres) + '- ' + word.substring(n_caracteres);
