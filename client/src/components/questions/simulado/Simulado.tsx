@@ -8,6 +8,13 @@ import Numbers from "./Numbers";
 import { handleQuestionNumberClick } from "./Numbers";
 
 import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
     AlertDialog,
     AlertDialogBody,
     AlertDialogFooter,
@@ -41,6 +48,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
     const [resultsHashMap, setResultsHashMap] = useState<questionMapResultInterface>([]);
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2} = useDisclosure();
     const cancelRef = useRef<HTMLButtonElement | null>(null);
 
     const nQuestoesRestantes = () => {
@@ -103,8 +111,17 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
 
 
     const navegate = useNavigate();
-    /* CÓDIGO REMOVIDO AQUI EMBAIXO:
-                        {!isSimuladoFinished ? <Button colorScheme="black" size="lg" variant="outline"
+
+    return (
+        <div id="simulado">
+            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.id})} setActiveQuestion={setActiveQuestion} 
+            onMenuIconClick={() => {}}
+            />
+            <div id="allQuestionsMargin"></div>
+            <div className="content">
+                <div className="infoTop">
+                    <h3>43:22</h3>
+                    {!isSimuladoFinished ? <Button colorScheme="black" size="lg" variant="outline"
                     onClick={()=>{
                         onOpen();
                     }}>
@@ -192,6 +209,50 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                     </AlertDialogContent>
                 </AlertDialog>
         </div>
+
+                    
+        <Modal
+        isCentered
+        onClose={onClose2}
+        isOpen={isOpen2}
+        motionPreset='slideInBottom'
+        >
+        <ModalOverlay />
+        <ModalContent>
+        <ModalHeader>Todas as questões</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+        <p>Clique em uma questão para ir até ela</p>    
+        <div className="allQuestionsModal">
+            
+            {
+                questionsHashMap.map((question, index) => {
+                    return (<h3 key={index}
+                    
+                    onClick={() => {
+                        handleQuestionNumberClick(index, setActiveQuestion);
+                        onClose();
+                    }}
+                    >{index + 1}</h3>
+                    );
+                })
+            }
+        </div>
+        </ModalBody>
+        <ModalFooter>
+            <Button colorScheme={nQuestoesRestantes() > 0 ? 'black' : 'blue'} size="lg" variant="outline"
+            onClick={()=>{
+                    onClose2();
+                    onOpen();
+                }}>
+                    Finalizar Simulado
+            </Button>
+
+        </ModalFooter>
+        </ModalContent>
+        </Modal>        
+
+        </>
 
     );
 };
