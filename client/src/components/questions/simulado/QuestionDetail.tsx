@@ -120,6 +120,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
         return text22;
     }
 
+    //OiFernando
     return (
     <>
         {question === undefined ? <h1>Erro ao carregar questão</h1> : 
