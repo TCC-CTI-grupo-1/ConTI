@@ -103,17 +103,8 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
 
 
     const navegate = useNavigate();
-
-    return (
-        <div id="simulado">
-            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.id})} setActiveQuestion={setActiveQuestion} 
-            onMenuIconClick={() => {}}
-            />
-            <div id="allQuestionsMargin"></div>
-            <div className="content">
-                <div className="infoTop">
-                    <h3>43:22</h3>
-                    {!isSimuladoFinished ? <Button colorScheme="black" size="lg" variant="outline"
+    /* CÓDIGO REMOVIDO AQUI EMBAIXO:
+                        {!isSimuladoFinished ? <Button colorScheme="black" size="lg" variant="outline"
                     onClick={()=>{
                         onOpen();
                     }}>
@@ -125,6 +116,16 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                         Voltar ao home
                     </Button>
                     }
+    */
+    return (
+        <div id="simulado">
+            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.id})} setActiveQuestion={setActiveQuestion} 
+            onMenuIconClick={() => {}}
+            />
+            <div id="allQuestionsMargin"></div>
+            <div className="content">
+                <div className="infoTop">
+                    <h3>43:22</h3>
                 </div>
                 {returnQuestionDetail()}
                 <div id="buttons">

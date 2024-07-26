@@ -1706,7 +1706,7 @@ COMPONENTES GERAIS DO FERNANDO
   }
   & > .content{
     height: 100vh;
-    padding: 0 var(--padding-1);
+    padding: 0;
     flex: 1;
     gap: var(--padding-3);
     display: flex;
@@ -1734,6 +1734,15 @@ COMPONENTES GERAIS DO FERNANDO
       width: 100%;
       justify-content: center;
     }
+  }
+  #question-number-container{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background-color: var(--primary-color);
+    width: 1.5rem;
+    aspect-ratio:1/1;
+    color: var(--text-white);
   }
 }
 
@@ -1970,7 +1979,7 @@ COMPONENTES GERAIS DO FERNANDO
   }
 
   .question{
-    max-width: 100%;
+    max-width: 75vw;
   }
 }
 

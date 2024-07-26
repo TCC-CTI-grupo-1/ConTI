@@ -112,22 +112,14 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
         return returnedWord;
     }
 
-    function validateTextText(text: string): string {
-        let text22 = ''
-        text.split(' ').map((line: string, index) => (
-            text22 += validateWordText(line) + ' '
-        ));
-        return text22;
-    }
-
+    //
     //OiFernando
     return (
     <>
         {question === undefined ? <h1>Erro ao carregar questão</h1> : 
         <div className='box question'>
-            {isSimulado ? <p>Questão {qNumber}</p> : 
+            {isSimulado ? <p id='question-number-container'>{qNumber}</p> : 
             <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>}
-            
             <h4>
             {question.enunciado}
             </h4>
