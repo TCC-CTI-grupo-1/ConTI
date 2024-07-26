@@ -1,0 +1,30 @@
+
+
+Em simulado.tsx
+- Mudara s setas para (Ao lado, seletor de questtões) ser com scroll
+- Arrumar a porra do CSS desses numeros a esquerda (A margem em baixo e em cima são diferentes)
+
+Filtros
+- Deixar todos os filtros ativos quando desseleciona tudo (Nenhum ano seleiconado, mostra 2021, 2022 e 2023.)
+
+Geral;
+- Mudar rotas para o protugues (talvez) [/profile -> /perfil]
+- Alterar TONS de verde e vermelho
+- Fazer um feedback dahorinha nos botão se der
+
+Em config.tsx:
+- abrir uma caixa de confirmação se deseja mesmo deletar a conta
+
+
+SIMULADO
+
+- Diminuir fonte alternativa
+- tirar "de onde a questão veio" quando você faz um simulado.
+
+Mudar o botão finalizar simulado para uma tela que 
+é carregada quando você passa da ultima quatão
+(mosta todas as questões)
+
+- botaõ de HIDE no tempo decorrido
+
+- mostrar numero da questão (sem tanta enfase)

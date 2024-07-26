@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { routes } from './http/routes';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 const session = require('express-session');
 
@@ -20,11 +21,13 @@ app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    name: 'session',
+    name: 'sid',
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24
+        maxAge: 1000 * 60 * 60 * 12
     }
 }))
+
+app.use(cookieParser());
 
 routes(app);
 

@@ -1,33 +1,36 @@
-//import loadingIcon from '../assets/loading.gif';
-import { Button } from '@chakra-ui/react';
+import React from 'react';
+import { Button, useBreakpointValue, ChakraProvider, extendTheme } from '@chakra-ui/react';
 
-interface Props{
-    text: string;
+interface Props {
+    children: any;
     variant?: 'solid' | 'outline' | 'ghost' | 'link';
     onClick: () => void;
     loading?: boolean;
-    size?: 'lg' | 'md' | 'sm' | 'xs'
-    color?: 'blue' | 'red'
+    colorScheme?: 'blue' | 'red' | 'gray'
     width?: '100%' | 'auto' | 'fit-content'
+    rightIcon?: any
+
 }
 
-const LocalButton = ({text, onClick, variant = 'solid', loading = false, 
-size='lg', color = 'blue', width='100%'}: Props) => {
+const LocalButton = ({ children, onClick, variant = 'solid', loading = false, 
+    colorScheme = 'blue', width = 'fit-content', rightIcon }: Props) => {
+    
+    const size = useBreakpointValue({ base: 'xs', sm: 'xs', md: 'sm', lg: 'md' });
+
     return (
-        <Button variant={variant} colorScheme={color} width={width}
-        onClick={onClick}
-        isLoading={loading}
-        size={size}>{text}
+        <Button
+            variant={variant}
+            colorScheme={colorScheme}
+            width={width}
+            onClick={onClick}
+            isLoading={loading}
+            size={size}
+            rightIcon={rightIcon}
+            
+        >
+            {children}
         </Button>
-    )
+    );
 }
-
-/*<button onClick={onClick} className={(type == 2 ? 'secondary' : '')
-            + ' ' + (loading ? 'loading' : '')
-        }>
-             {!loading && <h3> {text} </h3>}
-             {loading && <img src={loadingIcon} alt="Loading" />}
-        </button>*/
-
 
 export default LocalButton;

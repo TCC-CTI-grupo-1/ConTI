@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 import Button from "../../Button"
 import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
-import { getUser } from "../../../controllers/userController";
+import { handleGetUser } from "../../../controllers/userController";
 import { Profile } from "../../../../../server/src/types/express-session";
 import { handleDeleteAccount, handleLogout, handleSaveChanges } from "../../../controllers/userController";
+import { showAlert } from "../../../App";
 
 const Config = () => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -13,15 +14,17 @@ const Config = () => {
     const [user, setUser] = useState<Profile | null>(null);
     /*Informações provenientes do BancoDeDados*/
 
-    async function handleGetUser(){
-        let user = await getUser();
+    //Esse é o famoso se funciona não mexe.
+    async function handleGetUserBySession(){
+        let user = await handleGetUser();
         setUser(user);
     }
     useEffect(() => {
-        handleGetUser();
+        handleGetUserBySession();
     }, []);
 
     useEffect(() => {
+        console.log(user);
         if (user != null) {
             setLoading(false);
         }
@@ -29,14 +32,13 @@ const Config = () => {
 
     
     /*Aqui ficam todas as configurações, as quais o usuario pode alkterar*/
-    const [name, setName] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
+    const [updatedUser, setUpdatedUser] = useState<Profile>();
     const [creationDate, setCreationDate] = useState<Date>(new Date());
 
     function setDefaultInfo(){
         if (user) {
-            setName(user.name);
-            setEmail(user.email);
+            setUpdatedUser(user);
+
             setCreationDate(new Date(user.creation_date));
         }
         setUpdates([]);
@@ -47,7 +49,11 @@ const Config = () => {
     }, [user]);
     
     function handleNameChange(e: React.ChangeEvent<HTMLInputElement>){
-        setName(e.target.value);
+        if(!updatedUser) return;
+        let newUser:Profile = {...updatedUser};
+        newUser.name = e.target.value;
+        setUpdatedUser(newUser);
+        
         if (e.target.value != user?.name) {
             !updates.includes('name') && setUpdates([...updates, 'name']);
             console.log(updates);
@@ -58,7 +64,11 @@ const Config = () => {
     }
 
     function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>){
-        setEmail(e.target.value);
+        if(!updatedUser) return;
+        let newUser:Profile = {...updatedUser};
+        newUser.email = e.target.value;
+        setUpdatedUser(newUser);
+
         if (e.target.value != user?.email) {
             !updates.includes('email') && setUpdates([...updates, 'email']);
         }
@@ -81,9 +91,24 @@ const Config = () => {
     }, []);*/
 
 
+    async function handleSaveChangesButtonClick(){
+        if(!updatedUser){
+            showAlert("Erro ao salvar as alterções");
+            return;
+        }
+        const isSavedChanges = await handleSaveChanges(updatedUser);
+        if(isSavedChanges === true){
+            showAlert("Alterações salvas com sucesso", 'success');
+            setUser(updatedUser);
+        }
+        else{
+            showAlert("Erro: " + isSavedChanges)
+        }
+    }
+
     return (
         <>
-            {!loading && <div id="config">
+            {loading && <div id="config">
                 <Skeleton>
                     <div>
                         <h2>Vamos ocupar espaço</h2>
@@ -115,17 +140,17 @@ const Config = () => {
                 
             </div>}
 
-            {loading && <div id="config">
+            {!loading && <div id="config">
                 <div>
                     <h2>Informações da conta</h2>
                     <Input name="nome"color={updates.includes('name') ? 'blue' : 'black'}
-                    label="Nome" value={name} onChange={(e) => {
+                    label="Nome" value={updatedUser?.name} onChange={(e) => {
                         handleNameChange(e);
                     }}
                     valid={updates.includes('name') ? true : undefined}/>
 
                     <Input name="nome" color={updates.includes('email') ? 'blue' : 'black'}
-                    label="Email" value={email} onChange={(e) => {
+                    label="Email" value={updatedUser?.email} onChange={(e) => {
                         handleEmailChange(e);
                     }}
                     valid={updates.includes('email') ? true : undefined}
@@ -135,8 +160,8 @@ const Config = () => {
                 
                 <div>
                     <h2>Configurações da conta</h2>
-                    <Button text='Log-out' color='red' width="auto" variant='outline' onClick={handleLogout} />
-                    <Button text='Deletar conta' color='red' width="auto" onClick={handleDeleteAccount} />
+                    <Button colorScheme='red' width="auto" variant='outline' onClick={handleLogout} >Log-out</Button>
+                    <Button colorScheme='red' width="auto" onClick={handleDeleteAccount} >Deletar conta </Button>
                 </div>
 
                 
@@ -148,9 +173,9 @@ const Config = () => {
                 </div>
             </div>}
             <PopupBottom 
-            enabled={updates.length > 0}
-            handleSalvar={handleSaveChanges}
-            handleDescartar={setDefaultInfo}
+                enabled={updates.length > 0}
+                handleDescartar={setDefaultInfo}
+                handleSaveChanges={handleSaveChangesButtonClick}
             />
 
         </>

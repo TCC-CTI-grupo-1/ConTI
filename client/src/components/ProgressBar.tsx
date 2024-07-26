@@ -19,7 +19,7 @@ const ProgressBar = ({color, radius, filledPercentage, animation = ""}: Props) =
         <div className='progress-bar-container' style={{width: (progressSize + 'px'), height: (progressSize + 'px')}}>
             <div className='progress-bar-outline'>
                 <div className='progress-bar-inner-circle'>
-                    <span className='progress-bar-text'>{filledPercentage}%</span>
+                    <div className='progress-bar-text'>{filledPercentage}%</div>
                 </div>
             </div>
             <svg viewBox={"0 0 " + (progressSize) + ' ' + (progressSize)} version="1.1" xmlns="https://www.w3.org/2000/svg" 
