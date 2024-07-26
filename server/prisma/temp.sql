@@ -43,7 +43,8 @@ CREATE TABLE question_mock_test (
     answer_id INTEGER,
     FOREIGN KEY (answer_id) REFERENCES answer(id),
     FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE,
-    FOREIGN KEY (mock_test_id) REFERENCES mock_test(id) ON DELETE CASCADE
+    FOREIGN KEY (mock_test_id) REFERENCES mock_test(id) ON DELETE CASCADE,
+    PRIMARY KEY (question_id, mock_test_id)
 );
 
 CREATE TABLE answer (
@@ -67,5 +68,6 @@ CREATE TABLE area_profile (
     total_correct_answers INTEGER NOT NULL DEFAULT 0,
     total_answers INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (area_id) REFERENCES area(id),
-    FOREIGN KEY (profile_id) REFERENCES profile(id) ON DELETE CASCADE
+    FOREIGN KEY (profile_id) REFERENCES profile(id) ON DELETE CASCADE,
+    PRIMARY KEY (area_id, profile_id)
 );
