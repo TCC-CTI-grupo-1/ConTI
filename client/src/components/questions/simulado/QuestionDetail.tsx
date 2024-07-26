@@ -5,12 +5,13 @@ import { showAlert } from '../../../App';
 
 interface Props {
     question: questionInterface;
+    qNumber?: number; //Numero da questão no simulado
     isSimulado?: boolean;
     isAwnserSelected?: (value: string | null) => void; //Executado quando o usuario marca/desmarca uma alternativa
     isCorrecao?: string | null | undefined; //Se o usuario está vendo a correção de uma prova - passa a alternativa
 }
 
-function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrecao = undefined }: Props) {
+function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrecao = undefined, qNumber }: Props) {
 
     const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
 
@@ -97,9 +98,10 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
         }
     }, []);
 
+    //saporranfunciona
     function validateWordText(word: string): string {
         //aqui está como "line" mas na verdade é cada palavra.
-        let n_caracteres = 100;
+        const n_caracteres = 100;
         let returnedWord = '';
         if (word.length > n_caracteres) {
             returnedWord = word.substring(0, n_caracteres) + '- ' + word.substring(n_caracteres);
@@ -122,19 +124,20 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
     <>
         {question === undefined ? <h1>Erro ao carregar questão</h1> : 
         <div className='box question'>
-            <h1>Questão {question.id}</h1>
-            <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>
-            <h3>
-            {validateTextText(question.enunciado)}
-            </h3>
+            {isSimulado ? <p>Questão {qNumber}</p> : 
+            <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>}
+            
+            <h4>
+            {question.enunciado}
+            </h4>
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 
                 {question.alternativas.map((alternative, index) => (
                     <div key={index}>
                         <span>
-                            <h3>{String.fromCharCode(65 + index)}</h3>
+                            <p> {String.fromCharCode(65 + index)} </p>
                         </span>
-                        <p>{validateTextText(alternative)}</p>
+                        <p> {alternative} </p>
                     </div>
                 ))}
 
