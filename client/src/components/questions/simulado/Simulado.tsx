@@ -75,7 +75,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             questionsDetail.push(
                 <div
                     key={cont}
-                    style={{ display: activeQuestion === index ? "block" : "none" }}
+                    style={{ display: activeQuestion === index ? "flex" : "none" }}
                 >
                     <QuestionDetail 
                         isSimulado 
@@ -91,6 +91,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                                 markQuestionAsSelected(index, false);
                             }
                         }}
+                        qNumber={cont}
                     />
                 </div>
             );
@@ -105,11 +106,13 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
 
     return (
         <div id="simulado">
-            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.id})} setActiveQuestion={setActiveQuestion} />
+            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.id})} setActiveQuestion={setActiveQuestion} 
+            onMenuIconClick={() => {}}
+            />
             <div id="allQuestionsMargin"></div>
             <div className="content">
                 <div className="infoTop">
-                    <h3>Tempo decorrido: 43:22 | 100:00</h3>
+                    <h3>43:22</h3>
                     {!isSimuladoFinished ? <Button colorScheme="black" size="lg" variant="outline"
                     onClick={()=>{
                         onOpen();

@@ -14,3 +14,17 @@ Geral;
 
 Em config.tsx:
 - abrir uma caixa de confirmação se deseja mesmo deletar a conta
+
+
+SIMULADO
+
+- Diminuir fonte alternativa
+- tirar "de onde a questão veio" quando você faz um simulado.
+
+Mudar o botão finalizar simulado para uma tela que 
+é carregada quando você passa da ultima quatão
+(mosta todas as questões)
+
+- botaõ de HIDE no tempo decorrido
+
+- mostrar numero da questão (sem tanta enfase)

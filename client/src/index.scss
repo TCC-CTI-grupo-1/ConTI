@@ -67,7 +67,7 @@ input::-ms-clear {
   --padding-6: 5px;
 
 
-
+  --var-h2: 2rem;
 
   --var-h3: var(--var-h2);
   --margin-smol: 2px;
@@ -104,7 +104,9 @@ h2 {
 
 h3 {
   font-size: 1.5rem;
-
+}
+H4{
+  font-size: 1.2rem;
 }
 
 * {
@@ -846,7 +848,7 @@ h2 {
 
 #inputArea {
 
-  width: 40%;
+  width: 30%;
   min-height: 70%;
   max-height: 90%;
   border-radius: 15px;
@@ -989,7 +991,6 @@ h2 {
   margin-bottom: 100px;
 
   &>div {
-    border: 1px solid black;
     border-radius: var(--border-radius);
     padding: var(--padding-3);
     display: flex;
@@ -1108,6 +1109,7 @@ COMPONENTES GERAIS DO FERNANDO
   flex-direction: column;
   gap: var(--margin-big);
 
+  //Removido
   & .info-geral {
     display: flex;
     gap: var(--padding-0);
@@ -1153,8 +1155,8 @@ COMPONENTES GERAIS DO FERNANDO
 
     &>#header {
       padding: var(--padding-2);
+      padding-left: 0;
       background-color: var(--background-color);
-      border: 1px solid black;
       border-radius: var(--border-radius);
     }
 
@@ -1525,7 +1527,8 @@ COMPONENTES GERAIS DO FERNANDO
 
 .question {
 
-  min-width: 100%;
+  max-width: 75%;
+  border: none;
   &>.alternatives {
     &.showCorrect {
       &>div {
@@ -1561,6 +1564,7 @@ COMPONENTES GERAIS DO FERNANDO
     margin: var(--padding-2) 0;
     display: flex;
     flex-direction: column;
+    gap: var(--padding-3);
 
     &>div {
       display: flex;
@@ -1571,16 +1575,23 @@ COMPONENTES GERAIS DO FERNANDO
       border-radius: var(--border-radius);
       margin: var(--margin-smol);
       cursor: pointer;
+      border: 1px solid black;
+
 
       &>span {
         transition: 0.25s;
-        border: 2px solid black;
-        width: var(--padding-0);
+        border: 1px solid black;
+        width: var(--padding-2);
         aspect-ratio: 1/1;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+
+      & > p{
+        font-size: 1.1rem;
+        font-weight: 100;
       }
 
       &:hover {
@@ -1716,6 +1727,12 @@ COMPONENTES GERAIS DO FERNANDO
         flex: 1;
         text-align: center;
       }
+    }
+    & > div{
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: center;
     }
   }
 }
