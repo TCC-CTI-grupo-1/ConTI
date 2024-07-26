@@ -27,13 +27,13 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
     const correctAnswer = isCorrecao !== undefined ? question.alternativaCorreta.toUpperCase() : null;
 
     const addClassToAlternative = useCallback((letter: string) => {
-        if (questionRef.current === null) return showAlert('Ocorreu um erro ao computar a alternativa. Tente novamente.');
+        if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
 
         const alternatives = questionRef.current.querySelectorAll('.alternatives div');
 
         alternatives.forEach((alternative) => {
             alternative.classList.remove('active');
-            const alternativeLetter = alternative.querySelector('h3')?.textContent;
+            const alternativeLetter = alternative.querySelector('p')?.textContent;
             if (alternativeLetter === letter) {
                 alternative.classList.add('active');
                 setSelectedAwnser(letter);
@@ -44,9 +44,9 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
     const handleClick = useCallback((event: Event) => {
         const target = event.currentTarget as HTMLElement;
 
-        if (questionRef.current === null) return showAlert('Ocorreu um erro ao computar a alternativa. Tente novamente.');
+        if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
 
-        const selectedLetter = target.querySelector('h3')?.textContent;
+        const selectedLetter = target.querySelector('p')?.textContent;
         if (typeof (selectedLetter) === 'string') {
             addClassToAlternative(selectedLetter);
         } else {
