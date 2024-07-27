@@ -1053,32 +1053,34 @@ COMPONENTES GERAIS DO FERNANDO
   height: 200px;
   position: relative;
 
-  .progress-bar-container div {
+
+  & div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
+    //border: 1px solid black;
     border-radius: 50%;
   }
 
-  .progress-bar-outline {
+  & .progress-bar-outline {
     width: 100%;
     height: 100%;
 
-    .progress-bar-inner-circle {
-      width: 90%;
+    & .progress-bar-inner-circle {
+      width: 90% ;
       height: 90%;
       background: none;
+      
 
-      .progress-bar-text {
+      & .progress-bar-text {
         font-size: 1.5em;
         font-weight: 600;
       }
     }
   }
 
-  svg {
+  & svg {
     fill: none;
     stroke-linecap: round;
     position: absolute;

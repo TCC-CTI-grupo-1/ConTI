@@ -184,6 +184,15 @@ const Status = () => {
     }
 
     const [materiaAtiva, setMateriaAtiva] = useState<'math' | 'port' | 'naturais' | 'humanas'>('math');
+    
+    interface hasPlayedAnimationI {
+        "math":boolean,
+        "port":boolean,
+        "naturais":boolean,
+        "humanas":boolean
+    } 
+    
+    const [hasPlayedAnimation,setHasPlayedAnimation] = useState<hasPlayedAnimationI>({"math":true,"port":false,"naturais":false,"humanas":false});
 
     const [materiaAtivaDados, setMateriaAtivaDados] = useState<SubjectInformation>(profileInformation.subjects.math);
 
@@ -217,6 +226,17 @@ const Status = () => {
         
     }, [materiaAtiva]);
 
+    function modifyMateriaAtiva(materiaAtiva:'math' | 'port' | 'naturais' | 'humanas'):void
+    {
+        setMateriaAtiva(materiaAtiva);
+        if(!hasPlayedAnimation[materiaAtiva]){
+            let newHPA = hasPlayedAnimation;
+            newHPA[materiaAtiva] = true;
+            setHasPlayedAnimation(newHPA);
+
+        }  
+
+    }
 
     const primaryColor = '#0066FF';
 
@@ -251,7 +271,7 @@ const Status = () => {
                         <div id="materias">
                             <div id="active" className="math"
                             onClick={() => {
-                                setMateriaAtiva('math');
+                                modifyMateriaAtiva('math');
                             }}>
                                 <div id="header">
                                     <img src={mat}></img>
@@ -259,12 +279,12 @@ const Status = () => {
                                     <img src={expand} className="expand"></img>
                                 </div>
                                 <div id="content">
-                                    <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.math.percentage*100} />
+                                    <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.math.percentage*100} animation = {hasPlayedAnimation['math']}/>
                                 </div>
                             </div>
                             <div className="port"
                             onClick={() => {
-                                setMateriaAtiva('port');
+                                modifyMateriaAtiva('port');
                             }}>
                                 <div id="header">
                                     <img src={port}></img>
@@ -272,12 +292,12 @@ const Status = () => {
                                     <img src={expand} className="expand"></img>
                                 </div>
                                 <div id="content">
-                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.port.percentage*100} />
+                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.port.percentage*100} animation = {hasPlayedAnimation['port']}/>
                                 </div>
                             </div>
                             <div className="naturais"
                             onClick={() => {
-                                setMateriaAtiva('naturais');
+                                modifyMateriaAtiva('naturais');
                             }}>
                                 <div id="header">
                                     <img src={naturais}></img>
@@ -285,12 +305,12 @@ const Status = () => {
                                     <img src={expand} className="expand"></img>
                                 </div>
                                 <div id="content">
-                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.naturais.percentage*100} />
+                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.naturais.percentage*100} animation = {hasPlayedAnimation['naturais']}/>
                                 </div>
                             </div>
                             <div className="humanas"
                             onClick={() => {
-                                setMateriaAtiva('humanas');
+                                modifyMateriaAtiva('humanas');
                             }}>
                                 <div id="header">
                                     <img src={humanas}></img>
@@ -298,7 +318,7 @@ const Status = () => {
                                     <img src={expand} className="expand"></img>
                                 </div>
                                 <div id="content">
-                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.humanas.percentage*100} />
+                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.humanas.percentage*100} animation = {hasPlayedAnimation['humanas']}/>
                                 </div>
                             </div>
                         </div>
