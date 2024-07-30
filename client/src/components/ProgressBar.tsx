@@ -6,6 +6,7 @@ interface Props{
     animation?: boolean | false;
 }
 const PI = 3.1415926535897932384;
+const animationSpeedInMS = 10;
 
 function percentageToCircle(percentage: number, radius: number){
     return radius * PI * 2 * percentage/100;
@@ -25,7 +26,7 @@ const ProgressBar = ({color, radius, filledPercentage, animation = false}: Props
                     clearInterval(interval);
                     return prevPercentage;
                 });
-            }, 0.5); 
+            }, animationSpeedInMS); 
 
             return () => clearInterval(interval);
         }

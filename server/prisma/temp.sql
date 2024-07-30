@@ -57,7 +57,7 @@ CREATE TABLE answer (
 
 CREATE TABLE area (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL UNIQUE,
     parent_id INTEGER,
     FOREIGN KEY (parent_id) REFERENCES area(id)
 );

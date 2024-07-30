@@ -32,7 +32,7 @@ model answer {
 
 model area {
   id           Int            @id @default(autoincrement())
-  name         String         @db.VarChar(255)
+  name         String         @db.VarChar(255) @unique
   parent_id    Int?
   area         area?          @relation("areaToarea", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   other_area   area[]         @relation("areaToarea")

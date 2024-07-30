@@ -6,6 +6,8 @@ import { deleteProfileController } from './controllers/deleteProfileController';
 import { Request, Response } from "express";
 import { updateProfileController } from './controllers/updateProfileController';
 import { getProfileController } from './controllers/getProfileController';
+import { getAreaController } from './controllers/getAreaController';
+import { setAreaController } from './controllers/setAreaController';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
@@ -19,4 +21,6 @@ export async function routes(app: any) {
     app.post('/logout', logoutController);
     app.delete('/deleteUser', deleteProfileController);
     app.get('/user', getProfileController);
+    app.get('/areas', getAreaController);
+    app.post('/setArea', setAreaController);
 }
