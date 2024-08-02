@@ -17,18 +17,31 @@
         <button onclick="convert()">Clique aqui para converter</button>
     <script>
         class Question {
-            constructor()
+            constructor(enunciation,additionalText,subject,questionNumber,questionYear,alternatives,hasImage,hasLatex)
             {
                 this.enunciation = enunciation;
                 this.additionalText = additionalText;
                 this.subject = subject; // Trigonometria
                 this.questionNumber = questionNumber;
                 this.questionYear = questionYear;
-                this.questionCreator = questionCreator; // Ex: VUNESP.
-                this.prova = prova; // CTI
+                this.questionCreator = "VUNESP"; // Ex: VUNESP.
+                this.prova = "CTI"; // CTI
                 this.alternatives = alternatives; // {"A":sdasd, "B":23,... Tem que ser assim pq pode ter A-D ou A-E}
                 this.hasImage = hasImage; 
                 this.hasLatex = hasLatex;
+            }
+        }
+        class Answer {
+            constructor(answer)
+            {
+                this.answer = answer;
+                this.is_correct = false;
+            }
+        }
+        class Area {
+            constructor(areaName)
+            {
+                this.areaName = areaName
             }
         }
         function load()
@@ -51,10 +64,19 @@
                 reader.onload = function(ev) {
                     try {
                         const json = JSON.parse(ev.target.result);
-                        console.log(json);
-                        // You can now use the JSON content as needed
+                        console.log(json)
+                        for(const q of json)
+                        {
+                            const alt = [Answer(q.alternativaA),Answer(q.alternativaB),Answer(q.alternativaC),Answer(q.alternativaD)];
+                            if(q.alternativaE != undefined)
+                        {
+                            alt.push(q.alternativaE)
+                        }
+                            const question = Question(q.enunciado,q.textoAdicional,Area(q.materia),q.numero,q.ano,q.imagem=='on',false);
+                            const sqlQuery = ``
+                        }
                     } catch (e) {
-                        alert("Erro ao ler o arquivo JSON!");
+                        alert("Erro ao ler o arquivo JSON: " + e.message);
                     }
                 };
                 reader.onerror = function() {
