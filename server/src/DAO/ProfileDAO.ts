@@ -1,7 +1,6 @@
 import { ConnectionDAO } from './ConnectionDAO';
 import { ProfileDTO } from '../DTO/ProfileDTO';
 import { hashPassword, comparePasswords } from '../hidden/hidden';
-import { throwDeprecation } from 'process';
 
 const connectionDAO = new ConnectionDAO();
 export class ProfileDAO {
@@ -25,6 +24,7 @@ export class ProfileDAO {
             if (error.code === 'P2002') {
                 throw new Error('E-mail já cadastrado');
             }
+            throw error;
         }
     }
 
@@ -49,6 +49,7 @@ export class ProfileDAO {
             if (error.code === 'P2002') {
                 throw new Error('Email já cadastrado');
             }
+            throw error;
         }
     }
 
@@ -68,6 +69,7 @@ export class ProfileDAO {
             if (error.code === 'P2002') {
                 throw new Error('Email já cadastrado');
             }
+            throw error;
         }
     }
 

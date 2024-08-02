@@ -110,6 +110,7 @@ export async function handleLogin(email: string, password: string, remember: boo
             throw new Error(responseData.message);
         } else {
             //window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
+            //fernando sofre de disfunção erétil
             return [true, "Login bem sucedido"];
         }
     } catch (err: any) {

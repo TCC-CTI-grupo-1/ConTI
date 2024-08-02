@@ -1,5 +1,5 @@
-CREATE TYPE Difficulty AS ENUM ('fácil', 'médio', 'difícil');
-CREATE TYPE MockTestType AS ENUM ('personalizado', 'automático', 'antigo');
+CREATE TYPE Difficulty AS ENUM ('facil', 'medio', 'dificil');
+CREATE TYPE MockTestType AS ENUM ('personalizado', 'automatico', 'antigo');
 
 CREATE TABLE profile (
     id SERIAL PRIMARY KEY,
@@ -12,7 +12,7 @@ CREATE TABLE profile (
     total_incorrect_answers INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE mock_test (
+CREATE TABLE mockTest (
     id SERIAL PRIMARY KEY,
     profile_id INTEGER NOT NULL,
     title VARCHAR(255) NOT NULL,
@@ -21,7 +21,8 @@ CREATE TABLE mock_test (
     time_limit INTEGER NOT NULL,
     time_spent INTEGER NOT NULL DEFAULT 0,
     creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    type MockTestType NOT NULL,
+    test_type MockTestType NOT NULL,
+    UUID VARCHAR(255) NOT NULL,
     FOREIGN KEY (profile_id) REFERENCES profile(id) ON DELETE CASCADE
 );
 
@@ -40,7 +41,7 @@ CREATE TABLE question (
     question_number INTEGER
 );
 
-CREATE TABLE question_mock_test (
+CREATE TABLE question_mockTest (
     question_id INTEGER NOT NULL,
     mock_test_id INTEGER NOT NULL,
     answer_id INTEGER,

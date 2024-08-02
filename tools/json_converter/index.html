@@ -75,6 +75,10 @@
                             const question = Question(q.enunciado,q.textoAdicional,Area(q.materia),q.numero,q.ano,alt,q.imagem=='on',false);
                             const sqlQuery = `INSERT INTO question (question_text, additional_info, area_id, question_number, question_year, question_creator, test_name, hasImage) VALUES ('${question.enunciation}', '${question.additionalText}', '${question.subject}', '${question.questionNumber}', '${question.questionYear}', '${question.questionCreator}', '${question.prova}', '${question.hasImage}');`
                             
+                            for (const a of alt) {
+                                const sqlQueryAlt = `INSERT INTO answer (question_id, answer, is_correct) VALUES (LAST_INSERT_ID(), '${a.answer}', '${a.is_correct}');`
+                            }
+                            
                         }
                     } catch (e) {
                         alert("Erro ao ler o arquivo JSON: " + e.message);
