@@ -9,6 +9,11 @@ import QuestionDatabase from './components/questions/QuestionDatabase';
 import AllTests from './components/questions/AllTests';
 import NewTest from './components/newtest/NewTest';
 
+
+//Middlewares
+import Middleware from './middlewares/Middleware';
+
+
 import { Routes, Route } from "react-router-dom"
 import SimuladoFrame from './components/questions/simulado/FrameSimulado';
 
@@ -40,20 +45,24 @@ function App() {
         console.log = function(){}
     }
 
+    const middleware = new Middleware();
+
     return (
         <div className='app'>
         <div id='alert-box-container'></div>
         <Routes>
-            <Route path='/' element={ <Home /> } />
-            <Route path='/newtest' element={ <NewTest /> } />
-            <Route path='/login' element={ <User /> } />
-            <Route path='/profile' element={ <Profile /> } />
-            <Route path='/history' element={ <History /> } />
-            <Route path='/alltests' element={ <AllTests /> } />   
-            <Route path='/questions' element={<QuestionDatabase />} />
-            <Route path='/questions/:id' element={<QuestionDatabase />} />
-            <Route path='/test' element={<SimuladoFrame questionsList={[1,2,3,4,5]}/>} />
-            <Route path='/simulado/:id' element={<SimuladoVer />} />
+          <Route path='/' element={ <Home /> } />
+          <Route path='/newtest' element={ <NewTest /> } />
+          <Route path='/login' element={ <User /> } />
+
+          <Route path='/profile' element={middleware.routeToDisplay(['isLoggedIn'], <Profile />)} />
+          <Route path='/history' element={ <History /> } />
+
+          <Route path='/alltests' element={ <AllTests /> } />   
+          <Route path='/questions' element={<QuestionDatabase />} />
+          <Route path='/questions/:id' element={<QuestionDatabase />} />
+          <Route path='/test' element={<SimuladoFrame questionsList={[1,2,3,4,5]}/>} />
+          <Route path='/simulado/:id' element={<SimuladoVer />} />
         </Routes>
         </div>
     );
