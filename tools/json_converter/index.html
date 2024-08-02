@@ -70,11 +70,20 @@
                                 alt.push(new Answer(q.alternativaE));
                             }
                             const question = new Question(q.enunciado, q.textoAdicional,new Area(q.materia), q.numero, q.ano, alt, q.imagem == 'on', false);
-                            const sqlQuery = `INSERT INTO question (question_text, additional_info, area_id, question_number, question_year, question_creator, test_name, hasImage) VALUES ('${question.enunciation}', '${question.additionalText}', '${question.subject}', '${question.questionNumber}', '${question.questionYear}', '${question.questionCreator}', '${question.prova}', '${question.hasImage}');`;
+                            const sqlQuery = `INSERT INTO question_teste (question_text, additional_info, area_id, question_number, question_year, question_creator, test_name, hasImage) VALUES ('${question.enunciation}', '${question.additionalText}', '${question.subject.areaName}', '${question.questionNumber}', '${question.questionYear}', '${question.questionCreator}', '${question.prova}', '${question.hasImage}');`;
 
-                            const altQueries = alt.map(a => `INSERT INTO answer (question_id, answer, is_correct) VALUES (LAST_INSERT_ID(), '${a.answer}', '${a.is_correct}');`);
+                            const altQueries = alt.map(a => `INSERT INTO answer_teste (question_id, answer, is_correct) VALUES (LAST_INSERT_ID(), '${a.answer}', '${a.is_correct}');`);
 
-                            
+                            fetch('http://localhost:3000/submit-queries', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ sqlQuery, altQueries })
+                            })
+                            .then(response => response.text())
+                            .then(data => console.log(data))
+                            .catch(error => console.error('Error:', error));
                         }
                     } catch (e) {
                         alert("Erro ao ler o arquivo JSON: " + e.message);
@@ -86,23 +95,6 @@
                 reader.readAsText(file);
             };
 
-            let oi = "aoaoa";
-
-            // Send the variable to the server
-            fetch('echo.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ oi: oi })
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log('Response from server:', data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
         }
     </script>
 </body>
