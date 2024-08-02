@@ -72,8 +72,9 @@
                         {
                             alt.push(q.alternativaE)
                         }
-                            const question = Question(q.enunciado,q.textoAdicional,Area(q.materia),q.numero,q.ano,q.imagem=='on',false);
-                            const sqlQuery = ``
+                            const question = Question(q.enunciado,q.textoAdicional,Area(q.materia),q.numero,q.ano,alt,q.imagem=='on',false);
+                            const sqlQuery = `INSERT INTO question (question_text, additional_info, area_id, question_number, question_year, question_creator, test_name, hasImage) VALUES ('${question.enunciation}', '${question.additionalText}', '${question.subject}', '${question.questionNumber}', '${question.questionYear}', '${question.questionCreator}', '${question.prova}', '${question.hasImage}');`
+                            
                         }
                     } catch (e) {
                         alert("Erro ao ler o arquivo JSON: " + e.message);

@@ -37,8 +37,9 @@ CREATE TABLE question (
     area_id INTEGER NOT NULL,
     question_creator VARCHAR(255),
     test_name VARCHAR(255),
-    question_number INTEGER 
-); 
+    question_number INTEGER
+);
+
 CREATE TABLE question_mock_test (
     question_id INTEGER NOT NULL,
     mock_test_id INTEGER NOT NULL,
