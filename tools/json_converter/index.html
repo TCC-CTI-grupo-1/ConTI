@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<h>, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body onload="load()">
+    <h1>
+        Inserir JSON no banco de dados
+    </h1>
+
+        <label>
+            Arquivo JSON: 
+            <input type="file" id="file">
+        </label>
+        <button onclick="convert()">Clique aqui para converter</button>
+    <script>
+        class Question {
+            constructor()
+            {
+                this.enunciation = enunciation;
+                this.additionalText = additionalText;
+                this.subject = subject; // Trigonometria
+                this.questionNumber = questionNumber;
+                this.questionYear = questionYear;
+                this.questionCreator = questionCreator; // Ex: VUNESP.
+                this.prova = prova; // CTI
+                this.alternatives = alternatives; // {"A":sdasd, "B":23,... Tem que ser assim pq pode ter A-D ou A-E}
+                this.hasImage = hasImage; 
+                this.hasLatex = hasLatex;
+            }
+        }
+        function load()
+        {
+            const fileInput = document.getElementById('file')
+            window.convert = function()
+            {
+                if(fileInput == undefined)
+            {
+                alert("Erro no DOM");
+                return;
+            }
+                const files = fileInput.files;
+                if(files.length===0) {
+                    alert("Nenhum arquivo selecionado!");
+                    return;
+                }
+                const file = files[0];
+                    const reader = new FileReader();
+                reader.onload = function(ev) {
+                    try {
+                        const json = JSON.parse(ev.target.result);
+                        console.log(json);
+                        // You can now use the JSON content as needed
+                    } catch (e) {
+                        alert("Erro ao ler o arquivo JSON!");
+                    }
+                };
+                reader.onerror = function() {
+                    alert("Erro ao ler o arquivo!");
+                };
+                reader.readAsText(file);
+                
+            }
+        }
+    </script>
+</body>
+</html>

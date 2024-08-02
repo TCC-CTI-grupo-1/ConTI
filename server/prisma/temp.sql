@@ -28,15 +28,17 @@ CREATE TABLE mock_test (
 CREATE TABLE question (
     id SERIAL PRIMARY KEY,
     question_text TEXT NOT NULL,
-    year INTEGER NOT NULL,
+    question_year INTEGER NOT NULL, 
     total_answers INTEGER NOT NULL DEFAULT 0,
     total_answers_right INTEGER NOT NULL DEFAULT 0,
     difficulty Difficulty NOT NULL,
-    image VARCHAR(255),
+    hasImage BOOLEAN,
     additional_info TEXT,
-    area_id INTEGER NOT NULL
-);
-
+    area_id INTEGER NOT NULL,
+    question_creator VARCHAR(255),
+    test_name VARCHAR(255),
+    question_number INTEGER 
+); 
 CREATE TABLE question_mock_test (
     question_id INTEGER NOT NULL,
     mock_test_id INTEGER NOT NULL,
@@ -51,9 +53,10 @@ CREATE TABLE answer (
     id SERIAL PRIMARY KEY,
     question_id INTEGER NOT NULL,
     answer TEXT NOT NULL,
-    is_correct BOOLEAN NOT NULL,
+    is_correct BOOLEAN NOT NULL, 
     FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE
-);
+); 
+
 
 CREATE TABLE area (
     id SERIAL PRIMARY KEY,
