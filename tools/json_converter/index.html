@@ -44,36 +44,36 @@
                 this.areaName = areaName
             }
         }
-        function load()
-        {
-            const fileInput = document.getElementById('file')
-            window.convert = function()
-            {
-                if(fileInput == undefined)
-            {
-                alert("Erro no DOM");
-                return;
-            }
+        function load() {
+            const fileInput = document.getElementById('file');
+            window.convert = function() {
                 const files = fileInput.files;
-                if(files.length===0) {
+                if (files.length === 0) {
                     alert("Nenhum arquivo selecionado!");
                     return;
                 }
+
                 const file = files[0];
-                    const reader = new FileReader();
+                if (file.name.split('.').pop().toLowerCase() !== 'json') {
+                    alert("Arquivo deve ser JSON!");
+                    return;
+                }
+
+                const reader = new FileReader();
                 reader.onload = function(ev) {
                     try {
                         const json = JSON.parse(ev.target.result);
-                        console.log(json)
-                        for(const q of json)
-                        {
-                            const alt = [Answer(q.alternativaA),Answer(q.alternativaB),Answer(q.alternativaC),Answer(q.alternativaD)];
-                            if(q.alternativaE != undefined)
-                        {
-                            alt.push(q.alternativaE)
-                        }
-                            const question = Question(q.enunciado,q.textoAdicional,Area(q.materia),q.numero,q.ano,alt,q.imagem=='on',false);
-                            const sqlQuery = `INSERT INTO question (question_text, additional_info, area_id, question_number, question_year, question_creator, test_name, hasImage) VALUES ('${question.enunciation}', '${question.additionalText}', '${question.subject}', '${question.questionNumber}', '${question.questionYear}', '${question.questionCreator}', '${question.prova}', '${question.hasImage}');`
+                        console.log(json);
+                        for (const q of json) {
+                            const alt = [ new Answer(q.alternativaA),new  Answer(q.alternativaB), new Answer(q.alternativaC), new Answer(q.alternativaD)];
+                            if (q.alternativaE != undefined) {
+                                alt.push(new Answer(q.alternativaE));
+                            }
+                            const question = new Question(q.enunciado, q.textoAdicional,new Area(q.materia), q.numero, q.ano, alt, q.imagem == 'on', false);
+                            const sqlQuery = `INSERT INTO question (question_text, additional_info, area_id, question_number, question_year, question_creator, test_name, hasImage) VALUES ('${question.enunciation}', '${question.additionalText}', '${question.subject}', '${question.questionNumber}', '${question.questionYear}', '${question.questionCreator}', '${question.prova}', '${question.hasImage}');`;
+
+                            const altQueries = alt.map(a => `INSERT INTO answer (question_id, answer, is_correct) VALUES (LAST_INSERT_ID(), '${a.answer}', '${a.is_correct}');`);
+
                             
                         }
                     } catch (e) {
@@ -84,8 +84,25 @@
                     alert("Erro ao ler o arquivo!");
                 };
                 reader.readAsText(file);
-                
-            }
+            };
+
+            let oi = "aoaoa";
+
+            // Send the variable to the server
+            fetch('echo.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ oi: oi })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Response from server:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     </script>
 </body>
