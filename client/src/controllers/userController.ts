@@ -501,5 +501,14 @@ export async function generateNewSimulado(): Promise<string>{
     return '34ghGTH33EDWF@#wfdw';
 }
 
+export async function handleGetAreas(): Promise<string[]>{ //Por enquanto retorna todas mesmo
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    return ['Matemática', 'Português', 'Ciências', 'História'];
+}
+
+export async function handlePostArea(nomeArea: string, areaPai: string | null): Promise<boolean>{
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    return true;
+}
 
 export { validadeEmail, validadePassword }
