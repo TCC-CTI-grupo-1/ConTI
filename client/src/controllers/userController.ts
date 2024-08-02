@@ -128,8 +128,6 @@ export async function handleGetUser(): Promise<Profile | null> {
                 'Content-Type': 'application/json'
             }
         });
-
-        console.log("DAAAAAAAAAAAAAAAAAAAAAAAA")
         const responseData = await response.json();
         if (!response.ok) {
             throw new Error(responseData.message);
@@ -503,13 +501,56 @@ export async function generateNewSimulado(): Promise<string>{
 }
 
 export async function handleGetAreas(): Promise<string[]>{ //Por enquanto retorna todas mesmo
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    return ['Matemática', 'Português', 'Ciências', 'História'];
+    try {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        const response = await fetch('http://localhost:3001/areas', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return [responseData.areas];
+        }
+    } catch (err: any) {
+        return [];
+    }
 }
 
 export async function handlePostArea(nomeArea: string, areaPai: string | null): Promise<boolean>{
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    return true;
+    try {        
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        const data = {
+            name: nomeArea,
+            parent: areaPai
+        };
+
+        const response = await fetch('http://localhost:3001/setArea', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
 }
+
 
 export { validadeEmail, validadePassword }
