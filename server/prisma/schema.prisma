@@ -26,6 +26,7 @@ model answer {
   question_id       Int
   answer            String
   is_correct        Boolean
+  question_letter   String?             @db.Char(1)
   question          question            @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   question_mockTest question_mockTest[]
 }
@@ -124,13 +125,16 @@ model password_reset_tokens {
 model question {
   id                  Int                 @id @default(autoincrement())
   question_text       String
-  year                Int
+  question_year       Int
   total_answers       Int                 @default(0)
   total_answers_right Int                 @default(0)
   difficulty          difficulty
-  image               String?             @db.VarChar(255)
   additional_info     String?
   area_id             Int
+  question_creator    String              @db.VarChar(255)
+  official_test_name  String?             @db.VarChar(255)
+  question_number     Int?
+  has_image           Boolean             @default(false)
   answer              answer[]
   question_mockTest   question_mockTest[]
 }
@@ -168,7 +172,6 @@ model mockTest {
   time_spent            Int                 @default(0)
   creation_date         DateTime            @default(now()) @db.Timestamp(6)
   test_type             mocktesttype
-  UUID                  String              @default(uuid()) @db.VarChar(255) @unique
   profile               profile             @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mock_test_profile_id_fkey")
   question_mockTest     question_mockTest[]
 }

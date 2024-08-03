@@ -33,11 +33,11 @@ CREATE TABLE question (
     total_answers INTEGER NOT NULL DEFAULT 0,
     total_answers_right INTEGER NOT NULL DEFAULT 0,
     difficulty Difficulty NOT NULL,
-    hasImage BOOLEAN,
+    has_image BOOLEAN NOT NULL DEFAULT false,
     additional_info TEXT,
     area_id INTEGER NOT NULL,
     question_creator VARCHAR(255),
-    test_name VARCHAR(255),
+    official_test_name VARCHAR(255),
     question_number INTEGER
 );
 
@@ -56,6 +56,7 @@ CREATE TABLE answer (
     question_id INTEGER NOT NULL,
     answer TEXT NOT NULL,
     is_correct BOOLEAN NOT NULL, 
+    question_letter VARCHAR(1),
     FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE
 ); 
 
