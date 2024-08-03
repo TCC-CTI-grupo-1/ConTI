@@ -1,5 +1,5 @@
 import { Profile } from '../../../server/src/types/express-session';
-import { questionInterface, simuladoSimpleInterface, simuladoInterface } from './interfaces';
+import { questionInterface, simuladoSimpleInterface, simuladoInterface, areaInterface, area_ProfileInterface } from './interfaces';
 import { questionFilters } from './interfaces';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
@@ -500,9 +500,9 @@ export async function generateNewSimulado(): Promise<string>{
     return '34ghGTH33EDWF@#wfdw';
 }
 
-export async function handleGetAreas(): Promise<string[]>{ //Por enquanto retorna todas mesmo
+export async function handleGetAreas(): Promise<areaInterface[]> {
     try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch('http://localhost:3001/areas', {
             method: 'GET',
             credentials: 'include',
@@ -515,8 +515,9 @@ export async function handleGetAreas(): Promise<string[]>{ //Por enquanto retorn
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return [responseData.areas];
+            return responseData.areas;
         }
+
     } catch (err: any) {
         return [];
     }
@@ -549,6 +550,29 @@ export async function handlePostArea(nomeArea: string, areaPai: string | null): 
 
     } catch (err: any) {
         return false;
+    }
+}
+
+export async function handleGetArea_Profile(): Promise<area_ProfileInterface[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/getArea_Profile', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.areas_profile;
+        }
+
+    } catch (err: any) {
+        return [];
     }
 }
 

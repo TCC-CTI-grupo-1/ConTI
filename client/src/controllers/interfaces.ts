@@ -43,3 +43,17 @@ export interface simuladoInterface{
     date: Date,
     time: number,
 }
+
+// NÃO DÁ PRA SÓ PEGAR DO DTO? EM SERVER... MELHOR, NÃO?...
+export interface areaInterface{
+    id: number,
+    name: string,
+    parent_id: number
+}
+
+export interface area_ProfileInterface{
+    area_id: number,
+    profile_id: number,
+    total_correct_answers: number,
+    total_answers: number
+}

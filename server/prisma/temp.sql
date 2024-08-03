@@ -38,7 +38,8 @@ CREATE TABLE question (
     area_id INTEGER NOT NULL,
     question_creator VARCHAR(255),
     official_test_name VARCHAR(255),
-    question_number INTEGER
+    question_number INTEGER,
+    has_latex BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE question_mockTest (

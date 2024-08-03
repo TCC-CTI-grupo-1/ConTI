@@ -8,9 +8,9 @@ import { updateProfileController } from './controllers/updateProfileController';
 import { getProfileController } from './controllers/getProfileController';
 import { getAreaController } from './controllers/getAreaController';
 import { setAreaController } from './controllers/setAreaController';
-import { getMockTestsController } from './controllers/getMockTestsController';
-import { getMockTestsByDecrescentDateController } from './controllers/getMockTestsByDecrescentDateController';
+import { getMockTestsController, getMockTestsByDecrescentDateController } from './controllers/getMockTestsController';
 import { setMockTestController } from './controllers/setMockTestController';
+import { getArea_ProfileController } from './controllers/getArea_ProfileController';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
@@ -29,4 +29,5 @@ export async function routes(app: any) {
     app.get('/mockTests', getMockTestsController);
     app.get('/mockTestbyDate', getMockTestsByDecrescentDateController);
     app.post('/setMockTest', setMockTestController);
+    app.post('/getArea_Profile', getArea_ProfileController);
 }

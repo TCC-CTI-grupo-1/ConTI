@@ -1,7 +1,7 @@
 export class AreaDTO {
     id: number;
     name: string;
-    parent_id: number;
+    parent_id: (number | null);
 
     constructor(id: number, name: string, parent_id: number) {
         this.id = id;

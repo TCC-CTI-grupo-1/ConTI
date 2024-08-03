@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Skeleton } from "@chakra-ui/react";
 import { ProgressBar } from "../../ProgressBar";
+import { handleGetArea_Profile } from "../../../controllers/userController";
 
 import mat from '../../../assets/mat.png';
 import port from '../../../assets/port.png';
@@ -11,14 +12,23 @@ import expand from '../../../assets/expand.png';
 const Status = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
+    const [profileTeste, setProfileTeste] = useState<any>(null);
+
 
     async function loadConfig():Promise<boolean> {
         await new Promise(resolve => setTimeout(resolve, 10));
         return true;
     }
 
+    async function TESTEEEE(){
+        await loadConfig();
+        const pteste = await handleGetArea_Profile();
+        setProfileTeste(pteste);
+        setLoading(false);
+    }
+
     useEffect(() => {
-        loadConfig().then(() => setLoading(false));
+        TESTEEEE();
     }, []);
 
 
