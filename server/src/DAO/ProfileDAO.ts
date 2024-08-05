@@ -74,12 +74,16 @@ export class ProfileDAO {
     }
 
     deleteProfile = async (profile: ProfileDTO) => {
-        const client = await connectionDAO.getConnection();
-        await client.profile.delete({
-            where: {
-                id: profile.id
-            }
-        });
+        try {
+            const client = await connectionDAO.getConnection();
+            await client.profile.delete({
+                where: {
+                    id: profile.id
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
     }
 
     listProfiles = async () => {

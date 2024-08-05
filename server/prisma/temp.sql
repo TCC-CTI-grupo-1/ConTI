@@ -22,7 +22,7 @@ CREATE TABLE mockTest (
     time_spent INTEGER NOT NULL DEFAULT 0,
     creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     test_type MockTestType NOT NULL,
-    UUID VARCHAR(255) NOT NULL,
+    UUID VARCHAR(255) NOT NULL UNIQUE,
     FOREIGN KEY (profile_id) REFERENCES profile(id) ON DELETE CASCADE
 );
 
@@ -59,8 +59,7 @@ CREATE TABLE answer (
     is_correct BOOLEAN NOT NULL, 
     question_letter VARCHAR(1),
     FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE
-); 
-
+);
 
 CREATE TABLE area (
     id SERIAL PRIMARY KEY,

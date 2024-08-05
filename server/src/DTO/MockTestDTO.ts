@@ -1,4 +1,4 @@
-import { MockTestType } from "../types/database/MockTestType";
+import { mocktesttype } from "@prisma/client";
 
 export class MockTestDTO {
     id: number;
@@ -9,10 +9,10 @@ export class MockTestDTO {
     total_correct_answers: number;
     time_limit: number;
     time_spent: number;
-    test_type: MockTestType;
+    test_type: mocktesttype;
     UUID: string;
 
-    constructor(id: number, title: string, creation_date: Date, profile_id: number, total_wrong_answers: number, total_correct_answers: number, time_limit: number, time_spent: number, test_type: MockTestType, UUID: string) {
+    constructor(id: number, title: string, creation_date: Date, profile_id: number, total_wrong_answers: number, total_correct_answers: number, time_limit: number, time_spent: number, test_type: mocktesttype, UUID: string) {
         this.id = id;
         this.title = title;
         this.creation_date = creation_date;
