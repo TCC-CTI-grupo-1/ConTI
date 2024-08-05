@@ -267,7 +267,7 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
             year: 2021,
             enunciado: 'Qual é a raiz quadrada de 49?',
             alternativas: ['1', '7', '9', '5', '49'],
-            alternativaCorreta: 'a'
+            alternativaCorreta: 'b'
         };
     } else {
         return {
@@ -310,7 +310,7 @@ export async function handleGetQuestions(filters: questionFilters): Promise<ques
             year: 2021,
             enunciado: 'Qual é a raiz quadrada de 49?',
             alternativas: ['1', '7', '9', '5', '49'],
-            alternativaCorreta: 'a'
+            alternativaCorreta: 'b'
         },
         {
             id: 2,
