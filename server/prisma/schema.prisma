@@ -135,6 +135,7 @@ model question {
   official_test_name  String?             @db.VarChar(255)
   question_number     Int?
   has_image           Boolean             @default(false)
+  has_latex           Boolean             @default(false)
   answer              answer[]
   question_mockTest   question_mockTest[]
 }
@@ -172,6 +173,7 @@ model mockTest {
   time_spent            Int                 @default(0)
   creation_date         DateTime            @default(now()) @db.Timestamp(6)
   test_type             mocktesttype
+  UUID                  String              @db.VarChar(255) @unique
   profile               profile             @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mock_test_profile_id_fkey")
   question_mockTest     question_mockTest[]
 }

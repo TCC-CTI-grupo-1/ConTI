@@ -154,5 +154,18 @@ export class MockTestDAO {
             throw error;
         }
     }
+
+    deleteMockTest = async (id: number) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            await client.mockTest.delete({
+                where: {
+                    id: id
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
     
 }

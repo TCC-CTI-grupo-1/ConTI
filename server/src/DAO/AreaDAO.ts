@@ -37,7 +37,11 @@ export class AreaDAO {
                 areas.push(area);
             });
 
-        return areas;
+            if (areas.length === 0) {
+                throw new Error('Nenhuma área cadastrada');
+            }
+
+            return areas;
 
         } catch (error) {
             throw error;
@@ -48,12 +52,21 @@ export class AreaDAO {
     searchAreaById = async (id: number) => {
         try {
             const client = await connectionDAO.getConnection();
-            const area = await client.area.findUnique({
+            const result = await client.area.findUnique({
                 where: {
                     id: id
                 }
             });
-            return area;
+            if (result) {
+                const areaDTO: AreaDTO = {
+                    id: result.id,
+                    name: result.name,
+                    parent_id: result.parent_id
+                }
+                return areaDTO;
+            } else {
+                throw new Error('Área não encontrada');
+            }
         } catch (error) {
             throw error;
         }
@@ -111,6 +124,8 @@ export class AreaDAO {
                 }
                 areas.push(area);
             });
+
+            return areas;
         } catch (error) {
             throw error;
         }
@@ -119,15 +134,50 @@ export class AreaDAO {
     searchAreaByName = async (name: string) => {
         try {
             const client = await connectionDAO.getConnection();
-            const area = await client.area.findFirst({
+            const result = await client.area.findFirst({
                 where: {
                     name: name
                 }
             });
-            return area;
+            if (result) {
+                const areaDTO: AreaDTO = {
+                    id: result.id,
+                    name: result.name,
+                    parent_id: result.parent_id
+                }
+                return areaDTO;
+            }
         } catch (error) {
             throw error;
         }
     }
+
+    listAllParentAreaIDs = async (areaId: number) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            let result = await client.area.findFirst({
+                where: {
+                    id: areaId
+                }
+            });
+
+            const parentAreaIDs: number[] = [];
+            let parent_id = result?.parent_id;
+
+            while (parent_id) {
+                parentAreaIDs.push(parent_id);
+                result = await client.area.findFirst({
+                    where: {
+                        id: parent_id
+                    }
+                });
+                parent_id = result?.parent_id;
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
 
 }
