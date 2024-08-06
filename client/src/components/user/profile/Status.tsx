@@ -360,9 +360,9 @@ const Status = () => {
                                         <p>Total de questões corretas</p>
                                         <p>Total de questões erradas</p>
                                     </div>
-                                    {Object.entries(materiaAtivaDados.sub_subjects).map(([, value]) => {
+                                    {Object.entries(materiaAtivaDados.sub_subjects).map(([index, value]) => {
                                         return (
-                                            <div className="sub-subject">
+                                            <div className="sub-subject" key={index}>
                                                 <h3>{value.name}</h3>
                                                 <p>{value.percentage * 100}%</p>
                                                 <p>{value.totalQuestions}</p>

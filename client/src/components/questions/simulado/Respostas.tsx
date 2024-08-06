@@ -52,7 +52,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
             questionsDetail.push(
                 <div
                     key={cont}
-                    style={{ display: activeQuestion === index ? "block" : "none" }}
+                    style={{ display: activeQuestion === index ? "flex" : "none" }}
                 >
                     <QuestionDetail 
                         question={questionMap[0]} 

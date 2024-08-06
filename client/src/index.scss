@@ -1542,7 +1542,8 @@ COMPONENTES GERAIS DO FERNANDO
 }
 
 .question {
-
+  margin: var(--padding-6);
+  min-width: 50vw;
   &.small{
     max-width: 100%;
     & > .alternatives {
@@ -1906,7 +1907,9 @@ COMPONENTES GERAIS DO FERNANDO
       &:hover::after{
         opacity: 1;
       }
-
+      & h2, & p{
+        text-align: center;
+      }
       &::after{
         content: '';
         display: block;

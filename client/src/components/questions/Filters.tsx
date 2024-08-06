@@ -7,6 +7,14 @@ import {
   MenuOptionGroup,
   Button,
   Checkbox,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
 } from "@chakra-ui/react";
 import LocalButton from "../Button";
 import { showAlert } from "../../App";
@@ -21,12 +29,14 @@ import { handleGetQuestions } from "../../controllers/userController";
 const Filters = () => {
   const navegate = useNavigate();
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const [options, setOptions] = useState<options>({
-    ano: ["2024", "2023", "2022"],
+    ano: [2024, 2023, 2022],
     dificuldade: ["easy", "medium", "hard", "take-the-l"],
     disciplina: ["math", "port", "naturais", "humanas"],
     alreadyAnswered: false,
-    mySimulations: false,
+    //mySimulations: false,
   });
 
   function handleSelectChange(
@@ -55,6 +65,7 @@ const Filters = () => {
   const [loading, setLoading] = useState(false);
 
   return (
+    <>
     <div id="questions">
       <div className="filters box">
         <h3>Filtros</h3>
@@ -119,40 +130,13 @@ const Filters = () => {
           </div>
 
           <div>
-            <Menu closeOnSelect={false}>
-              {({ isOpen }) => (
-                <>
-                  <MenuButton
-                    as={Button}
-                    colorScheme={isOpen ? "blue" : "gray"}
-                    rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                  >
-                    Disciplina
-                  </MenuButton>
-                  <MenuList minWidth="240px">
-                    <MenuOptionGroup
-                      title="Disciplina"
-                      type="checkbox"
-                      onChange={(e) => {
-                        handleSelectChange(e, "disciplina");
-                      }}
-                    >
-                      <MenuItemOption value="math">Matemática</MenuItemOption>
-                      <MenuItemOption value="port">Português</MenuItemOption>
-                      <MenuItemOption value="naturais">
-                        Ciências Naturais
-                      </MenuItemOption>
-                      <MenuItemOption value="humanas">
-                        Ciências Humanas
-                      </MenuItemOption>
-                    </MenuOptionGroup>
-                  </MenuList>
-                </>
-              )}
-            </Menu>
+            <Button
+            onClick={onOpen}><span>Selecionar disciplina</span></Button>
           </div>
         </div>
         <div className="more-options">
+
+          {/*
           <p>Excluir questões:</p>
           <Checkbox
             onChange={(e) => {
@@ -160,14 +144,17 @@ const Filters = () => {
             }}
           >
             De meus simulados
-          </Checkbox>
+          </Checkbox>*/
+          }
           <Checkbox
             onChange={(e) => {
-              setOptions({ ...options, mySimulations: e.target.checked });
+              setOptions({ ...options, alreadyAnswered: e.target.checked });
             }}
           >
             Já respondidas
           </Checkbox>
+          
+
           <LocalButton
             colorScheme="red"
             variant={"outline"}
@@ -235,6 +222,29 @@ const Filters = () => {
         </div>
       </div>
     </div>
+
+    <Modal
+        isCentered
+        onClose={onClose}
+        isOpen={isOpen}
+        motionPreset='slideInBottom'
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>TESTEETETSTEE</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant='ghost'>Secondary Action</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

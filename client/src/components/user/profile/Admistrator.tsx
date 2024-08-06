@@ -28,9 +28,9 @@ const Admnistrador = () => {
 
     useEffect(() => {
         handleGetAreas().then((areas) => {
-            setAreas(areas);
+            let listaNomeAreas: string[] = areas.map((area) => area.name);
             setLoading(false);
-        });
+        });        
     }, []);
 
     return (
