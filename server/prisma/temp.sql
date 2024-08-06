@@ -39,7 +39,8 @@ CREATE TABLE question (
     question_creator VARCHAR(255),
     official_test_name VARCHAR(255),
     question_number INTEGER,
-    has_latex BOOLEAN NOT NULL DEFAULT false
+    has_latex BOOLEAN NOT NULL DEFAULT false,
+    FOREIGN KEY (area_id) REFERENCES area(id)
 );
 
 CREATE TABLE question_mockTest (

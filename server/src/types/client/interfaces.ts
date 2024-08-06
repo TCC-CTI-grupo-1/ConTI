@@ -5,5 +5,4 @@ export interface questionFilters{
     dificuldade?: difficulty[];
     disciplina?: string[];
     alreadyAnswered?: boolean;
-    myMockTests?: boolean;
 }

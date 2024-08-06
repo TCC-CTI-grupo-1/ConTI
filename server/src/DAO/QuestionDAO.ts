@@ -141,20 +141,65 @@ export class QuestionDAO {
     }
 
     searchQuestionByFilters = async (filters: questionFilters) => {
+
         try {
             const areaDAO: AreaDAO = new AreaDAO();
-
             const client = await connectionDAO.getConnection();
             const areaNames: string[] = filters.disciplina ? filters.disciplina : [];
             const difficulties: difficulty[] = filters.dificuldade ? filters.dificuldade : [];
-            const years: number[] = filters.ano ? filters.ano : [];
-            
-            let resultAllParents: AreaDTO[] = [];
+            const years: number[] = filters.ano ? filters.ano.map(Number) : [];
 
-            // for (let i = 0; i < areaNames.length; i++) {
-            //     const area = await areaDAO.searchAreaByName(areaNames[i]);
-            //     resultAllParents = resultAllParents.concat(await areaDAO.listAllParents(area.id));
-            // }
+            const areasIDs: number[] = [];
+            for (const areaName of areaNames) {
+                const area: (AreaDTO | undefined) = await areaDAO.searchAreaByName(areaName);
+                if (area !== undefined) {
+                    areasIDs.push(area.id);
+                }
+            }
+
+            for (const areaID of areasIDs) {
+                const areasChildren: AreaDTO[] = await areaDAO.listAllSubAreas(areaID);
+                for (const area of areasChildren) {
+                    areasIDs.push(area.id);
+                }
+            }
+
+            const result = await client.question.findMany({
+                where: {
+                    area_id: {
+                        in: areasIDs
+                    },
+                    difficulty: {
+                        in: difficulties
+                    },
+                    question_year: {
+                        in: years
+                    }
+                }
+            });
+
+            const questions: QuestionDTO[] = [];
+
+            result.forEach((result: any) => {
+                const question: QuestionDTO = {
+                    id: result.id,
+                    question_text: result.question_text,
+                    question_year: result.question_year,
+                    total_answers: result.total_answers,
+                    total_answers_right: result.total_answers_right,
+                    difficulty: result.difficulty,
+                    additional_info: result.additional_info,
+                    area_id: result.area_id,
+                    question_creator: result.question_creator,
+                    official_test_name: result.official_test_name,
+                    question_number: result.question_number,
+                    has_image: result.has_image,
+                    has_latex: result.has_latex
+                };
+                questions.push(question);
+            });
+
+            return questions;
 
         } catch (error) {
             throw error;
