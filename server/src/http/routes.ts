@@ -11,6 +11,7 @@ import { setAreaController } from './controllers/setAreaController';
 import { getMockTestsController, getMockTestsByDecrescentDateController } from './controllers/getMockTestsController';
 import { setMockTestController } from './controllers/setMockTestController';
 import { getArea_ProfileController } from './controllers/getArea_ProfileController';
+import { getAreaByIdController } from './controllers/getAreaByIdController';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
@@ -25,6 +26,7 @@ export async function routes(app: any) {
     app.delete('/deleteUser', deleteProfileController);
     app.get('/user', getProfileController);
     app.get('/areas', getAreaController);
+    app.get('/areas/:id', getAreaByIdController);
     app.post('/setArea', setAreaController);
     app.get('/mockTests', getMockTestsController);
     app.get('/mockTestbyDate', getMockTestsByDecrescentDateController);

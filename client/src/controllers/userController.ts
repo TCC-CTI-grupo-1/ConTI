@@ -553,7 +553,7 @@ export async function handlePostArea(nomeArea: string, areaPai: string | null): 
     }
 }
 
-export async function handleGetArea_Profile(): Promise<area_ProfileInterface[]> {
+export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch('http://localhost:3001/getArea_Profile', {
@@ -572,9 +572,31 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[]> 
         }
 
     } catch (err: any) {
-        return [];
+        return null;
     }
 }
 
+export async function handleGetAreaById(id: number): Promise<areaInterface | null> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/areas/'+id, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.areas_profile;
+        }
+
+    } catch (err: any) {
+        return null;
+    }
+}
 
 export { validadeEmail, validadePassword }

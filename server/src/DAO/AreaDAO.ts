@@ -173,6 +173,8 @@ export class AreaDAO {
                 });
                 parent_id = result?.parent_id;
             }
+
+            return parentAreaIDs;
         } catch (error) {
             throw error;
         }

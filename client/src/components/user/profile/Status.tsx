@@ -2,216 +2,184 @@ import { useState, useEffect } from "react";
 import { Skeleton } from "@chakra-ui/react";
 import { ProgressBar } from "../../ProgressBar";
 import { handleGetArea_Profile } from "../../../controllers/userController";
+import { area_ProfileInterface } from "../../../controllers/interfaces";
+import { areaInterface } from "../../../controllers/interfaces";
+import { handleGetAreaById } from "../../../controllers/userController";
+import { handleGetAreas } from "../../../controllers/userController";
 
-import mat from '../../../assets/mat.png';
-import port from '../../../assets/port.png';
-import naturais from '../../../assets/naturais.png';
-import humanas from '../../../assets/humanas.png';
+import { useNavigate } from "react-router-dom";
+
+import mat from '../../../assets/areasIcons/1.png';
+import port from '../../../assets/areasIcons/2.png';
+import naturais from '../../../assets/areasIcons/3.png';
+import humanas from '../../../assets/areasIcons/4.png';
 import expand from '../../../assets/expand.png';
+import { showAlert } from "../../../App";
 
 const Status = () => {
 
+    const navegate = useNavigate();
     const [loading, setLoading] = useState<boolean>(true);
-    const [profileTeste, setProfileTeste] = useState<any>(null);
+    const [doesProfileExist, setDoesProfileExist] = useState<boolean>(false);
+    const [profileStatus, setProfileStatus] = useState<{[id:number]: area_ProfileInterface}>({});
+    const [areas, setAreas] = useState<{ [id: number]: areaInterface }>({}); //Array chave-valor com todas as areas do usuario
+    const [areasPai, setAreasPai] = useState<areaInterface[]>([]); //As areas que não dependem de ninguem
 
+    const logos = [mat, port, naturais, humanas]
+    
+    function getPercentage(id: number):number
+    {
+        if(profileStatus[id] === undefined)
+        {
+            return 0;
+        }
+        return Math.trunc(((profileStatus[id].total_correct_answers / profileStatus[id].total_answers)*100));
+    }
+
+    const [hasPlayedAnimation, setHasPlayedAnimation] = useState<hasPlayedAnimationI>({});
+    //matematica, portugues, ciencias naturais e ciencias humanas
+
+
+    async function handleGetAreasLocalProfile(): Promise<{[id:number]: area_ProfileInterface} | null>{
+        await loadConfig();
+        const status = await handleGetArea_Profile();
+        if(status)
+        {
+            let newStatus: {[id:number]: area_ProfileInterface} = {};
+            status.forEach(s => {
+                newStatus[s.area_id] = s;
+            })
+            return newStatus;
+        }
+        else{
+            navegate('/login');
+            showAlert("Você não está logado");
+            return null;
+        }
+
+    }
+
+    async function handleGetAreasLocal(): Promise<{ [id: number]: areaInterface } | null>{
+        if(profileStatus){
+            const areas = await handleGetAreas();
+            
+            let areasMap: { [id: number]: areaInterface } = {};
+            areas.forEach((area) => {
+                areasMap[area.id] = area;
+            });
+            return (areasMap);       
+
+        }
+        else{
+            showAlert("Erro ao carregar as areas");
+            return null;
+        }
+    }
+
+    function handleSetAreasPai(){
+        let areasPaiList: areaInterface[] = [];
+        Object.values(areas).forEach(area => {
+            if(area.parent_id == null){
+                areasPaiList.push(area);
+            }
+        });        
+        areasPaiList.sort((a, b) => a.id - b.id);
+        setAreasPai(areasPaiList);
+    }
+
+
+    const updateHasPlayedAnimation = () => {
+        const newHasPlayedAnimation: hasPlayedAnimationI = {};
+        
+        areasPai.forEach(area => {
+            newHasPlayedAnimation[area.name] = false; // Define o valor padrão para `false`
+        });
+
+        setHasPlayedAnimation(newHasPlayedAnimation);
+    };          
 
     async function loadConfig():Promise<boolean> {
         await new Promise(resolve => setTimeout(resolve, 10));
         return true;
     }
 
-    async function TESTEEEE(){
-        await loadConfig();
-        const pteste = await handleGetArea_Profile();
-        setProfileTeste(pteste);
-        setLoading(false);
+
+    async function handleRunOtherFunctions(){
+        const profileNew = await handleGetAreasLocalProfile();
+        const areasNew = await handleGetAreasLocal();
+        updateHasPlayedAnimation();
+
+        if(!areasNew){
+            console.log("Erro ao renderizar as areas");
+            return;
+        }
+
+        if(!profileNew){
+            console.log("Erro ao renderizar o perfil");
+            return;
+        }
+
+        setAreas(areasNew);
+        setProfileStatus(profileNew);     
     }
 
     useEffect(() => {
-        TESTEEEE();
+        handleRunOtherFunctions();
     }, []);
 
-
-    interface SubSubjectInformation{
-        name: string;
-        percentage: number;
-        totalQuestions: number;
-        totalSuccess: number;
-        totalErrors: number;
-    }
-
-    interface SubjectInformation {
-        name: string;
-        percentage: number;
-        totalQuestions: number;
-        totalSuccess: number;
-        totalErrors: number;
-        sub_subjects: {
-            [key: string]: SubSubjectInformation;
-        }
-    }
-
-    interface ProfileInformation {
-        percentage: number;
-        totalTests: number;
-        totalQuestions: number;
-        totalSuccess: number;
-        totalErrors: number;
-        subjects: {
-            [key: string]: SubjectInformation;
-        };
-    }
-
-    const profileInformation: ProfileInformation = {
-        percentage: 0.46,
-        totalTests: 42,
-        totalQuestions: 2246,
-        totalSuccess: 8765887765,
-        totalErrors: 0,
-        subjects: {
-            math: {
-                name: 'Matemática',
-                percentage: 0.89,
-                totalQuestions: 42,
-                totalSuccess: 42,
-                totalErrors: 0,
-                sub_subjects: {
-                    algebra: {
-                        name: 'Álgebra',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                    geometry: {
-                        name: 'Geometria',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                    trigonometry: {
-                        name: 'Trigonometria',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                }
-            },
-            port: {
-                name: 'Português',
-                percentage: 0.22,
-                totalQuestions: 42,
-                totalSuccess: 42,
-                totalErrors: 0,
-                sub_subjects: {
-                    grammar: {
-                        name: 'Gramática',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                    literature: {
-                        name: 'Literatura',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                    writing: {
-                        name: 'Redação',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                }
-            },
-            naturais: {
-                name: 'Ciências Naturais',
-                percentage: 0.68,
-                totalQuestions: 42,
-                totalSuccess: 42,
-                totalErrors: 0,
-                sub_subjects: {
-                    biology: {
-                        name: 'Biologia',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                    chemistry: {
-                        name: 'Química',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                    physics: {
-                        name: 'Física',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                }
-            },
-            humanas: {
-                name: 'Ciências Humanas',
-                percentage: 0.42,
-                totalQuestions: 42,
-                totalSuccess: 42,
-                totalErrors: 0,
-                sub_subjects: {
-                    history: {
-                        name: 'História',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                    geography: {
-                        name: 'Geografia',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                    philosophy: {
-                        name: 'Filosofia',
-                        percentage: 0.42,
-                        totalQuestions: 42,
-                        totalSuccess: 42,
-                        totalErrors: 0,
-                    },
-                }
+    useEffect(() => {
+        if(Object.keys(areas).length > 0)
+        {   
+            if(areas[materiaAtiva] === undefined)
+            {
+                showAlert("Ocorreu um erro ao carrgar a area: " + materiaAtiva);
+                console.log("Areas:");
+                console.log(areas);
+                return;
             }
-            
+            handleSetAreasPai();
         }
-    }
+        
+    }, [areas])
 
-    const [materiaAtiva, setMateriaAtiva] = useState<'math' | 'port' | 'naturais' | 'humanas'>('math');
+
+    useEffect(() => {
+        if(Object.keys(profileStatus).length > 0)
+        {   
+            if(profileStatus[materiaAtiva] === undefined)
+            {
+                showAlert("Ocorreu um erro ao carrgar o perfil: " + materiaAtiva);
+                console.log("Areas:");
+                console.log(profileStatus);
+                return;
+            }
+            //showAlert("Perfil foi!", "success");
+            setDoesProfileExist(true);
+        }
+        
+    }, [profileStatus])
+
+    useEffect(() => {
+        if(areasPai.length > 0)
+        {
+            console.log("Areas pai");
+            console.log(areasPai);
+            setLoading(false);
+        }
+    }, [areasPai])
+
+    const [materiaAtiva, setMateriaAtiva] = useState<number>(1); //id da materia ativa
     
     interface hasPlayedAnimationI {
-        "math":boolean,
-        "port":boolean,
-        "naturais":boolean,
-        "humanas":boolean
+        [name: string]: boolean,
     } 
-    
-    const [hasPlayedAnimation,setHasPlayedAnimation] = useState<hasPlayedAnimationI>({"math":true,"port":false,"naturais":false,"humanas":false});
-
-    const [materiaAtivaDados, setMateriaAtivaDados] = useState<SubjectInformation>(profileInformation.subjects.math);
 
     /*Valores que serão recebidos pelo banco de dados*/
 
 
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         //alert('Materia Ativa: ' + materiaAtiva);
 
         const materias = document.querySelectorAll('#status > .info-area > #content > #materias > div');
@@ -234,18 +202,44 @@ const Status = () => {
             }
         }
         
-    }, [materiaAtiva]);
+    }, [materiaAtiva]);*/
 
-    function modifyMateriaAtiva(materiaAtiva:'math' | 'port' | 'naturais' | 'humanas'):void
+    function modifyMateriaAtiva(materiaAtiva: number):void
     {
+        if(profileStatus[materiaAtiva] === undefined ||
+            Object.values(profileStatus[materiaAtiva]).length <= 0)
+        {
+            showAlert("Você não fez atividade dessa materia!", "warning");
+            return;
+        }
+
         setMateriaAtiva(materiaAtiva);
+
         if(!hasPlayedAnimation[materiaAtiva]){
             let newHPA = hasPlayedAnimation;
             newHPA[materiaAtiva] = true;
             setHasPlayedAnimation(newHPA);
-
         }  
+    }
 
+
+    function getSubAreas(areaID: number){
+        Object.values(areas).map(area => {
+            if(area.parent_id == areaID)
+            {
+                getSubAreas(area.id);
+                return (
+                    <div className="sub-subject" key={area.id}>
+                        <p>{area.name}</p>
+                        <p>{getPercentage(area.id)}%</p>
+                        <p>{profileStatus[area.id].total_answers}</p>
+                        <p>{profileStatus[area.id].total_correct_answers}</p>
+                        <p>{(profileStatus[area.id].total_answers -
+                            profileStatus[area.id].total_correct_answers)}</p>
+                    </div>
+                );
+                
+            }});
     }
 
     const primaryColor = '#0066FF';
@@ -277,79 +271,54 @@ const Status = () => {
                         <h2>Informações por área</h2>
                         <p>Clique para receber informação específica de cada uma das áreas exigidas no vestibulinho do CTI</p>
                     </div>
+                    {doesProfileExist ?
+                    <>
                     <div id="content">
                         <div id="materias">
-                            <div id="active" className="math"
-                            onClick={() => {
-                                modifyMateriaAtiva('math');
-                            }}>
-                                <div id="header">
-                                    <img src={mat}></img>
-                                    <h3>Matemática</h3>
-                                    <img src={expand} className="expand"></img>
+                            <>
+                            {areasPai.map((areaPai) => (
+                                <div
+                                    key={areaPai.id}
+                                    className={areaPai.name}
+                                    id={materiaAtiva == areaPai.id ? 'active' : ''}
+                                    onClick={() => modifyMateriaAtiva(areaPai.id)}
+                                >
+                                    <div id="header">
+                                        <img src={logos[areaPai.id-1]} alt={areaPai.name} />
+                                        <h4>{areaPai.name}</h4>
+                                        <img src={expand} className="expand" alt="expand" />
+                                    </div>
+                                    <div id="content">
+                                        <ProgressBar
+                                            color={primaryColor}
+                                            radius={100}
+                                            filledPercentage={getPercentage(areaPai.id)}
+                                            animation={hasPlayedAnimation[areaPai.name]}
+                                        />
+                                    </div>
                                 </div>
-                                <div id="content">
-                                    <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.math.percentage*100} animation = {hasPlayedAnimation['math']}/>
-                                </div>
-                            </div>
-                            <div className="port"
-                            onClick={() => {
-                                modifyMateriaAtiva('port');
-                            }}>
-                                <div id="header">
-                                    <img src={port}></img>
-                                    <h3>Português</h3>
-                                    <img src={expand} className="expand"></img>
-                                </div>
-                                <div id="content">
-                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.port.percentage*100} animation = {hasPlayedAnimation['port']}/>
-                                </div>
-                            </div>
-                            <div className="naturais"
-                            onClick={() => {
-                                modifyMateriaAtiva('naturais');
-                            }}>
-                                <div id="header">
-                                    <img src={naturais}></img>
-                                    <h3>Ciências Naturais</h3>
-                                    <img src={expand} className="expand"></img>
-                                </div>
-                                <div id="content">
-                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.naturais.percentage*100} animation = {hasPlayedAnimation['naturais']}/>
-                                </div>
-                            </div>
-                            <div className="humanas"
-                            onClick={() => {
-                                modifyMateriaAtiva('humanas');
-                            }}>
-                                <div id="header">
-                                    <img src={humanas}></img>
-                                    <h3>Ciências Humanas</h3>
-                                    <img src={expand} className="expand"></img>
-                                </div>
-                                <div id="content">
-                                <ProgressBar color={primaryColor} radius={100} filledPercentage={profileInformation.subjects.humanas.percentage*100} animation = {hasPlayedAnimation['humanas']}/>
-                                </div>
-                            </div>
+                            ))}
+                            </>
                         </div>
                         <div id="info">
                             <div id="header">
                                 <div id="title">
-                                    <h2 className="title">{materiaAtivaDados.name}</h2>
-                                    <h2>{materiaAtivaDados.percentage * 100}%</h2>
+                                    <h2 className="title">{areas[materiaAtiva].name}</h2>
+                                    <h2>{getPercentage(materiaAtiva)}%</h2>
                                 </div>
                                 <div id="progress-bar">
                                     <div id="progress"
                                     style={{
-                                        width: `${materiaAtivaDados.percentage * 100}%`
+                                        width: `${getPercentage(materiaAtiva)}%`
                                     }}></div>
                                 </div>
                             </div>
                             <div id="content">
                                 <div id="total-questions">
-                                    <p>Total de questões feitas: {materiaAtivaDados.totalQuestions}</p>
-                                    <p>Total de questões corretas: {materiaAtivaDados.totalSuccess}</p>
-                                    <p>Total de questões erradas: {materiaAtivaDados.totalErrors}</p>
+                                    <p>Total de questões feitas: {profileStatus[materiaAtiva].total_answers}</p>
+                                    <p>Total de questões corretas: {profileStatus[materiaAtiva].total_correct_answers}</p>
+                                    <p>Total de questões erradas: {(profileStatus[materiaAtiva].total_answers - 
+                                    profileStatus[materiaAtiva].total_correct_answers)}</p>
                                 </div>
 
                                 <div id="sub-subjects">
@@ -360,7 +329,25 @@ const Status = () => {
                                         <p>Total de questões corretas</p>
                                         <p>Total de questões erradas</p>
                                     </div>
-                                    {Object.entries(materiaAtivaDados.sub_subjects).map(([index, value]) => {
+                                    {Object.values(areas).map(area => {
+                                        if(area.parent_id == materiaAtiva)
+                                        {
+                                            return (
+                                                <div className="sub-subject" key={area.id}>
+                                                    <p>{area.name}</p>
+                                                    <p>{getPercentage(area.id)}%</p>
+                                                    <p>{profileStatus[area.id].total_answers}</p>
+                                                    <p>{profileStatus[area.id].total_correct_answers}</p>
+                                                    <p>{(profileStatus[area.id].total_answers -
+                                                        profileStatus[area.id].total_correct_answers)}</p>
+                                                </div>
+                                            );
+                                        }
+                                    })
+                                    
+                                    
+                                    
+                                    /*Object.entries(materiaAtivaDados.sub_subjects).map(([index, value]) => {
                                         return (
                                             <div className="sub-subject" key={index}>
                                                 <h3>{value.name}</h3>
@@ -370,11 +357,21 @@ const Status = () => {
                                                 <p>{value.totalErrors}</p>
                                             </div>
                                         );
-                                    })}
+                                    })*/
+                                    }
                                 </div>
                             </div>
                         </div>
                     </div>
+                    </>
+                    :
+                    <>
+                    <div>
+                        <h3>Você não fez nenhuma questão ainda</h3>
+                        <p>Não há dados disponiveis</p>
+                    </div>
+                    </>
+                    }   
                 </div>
             </div>
         }

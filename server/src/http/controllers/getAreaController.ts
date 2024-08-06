@@ -10,4 +10,4 @@ export async function getAreaController(req: Request, res: Response) {
     } catch (error: any) {
         res.status(400).json({ message: error.message });
     }
-}
+}   
