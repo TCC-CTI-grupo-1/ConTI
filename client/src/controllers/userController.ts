@@ -293,77 +293,26 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 }
 
 export async function handleGetQuestions(filters: questionFilters): Promise<questionInterface[]> {
-    await new Promise(resolve => setTimeout(resolve, 10));
-    return [
-        {
-            id: 1,
-            subject: {
-                name: 'Matemática',
-                sub: {
-                    name: 'Álgebra',
-                    sub: {
-                        name: 'Equações'
-                    }
-                }
-            },
-            difficulty: 'easy',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['1', '7', '9', '5', '49'],
-            alternativaCorreta: 'b'
-        },
-        {
-            id: 2,
-            subject: {
-                name: 'Português',
-                sub: {
-                    name: 'Gramática',
-                    sub: {
-                        name: 'Sintaxe'
-                    }
-                }
-            },
-            difficulty: 'medium',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
-            alternativaCorreta: 'b'
-        },
-        {
-            id: 3,
-            subject: {
-                name: 'Matemática',
-                sub: {
-                    name: 'Álgebra',
-                    sub: {
-                        name: 'Equações'
-                    }
-                }
-            },
-            difficulty: 'hard',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['1', '7', '9', '5', '49'],
-            alternativaCorreta: 'c'
-        },
-        {
-            id: 4,
-            subject: {
-                name: 'Português',
-                sub: {
-                    name: 'Gramática',
-                    sub: {
-                        name: 'Sintaxe'
-                    }
-                }
-            },
-            difficulty: 'hard',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
-            alternativaCorreta: 'd'
+    try {
+        const response = await fetch('http://localhost:3001/questions/' + JSON.stringify(filters), {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            console.log(responseData.questions);
+            return responseData.questions;
         }
-    ];
+
+    } catch (err: any) {
+        return [];
+    }
 }
 
 export async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInterface[]> {

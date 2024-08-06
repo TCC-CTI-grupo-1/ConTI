@@ -152,34 +152,37 @@ export class AreaDAO {
         }
     }
 
-    listAllParentAreaIDs = async (areaId: number) => {
+    listAllSubAreas = async (parent_id: number) => {
         try {
             const client = await connectionDAO.getConnection();
-            let result = await client.area.findFirst({
+            const result = await client.area.findMany({
                 where: {
-                    id: areaId
+                    parent_id: parent_id
                 }
             });
 
-            const parentAreaIDs: number[] = [];
-            let parent_id = result?.parent_id;
+            const areas: AreaDTO[] = [];
 
-            while (parent_id) {
-                parentAreaIDs.push(parent_id);
-                result = await client.area.findFirst({
-                    where: {
-                        id: parent_id
-                    }
+            result.forEach((result: any) => {
+                const area: AreaDTO = {
+                    id: result.id,
+                    name: result.name,
+                    parent_id: result.parent_id
+                }
+                areas.push(area);
+                this.listAllSubAreas(result.id).then((subAreas) => {
+                    subAreas.forEach((subArea) => {
+                        areas.push(subArea);
+                    });
                 });
-                parent_id = result?.parent_id;
-            }
+            });
 
-            return parentAreaIDs;
+            return areas;
+
         } catch (error) {
             throw error;
         }
     }
-
 
 
 }

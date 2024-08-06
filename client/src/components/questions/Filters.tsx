@@ -33,8 +33,8 @@ const Filters = () => {
 
   const [options, setOptions] = useState<options>({
     ano: [2024, 2023, 2022],
-    dificuldade: ["easy", "medium", "hard", "take-the-l"],
-    disciplina: ["math", "port", "naturais", "humanas"],
+    dificuldade: ["facil", "medio", "dificil"],
+    disciplina: ["Matemática", "Língua%20Portuguesa", "Ciências%20da%20Natureza", "Ciências%20Humanas", "sexo"],
     alreadyAnswered: false,
     //mySimulations: false,
   });
@@ -119,9 +119,9 @@ const Filters = () => {
                         handleSelectChange(e, "dificuldade");
                       }}
                     >
-                      <MenuItemOption value="easy">Fácil</MenuItemOption>
-                      <MenuItemOption value="medium">Médio</MenuItemOption>
-                      <MenuItemOption value="hard">Difícil</MenuItemOption>
+                      <MenuItemOption value="facil">Fácil</MenuItemOption>
+                      <MenuItemOption value="medio">Médio</MenuItemOption>
+                      <MenuItemOption value="dificil">Difícil</MenuItemOption>
                     </MenuOptionGroup>
                   </MenuList>
                 </>

@@ -32,4 +32,6 @@ export async function routes(app: any) {
     app.get('/mockTestbyDate', getMockTestsByDecrescentDateController);
     app.post('/setMockTest', setMockTestController);
     app.post('/getArea_Profile', getArea_ProfileController);
+    app.get('/questions/:filter', getQuestionWithFiltersController);
+    app.get('/questions/:weight', getQuestionByWeightsAndProfileController);
 }
