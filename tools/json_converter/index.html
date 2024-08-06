@@ -28,14 +28,15 @@
                 this.prova = "CTI"; // CTI
                 this.alternatives = alternatives; // {"A":sdasd, "B":23,... Tem que ser assim pq pode ter A-D ou A-E}
                 this.hasImage = hasImage; 
-                this.hasLatex = hasLatex;
+                this.hasLatex = hasLatex? hasLatex : false;
             }
         }
         class Answer {
-            constructor(answer)
+            constructor(answer,questionLetter)
             {
                 this.answer = answer;
                 this.is_correct = false;
+                this.questionLetter = questionLetter
             }
         }
         class Area {
@@ -44,6 +45,38 @@
                 this.areaName = areaName
             }
         }
+        function transformJson(inputJson) {
+    const transformedJson = [];
+
+    for (const key in inputJson) {
+        if (inputJson.hasOwnProperty(key)) {
+            const item = inputJson[key];
+
+            // Check if the structure is the "wrong" one
+            if (item.hasOwnProperty('question_number') || item.hasOwnProperty('alternatives')) {
+                transformedJson.push( {
+                    "ano": item.ano.toString(),
+                    "numero": item.question_number.toString(),
+                    "materia": item.materia,
+                    "enunciado": item.enunciation,
+                    "alternativaA": item.alternatives.A,
+                    "alternativaB": item.alternatives.B,
+                    "alternativaC": item.alternatives.C,
+                    "alternativaD": item.alternatives.D,
+                    "alternativaE": item.alternatives.E || "",
+                    "textoAdicional": item.associated_text || "",
+                    "imagem": "off" // Assuming "on" as default value for "imagem"
+                });
+                console.warn("Modificado!")
+            } else {
+                // If the structure is already correct, keep it as is
+                transformedJson.push(item)
+            }
+        }
+    }
+
+    return transformedJson;
+}
         function load() {
             const fileInput = document.getElementById('file');
             window.convert = function() {
@@ -62,24 +95,35 @@
                 const reader = new FileReader();
                 reader.onload = function(ev) {
                     try {
-                        const json = JSON.parse(ev.target.result);
-                        console.log(json);
+                        const parsed_json = JSON.parse(ev.target.result);
+                        const json = transformJson(parsed_json);
+                        console.log(transformJson(json));
                         for (const q of json) {
                             const alt = [ new Answer(q.alternativaA),new  Answer(q.alternativaB), new Answer(q.alternativaC), new Answer(q.alternativaD)];
                             if (q.alternativaE != undefined) {
                                 alt.push(new Answer(q.alternativaE));
                             }
                             const question = new Question(q.enunciado, q.textoAdicional,new Area(q.materia), q.numero, q.ano, alt, q.imagem == 'on', false);
-                            const sqlQuery = `INSERT INTO question_teste (question_text, additional_info, area_id, question_number, question_year, question_creator, test_name, hasImage) VALUES ('${question.enunciation}', '${question.additionalText}', '${question.subject.areaName}', '${question.questionNumber}', '${question.questionYear}', '${question.questionCreator}', '${question.prova}', '${question.hasImage}');`;
-
-                            const altQueries = alt.map(a => `INSERT INTO answer_teste (question_id, answer, is_correct) VALUES (LAST_INSERT_ID(), '${a.answer}', '${a.is_correct}');`);
+                            
+                            const ID_translator = {
+                                "Ciências Humanas": 4,
+                                "Ciências da Natureza" :3,
+                                "Língua Portuguesa" : 2,
+                                "Matemática":1,
+                                "Português": 2,
+                                "História": 4
+                            }
+                            const areaID = ID_translator[question.subject.areaName];
+                            const sqlQuery = `INSERT INTO question (question_text, additional_info, area_id, question_number, question_year, question_creator, official_test_name, has_image,difficulty,has_latex) VALUES ('${question.enunciation}', '${question.additionalText}', '${areaID}', '${question.questionNumber}', '${question.questionYear}', '${question.questionCreator}', '${question.prova}', '${question.hasImage}','facil','false') RETURNING id;`;
+                            //alert(sqlQuery)
+                            //const altQueries = alt.map(a => `INSERT INTO answer_teste (question_id, answer, is_correct) VALUES (LAST_INSERT_ID(), '${a.answer}', '${a.is_correct}');`);
 
                             fetch('http://localhost:3000/submit-queries', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify({ sqlQuery, altQueries })
+                                body: JSON.stringify({ sqlQuery, alt })
                             })
                             .then(response => response.text())
                             .then(data => console.log(data))

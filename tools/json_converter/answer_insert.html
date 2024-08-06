@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+            body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        textarea {
+            width: 80%;
+            height: 200px;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+    </style>
+</head>
+<body>
+    <textarea id="texto">
+        
+    </textarea>
+    <input type="number" id="year">
+    <button onclick="enviar()">Enviar pro banco de dados</button>
+    <script>
+        function enviar()
+        {
+            console.warn("Entrou na função")
+            const year  = document.getElementById('year').value;
+            const texto = document.getElementById('texto').value
+            const regex = /(\d+)\s*-\s*([A-E])/g
+            
+            const matches = texto.matchAll(regex);
+            let match;
+            while((match = regex.exec(texto)) !==null){
+                const answer = {
+                year: year,
+                number: match[1],
+                letter: match[2]
+                
+            }
+            fetch('http://localhost:3000/submit-answers', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(answer)
+                            })
+                            .then(response => response.text())
+                            .then(data => console.log(data))
+                            .catch(error => console.error('Error:', error));
+            }
+        }
+
+    </script>
+</body>
+</html>
