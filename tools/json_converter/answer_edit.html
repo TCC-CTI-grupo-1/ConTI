@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <label>
+            Número do ano:
+            <input type="number" id="ano">
+        </label>
+        <button onclick="fetchQuestions()">Buscar Questões</button>
+    </div>
+    <div id="questions-container"></div>
+    <script>
+        async function fetchQuestions() {
+            const year = document.getElementById('ano').value;
+            if (!year) {
+                alert('Por favor, insira um ano.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/get-questions?year=${year}`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Erro ao buscar questões:', errorText);
+                    alert('Erro ao buscar questões. Verifique o console para mais detalhes.');
+                    return;
+                }
+
+                const questions = await response.json();
+
+                const container = document.getElementById('questions-container');
+                container.innerHTML = ''; // Clear previous content
+
+                
+questions.forEach((question, index) => {
+    const form = document.createElement('form');
+    form.id = `question-form-${question.id}`;
+    form.innerHTML = `<h3>Questão ${index + 1}</h3>`;
+
+   Object.keys(question).forEach(key => {
+    const label = document.createElement('label');
+    label.innerHTML = `
+        ${key.charAt(0).toUpperCase() + key.slice(1)}:
+        <input type="text" name="${key}" value="${question[key]}" ${key === 'id' ? 'readonly' : ''}>
+    `;
+    form.appendChild(label);
+});
+
+// Handle answers
+if (question.answers && question.answers.length > 0) {
+    question.answers.forEach((answer, index) => {
+        const answerLabel = document.createElement('label');
+        answerLabel.innerHTML = `
+            Answer ${index + 1}:
+            <input type="text" name="answer_${answer.answer_id}" value="${answer.answer_text}">
+        `;
+        form.appendChild(answerLabel);
+    });
+}
+
+const button = document.createElement('button');
+button.type = 'button';
+button.innerText = 'Atualizar';
+button.onclick = () => updateQuestion(question.id);
+form.appendChild(button);
+
+    container.appendChild(form);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar questões:', error);
+                alert('Erro ao buscar questões. Verifique o console para mais detalhes.');
+            }
+        }
+
+        async function updateQuestion(id) {
+            const form = document.getElementById(`question-form-${id}`);
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(`http://localhost:3000/update-question`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Erro ao atualizar questão:', errorText);
+                    alert('Erro ao atualizar questão. Verifique o console para mais detalhes.');
+                    return;
+                }
+
+                alert('Questão atualizada com sucesso!');
+            } catch (error) {
+                console.error('Erro ao atualizar questão:', error);
+                alert('Erro ao atualizar questão. Verifique o console para mais detalhes.');
+            }
+        }
+    </script>
+</body>
+</html>

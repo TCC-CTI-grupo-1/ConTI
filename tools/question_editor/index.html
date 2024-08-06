@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <label>
+            Número do ano:
+            <input type="number" id="ano">
+        </label>
+        <button onclick="fetchQuestions()">Buscar Questões</button>
+    </div>
+    <div>
+        <label>
+            Número da questão:
+            <select id="questoes">
+                <option value="">Selecione uma questão</option>
+            </select>
+        </label>
+    </div>
+    <script>
+        async function fetchQuestions() {
+            const year = document.getElementById('ano').value;
+            if (!year) {
+                alert('Por favor, insira um ano.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/get-questions?year=${year}`);
+                const questions = await response.json();
+
+                const dropdown = document.getElementById('questoes');
+                dropdown.innerHTML = '<option value="">Selecione uma questão</option>'; // Clear previous options
+
+                questions.forEach((question, index) => {
+                    const option = document.createElement('option');
+                    option.value = question.id;
+                    option.text = `Questão ${index + 1}`;
+                    dropdown.add(option);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar questões:', error);
+            }
+        }
+    </script>
+</body>
+</html>
