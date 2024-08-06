@@ -45,7 +45,7 @@ const Navbar = ({screen}:Props) => {
                 <div className="icon">
                     <HomeIcon iconColor={checkActiveScreen('home')}
                     onIconClick={() => {navegate('/')}}/>
-                    <p className={checkActiveScreen('home')}>Home</p>
+                    <p  className={checkActiveScreen('home')}>Home</p>
                 </div>
                                         
                 <div className="icon">

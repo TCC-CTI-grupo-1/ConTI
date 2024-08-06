@@ -4,6 +4,8 @@ import { questionFilters } from "../types/client/interfaces";
 import { difficulty } from "@prisma/client";
 import { AreaDAO } from "./AreaDAO";
 import { AreaDTO } from "../DTO/AreaDTO";
+import { Area_ProfileDAO } from "./Area_ProfileDAO";
+import { Area_ProfileDTO } from "../DTO/Area_ProfileDTO";
 
 const connectionDAO = new ConnectionDAO();
 
@@ -140,7 +142,7 @@ export class QuestionDAO {
         }
     }
 
-    searchQuestionByFilters = async (filters: questionFilters) => {
+    listQuestionByFilters = async (filters: questionFilters) => {
 
         try {
             const areaDAO: AreaDAO = new AreaDAO();
@@ -205,4 +207,72 @@ export class QuestionDAO {
             throw error;
         }
     }
+
+    listQuestionsByArea = async (areaID: number) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.question.findMany({
+                where: {
+                    area_id: areaID
+                }
+            });
+
+            const questions: QuestionDTO[] = [];
+
+            result.forEach((result: any) => {
+                const question: QuestionDTO = {
+                    id: result.id,
+                    question_text: result.question_text,
+                    question_year: result.question_year,
+                    total_answers: result.total_answers,
+                    total_answers_right: result.total_answers_right,
+                    difficulty: result.difficulty,
+                    additional_info: result.additional_info,
+                    area_id: result.area_id,
+                    question_creator: result.question_creator,
+                    official_test_name: result.official_test_name,
+                    question_number: result.question_number,
+                    has_image: result.has_image,
+                    has_latex: result.has_latex
+                };
+                questions.push(question);
+            });
+
+            return questions;
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    listQuestionsByWeightsAndProfile = async (profileID: number, amountQuestions: number) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const area_ProfileDAO: Area_ProfileDAO = new Area_ProfileDAO();
+            const areas_Profile: Area_ProfileDTO[] = await area_ProfileDAO.listArea_ProfileByProfileId(profileID);
+            const weightsByArea: Map<number, number> = new Map();
+
+            areas_Profile.forEach((area_Profile: Area_ProfileDTO) => {
+                weightsByArea.set(area_Profile.area_id, area_Profile.total_correct_answers / area_Profile.total_answers);
+            });
+
+            let questions: QuestionDTO[] = [];
+            for (const [areaID, weight] of weightsByArea) {
+                const questionsByArea: QuestionDTO[] = await this.listQuestionsByArea(areaID);
+                const questionPerArea: number = Math.round(questionsByArea.length * weight);
+                for (let i = 0; i < questionPerArea; ++i) {
+                    questions.push(questionsByArea[i]);
+                }
+            }
+
+            questions = questions.sort(() => Math.random() - 0.5).slice(0, amountQuestions);
+
+            return questions;
+        
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
 }
