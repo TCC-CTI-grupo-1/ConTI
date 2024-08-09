@@ -160,7 +160,7 @@ export class QuestionDAO {
             }
 
             for (const areaID of areasIDs) {
-                const areasChildren: AreaDTO[] = await areaDAO.listAllSubAreas(areaID);
+                const areasChildren: AreaDTO[] = await areaDAO.listAllSubAreasByParentId(areaID);
                 for (const area of areasChildren) {
                     areasIDs.push(area.id);
                 }

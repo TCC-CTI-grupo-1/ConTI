@@ -24,7 +24,7 @@ import Question from "./QuestionBox";
 import { useNavigate } from "react-router-dom";
 import { questionInterface } from "../../controllers/interfaces";
 import { questionFilters as options } from "../../controllers/interfaces";
-import { handleGetQuestions } from "../../controllers/userController";
+import { handleGetFilteredQuestions } from "../../controllers/userController";
 
 const Filters = () => {
   const navegate = useNavigate();
@@ -53,10 +53,10 @@ const Filters = () => {
     questionInterface[]
   >([]);
 
-  function handleGetFilteredQuestions(){
+  function handleGetFilteredQuestionsLocal(){
     setLoading(true);
     console.log(options);
-    handleGetQuestions(options).then((questions) => {
+    handleGetFilteredQuestions(options).then((questions) => {
       setFilteredQuestions(questions);
       setLoading(false);
     });
@@ -174,7 +174,7 @@ const Filters = () => {
 
           <LocalButton colorScheme="blue" variant={"solid"}
           onClick={
-            handleGetFilteredQuestions
+            handleGetFilteredQuestionsLocal
           }>
             Aplicar filtros
           </LocalButton>

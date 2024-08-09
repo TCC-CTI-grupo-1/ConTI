@@ -152,7 +152,7 @@ export class AreaDAO {
         }
     }
 
-    listAllSubAreas = async (parent_id: number) => {
+    listAllSubAreasByParentId = async (parent_id: number) => {
         try {
             const client = await connectionDAO.getConnection();
             const result = await client.area.findMany({
@@ -170,7 +170,7 @@ export class AreaDAO {
                     parent_id: result.parent_id
                 }
                 areas.push(area);
-                this.listAllSubAreas(result.id).then((subAreas) => {
+                this.listAllSubAreasByParentId(result.id).then((subAreas) => {
                     subAreas.forEach((subArea) => {
                         areas.push(subArea);
                     });
