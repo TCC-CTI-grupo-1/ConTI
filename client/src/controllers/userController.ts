@@ -443,10 +443,27 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 
 //Atenção, a magica acontece aqui:
 
-export async function generateNewSimulado(): Promise<string>{
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    //UID do simulado (talvez não vamos usar, ai retorne booleano)
-    return '34ghGTH33EDWF@#wfdw';
+export async function generateNewSimulado(amount: number): Promise<string>{
+    try {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        const response = await fetch('http://localhost:3001/questions/'+amount, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.questions;
+        }
+    }
+    catch (err: any) {
+        return err.message;
+    }
 }
 
 export async function handleGetAreas(): Promise<areaInterface[]> {

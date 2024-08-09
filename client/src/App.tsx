@@ -61,7 +61,7 @@ function App() {
           <Route path='/alltests' element={ <AllTests /> } />   
           <Route path='/questions' element={<QuestionDatabase />} />
           <Route path='/questions/:id' element={<QuestionDatabase />} />
-          <Route path='/test' element={<SimuladoFrame questionsList={[1,2,3,4,5]}/>} />
+          <Route path='/test' element={<SimuladoFrame questionsList={[11,22,3,4,5]}/>} />
           <Route path='/simulado/:id' element={<SimuladoVer />} />
         </Routes>
         </div>

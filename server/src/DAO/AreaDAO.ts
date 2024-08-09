@@ -184,5 +184,32 @@ export class AreaDAO {
         }
     }
 
+    // listAreasWithoutSubAreas = async () => {
+    //     try {
+    //         const client = await connectionDAO.getConnection();
+    //         const result = await client.area.findMany({
+    //             where: {
+    //                 parent_id: null
+    //             }
+    //         });
+
+    //         const areas: AreaDTO[] = [];
+
+    //         result.forEach((result: any) => {
+    //             const area: AreaDTO = {
+    //                 id: result.id,
+    //                 name: result.name,
+    //                 parent_id: result.parent_id
+    //             }
+                
+    //         });
+
+            
+    //         return areas;
+
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // }
 
 }

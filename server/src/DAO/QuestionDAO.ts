@@ -151,7 +151,7 @@ export class QuestionDAO {
             const difficulties: difficulty[] = filters.dificuldade ? filters.dificuldade : [];
             const years: number[] = filters.ano ? filters.ano.map(Number) : [];
 
-            const areasIDs: number[] = [];
+            let areasIDs: number[] = [];
             for (const areaName of areaNames) {
                 const area: (AreaDTO | undefined) = await areaDAO.searchAreaByName(areaName);
                 if (area !== undefined) {
@@ -253,13 +253,17 @@ export class QuestionDAO {
             const weightsByArea: Map<number, number> = new Map();
 
             areas_Profile.forEach((area_Profile: Area_ProfileDTO) => {
-                weightsByArea.set(area_Profile.area_id, area_Profile.total_correct_answers / area_Profile.total_answers);
+                if (area_Profile.total_answers === 0) {
+                    weightsByArea.set(area_Profile.area_id, 1);
+                } else {
+                    weightsByArea.set(area_Profile.area_id, area_Profile.total_correct_answers / area_Profile.total_answers);
+                }
             });
 
             let questions: QuestionDTO[] = [];
             for (const [areaID, weight] of weightsByArea) {
                 const questionsByArea: QuestionDTO[] = await this.listQuestionsByArea(areaID);
-                const questionPerArea: number = Math.round(questionsByArea.length * weight);
+                const questionPerArea: number = Math.round((amountQuestions * weight) / weightsByArea.size);
                 for (let i = 0; i < questionPerArea; ++i) {
                     questions.push(questionsByArea[i]);
                 }

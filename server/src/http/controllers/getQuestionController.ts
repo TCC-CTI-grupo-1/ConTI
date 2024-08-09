@@ -30,7 +30,7 @@ export async function getQuestionByWeightsAndProfileController(req: Request, res
     const questionDAO = new QuestionDAO();
     try {
         const profileId = req.session.profile.id;
-        const questions = await questionDAO.listQuestionsByWeightsAndProfile(profileId, 3);
+        const questions = await questionDAO.listQuestionsByWeightsAndProfile(profileId, 10);
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
