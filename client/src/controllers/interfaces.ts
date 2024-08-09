@@ -12,13 +12,21 @@ export interface questionFilters{
     myMockTests?: boolean;
 }
 export interface questionInterface{
+    additional_info: string;
+    area_id: number;
+    has_image: boolean;
+    has_latex: boolean;
+    difficulty: string,
     id: number,
-    subject: SubjectCategory,
-    difficulty: 'easy' | 'medium' | 'hard',
-    year: number,
-    enunciado: string,
-    alternativas: string[],
-    alternativaCorreta: string,
+    official_test_name: string;
+    question_creator: string;
+    question_number: number;
+    question_text: string,
+    question_year: number, 
+
+    areaName: string,
+    correct_answer: string,
+    awnsers: string[],
 }
 
 //Usado para mostrar o histórico de simulados

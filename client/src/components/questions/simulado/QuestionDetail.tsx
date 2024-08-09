@@ -32,14 +32,14 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
 
     // Garante que o array de refs tenha o tamanho necessário
     if (alternativasRef.current.length === 0) {
-        alternativasRef.current = Array.from({ length: question.alternativas.length }, () => React.createRef());
+        alternativasRef.current = Array.from({ length: question.awnsers.length }, () => React.createRef());
     }
 
     const questionRef = useRef<HTMLDivElement>(null);
 
     const [showAnswer, setShowAnswer] = useState(false);
 
-    const correctAnswer = isCorrecao !== undefined ? question.alternativaCorreta.toUpperCase() : null;
+    const correctAnswer = isCorrecao !== undefined ? question.correct_answer.toUpperCase() : null;
 
     const addClassToAlternative = useCallback((letter: string) => {
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
@@ -154,11 +154,11 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
             {isSimulado ? <p id='question-number-container'>{qNumber}</p> : type !== "small" &&
             <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>}
             <h4>
-            {question.enunciado}
+            {question.question_text}
             </h4>
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 
-                {question.alternativas.map((alternative, index) => (
+                {question.awnsers.map((alternative, index) => (
                     <div key={index} ref={alternativasRef.current[index]}>
                         <span>
                             <p> {String.fromCharCode(65 + index)} </p>

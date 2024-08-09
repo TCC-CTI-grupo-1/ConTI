@@ -38,9 +38,9 @@ const QuestionBox = ({  question }: Props) => {
         <div className="q-id">
           <p>Q{question.id}</p>
         </div>
-        <div className="category">{getCategoryElements(question.subject)}</div>
+        <div className="category">Socio{question.areaName}</div>
         <div className="year">
-          <p>Ano: {question.year}</p>
+          <p>Ano: {question.question_year}</p>
         </div>
         <div className={"difficulty " + question.difficulty}><p>
           {question.difficulty === "easy"
