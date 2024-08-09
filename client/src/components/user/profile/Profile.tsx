@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import Status from "./Status";
 import Config from "./Config";
 import Background from "../Background";
-import Admnistrador from "./Admistrator";
+import Admnistrador from "./../../Administrador";
 const Profile = () => {
 
     const [tela, setTela] = useState<number>(0);

@@ -52,7 +52,7 @@ const Status = () => {
             return newStatus;
         }
         else{
-            navegate('/login');
+            //navegate('/login');
             showAlert("Você não está logado");
             return null;
         }
@@ -223,24 +223,33 @@ const Status = () => {
     }
 
 
-    function getSubAreas(areaID: number){
-        Object.values(areas).map(area => {
-            if(area.parent_id == areaID)
-            {
-                getSubAreas(area.id);
+    function getSubAreas(areaID: number): JSX.Element {
+        const subAreas = Object.values(areas).map(area => {
+            if (area.parent_id === areaID) {
+                if(profileStatus[area.id] === undefined)
+                {
+                    return null;
+                }
                 return (
-                    <div className="sub-subject" key={area.id}>
-                        <p>{area.name}</p>
-                        <p>{getPercentage(area.id)}%</p>
-                        <p>{profileStatus[area.id].total_answers}</p>
-                        <p>{profileStatus[area.id].total_correct_answers}</p>
-                        <p>{(profileStatus[area.id].total_answers -
-                            profileStatus[area.id].total_correct_answers)}</p>
-                    </div>
+                    <>
+                        <div className="sub-subject" key={area.id}>
+                            <p>{area.name}</p>
+                            <p>{getPercentage(area.id)}%</p>
+                            <p>{profileStatus[area.id].total_answers}</p>
+                            <p>{profileStatus[area.id].total_correct_answers}</p>
+                            <p>{(profileStatus[area.id].total_answers -
+                                profileStatus[area.id].total_correct_answers)}</p>
+                        </div>
+                        {getSubAreas(area.id)}
+                    </>
                 );
-                
-            }});
+            }
+            return null; // Retorna null para áreas que não são subáreas
+        });
+    
+        return <>{subAreas}</>; // Retorna um elemento pai com as subáreas
     }
+    
 
     const primaryColor = '#0066FF';
 
@@ -332,15 +341,22 @@ const Status = () => {
                                     {Object.values(areas).map(area => {
                                         if(area.parent_id == materiaAtiva)
                                         {
+                                            if(profileStatus[area.id] === undefined)
+                                            {
+                                                return null;
+                                            }
                                             return (
-                                                <div className="sub-subject" key={area.id}>
-                                                    <p>{area.name}</p>
-                                                    <p>{getPercentage(area.id)}%</p>
-                                                    <p>{profileStatus[area.id].total_answers}</p>
-                                                    <p>{profileStatus[area.id].total_correct_answers}</p>
-                                                    <p>{(profileStatus[area.id].total_answers -
-                                                        profileStatus[area.id].total_correct_answers)}</p>
-                                                </div>
+                                                <>
+                                                    <div className="sub-subject" key={area.id}>
+                                                        <p>{area.name}</p>
+                                                        <p>{getPercentage(area.id)}%</p>
+                                                        <p>{profileStatus[area.id].total_answers}</p>
+                                                        <p>{profileStatus[area.id].total_correct_answers}</p>
+                                                        <p>{(profileStatus[area.id].total_answers -
+                                                            profileStatus[area.id].total_correct_answers)}</p>
+                                                    </div>
+                                                    {getSubAreas(area.id)}
+                                                </>
                                             );
                                         }
                                     })

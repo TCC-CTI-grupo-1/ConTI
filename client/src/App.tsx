@@ -8,7 +8,7 @@ import SimuladoVer from './components/questions/simulado/VerSimulado';
 import QuestionDatabase from './components/questions/QuestionDatabase';
 import AllTests from './components/questions/AllTests';
 import NewTest from './components/newtest/NewTest';
-
+import Admnistrador from './components/Administrador';
 
 //Middlewares
 import Middleware from './middlewares/Middleware';
@@ -63,6 +63,7 @@ function App() {
           <Route path='/questions/:id' element={<QuestionDatabase />} />
           <Route path='/test' element={<SimuladoFrame questionsList={[1,2,3,4,5]}/>} />
           <Route path='/simulado/:id' element={<SimuladoVer />} />
+          <Route path='/adm' element={<Admnistrador />} />
         </Routes>
         </div>
     );

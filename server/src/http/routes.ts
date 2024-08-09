@@ -12,6 +12,9 @@ import { getMockTestsController, getMockTestsByDecrescentDateController } from '
 import { setMockTestController } from './controllers/setMockTestController';
 import { getArea_ProfileController } from './controllers/getArea_ProfileController';
 import { getAreaByIdController } from './controllers/getAreaByIdController';
+import { getQuestionWithFiltersController, getQuestionByWeightsAndProfileController,
+        getQuestionByIdController, getQuestionController
+ } from './controllers/getQuestionController';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
@@ -34,4 +37,6 @@ export async function routes(app: any) {
     app.post('/getArea_Profile', getArea_ProfileController);
     app.get('/questions/:filter', getQuestionWithFiltersController);
     app.get('/questions/:weight', getQuestionByWeightsAndProfileController);
+    app.get('/questions/:id', getQuestionByIdController);
+    app.get('/questions', getQuestionController);
 }

@@ -248,51 +248,29 @@ export async function handleDeleteAccount() {
     }
 }
 
-export async function handleGetQuestion(questionID: number): Promise<questionInterface> {
-    //Fazer um timeout de 300ms:
-    
-    if (questionID % 2 === 0) {
-        return {
-            id: questionID * 100,
-            subject: {
-                name: 'Matemática',
-                sub: {
-                    name: 'Álgebra',
-                    sub: {
-                        name: 'Equações'
-                    }
-                }
-            },
-            difficulty: 'easy',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['1', '7', '9', '5', '49'],
-            alternativaCorreta: 'b'
-        };
-    } else {
-        return {
-            id: questionID * 100,
-            subject: {
-                name: 'Português',
-                sub: {
-                    name: 'Gramática',
-                    sub: {
-                        name: 'Sintaxe'
-                    }
-                }
-            },
-            difficulty: 'medium',
-            year: 2021,
-            enunciado: 'TesteDaPrimeiraLinha:11111111111111111111111111111111111111111111111111111 '+
-            'SegundaLinha:222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
-            alternativaCorreta: 'B'
-        };
+export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> {
+    try{
+        const response = await fetch('http://localhost:3001/questions/' + questionID, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.question;
+        }
+    } catch{
+        return null;
     }
 
 }
 
-export async function handleGetQuestions(filters: questionFilters): Promise<questionInterface[]> {
+export async function handleGetFilteredQuestions(filters: questionFilters): Promise<questionInterface[]> {
     try {
         const response = await fetch('http://localhost:3001/questions/' + JSON.stringify(filters), {
             method: 'GET',
@@ -307,6 +285,28 @@ export async function handleGetQuestions(filters: questionFilters): Promise<ques
             throw new Error(responseData.message);
         } else {
             console.log(responseData.questions);
+            return responseData.questions;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
+export async function handleGetQuestions(): Promise<questionInterface[]> {
+    try {
+        const response = await fetch('http://localhost:3001/questions', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
             return responseData.questions;
         }
 
