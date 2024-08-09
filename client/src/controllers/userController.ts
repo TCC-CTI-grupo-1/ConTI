@@ -248,6 +248,8 @@ export async function handleDeleteAccount() {
     }
 }
 
+
+
 export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> {
     try{
         const response = await fetch('http://localhost:3001/questions/' + questionID, {
@@ -262,6 +264,14 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
+            const area = await handleGetAreaById(responseData.question.area_id);
+            if(area === null){
+                responseData.question.areaName = 'Área não encontrada';
+            }else{
+                responseData.question.areaName = area.name;
+            }
+            //fazer o fetch das alternativas
+            responseData.question.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
             return responseData.question;
         }
     } catch{
@@ -307,6 +317,10 @@ export async function handleGetQuestions(): Promise<questionInterface[]> {
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
+            responseData.questions.forEach((element: questionInterface) => {
+                element.correct_answer = 'A';
+                element.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
+            });
             return responseData.questions;
         }
 
