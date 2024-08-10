@@ -8,8 +8,9 @@ import { handleGetAreas } from "./../controllers/userController";
 import { handlePostArea } from "./../controllers/userController";
 import { showAlert } from "./../App";
 import { handleGetQuestions } from "./../controllers/userController";
-import { questionInterface } from "../controllers/interfaces";
+import { areaInterface, questionInterface } from "../controllers/interfaces";
 import QuestionBox from "./questions/QuestionBox";
+import { handleGetAreaById } from "./../controllers/userController";
 
 const Admistrator = () => {
 
@@ -17,6 +18,8 @@ const Admistrator = () => {
     const [nomeArea, setNomeArea] = useState<string>('');
     const [areaPai, setAreaPai] = useState<string | null>(null);
     const [areas, setAreas] = useState<string[] | null>([]);
+    const [areaPorID, setAreaPorID] = useState<areaInterface | null>(null);
+
 
     const [questions, setQuestions] = useState<questionInterface[]>([]);
 
@@ -31,18 +34,32 @@ const Admistrator = () => {
 
     }
 
+    async function handleThings(){
+        const areas = await handleGetAreas();
+
+        let listaNomeAreas: string[] = areas.map((area) => area.name);
+        setAreas(listaNomeAreas);
+
+        const questions = await handleGetQuestions();
+        //Pege só as 100 primeiras quesõs
+        setQuestions(questions.slice(0, 50));
+
+
+        const area = await handleGetAreaById(1);
+
+        setAreaPorID(area);
+
+        setLoading(false);
+    }
+
     useEffect(() => {
-        handleGetAreas().then((areas) => {
-            let listaNomeAreas: string[] = areas.map((area) => area.name);
-            setAreas(listaNomeAreas);
-            //console.log(listaNomeAreas);
-            handleGetQuestions().then((questions) => {
-                setQuestions(questions);
-                console.log(questions);
-                setLoading(false);
-            });
-        });        
+        handleThings();        
     }, []);
+
+    useEffect(() => {
+        console.log('Cometa SUICIODIO');
+        console.log(areaPorID);
+    }, [areaPorID]);
 
   return (<>
     {loading ? <h1>Carregando</h1> :
@@ -87,6 +104,7 @@ const Admistrator = () => {
 
                     </div>
                     <div className="box">
+                        {areaPorID ? <h1>{areaPorID.name}</h1> : <h1>Area não encontrada</h1>}
                         {!loading && <div>
                             {questions.map((question, index) => {
                                 return <QuestionBox key={index} question={question}/>

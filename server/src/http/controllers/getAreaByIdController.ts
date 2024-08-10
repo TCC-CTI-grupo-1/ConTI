@@ -13,6 +13,7 @@ export async function getAreaByIdController(req: Request, res: Response) {
     try {
         const area: AreaDTO = await areaDAO.searchAreaById(Number(id));
         if (area) {
+            //console.log(area);
             return res.json({ area: area });
         } else {
             return res.status(404).json({ message: "Área não encontrada" });

@@ -53,10 +53,11 @@ export interface simuladoInterface{
 }
 
 // NÃO DÁ PRA SÓ PEGAR DO DTO? EM SERVER... MELHOR, NÃO?...
+
 export interface areaInterface{
     id: number,
     name: string,
-    parent_id: number
+    parent_id: number | null,
 }
 
 export interface area_ProfileInterface{

@@ -265,6 +265,7 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
             throw new Error(responseData.message);
         } else {
             const area = await handleGetAreaById(responseData.question.area_id);
+
             if(area === null){
                 responseData.question.areaName = 'Área não encontrada';
             }else{
@@ -317,7 +318,14 @@ export async function handleGetQuestions(): Promise<questionInterface[]> {
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            responseData.questions.forEach((element: questionInterface) => {
+            await responseData.questions.forEach(async (element: questionInterface) => {
+                const area = await handleGetAreaById(element.area_id);
+                if(area === null){
+                    element.areaName = 'Área não encontrada';
+                }
+                else{
+                    element.areaName = area.name;
+                }
                 element.correct_answer = 'A';
                 element.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
             });
@@ -571,11 +579,19 @@ export async function handleGetAreaById(id: number): Promise<areaInterface | nul
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return responseData.areas_profile;
+            return {
+                id: responseData.area.id,
+                name: responseData.area.name,
+                parent_id: responseData.area.parent_id
+            };
         }
 
     } catch (err: any) {
-        return null;
+        return {
+            id: 0,
+            name: 'SOUGAY',
+            parent_id: null
+        };
     }
 }
 
