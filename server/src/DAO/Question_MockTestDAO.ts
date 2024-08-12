@@ -39,11 +39,37 @@ export class Question_MockTestDAO {
             throw error;
         }
     }
-    
+
     listQuestion_MockTests = async () => {
         try {
             const client = await connectionDAO.getConnection();
             const result = await client.question_mockTest.findMany();
+
+            const question_MockTests: Question_MockTestDTO[] = [];
+
+            result.forEach((result: any) => {
+                const question_MockTest: Question_MockTestDTO = {
+                    question_id: result.question_id,
+                    mockTest_id: result.mockTest_id,
+                    answer_id: result.answer_id
+                }
+                question_MockTests.push(question_MockTest);
+            });
+
+            return question_MockTests;
+        } catch (error: any) {
+            throw error;
+        }
+    }
+
+    listQuestion_MockTestsByMockTestId = async (mockTest_id: number) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.question_mockTest.findMany({
+                where: {
+                    mockTest_id: mockTest_id
+                }
+            });
 
             const question_MockTests: Question_MockTestDTO[] = [];
 
