@@ -319,13 +319,6 @@ export async function handleGetQuestions(): Promise<questionInterface[]> {
             throw new Error(responseData.message);
         } else {
             await responseData.questions.forEach(async (element: questionInterface) => {
-                const area = await handleGetAreaById(element.area_id);
-                if(area === null){
-                    element.areaName = 'Área não encontrada';
-                }
-                else{
-                    element.areaName = area.name;
-                }
                 element.correct_answer = 'A';
                 element.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
             });
@@ -508,6 +501,24 @@ export async function handleGetAreas(): Promise<areaInterface[]> {
 
     } catch (err: any) {
         return [];
+    }
+}
+
+//Função que executa handleGetAreas e transforma em um hashMap [id] => area
+export async function handleGetAreasMap(): Promise<{[id: number]: areaInterface}> {
+    try{
+        const areas = await handleGetAreas();
+        if(areas.length === 0){
+            throw new Error('Erro ao pegar areas');
+        }
+        let areasMap: {[id: number]: areaInterface} = {};
+        areas.forEach((area) => {
+            areasMap[area.id] = area;
+        });
+        return areasMap;
+    }
+    catch(err: any){
+        return {};
     }
 }
 

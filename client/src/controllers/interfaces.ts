@@ -24,7 +24,6 @@ export interface questionInterface{
     question_text: string,
     question_year: number, 
 
-    areaName: string,
     correct_answer: string,
     awnsers: string[],
 }
