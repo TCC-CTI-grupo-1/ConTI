@@ -2,26 +2,33 @@ import Navbar from "./Navbar"
 import { useState, useEffect } from "react";
 import Button from "././Button"
 import Input from "././Input";
-import { handleDeleteAccount, handleLogout, handleSaveChanges } from "./../controllers/userController";
+import { handleDeleteAccount, handleGetAreasMap, handleLogout, handleSaveChanges } from "./../controllers/userController";
 import { Select } from '@chakra-ui/react'
-import { handleGetAreas } from "./../controllers/userController";
 import { handlePostArea } from "./../controllers/userController";
 import { showAlert } from "./../App";
 import { handleGetQuestions } from "./../controllers/userController";
 import { areaInterface, questionInterface } from "../controllers/interfaces";
 import QuestionBox from "./questions/QuestionBox";
-import { handleGetAreaById } from "./../controllers/userController";
 
 const Admistrator = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
     const [nomeArea, setNomeArea] = useState<string>('');
     const [areaPai, setAreaPai] = useState<string | null>(null);
-    const [areas, setAreas] = useState<string[] | null>([]);
-    const [areaPorID, setAreaPorID] = useState<areaInterface | null>(null);
+    const [areas, setAreas] = useState<{[id: number]: areaInterface}>([]);
 
+
+    const [enunciadoQst, setEnunciadoQst] = useState<string>('');
+    const [alternativaA, setAlternativaA] = useState<string>('');
+    const [alternativaB, setAlternativaB] = useState<string>('');
+    const [alternativaC, setAlternativaC] = useState<string>('');
+    const [alternativaD, setAlternativaD] = useState<string>('');
+    const [alternativaE, setAlternativaE] = useState<string>('');
+    const [alternativaCorreta, setAlternativaCorreta] = useState<string>('A');
+    const [qstID, setQstID] = useState<number>(0);
 
     const [questions, setQuestions] = useState<questionInterface[]>([]);
+    const [pagina, setPagina] = useState<number>(1);
 
     async function handlePostNovaArea(){
         showAlert("Cadastrando area...", "warning");
@@ -35,19 +42,21 @@ const Admistrator = () => {
     }
 
     async function handleThings(){
-        const areas = await handleGetAreas();
+        const areasMap = await handleGetAreasMap();
 
-        let listaNomeAreas: string[] = areas.map((area) => area.name);
-        setAreas(listaNomeAreas);
+        if(Object.keys(areasMap).length === 0){
+            showAlert("Erro ao carregar areas");
+            return;
+        }
+
+        setAreas(areasMap);
+        console.log(areasMap);
+
 
         const questions = await handleGetQuestions();
         //Pege só as 100 primeiras quesõs
-        setQuestions(questions.slice(0, 50));
-
-
-        const area = await handleGetAreaById(1);
-
-        setAreaPorID(area);
+        setQuestions(questions);
+        console.log(questions);
 
         setLoading(false);
     }
@@ -55,11 +64,6 @@ const Admistrator = () => {
     useEffect(() => {
         handleThings();        
     }, []);
-
-    useEffect(() => {
-        console.log('Cometa SUICIODIO');
-        console.log(areaPorID);
-    }, [areaPorID]);
 
   return (<>
     {loading ? <h1>Carregando</h1> :
@@ -93,8 +97,8 @@ const Admistrator = () => {
                                 }}>
                                     <option value='none'>Nenhuma</option>
                                     {
-                                        areas?.map((area, index) => {
-                                            return <option key={index} value={area}>{area}</option>
+                                        Object.values(areas).map((area, index) => {
+                                            return <option key={index} value={area.id}>{area.name}</option>
                                         })
                                     }
                                 </Select>
@@ -103,15 +107,79 @@ const Admistrator = () => {
                         </div>}
 
                     </div>
-                    <div className="box">
-                        {areaPorID ? <h1>{areaPorID.name}</h1> : <h1>Area não encontrada</h1>}
-                        {!loading && <div>
-                            {questions.map((question, index) => {
-                                return <QuestionBox key={index} question={question}/>
+                    <div className="box admin">
+                        <div>
+                            <h3>Pagina: {pagina}</h3>
+                            <input type="number" value={pagina} onChange={(e) => {
+                                if(isNaN(Number(e.target.value))) return;
 
+                                setPagina(parseInt(e.target.value));
+                            }} />
+                        </div>
+                        {!loading && <div className="adm-box">
+                            {questions.map((question, index) => {
+                                return index > 7 * (pagina - 1) && index < 7 * pagina &&
+                                (areas[question.area_id] === undefined ?  null :
+                                <><QuestionBox key={index} question={question} area={areas[question.area_id]}/>
+                                    <div className="btn">
+                                        <Button size={'xs'} onClick={() => {}}>Deletar</Button>
+                                        <Button size={'xs'} onClick={() => {
+                                            setEnunciadoQst(question.question_text);
+                                            setAlternativaA(question.awnsers[0]);
+                                            setAlternativaB(question.awnsers[1]);
+                                            setAlternativaC(question.awnsers[2]);
+                                            setAlternativaD(question.awnsers[3]);
+                                            setAlternativaE(question.awnsers[4]);
+                                            setAlternativaCorreta(question.correct_answer);
+                                            setQstID(question.id);
+                                        }}>Editar</Button>
+                                    </div>
+                                </>)
                             })}
                             
-                            </div>}
+                        </div>}
+                        <div className="inputs">
+                            <h3>Editando questão {qstID}</h3>
+                                <p>Enunciado:</p>
+                                <textarea name={'Enunciado'} placeholder="Enunciado" onChange={(e) => {
+                                    setEnunciadoQst(e.target.value);
+                                }}
+                                value={enunciadoQst}></textarea>
+                                <Input name={'Alternativa A'} label="Alternativa A" onChange={(e) => {
+                                    setAlternativaA(e.target.value);
+                                }}
+                                value={alternativaA}></Input>
+                                <Input name={'Alternativa B'} label="Alternativa B" onChange={(e) => {
+                                    setAlternativaB(e.target.value);
+                                }}
+                                value={alternativaB}></Input>
+                                <Input name={'Alternativa C'} label="Alternativa C" onChange={(e) => {
+                                    setAlternativaC(e.target.value);
+                                }}
+                                value={alternativaC}></Input>
+                                <Input name={'Alternativa D'} label="Alternativa D" onChange={(e) => {
+                                    setAlternativaD(e.target.value);
+                                }}
+                                value={alternativaD}></Input>
+                                <Input name={'Alternativa E'} label="Alternativa E" onChange={(e) => {
+                                    setAlternativaE(e.target.value);
+                                }}
+                                value={alternativaE}></Input>
+                                <br></br>
+                                <p>Alternativa correta:</p>
+                                <Select placeholder='Selecione a alternativa correta' onChange={(e) => {
+                                    setAlternativaCorreta(e.target.value);
+                                }}
+                                value={alternativaCorreta}>
+                                    <option value='A'>A</option>
+                                    <option value='B'>B</option>
+                                    <option value='C'>C</option>
+                                    <option value='D'>D</option>
+                                    <option value='E'>E</option>
+                                </Select>
+                                <Button onClick={() => {}}>Salvar alterações</Button>
+
+                            </div>
                     </div>
                 </div>
             </div>
