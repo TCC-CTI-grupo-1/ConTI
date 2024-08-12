@@ -12,7 +12,7 @@ export class MockTestDAO {
                     title: mockTest.title,
                     creation_date: mockTest.creation_date,
                     profile_id: mockTest.profile_id,
-                    total_wrong_answers: mockTest.total_wrong_answers,
+                    total_answers: mockTest.total_answers,
                     total_correct_answers: mockTest.total_correct_answers,
                     time_limit: mockTest.time_limit,
                     time_spent: mockTest.time_spent,
@@ -37,7 +37,7 @@ export class MockTestDAO {
                     title: mockTest.title,
                     creation_date: mockTest.creation_date,
                     profile_id: mockTest.profile_id,
-                    total_wrong_answers: mockTest.total_wrong_answers,
+                    total_answers: mockTest.total_answers,
                     total_correct_answers: mockTest.total_correct_answers,
                     time_limit: mockTest.time_limit,
                     time_spent: mockTest.time_spent,
@@ -62,7 +62,7 @@ export class MockTestDAO {
                     title: result.title,
                     creation_date: result.creation_date,
                     profile_id: result.profile_id,
-                    total_wrong_answers: result.total_wrong_answers,
+                    total_answers: result.total_answers,
                     total_correct_answers: result.total_correct_answers,
                     time_limit: result.time_limit,
                     time_spent: result.time_spent,
@@ -138,7 +138,54 @@ export class MockTestDAO {
                     title: result.title,
                     creation_date: result.creation_date,
                     profile_id: result.profile_id,
-                    total_wrong_answers: result.total_wrong_answers,
+                    total_answers: result.total_answers,
+                    total_correct_answers: result.total_correct_answers,
+                    time_limit: result.time_limit,
+                    time_spent: result.time_spent,
+                    test_type: result.test_type,
+                    UUID: result.UUID
+                }
+                mockTests.push(mockTest);
+            });
+
+            return mockTests;
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    listMockTestByCreationDateAscendentAndProfileId = async (creationDay: Date, profile_id: number) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.mockTest.findMany({
+                where: {
+                    AND: [
+                        {
+                            creation_date: {
+                                gte: creationDay,
+                                lt: new Date(creationDay.getTime() + 24 * 60 * 60 * 1000)
+                            }
+                        },
+                        {
+                            profile_id: profile_id
+                        }
+                    ]
+                },
+                orderBy: {
+                    creation_date: 'asc'
+                }
+            });
+
+            const mockTests: MockTestDTO[] = [];
+
+            result.forEach((result: any) => {
+                const mockTest: MockTestDTO = {
+                    id: result.id,
+                    title: result.title,
+                    creation_date: result.creation_date,
+                    profile_id: result.profile_id,
+                    total_answers: result.total_answers,
                     total_correct_answers: result.total_correct_answers,
                     time_limit: result.time_limit,
                     time_spent: result.time_spent,

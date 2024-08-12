@@ -9,14 +9,14 @@ CREATE TABLE profile (
     profile_picture VARCHAR(255),
     creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total_correct_answers INTEGER NOT NULL DEFAULT 0,
-    total_incorrect_answers INTEGER NOT NULL DEFAULT 0
+    total_answers INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE mockTest (
     id SERIAL PRIMARY KEY,
     profile_id INTEGER NOT NULL,
     title VARCHAR(255) NOT NULL,
-    total_wrong_answers INTEGER NOT NULL DEFAULT 0,
+    total_answers INTEGER NOT NULL DEFAULT 0,
     total_correct_answers INTEGER NOT NULL DEFAULT 0,
     time_limit INTEGER NOT NULL,
     time_spent INTEGER NOT NULL DEFAULT 0,
@@ -31,7 +31,7 @@ CREATE TABLE question (
     question_text TEXT NOT NULL,
     question_year INTEGER NOT NULL, 
     total_answers INTEGER NOT NULL DEFAULT 0,
-    total_answers_right INTEGER NOT NULL DEFAULT 0,
+    total_correct_answers INTEGER NOT NULL DEFAULT 0,
     difficulty Difficulty NOT NULL,
     has_image BOOLEAN NOT NULL DEFAULT false,
     additional_info TEXT,

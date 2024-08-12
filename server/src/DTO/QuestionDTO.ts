@@ -5,7 +5,7 @@ export class QuestionDTO {
     question_text: string;
     question_year: number;
     total_answers: number;
-    total_answers_right: number;
+    total_correct_answers: number;
     difficulty: difficulty;
     additional_info: (string | null);
     area_id: number;
@@ -15,12 +15,12 @@ export class QuestionDTO {
     has_image: boolean;
     has_latex: boolean;
 
-    constructor(id: number, question_text: string, question_year: number, total_answers: number, total_answers_right: number, difficulty: difficulty, additional_info: string, area_id: number, question_creator: string, official_test_name: string, question_number: number, has_image: boolean, has_latex: boolean) {
+    constructor(id: number, question_text: string, question_year: number, total_answers: number, total_correct_answers: number, difficulty: difficulty, additional_info: string, area_id: number, question_creator: string, official_test_name: string, question_number: number, has_image: boolean, has_latex: boolean) {
         this.id = id;
         this.question_text = question_text;
         this.question_year = question_year;
         this.total_answers = total_answers;
-        this.total_answers_right = total_answers_right;
+        this.total_correct_answers = total_correct_answers;
         this.difficulty = difficulty;
         this.additional_info = additional_info;
         this.area_id = area_id;

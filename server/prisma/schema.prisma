@@ -8,17 +8,17 @@ datasource db {
 }
 
 model profile {
-  id                      Int            @id @default(autoincrement())
-  name                    String         @db.VarChar(255)
-  email                   String         @unique @db.VarChar(255)
-  password                String         @db.VarChar(255)
-  profile_picture         String?        @db.VarChar(255)
-  creation_date           DateTime       @default(now()) @db.Timestamp(6)
-  total_correct_answers   Int            @default(0)
-  total_incorrect_answers Int            @default(0)
-  total_mock_tests        Int            @default(0)
-  area_profile            area_profile[]
-  mockTest                mockTest[]
+  id                    Int            @id @default(autoincrement())
+  name                  String         @db.VarChar(255)
+  email                 String         @unique @db.VarChar(255)
+  password              String         @db.VarChar(255)
+  profile_picture       String?        @db.VarChar(255)
+  creation_date         DateTime       @default(now()) @db.Timestamp(6)
+  total_correct_answers Int            @default(0)
+  total_mock_tests      Int            @default(0)
+  total_answers         Int            @default(0)
+  area_profile          area_profile[]
+  mockTest              mockTest[]
 }
 
 model answer {
@@ -124,22 +124,22 @@ model password_reset_tokens {
 }
 
 model question {
-  id                  Int                 @id @default(autoincrement())
-  question_text       String
-  question_year       Int
-  total_answers       Int                 @default(0)
-  total_answers_right Int                 @default(0)
-  difficulty          difficulty
-  additional_info     String?
-  area_id             Int
-  question_creator    String              @db.VarChar(255)
-  official_test_name  String?             @db.VarChar(255)
-  question_number     Int?
-  has_image           Boolean             @default(false)
-  has_latex           Boolean             @default(false)
-  answer              answer[]
-  area                area                @relation(fields: [area_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  question_mockTest   question_mockTest[]
+  id                    Int                 @id @default(autoincrement())
+  question_text         String
+  question_year         Int
+  total_answers         Int                 @default(0)
+  difficulty            difficulty
+  additional_info       String?
+  area_id               Int
+  question_creator      String              @db.VarChar(255)
+  official_test_name    String?             @db.VarChar(255)
+  question_number       Int?
+  has_image             Boolean             @default(false)
+  has_latex             Boolean             @default(false)
+  total_correct_answers Int                 @default(0)
+  answer                answer[]
+  area                  area                @relation(fields: [area_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  question_mockTest     question_mockTest[]
 }
 
 model sessions {
@@ -169,26 +169,26 @@ model mockTest {
   id                    Int                 @id(map: "mock_test_pkey") @default(autoincrement())
   profile_id            Int
   title                 String              @db.VarChar(255)
-  total_wrong_answers   Int                 @default(0)
   total_correct_answers Int                 @default(0)
   time_limit            Int
   time_spent            Int                 @default(0)
   creation_date         DateTime            @default(now()) @db.Timestamp(6)
   test_type             mocktesttype
   UUID                  String              @unique @db.VarChar(255)
+  total_answers         Int                 @default(0)
   profile               profile             @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mock_test_profile_id_fkey")
   question_mockTest     question_mockTest[]
 }
 
 model question_mockTest {
-  question_id  Int
-  mock_test_id Int
-  answer_id    Int?
-  answer       answer?  @relation(fields: [answer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "question_mock_test_answer_id_fkey")
-  mockTest     mockTest @relation(fields: [mock_test_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "question_mock_test_mock_test_id_fkey")
-  question     question @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "question_mock_test_question_id_fkey")
+  question_id Int
+  mockTest_id Int
+  answer_id   Int?
+  answer      answer?  @relation(fields: [answer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "question_mock_test_answer_id_fkey")
+  mockTest    mockTest @relation(fields: [mockTest_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "question_mock_test_mock_test_id_fkey")
+  question    question @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "question_mock_test_question_id_fkey")
 
-  @@id([question_id, mock_test_id], map: "question_mock_test_pkey")
+  @@id([question_id, mockTest_id], map: "question_mock_test_pkey")
 }
 
 enum difficulty {

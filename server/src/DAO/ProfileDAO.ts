@@ -16,7 +16,7 @@ export class ProfileDAO {
                     profile_picture: profile.profile_picture,
                     creation_date: profile.creation_date,
                     total_correct_answers: profile.total_correct_answers,
-                    total_incorrect_answers: profile.total_incorrect_answers
+                    total_answers: profile.total_answers
                 }
             });
             return createdProfile;
@@ -42,7 +42,7 @@ export class ProfileDAO {
                 profile_picture: profile.profile_picture,
                 creation_date: profile.creation_date,
                 total_correct_answers: profile.total_correct_answers,
-                total_incorrect_answers: profile.total_incorrect_answers
+                total_answers: profile.total_answers
             }
         });
         } catch (error: any) {
@@ -102,7 +102,7 @@ export class ProfileDAO {
                 profile_picture: result.profile_picture,
                 creation_date: result.creation_date,
                 total_correct_answers: result.total_correct_answers,
-                total_incorrect_answers: result.total_incorrect_answers
+                total_answers: result.total_answers
             };
             profiles.push(profile);
         });
@@ -132,7 +132,7 @@ export class ProfileDAO {
                     profile_picture: result.profile_picture,
                     creation_date: result.creation_date,
                     total_correct_answers: result.total_correct_answers,
-                    total_incorrect_answers: result.total_incorrect_answers
+                    total_answers: result.total_answers
                 };
                 return profile;
             }
@@ -162,7 +162,7 @@ export class ProfileDAO {
                     profile_picture: result.profile_picture,
                     creation_date: result.creation_date,
                     total_correct_answers: result.total_correct_answers,
-                    total_incorrect_answers: result.total_incorrect_answers
+                    total_answers: result.total_answers
                 };
                 return profile;
             }
