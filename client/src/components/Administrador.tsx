@@ -9,6 +9,7 @@ import { showAlert } from "./../App";
 import { handleGetQuestions } from "./../controllers/userController";
 import { areaInterface, questionInterface } from "../controllers/interfaces";
 import QuestionBox from "./questions/QuestionBox";
+import { handlePutQuestion, handleDeleteQuestion } from "./../controllers/userController";
 
 const Admistrator = () => {
 
@@ -54,7 +55,9 @@ const Admistrator = () => {
 
 
         const questions = await handleGetQuestions();
-        //Pege só as 100 primeiras quesõs
+        //deixa questions em ordem crescente de ID
+        questions.sort((a, b) => a.id - b.id);
+
         setQuestions(questions);
         console.log(questions);
 
@@ -110,11 +113,17 @@ const Admistrator = () => {
                     <div className="box admin">
                         <div>
                             <h3>Pagina: {pagina}</h3>
+                            <Button onClick={() => {
+                                setPagina(pagina-1);
+                            }} size="xs">Anterior</Button>
                             <input type="number" value={pagina} onChange={(e) => {
                                 if(isNaN(Number(e.target.value))) return;
 
                                 setPagina(parseInt(e.target.value));
                             }} />
+                            <Button onClick={() => {
+                                setPagina(pagina+1);
+                            }} size="xs">Proxima</Button>
                         </div>
                         {!loading && <div className="adm-box">
                             {questions.map((question, index) => {
@@ -122,7 +131,6 @@ const Admistrator = () => {
                                 (areas[question.area_id] === undefined ?  null :
                                 <><QuestionBox key={index} question={question} area={areas[question.area_id]}/>
                                     <div className="btn">
-                                        <Button size={'xs'} onClick={() => {}}>Deletar</Button>
                                         <Button size={'xs'} onClick={() => {
                                             setEnunciadoQst(question.question_text);
                                             setAlternativaA(question.awnsers[0]);
@@ -177,7 +185,49 @@ const Admistrator = () => {
                                     <option value='D'>D</option>
                                     <option value='E'>E</option>
                                 </Select>
-                                <Button onClick={() => {}}>Salvar alterações</Button>
+                                <Button onClick={() => {
+                                    let qst = questions.find(qst => qst.id === qstID);
+                                    if(qst === undefined){
+                                        showAlert("Erro ao encontrar questão");
+                                        return;
+                                    }
+                                    let question: questionInterface = {
+                                        question_text: enunciadoQst,
+                                        awnsers: [alternativaA, alternativaB, alternativaC, alternativaD, alternativaE],
+                                        correct_answer: alternativaCorreta,
+                                        id: qstID,
+                                        area_id: qst.area_id,
+                                        additional_info: qst.additional_info,
+                                        has_image: qst.has_image,
+                                        has_latex: qst.has_latex,
+                                        difficulty: qst.difficulty,
+                                        official_test_name: qst.official_test_name,
+                                        question_creator: qst.question_creator,
+                                        question_number: qst.question_number,
+                                        question_year: qst.question_year,
+                                    };
+
+                                    handlePutQuestion(question).then((resp) => {
+                                        if(resp){
+                                            showAlert("Questão editada com sucesso!", "success");
+                                        }
+                                        else{
+                                            showAlert("Erro ao editar questão");
+                                        }
+                                    }
+                                    );
+                                }}>Salvar alterações</Button>
+                                <Button onClick={() => {
+                                    handleDeleteQuestion(qstID).then((resp) => {
+                                        if(resp){
+                                            showAlert("Questão deletada com sucesso!", "success");
+                                        }
+                                        else{
+                                            showAlert("Erro ao deletar questão");
+                                        }
+                                    });
+                                }}>Deletar</Button>
+
 
                             </div>
                     </div>

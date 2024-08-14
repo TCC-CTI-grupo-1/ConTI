@@ -48,13 +48,7 @@ const QuestionBox = ({  question, area }: Props) => {
             <p>Ano: {question.question_year}</p>
           </div>
           <div className={"difficulty " + question.difficulty}><p>
-            {question.difficulty === "easy"
-              ? "Fácil"
-              : question.difficulty === "medium"
-              ? "Médio"
-              : question.difficulty === "hard"
-              ? "Difícil"
-              : "Faz o L"}
+            {question.difficulty}
             </p>
           </div>
         </div>
