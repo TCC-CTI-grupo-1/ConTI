@@ -19,12 +19,13 @@ import {
 import LocalButton from "../Button";
 import { showAlert } from "../../App";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Question from "./QuestionBox";
 import { useNavigate } from "react-router-dom";
-import { questionInterface } from "../../controllers/interfaces";
+import { questionInterface, areaInterface } from "../../controllers/interfaces";
 import { questionFilters as options } from "../../controllers/interfaces";
-import { handleGetFilteredQuestions } from "../../controllers/userController";
+import { handleGetFilteredQuestions, handleGetAreasMap } from "../../controllers/userController";
+import QuestionBox from "./QuestionBox";
 
 const Filters = () => {
   const navegate = useNavigate();
@@ -62,7 +63,20 @@ const Filters = () => {
     });
   }
   
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  async function handleAreasMap(){
+    const areasMap = await handleGetAreasMap();
+
+    if(Object.keys(areasMap).length === 0){
+        showAlert("Erro ao carregar areas");
+        return;
+    }
+
+    setAreas(areasMap);
+  }
+
+  const [areas, setAreas] = useState<{[id: number]: areaInterface}>({});
 
   return (
     <>
@@ -216,7 +230,11 @@ const Filters = () => {
             <h2>Carregando...</h2>
           ) : (
             filteredQuestions.map((question, index) => {
-              return <Question key={index} question={question} />;
+              return areas[question.area_id] ? (<QuestionBox
+                key={index}
+                question={question}
+                area={areas[question.area_id]}
+                />) : <p>Area da questão {question.id} não encontrada</p>;
             })
           )}
         </div>
