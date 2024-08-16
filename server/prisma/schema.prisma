@@ -24,6 +24,7 @@ model profile {
 model answer {
   id                Int                 @id @default(autoincrement())
   question_id       Int
+  total_answers     Int                 @default(0)
   answer            String
   is_correct        Boolean
   question_letter   String?             @db.Char(1)

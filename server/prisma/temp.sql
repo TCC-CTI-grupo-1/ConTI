@@ -59,6 +59,7 @@ CREATE TABLE answer (
     answer TEXT NOT NULL,
     is_correct BOOLEAN NOT NULL, 
     question_letter VARCHAR(1),
+    total_answers INTEGER NOT NULL DEFAULT 0
     FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE
 );
 

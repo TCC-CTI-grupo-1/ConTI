@@ -3,7 +3,7 @@ import Navbar from '../Navbar'
 import DaySelector from './DaySelector'
 import { useState } from 'react'
 import date from 'date-and-time'
-import { handleGetSimpleSimulados } from '../../controllers/userController'
+import { handleGetQuestion, handleGetQuestions_MockTestByMockTestId, handleGetSimpleMockTests } from '../../controllers/userController'
 import { simuladoSimpleInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
@@ -49,12 +49,22 @@ const History = () => {
         setLoading(false);
     }
     //[simulados, listas]
-    async function getSimuladosAndListas(day: Date): Promise<[simuladoSimpleInterface[], simuladoSimpleInterface[]]>{
+    async function getSimuladosAndListas(date: Date): Promise<[simuladoSimpleInterface[], simuladoSimpleInterface[]]>{
         //Pega os simulados e listas feitos no dia
-        const responseSimulados = await handleGetSimpleSimulados(day);
-        console.log(responseSimulados);
-        const responseListas = await handleGetSimpleSimulados(day);
-        console.log(responseListas);
+        let day = new Date(date);
+
+        const responseSimulados = await handleGetSimpleMockTests(day);
+        const responseListas = await handleGetSimpleMockTests(day);
+        for (let i = 0; i < responseSimulados.length; ++i) {
+            const responseQuestoesSimulado = await handleGetQuestions_MockTestByMockTestId(responseSimulados[i].id);
+            for (let j = 0; j < responseQuestoesSimulado.length; ++j) {
+                const responseQuestoes = await handleGetQuestion(responseQuestoesSimulado[j].question_id);
+                // let subject = responseQuestoes.official_test_name;
+
+            }
+
+            responseSimulados[i].subjects = {};
+        }
         return [responseSimulados, responseListas];
     }
 
