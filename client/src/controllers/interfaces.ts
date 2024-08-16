@@ -28,6 +28,12 @@ export interface questionInterface{
     awnsers: string[],
 }
 
+export interface question_MockTestInterface{
+    question_id: number,
+    mocktest_id: number,
+    answer: string
+}
+
 //Usado para mostrar o histórico de simulados
 export interface simuladoSimpleInterface{
     id: number,
