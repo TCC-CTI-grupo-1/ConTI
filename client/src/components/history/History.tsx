@@ -20,12 +20,13 @@ import {
     Button,
     Spinner
   } from '@chakra-ui/react'
+import { showAlert } from '../../App'
 
 const History = () => {
 
     const {onOpen, onClose, isOpen} = useDisclosure();
 
-    const [activeDay, setActiveDay] = useState('01/01/2024');
+    const [activeDay, setActiveDay] = useState<Date>(new Date());
 
     const [simuladosAndListas, setSimuladosAndListas] = useState<[simuladoSimpleInterface[], simuladoSimpleInterface[]] | null>(null); //[simulados, listas]
 
@@ -37,6 +38,7 @@ const History = () => {
 
     useEffect(() => {
         setLoading(true);
+        
         handleSimuladosAndListas();
     }, [activeDay])
 
@@ -47,9 +49,8 @@ const History = () => {
         setLoading(false);
     }
     //[simulados, listas]
-    async function getSimuladosAndListas(dayString: string): Promise<[simuladoSimpleInterface[], simuladoSimpleInterface[]]>{
+    async function getSimuladosAndListas(day: Date): Promise<[simuladoSimpleInterface[], simuladoSimpleInterface[]]>{
         //Pega os simulados e listas feitos no dia
-        let day = new Date(dayString);
         const responseSimulados = await handleGetSimpleSimulados(day);
         console.log(responseSimulados);
         const responseListas = await handleGetSimpleSimulados(day);
@@ -114,13 +115,18 @@ const History = () => {
 
     }
 
+    function showDate(){
+        let date = new Date(activeDay);
+        console.log(date.toISOString());
+    }
+
     return (
         <>
             <div id="history" className="flex-container full-screen-size">
                     <Navbar screen="history"/>
                     <div className="container">
                         <div className="header">
-                            <h1>Histórico</h1>
+                            <h1 onClick={showDate}>Histórico</h1>
                         </div>
                         <div className="inversed-border"></div>
                         <div className="content">

@@ -4,22 +4,22 @@ import { useState } from 'react';
 import date from 'date-and-time';
 
 interface Props{
-    handleChangeDay: (day: string) => void;
+    handleChangeDay: (day: Date) => void;
 }
 
 const DaySelector = ({handleChangeDay}: Props ) => {
 
     const now = new Date();
 
-    const [activeDay, setActiveDay] = useState(date.format(now, 'DD/MM/YYYY'));
+    const [activeDay, setActiveDay] = useState<Date>(now);
 
-    function unsimplifyDate(date: string){
+    function unsimplifyDate(date: Date){
         //Tranforma 01/01/2024 em 01 de janeiro de 2024
 
-        const dateArray = date.split('/');
-        const day = dateArray[0];
+        const dateArray = date.toISOString().split('T')[0].split('-');
+        const day = dateArray[2];
         const month = dateArray[1];
-        const year = dateArray[2];
+        const year = dateArray[0];
 
         let monthName = '';
         switch(month){
@@ -67,14 +67,10 @@ const DaySelector = ({handleChangeDay}: Props ) => {
     }
 
     function changeDay(modo: number){
-        const dateArray = activeDay.split('/');
-        const day = parseInt(dateArray[0]);
-        const month = parseInt(dateArray[1]);
-        const year = parseInt(dateArray[2]);
-
-        const newDate = new Date(year, month-1, day+modo);
-        setActiveDay(date.format(newDate, 'DD/MM/YYYY'));
-        handleChangeDay(date.format(newDate, 'DD/MM/YYYY'));
+        const newDay = new Date(activeDay);
+        newDay.setDate(newDay.getDate() + modo);
+        setActiveDay(newDay);
+        handleChangeDay(newDay);
     }
 
   return (
