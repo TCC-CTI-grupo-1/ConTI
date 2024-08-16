@@ -1991,6 +1991,11 @@ COMPONENTES GERAIS DO FERNANDO
   }
 }
 
+#filtro-ver-areas{
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 1500px) {
   :root {
     --margin-big: 90px;

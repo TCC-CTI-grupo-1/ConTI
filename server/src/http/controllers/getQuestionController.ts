@@ -12,6 +12,7 @@ export async function getQuestionController(req: Request, res: Response) {
     }
 }
 
+
 export async function getQuestionByIdController(req: Request, res: Response) {
     const id = req.params.id;
     const questionDAO = new QuestionDAO();

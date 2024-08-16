@@ -15,6 +15,8 @@ import { getAreaByIdController } from './controllers/getAreaByIdController';
 import { getQuestionWithFiltersController, getQuestionByWeightsAndProfileController,
         getQuestionByIdController, getQuestionController
  } from './controllers/getQuestionController';
+ import { putQuestionByIdController } from './controllers/putQuestionController';
+ import { deleteQuestionByIdController } from './controllers/deleteQuestionController';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
@@ -39,4 +41,7 @@ export async function routes(app: any) {
     app.get('/questions/:weight', getQuestionByWeightsAndProfileController);
     app.get('/questions/:id', getQuestionByIdController);
     app.get('/questions', getQuestionController);
+    app.put('/questions/:id', putQuestionByIdController);
+    app.delete('/question/:id', deleteQuestionByIdController);
+
 }

@@ -32,7 +32,8 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
 
     // Garante que o array de refs tenha o tamanho necessário
     if (alternativasRef.current.length === 0) {
-        alternativasRef.current = Array.from({ length: question.awnsers.length }, () => React.createRef());
+        let length = question.awnsers.length;
+        alternativasRef.current = Array.from({ length }, () => React.createRef());
     }
 
     const questionRef = useRef<HTMLDivElement>(null);
@@ -95,7 +96,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
                         if (letra.textContent == null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [2]');
                         letra.textContent = letra.textContent?.replace(/\s/g, '');
                         correctAnswer?.replace(/\s/g, '');
-                        console.log('letra: ' + letra.textContent + " correctAnswer: " + correctAnswer + " letra=correctAnswer: " + (letra.textContent == correctAnswer));
+                        //console.log('letra: ' + letra.textContent + " correctAnswer: " + correctAnswer + " letra=correctAnswer: " + (letra.textContent == correctAnswer));
                     }
                 }
                 else{

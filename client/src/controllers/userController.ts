@@ -296,6 +296,10 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
             throw new Error(responseData.message);
         } else {
             console.log(responseData.questions);
+            await responseData.questions.forEach(async (element: questionInterface) => {
+                element.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
+                element.correct_answer = 'A';
+            });
             return responseData.questions;
         }
 

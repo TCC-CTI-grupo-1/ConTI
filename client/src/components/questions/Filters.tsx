@@ -14,7 +14,8 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
+  useDisclosure,
+  flexbox
 } from "@chakra-ui/react";
 import LocalButton from "../Button";
 import { showAlert } from "../../App";
@@ -32,11 +33,15 @@ const Filters = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const anos = [2024, 2023, 2022];
+  const dificuldade = ["facil", "medio", "dificil"];
+
   const [options, setOptions] = useState<options>({
-    ano: [2024, 2023, 2022],
-    dificuldade: ["facil", "medio", "dificil"],
-    disciplina: ["Matemática", "Língua%20Portuguesa", "Ciências%20da%20Natureza", "Ciências%20Humanas", "sexo"],
+    ano: anos,
+    dificuldade: dificuldade,
+    disciplina: [],
     alreadyAnswered: false,
+    myMockTests: false,
     //mySimulations: false,
   });
 
@@ -45,7 +50,31 @@ const Filters = () => {
     option: "ano" | "dificuldade" | "disciplina"
   ) {
     let newOptions = options;
+    console.log("Alterando n sei oq é isso");
+    console.log(e);
     newOptions[option] = e;
+    if(e.length === 0){
+      switch(option){
+        case "ano":
+          newOptions[option] = anos;
+          break;
+        case "dificuldade":
+          newOptions[option] = dificuldade;
+          break;
+        case "disciplina":
+          newOptions[option] = [];
+          break;
+      }
+    }
+
+    if(option == "ano"){
+      //conver 'e' de ['2024', '2023'] para [2024, 2023]
+      newOptions[option] = e.map((element: string) => {
+        return parseInt(element);
+      });
+    }
+
+    
     console.log(newOptions);
     setOptions(newOptions);
   }
@@ -74,7 +103,12 @@ const Filters = () => {
     }
 
     setAreas(areasMap);
+    setLoading(false);
   }
+
+  useEffect(() => {
+    handleAreasMap();
+  }, []);
 
   const [areas, setAreas] = useState<{[id: number]: areaInterface}>({});
 
@@ -82,7 +116,9 @@ const Filters = () => {
     <>
     <div id="questions">
       <div className="filters box">
-        <h3>Filtros</h3>
+        <h3 onClick={() => {
+          console.log(areas);
+        }}>Filtros</h3>
         <div className="options">
           <div>
             <Menu closeOnSelect={false}>
@@ -249,16 +285,41 @@ const Filters = () => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Selecione uma ou mais areas para o filtro</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <p>TESTEETETSTEE</p>
+            <div id="filtro-ver-areas">
+            {areas ? Object.keys(areas).map((key) => {
+                return (
+                <Checkbox
+                  key={key}
+                  onChange={(e) => {
+                  let newOptions = { ...options };
+                  if (e.target.checked) {
+                    newOptions.disciplina.push(areas[parseInt(key)].name);
+                  } else {
+                    newOptions.disciplina = newOptions.disciplina.filter(
+                    (element) => {
+                      return element !== areas[parseInt(key)].name;
+                    }
+                    );
+                  }
+                  console.log(newOptions);
+                  setOptions(newOptions);
+                  }}
+                >
+                  {areas[parseInt(key)].name} + {String(options.disciplina.map((element) => {
+                    return element === areas[parseInt(key)].name;
+                  }).includes(true) !== undefined)}
+                </Checkbox>
+                );
+            } ) : <p>Carregando...</p>}
+            </div>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme='blue' mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant='ghost'>Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

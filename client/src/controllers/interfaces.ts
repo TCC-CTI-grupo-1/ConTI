@@ -5,11 +5,11 @@ export interface SubjectCategory {
     sub?: SubjectCategory; // Tornando `sub` opcional
 }
 export interface questionFilters{
-    ano?: number[];
-    dificuldade?: string[];
-    disciplina?: string[];
+    ano: number[];
+    dificuldade: string[];
+    disciplina: string[];
     alreadyAnswered?: boolean;
-    myMockTests?: boolean;
+    myMockTests: boolean;
 }
 export interface questionInterface{
     additional_info: string;
