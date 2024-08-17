@@ -590,6 +590,33 @@ export async function handleGetAreaById(id: number): Promise<areaInterface | nul
     }
 }
 
+export async function handleGetTopParentAreaById(id: number): Promise<areaInterface | null> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/getTopArea/'+id, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return {
+                id: responseData.area.id,
+                name: responseData.area.name,
+                parent_id: responseData.area.parent_id
+            };
+        }
+
+    } catch (err: any) {
+        return null;
+    }
+}
+
 export async function handlePutQuestion(question: questionInterface): Promise<boolean> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));

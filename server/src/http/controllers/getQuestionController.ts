@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { QuestionDAO } from "../../DAO/QuestionDAO";
+import { QuestionDTO } from "../../DTO/QuestionDTO";
 import { questionFilters } from "../../types/client/interfaces";
 
 export async function getQuestionController(req: Request, res: Response) {
     const questionDAO = new QuestionDAO();
     try {
-        const questions = await questionDAO.listQuestions();
+        const questions: QuestionDTO[] = await questionDAO.listQuestions();
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
@@ -22,7 +23,7 @@ export async function getQuestionByIdController(req: Request, res: Response) {
     }
     
     try {
-        const question = await questionDAO.searchQuestionById(Number(req.params.id));
+        const question: QuestionDTO = await questionDAO.searchQuestionById(Number(req.params.id));
         res.json({ question: question });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -33,7 +34,7 @@ export async function getQuestionWithFiltersController(req: Request, res: Respon
     const questionDAO = new QuestionDAO();
     try {
         const filter = JSON.parse(req.params.filter) as questionFilters;
-        const questions = await questionDAO.listQuestionByFilters(filter);
+        const questions: QuestionDTO[] = await questionDAO.listQuestionByFilters(filter);
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
@@ -53,7 +54,7 @@ export async function getQuestionByWeightsAndProfileController(req: Request, res
     const questionDAO = new QuestionDAO();
     try {
         const profileId = req.session.profile.id;
-        const questions = await questionDAO.listQuestionsByWeightsAndProfile(profileId, 10);
+        const questions: QuestionDTO[] = await questionDAO.listQuestionsByWeightsAndProfile(profileId, 10);
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
