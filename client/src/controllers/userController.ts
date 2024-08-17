@@ -1,6 +1,6 @@
 import { json } from 'react-router-dom';
 import { Profile } from '../../../server/src/types/express-session';
-import { questionInterface, simuladoSimpleInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface } from './interfaces';
+import { questionInterface, simuladoSimpleInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface } from './interfaces';
 import { questionFilters } from './interfaces';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
@@ -710,7 +710,7 @@ export async function handleDeleteQuestion(id: number): Promise<boolean> {
     }
 }
 
-export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): Promise<string[]> {
+export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): Promise<respostaInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch('http://localhost:3001/getAnswers/questions/' + JSON.stringify(questions_ids), {

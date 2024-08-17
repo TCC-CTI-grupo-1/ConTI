@@ -65,6 +65,15 @@ export interface areaInterface{
     parent_id: number | null,
 }
 
+export interface respostaInterface{
+    id:number;
+    question_id:number;
+    answer:string;
+    is_correct:boolean;
+    question_letter:string;
+    total_answers:number;
+}
+
 export interface area_ProfileInterface{
     area_id: number,
     profile_id: number,

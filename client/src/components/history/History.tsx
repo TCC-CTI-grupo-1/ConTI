@@ -57,14 +57,25 @@ const History = () => {
         let responseListas: simuladoSimpleInterface[] = await handleGetSimpleMockTests(day);
         for (let i = 0; i < responseSimulados.length; ++i) {
             const responseQuestoesSimulado = await handleGetQuestions_MockTestByMockTestId(responseSimulados[i].id);
-            const areasIds = await handleGetAreasByQuestionsIds(responseQuestoesSimulado.map((questao) => questao.question_id));
-            const topAreas = await handleGetTopParentAreasByIds(areasIds.map((area) => area.area_id));
-            
-            for (let j = 0; j < responseQuestoesSimulado.length; ++j) {
-                const responseRespostas = await handleGetAnswersByQuestionsIds([responseQuestoesSimulado[j].question_id]);
-                const responseArea = await handleGetTopParentAreaById(topAreas[j].area_id);
-                
-            }
+
+            // responseQuestoesSimulado.forEach((questao_simulado) => {
+            //     let responseRespostas = handleGetAnswersByQuestionsIds([questao_simulado.question_id]);
+            //     responseRespostas.then((respostas) => {
+            //         let correct = respostas.filter((resposta) => resposta.is_correct);
+            //         let subject = handleGetAreaById(questao_simulado.question_id);
+            //         subject.then((subject) => {
+            //             if (responseSimulados[i].subjects[subject.name] === undefined) {
+            //                 responseSimulados[i].subjects[subject.name] = {
+            //                     totalQuestions: 0,
+            //                     totalCorrect: 0
+            //                 }
+            //             }
+            //             responseSimulados[i].subjects[subject.name].totalQuestions += 1;
+            //             responseSimulados[i].subjects[subject.name].totalCorrect += correct.length;
+            //         })
+            //     })
+            // });
+        }
 
             responseSimulados[i].subjects = {};
         }
