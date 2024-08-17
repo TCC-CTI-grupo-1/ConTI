@@ -9,7 +9,19 @@ import { showAlert } from "./../App";
 import { handleGetQuestions } from "./../controllers/userController";
 import { areaInterface, questionInterface } from "../controllers/interfaces";
 import QuestionBox from "./questions/QuestionBox";
-import { handlePutQuestion, handleDeleteQuestion } from "./../controllers/userController";
+import { handlePutQuestion, handleDeleteQuestion, handlePostQuestion } from "./../controllers/userController";
+
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+  } from '@chakra-ui/react'
+
 
 const Admistrator = () => {
 
@@ -18,15 +30,32 @@ const Admistrator = () => {
     const [areaPai, setAreaPai] = useState<string | null>(null);
     const [areas, setAreas] = useState<{[id: number]: areaInterface}>([]);
 
+    const {onOpen, onClose, isOpen} = useDisclosure();
 
-    const [enunciadoQst, setEnunciadoQst] = useState<string>('');
+    const [novaQst, setNovaQst] = useState<questionInterface>({
+        id: 0,
+        question_text: '',
+        awnsers: ['', '', '', '', ''],
+        correct_answer: 'A',
+        area_id: 0,
+        additional_info: '',
+        has_image: false,
+        has_latex: false,
+        difficulty: "",
+        official_test_name: '',
+        question_creator: '',
+        question_number: 0,
+        question_year: 0,
+    });
+
+    /*const [enunciadoQst, setEnunciadoQst] = useState<string>('');
     const [alternativaA, setAlternativaA] = useState<string>('');
     const [alternativaB, setAlternativaB] = useState<string>('');
     const [alternativaC, setAlternativaC] = useState<string>('');
     const [alternativaD, setAlternativaD] = useState<string>('');
-    const [alternativaE, setAlternativaE] = useState<string>('');
+    const [alternativaE, setAlternativaE] = useState<string | null>(null);
     const [alternativaCorreta, setAlternativaCorreta] = useState<string>('A');
-    const [qstID, setQstID] = useState<number>(0);
+    const [qstID, setQstID] = useState<number>(0);*/
 
     const [questions, setQuestions] = useState<questionInterface[]>([]);
     const [pagina, setPagina] = useState<number>(1);
@@ -67,173 +96,323 @@ const Admistrator = () => {
     useEffect(() => {
         handleThings();        
     }, []);
-
+    //tem tanto código aqui que ninguém vai saber que eu sou gay -> bastazini(fernndo)
   return (<>
     {loading ? <h1>Carregando</h1> :
-    <div id="Admistrator" className="flex-container full-screen-size">
-            <Navbar screen="adm"/>
-            <div className="container">
-                <div className="header">
-                    <h3>Area de admin</h3>
-                </div>
-                <div className="inversed-border"></div>
-                <div className="content">
-                    <h1>Admistrator</h1>
-                    <div className="box">
-
-                        {!loading && <div id="config">
-                            <div>
-                                <h2>Adicionar area</h2>
-                                
-                            </div>
-                            
-                            <div>
-                                <Input name={"Nova Area"} label={"Nova area"} onChange={(e) => {
-                                    setNomeArea(e.target.value);
-                                }}></Input>
-                                <Select placeholder='Selecione a area Pai'
-                                onChange={(e) => {
-                                    if(e.target.value === 'none'){
-                                        setAreaPai(null);
-                                    }
-                                    setAreaPai(e.target.value);
-                                }}>
-                                    <option value='none'>Nenhuma</option>
-                                    {
-                                        Object.values(areas).map((area, index) => {
-                                            return <option key={index} value={area.id}>{area.name}</option>
-                                        })
-                                    }
-                                </Select>
-                                <Button onClick={handlePostNovaArea}>Salvar</Button>
-                            </div>
-                        </div>}
-
+        <>
+            <div id="Admistrator" className="flex-container full-screen-size">
+                <Navbar screen="adm"/>
+                <div className="container">
+                    <div className="header">
+                        <h3>Area de admin</h3>
                     </div>
-                    <div className="box admin">
-                        <div>
-                            <h3>Pagina: {pagina}</h3>
-                            <Button onClick={() => {
-                                setPagina(pagina-1);
-                            }} size="xs">Anterior</Button>
-                            <input type="number" value={pagina} onChange={(e) => {
-                                if(isNaN(Number(e.target.value))) return;
+                    <div className="inversed-border"></div>
+                    <div className="content">
+                        <h1>Admistrator</h1>
+                        <div className="box">
 
-                                setPagina(parseInt(e.target.value));
-                            }} />
-                            <Button onClick={() => {
-                                setPagina(pagina+1);
-                            }} size="xs">Proxima</Button>
+                            {!loading && <div id="config">
+                                <div>
+                                    <h2>Adicionar area</h2>
+                                    
+                                </div>
+                                
+                                <div>
+                                    <Input name={"Nova Area"} label={"Nova area"} onChange={(e) => {
+                                        setNomeArea(e.target.value);
+                                    }}></Input>
+                                    <Select placeholder='Selecione a area Pai'
+                                    onChange={(e) => {
+                                        if(e.target.value === 'none'){
+                                            setAreaPai(null);
+                                        }
+                                        setAreaPai(e.target.value);
+                                    }}>
+                                        <option value='none'>Nenhuma</option>
+                                        {
+                                            Object.values(areas).map((area, index) => {
+                                                return <option key={index} value={area.id}>{area.name}</option>
+                                            })
+                                        }
+                                    </Select>
+                                    <Button onClick={handlePostNovaArea}>Salvar</Button>
+                                </div>
+                            </div>}
+
                         </div>
-                        {!loading && <div className="adm-box">
-                            {questions.map((question, index) => {
-                                return index > 7 * (pagina - 1) && index < 7 * pagina &&
-                                (areas[question.area_id] === undefined ?  null :
-                                <><QuestionBox key={index} question={question} area={areas[question.area_id]}/>
-                                    <div className="btn">
-                                        <Button size={'xs'} onClick={() => {
-                                            setEnunciadoQst(question.question_text);
-                                            setAlternativaA(question.awnsers[0]);
-                                            setAlternativaB(question.awnsers[1]);
-                                            setAlternativaC(question.awnsers[2]);
-                                            setAlternativaD(question.awnsers[3]);
-                                            setAlternativaE(question.awnsers[4]);
-                                            setAlternativaCorreta(question.correct_answer);
-                                            setQstID(question.id);
-                                        }}>Editar</Button>
-                                    </div>
-                                </>)
-                            })}
-                            
-                        </div>}
-                        <div className="inputs">
-                            <h3>Editando questão {qstID}</h3>
-                                <p>Enunciado:</p>
-                                <textarea name={'Enunciado'} placeholder="Enunciado" onChange={(e) => {
-                                    setEnunciadoQst(e.target.value);
-                                }}
-                                value={enunciadoQst}></textarea>
-                                <Input name={'Alternativa A'} label="Alternativa A" onChange={(e) => {
-                                    setAlternativaA(e.target.value);
-                                }}
-                                value={alternativaA}></Input>
-                                <Input name={'Alternativa B'} label="Alternativa B" onChange={(e) => {
-                                    setAlternativaB(e.target.value);
-                                }}
-                                value={alternativaB}></Input>
-                                <Input name={'Alternativa C'} label="Alternativa C" onChange={(e) => {
-                                    setAlternativaC(e.target.value);
-                                }}
-                                value={alternativaC}></Input>
-                                <Input name={'Alternativa D'} label="Alternativa D" onChange={(e) => {
-                                    setAlternativaD(e.target.value);
-                                }}
-                                value={alternativaD}></Input>
-                                <Input name={'Alternativa E'} label="Alternativa E" onChange={(e) => {
-                                    setAlternativaE(e.target.value);
-                                }}
-                                value={alternativaE}></Input>
-                                <br></br>
-                                <p>Alternativa correta:</p>
-                                <Select placeholder='Selecione a alternativa correta' onChange={(e) => {
-                                    setAlternativaCorreta(e.target.value);
-                                }}
-                                value={alternativaCorreta}>
-                                    <option value='A'>A</option>
-                                    <option value='B'>B</option>
-                                    <option value='C'>C</option>
-                                    <option value='D'>D</option>
-                                    <option value='E'>E</option>
-                                </Select>
+                        <div className="box admin">
+                            <Button onClick={() => {
+                                let questionLimpa = {
+                                    id: 0,
+                                    question_text: '',
+                                    awnsers: ['', '', '', '', ''],
+                                    correct_answer: 'A',
+                                    area_id: 0,
+                                    additional_info: '',
+                                    has_image: false,
+                                    has_latex: false,
+                                    difficulty: "",
+                                    official_test_name: '',
+                                    question_creator: '',
+                                    question_number: 0,
+                                    question_year: 0,
+                                }
+                                setNovaQst(questionLimpa);
+                                onOpen();
+                            }}>Adicionar questão</Button>
+                            <div className="page">
+                                <h3>Pagina: {pagina}</h3>
                                 <Button onClick={() => {
-                                    let qst = questions.find(qst => qst.id === qstID);
-                                    if(qst === undefined){
-                                        showAlert("Erro ao encontrar questão");
-                                        return;
-                                    }
-                                    let question: questionInterface = {
-                                        question_text: enunciadoQst,
-                                        awnsers: [alternativaA, alternativaB, alternativaC, alternativaD, alternativaE],
-                                        correct_answer: alternativaCorreta,
-                                        id: qstID,
-                                        area_id: qst.area_id,
-                                        additional_info: qst.additional_info,
-                                        has_image: qst.has_image,
-                                        has_latex: qst.has_latex,
-                                        difficulty: qst.difficulty,
-                                        official_test_name: qst.official_test_name,
-                                        question_creator: qst.question_creator,
-                                        question_number: qst.question_number,
-                                        question_year: qst.question_year,
-                                    };
+                                    setPagina(pagina-1);
+                                }} size="xs">Anterior</Button>
+                                <input type="number" value={pagina} onChange={(e) => {
+                                    if(isNaN(Number(e.target.value))) return;
 
-                                    handlePutQuestion(question).then((resp) => {
-                                        if(resp){
-                                            showAlert("Questão editada com sucesso!", "success");
-                                        }
-                                        else{
-                                            showAlert("Erro ao editar questão");
-                                        }
-                                    }
-                                    );
-                                }}>Salvar alterações</Button>
+                                    setPagina(parseInt(e.target.value));
+                                }} />
                                 <Button onClick={() => {
-                                    handleDeleteQuestion(qstID).then((resp) => {
-                                        if(resp){
-                                            showAlert("Questão deletada com sucesso!", "success");
-                                        }
-                                        else{
-                                            showAlert("Erro ao deletar questão");
-                                        }
-                                    });
-                                }}>Deletar</Button>
-
-
+                                    setPagina(pagina+1);
+                                }} size="xs">Proxima</Button>
                             </div>
+
+                            {!loading && <div className="adm-box">
+                                {questions.map((question, index) => {
+                                    return index > 7 * (pagina - 1) && index < 7 * pagina &&
+                                    (areas[question.area_id] === undefined ?  null :
+                                    <><QuestionBox key={index} question={question} area={areas[question.area_id]}/>
+                                        <div className="btn">
+                                            <Button size={'xs'} onClick={() => {
+                                                let editQst: questionInterface;
+                                                editQst = question;
+                                                setNovaQst(editQst);
+                                                onOpen();
+                                            }}>Editar</Button>
+                                        </div>
+                                    </>)
+                                })}
+                                
+                            </div>}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <Modal
+                isCentered
+                onClose={onClose}
+                isOpen={isOpen}
+                motionPreset='slideInBottom'
+                size={'xl'}
+            >
+            <ModalOverlay />
+            <ModalContent>
+            <ModalHeader>Editando questão {novaQst.id}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+                <div className="qst-edit">
+                    <div className="text">
+                        <p>Enunciado</p>
+                        <textarea name="enunciado" id="enunciado"
+                        value={novaQst.question_text}
+                        onChange={(e) => {
+                            setNovaQst({...novaQst, question_text: e.target.value});
+                            }
+                        }
+                        ></textarea>
+                        <div>
+                            <p>Informacoes adicionais:</p>
+                            <textarea name="info" id="info"></textarea>
+                        </div>
+                        
+                    </div>           
+                    <div className="awnsers">
+                        <p>Alternativas</p>
+                        {[...Array(novaQst.awnsers[5] ? 5 : 4)].map((_, index) => (
+                            <input type="text" placeholder={`Alternativa ${String.fromCharCode(65 + index)}`} key={index} 
+                            value={novaQst.awnsers[index]}
+                            onChange={(e) => {
+                                let newAwnsers = [...novaQst.awnsers];
+                                newAwnsers[index] = e.target.value;
+                                setNovaQst({...novaQst, awnsers: newAwnsers});
+                            }}
+                            />
+
+                        ))}
+                        {/*<input type="text" placeholder="Alternativa A" />
+                        <input type="text" placeholder="Alternativa B" />
+                        <input type="text" placeholder="Alternativa C" />
+                        <input type="text" placeholder="Alternativa D" />
+                        <input type="text" placeholder="Alternativa E" />*/}
+
+                    </div>
+                    <div className="awnsers">
+                        <p>Opções</p>
+                        
+                        <div>
+                            <label htmlFor="info">Nome da prova oficial: </label>
+                            <input type="text" name="info" id="info" 
+                            value={novaQst.official_test_name}
+                            onChange={(e) => {
+                                setNovaQst({...novaQst, official_test_name: e.target.value});
+                            }}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="info">Ano da prova: </label>
+                            <input type="number" name="info" id="info" 
+                            value={novaQst.question_year}
+                            onChange={(e) => {
+                                let ano = Number(e.target.value);
+                                setNovaQst({...novaQst, question_year: ano});
+                            }}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="info">Criador do orgão criadpr: </label>
+                            <input type="text" name="info" id="info" 
+                            value={novaQst.question_creator}
+                            onChange={(e) => {
+                                setNovaQst({...novaQst, question_creator: e.target.value});
+                            }}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="info">Numero da questão: </label>
+                            <input type="number" name="info" id="info" 
+                            value={novaQst.question_number}
+                            onChange={(e) => {
+                                let num = Number(e.target.value);
+                                setNovaQst({...novaQst, question_number: num});
+                            }}
+                            />
+                        </div>
+
+                    </div>
+
+                    <div className="options">
+                        <div>
+                            <label htmlFor="correta">Alternativa correta: </label>
+                            <select name="correta" id="correta" value={
+                                novaQst.correct_answer
+                            } onChange={(e) => {
+                                setNovaQst({...novaQst, correct_answer: e.target.value});
+                            }
+                            }>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                {novaQst.awnsers[5] && <option value="E">E</option>}
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="area">Area: </label>
+                            <select name="area" id="area"
+                            value={
+                                areas[novaQst.area_id] ? areas[novaQst.area_id].name : 0
+                            }>
+                                {Object.values(areas).map((area, index) => {
+                                    return <option key={index} value={area.id}>{area.name}</option>
+                                })}
+                            </select>
+                        </div>
+
+                        <div>
+
+                            <label htmlFor="info">Dificuldade: </label>
+                            <select name="info" id="info">
+                                <option value="1">Fácil</option>
+                                <option value="2">Médio</option>
+                                <option value="3">Díficil</option>
+                            </select>
+
+                        </div>
+                        <div>
+                            <label htmlFor="info">Tem imagem? </label>
+                            <input type="checkbox" name="info" id="info" 
+                            value={novaQst.has_image ? 'checked' : ''}
+                            onChange={(e) => {
+                                setNovaQst({...novaQst, has_image: e.target.checked});
+                            }}
+                            />
+                            
+                        </div>
+                        <div>
+                            <label htmlFor="info">Tem latex? </label>
+                            <input type="checkbox" name="info" id="info" 
+                            value={novaQst.has_latex ? 'checked' : ''}
+                            onChange={(e) => {
+                                setNovaQst({...novaQst, has_latex: e.target.checked});
+                            }}
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+            </ModalBody>
+            <ModalFooter>
+                {
+                    novaQst.id === 0 ?
+                    <Button onClick={() => {
+                        onClose();
+                        showAlert("Cadastrando questão...", "warning");
+                        handlePostQuestion(novaQst).then((resp) => {
+                            if(resp){
+                                showAlert("Questão cadastrada com sucesso!", "success");
+                            }
+                            else{
+                                showAlert("Erro ao cadastrar questão");
+                            }
+                        });
+                    }}>Nova questão</Button>
+                    :
+                    <>
+                        <Button colorScheme='blue' onClick={() => {
+
+                            onClose();
+                            if(novaQst.id === 0){
+                                showAlert("Nenhuma questão selecionada para edução");
+                                return;
+                            }
+
+                            showAlert("Editando questão...", "warning");
+                            handlePutQuestion(novaQst).then((resp) => {   
+                                if(resp){
+                                    showAlert("Questão editada com sucesso!", "success");
+                                }
+                                else{
+                                    showAlert("Erro ao editar questão");
+                                }
+                            }
+                            );
+                        }}>
+                        Salvar alteracoes
+                        </Button>
+                        <Button colorScheme="red" onClick={() => {
+                            onClose();
+
+                            if(novaQst.id === 0){
+                                showAlert("Nenhuma questão selecionada para deletar");
+                                return;
+                            }
+
+                            showAlert("Deletando questão...", "warning");
+                            handleDeleteQuestion(novaQst.id).then((resp) => {
+                                if(resp){
+                                    showAlert("Questão deletada com sucesso!", "success");
+                                }
+                                else{
+                                    showAlert("Erro ao deletar questão");
+                                }
+                            });
+                        }}>Deletar questão</Button>
+                    </>
+                }
+                <Button variant='ghost' onClick={onClose}>Cancelar</Button>
+            </ModalFooter>
+            </ModalContent>
+            </Modal>
+        </>
     }</>
   )
 }
