@@ -73,7 +73,7 @@ const History = () => {
                 
                 let correctAnswer;
                 
-                responseSimulados[i].subjects[]
+                //responseSimulados[i].subjects[]
             }
 
             responseSimulados[i].subjects = {};
