@@ -278,6 +278,30 @@ export class QuestionDAO {
         }
     }
 
+    listAreasIdsByQuestionsIds = async (questionsIDs: number[]): Promise<number[]> => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.question.findMany({
+                where: {
+                    id: {
+                        in: questionsIDs
+                    }
+                }
+            });
+
+            const areasIDs: number[] = [];
+
+            result.forEach((result: any) => {
+                areasIDs.push(result.area_id);
+            });
+
+            return areasIDs;
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
     // searchQuestionParentArea = async (areaID: number) => {
     //     try {
     //         const areaDAO: AreaDAO = new AreaDAO();

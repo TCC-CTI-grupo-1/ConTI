@@ -3,7 +3,7 @@ import Navbar from '../Navbar'
 import DaySelector from './DaySelector'
 import { useState } from 'react'
 import date from 'date-and-time'
-import { handleGetAreaById, handleGetQuestion, handleGetQuestions_MockTestByMockTestId, handleGetSimpleMockTests, handleGetTopParentAreaById } from '../../controllers/userController'
+import { handleGetAnswersByQuestionsIds, handleGetAreaById, handleGetAreasByQuestionsIds, handleGetQuestion, handleGetQuestions_MockTestByMockTestId, handleGetSimpleMockTests, handleGetTopParentAreaById, handleGetTopParentAreasByIds } from '../../controllers/userController'
 import { simuladoSimpleInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
@@ -57,23 +57,13 @@ const History = () => {
         let responseListas: simuladoSimpleInterface[] = await handleGetSimpleMockTests(day);
         for (let i = 0; i < responseSimulados.length; ++i) {
             const responseQuestoesSimulado = await handleGetQuestions_MockTestByMockTestId(responseSimulados[i].id);
-            let areas = {};
-
+            const areasIds = await handleGetAreasByQuestionsIds(responseQuestoesSimulado.map((questao) => questao.question_id));
+            const topAreas = await handleGetTopParentAreasByIds(areasIds.map((area) => area.area_id));
+            
             for (let j = 0; j < responseQuestoesSimulado.length; ++j) {
-                const responseQuestoes = await handleGetQuestion(responseQuestoesSimulado[j].question_id);
-                if (responseQuestoes === null) {
-                    showAlert('Erro ao buscar questões');
-                    return [[], []];
-                }
-                const area = await handleGetTopParentAreaById(responseQuestoes.area_id);
-                if (area === null) {
-                    showAlert('Erro ao buscar área');
-                    return [[], []];
-                }
+                const responseRespostas = await handleGetAnswersByQuestionsIds([responseQuestoesSimulado[j].question_id]);
+                const responseArea = await handleGetTopParentAreaById(topAreas[j].area_id);
                 
-                let correctAnswer;
-                
-                responseSimulados[i].subjects[]
             }
 
             responseSimulados[i].subjects = {};

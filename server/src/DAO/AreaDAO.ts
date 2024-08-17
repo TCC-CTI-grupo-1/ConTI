@@ -190,13 +190,39 @@ export class AreaDAO {
             });
             if (result) {
                 if (result.parent_id) {
-                    return this.searchTopParentArea(result.parent_id);
+                    return this.searchTopParentAreaById(result.parent_id);
                 } else {
                     return result as AreaDTO;
                 }
             } else {
                 throw new Error('Área não encontrada');
             }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    listTopParentAreasByIds = async (ids: number[]): Promise<AreaDTO[]> => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.area.findMany({
+                where: {
+                    id: {
+                        in: ids
+                    }
+                }
+            });
+
+            const areas: AreaDTO[] = [];
+
+            result.forEach((result: any) => {
+                this.searchTopParentAreaById(result.id).
+                    then((area) => {
+                        areas.push(area);
+                    });
+            });
+
+            return areas;
         } catch (error) {
             throw error;
         }
