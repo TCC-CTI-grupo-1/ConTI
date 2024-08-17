@@ -3,7 +3,7 @@ import Navbar from '../Navbar'
 import DaySelector from './DaySelector'
 import { useState } from 'react'
 import date from 'date-and-time'
-import { handleGetQuestion, handleGetQuestions_MockTestByMockTestId, handleGetSimpleMockTests } from '../../controllers/userController'
+import { handleGetAreaById, handleGetQuestion, handleGetQuestions_MockTestByMockTestId, handleGetSimpleMockTests, handleGetTopParentAreaById } from '../../controllers/userController'
 import { simuladoSimpleInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
@@ -53,14 +53,27 @@ const History = () => {
         //Pega os simulados e listas feitos no dia
         let day = new Date(date);
 
-        const responseSimulados = await handleGetSimpleMockTests(day);
-        const responseListas = await handleGetSimpleMockTests(day);
+        let responseSimulados: simuladoSimpleInterface[] = await handleGetSimpleMockTests(day);
+        let responseListas: simuladoSimpleInterface[] = await handleGetSimpleMockTests(day);
         for (let i = 0; i < responseSimulados.length; ++i) {
             const responseQuestoesSimulado = await handleGetQuestions_MockTestByMockTestId(responseSimulados[i].id);
+            let areas = {};
+
             for (let j = 0; j < responseQuestoesSimulado.length; ++j) {
                 const responseQuestoes = await handleGetQuestion(responseQuestoesSimulado[j].question_id);
-                // let subject = responseQuestoes.official_test_name;
-
+                if (responseQuestoes === null) {
+                    showAlert('Erro ao buscar questões');
+                    return [[], []];
+                }
+                const area = await handleGetTopParentAreaById(responseQuestoes.area_id);
+                if (area === null) {
+                    showAlert('Erro ao buscar área');
+                    return [[], []];
+                }
+                
+                let correctAnswer;
+                
+                responseSimulados[i].subjects[]
             }
 
             responseSimulados[i].subjects = {};

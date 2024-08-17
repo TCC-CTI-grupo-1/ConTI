@@ -6,7 +6,7 @@ import { deleteProfileController } from './controllers/deleteProfileController';
 import { Request, Response } from "express";
 import { updateProfileController } from './controllers/updateProfileController';
 import { getProfileController } from './controllers/getProfileController';
-import { getAreaController } from './controllers/getAreaController';
+import { getAreaController, getTopParentAreaByIdController } from './controllers/getAreaController';
 import { setAreaController } from './controllers/setAreaController';
 import { getMockTestsController, getMockTestsByDecrescentDateController,
             getMockTestsByDateAndProfileController
@@ -17,8 +17,9 @@ import { getAreaByIdController } from './controllers/getAreaByIdController';
 import { getQuestionWithFiltersController, getQuestionByWeightsAndProfileController,
         getQuestionByIdController, getQuestionController
  } from './controllers/getQuestionController';
- import { putQuestionByIdController } from './controllers/putQuestionController';
- import { deleteQuestionByIdController } from './controllers/deleteQuestionController';
+import { putQuestionByIdController } from './controllers/putQuestionController';
+import { deleteQuestionByIdController } from './controllers/deleteQuestionController';
+import { getAnswersByQuestionIdController } from './controllers/getAnswerController';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
@@ -34,6 +35,7 @@ export async function routes(app: any) {
     app.get('/getProfile', getProfileController);
     app.get('/getAreas', getAreaController);
     app.get('/getArea/:id', getAreaByIdController);
+    app.get('/getTopArea', getTopParentAreaByIdController);
     app.post('/setArea', setAreaController);
     app.get('/getMockTests', getMockTestsController);
     app.get('/getMockTestbyDate', getMockTestsByDecrescentDateController);
@@ -47,5 +49,6 @@ export async function routes(app: any) {
     app.get('/getQuestions_MockTest/:id', getQuestionController);
     app.put('/questions/:id', putQuestionByIdController);
     app.delete('/question/:id', deleteQuestionByIdController);
+    app.get('/getAnswers/question/:question_id', getAnswersByQuestionIdController);
 
 }

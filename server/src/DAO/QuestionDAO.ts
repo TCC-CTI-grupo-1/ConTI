@@ -70,7 +70,7 @@ export class QuestionDAO {
                 };
                 return question;
             } else {
-                return null;
+                throw new Error("Questão não encontrada");
             }
 
         } catch (error) {
