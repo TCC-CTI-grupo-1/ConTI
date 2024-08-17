@@ -273,13 +273,38 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
                 responseData.question.areaName = area.name;
             }
             //fazer o fetch das alternativas
-            responseData.question.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
+            const awnsers = await handleGetAwnsers(questionID);
+            if(awnsers.length === 0){
+                throw new Error('Erro ao pegar alternativas');
+            }
+            responseData.question.awnsers = awnsers;
             return responseData.question;
         }
     } catch{
         return null;
     }
 
+}
+
+async function handleGetAwnsers(questionID: number): Promise<string[]> {
+    try{
+        const response = await fetch('http://localhost:3001/getAnswers/question/' + questionID, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.awnsers;
+        }
+    } catch{
+        return [];
+    }
 }
 
 export async function handleGetFilteredQuestions(filters: questionFilters): Promise<questionInterface[]> {
