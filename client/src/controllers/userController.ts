@@ -666,8 +666,33 @@ export async function handleGetTopParentAreaById(id: number): Promise<areaInterf
 export async function handlePutQuestion(question: questionInterface): Promise<boolean> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/getQuestions/'+question.id, {
+        const response = await fetch('http://localhost:3001/questions/'+question.id, {
             method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(question)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            console.log(responseData.message);
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
+
+export async function handlePostQuestion(question: questionInterface): Promise<boolean> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/questions', {
+            method: 'POST',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'

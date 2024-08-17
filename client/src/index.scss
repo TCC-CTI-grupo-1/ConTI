@@ -91,6 +91,7 @@ input::-ms-clear {
   --chakra-colors-blue-900: #0041a2 !important;
   /* Mais escuro */
 
+  --chakra-sizes-xl: 70% !important;
 }
 
 body {
@@ -175,8 +176,20 @@ H4{
   border: 1px solid black;
   transform: translate(0px, 0px);
   &.admin{
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    & .page{
+      width: 100%;
+      display: flex;
+      gap: var(--padding-2);
+      align-items: center;
+      margin: var(--padding-2) 0;
+      & input{
+        flex: 1;
+        padding: var(--padding-3);
+      }
+    }
   }
   & .inputs{
     grid-area: 1/2;
@@ -202,6 +215,47 @@ H4{
     margin-bottom: var(--padding-2);
   }
 }
+
+.qst-edit{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+
+  & .text{
+    grid-area: 1/1/3/3;
+    & textarea{
+      width: 100%;
+      border: 1px solid black;
+      border-radius: var(--border-radius);
+    }
+    & > textarea{
+      min-height: 200px;
+    }
+  }
+  & .awnsers{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-6);
+    & > div{
+      display: flex;
+      gap: var(--padding-3);
+    }
+    & input{
+      width: 90%;
+      margin-left: var(--padding-3);
+      outline: none;
+      border-bottom: 1px solid black;
+      padding: var(--padding-6);
+    }
+  }
+  & .options{
+    grid-area: 4/1/5/3;
+    display: flex;
+    gap: var(--padding-3);
+    margin: var(--padding-3) 0;
+    width: 100%;
+  }
+} 
 
 .center {
   display: flex;
