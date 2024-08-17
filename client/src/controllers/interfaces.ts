@@ -5,11 +5,11 @@ export interface SubjectCategory {
     sub?: SubjectCategory; // Tornando `sub` opcional
 }
 export interface questionFilters{
-    ano?: number[];
-    dificuldade?: string[];
-    disciplina?: string[];
+    ano: number[];
+    dificuldade: string[];
+    disciplina: string[];
     alreadyAnswered?: boolean;
-    myMockTests?: boolean;
+    myMockTests: boolean;
 }
 export interface questionInterface{
     additional_info: string;
@@ -26,6 +26,12 @@ export interface questionInterface{
 
     correct_answer: string,
     awnsers: string[],
+}
+
+export interface question_MockTestInterface{
+    question_id: number,
+    mocktest_id: number,
+    answer: string
 }
 
 //Usado para mostrar o histórico de simulados

@@ -155,7 +155,7 @@ export class MockTestDAO {
         }
     }
 
-    listMockTestByCreationDateAscendentAndProfileId = async (creationDay: Date, profile_id: number) => {
+    listMockTestsByCreationDateAscendentAndProfileId = async (creationDay: Date, profile_id: number) => {
         try {
             const client = await connectionDAO.getConnection();
             const result = await client.mockTest.findMany({

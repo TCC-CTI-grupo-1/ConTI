@@ -70,7 +70,7 @@ export class QuestionDAO {
                 };
                 return question;
             } else {
-                return null;
+                throw new Error("Questão não encontrada");
             }
 
         } catch (error) {
@@ -278,5 +278,9 @@ export class QuestionDAO {
         }
     }
 
-
+    // searchQuestionParentArea = async (areaID: number) => {
+    //     try {
+    //         const areaDAO: AreaDAO = new AreaDAO();
+    //         const area: AreaDTO = await areaDAO.searchAreaById(areaID);
+    //         const parentArea: AreaDTO = await areaDAO.searchAreaById(area.parent
 }

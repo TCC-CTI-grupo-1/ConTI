@@ -21,7 +21,7 @@ export class AreaDAO {
         }
     }
 
-    listAreas = async () => {
+    listAreas = async (): Promise<AreaDTO[]> => {
         try {
             const client = await connectionDAO.getConnection();
             const result = await client.area.findMany();
@@ -49,7 +49,7 @@ export class AreaDAO {
 
     }
 
-    searchAreaById = async (id: number) => {
+    searchAreaById = async (id: number): Promise<AreaDTO> => {
         try {
             const client = await connectionDAO.getConnection();
             const result = await client.area.findUnique({
@@ -105,7 +105,7 @@ export class AreaDAO {
         }
     }
 
-    listAreasByParentId = async (parent_id: number) => {
+    listAreasByParentId = async (parent_id: number): Promise<AreaDTO[]> => {
         try {
             const client = await connectionDAO.getConnection();
             const result = await client.area.findMany({
@@ -131,7 +131,7 @@ export class AreaDAO {
         }
     }
 
-    searchAreaByName = async (name: string) => {
+    searchAreaByName = async (name: string): Promise<AreaDTO> => {
         try {
             const client = await connectionDAO.getConnection();
             const result = await client.area.findFirst({
@@ -139,20 +139,16 @@ export class AreaDAO {
                     name: name
                 }
             });
-            if (result) {
-                const areaDTO: AreaDTO = {
-                    id: result.id,
-                    name: result.name,
-                    parent_id: result.parent_id
-                }
-                return areaDTO;
+            if (!result) {
+                throw new Error('Área não encontrada');
             }
+            return result as AreaDTO;
         } catch (error) {
             throw error;
         }
     }
 
-    listAllSubAreasByParentId = async (parent_id: number) => {
+    listAllSubAreasByParentId = async (parent_id: number): Promise<AreaDTO[]> => {
         try {
             const client = await connectionDAO.getConnection();
             const result = await client.area.findMany({
@@ -179,6 +175,28 @@ export class AreaDAO {
 
             return areas;
 
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    searchTopParentAreaById = async (id: number): Promise<AreaDTO> => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.area.findUnique({
+                where: {
+                    id: id
+                }
+            });
+            if (result) {
+                if (result.parent_id) {
+                    return this.searchTopParentArea(result.parent_id);
+                } else {
+                    return result as AreaDTO;
+                }
+            } else {
+                throw new Error('Área não encontrada');
+            }
         } catch (error) {
             throw error;
         }

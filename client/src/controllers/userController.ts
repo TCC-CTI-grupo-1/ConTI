@@ -1,5 +1,6 @@
+import { json } from 'react-router-dom';
 import { Profile } from '../../../server/src/types/express-session';
-import { questionInterface, simuladoSimpleInterface, simuladoInterface, areaInterface, area_ProfileInterface } from './interfaces';
+import { questionInterface, simuladoSimpleInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface } from './interfaces';
 import { questionFilters } from './interfaces';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
@@ -252,7 +253,7 @@ export async function handleDeleteAccount() {
 
 export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> {
     try{
-        const response = await fetch('http://localhost:3001/questions/' + questionID, {
+        const response = await fetch('http://localhost:3001/getQuestion/' + questionID, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -272,7 +273,11 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
                 responseData.question.areaName = area.name;
             }
             //fazer o fetch das alternativas
-            responseData.question.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
+            const awnsers = await handleGetAwnsers(questionID);
+            if(awnsers.length === 0){
+                throw new Error('Erro ao pegar alternativas');
+            }
+            responseData.question.awnsers = awnsers;
             return responseData.question;
         }
     } catch{
@@ -281,9 +286,30 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 
 }
 
+async function handleGetAwnsers(questionID: number): Promise<string[]> {
+    try{
+        const response = await fetch('http://localhost:3001/getAnswers/question/' + questionID, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.awnsers;
+        }
+    } catch{
+        return [];
+    }
+}
+
 export async function handleGetFilteredQuestions(filters: questionFilters): Promise<questionInterface[]> {
     try {
-        const response = await fetch('http://localhost:3001/questions/' + JSON.stringify(filters), {
+        const response = await fetch('http://localhost:3001/getQuestions/' + JSON.stringify(filters), {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -296,6 +322,10 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
             throw new Error(responseData.message);
         } else {
             console.log(responseData.questions);
+            await responseData.questions.forEach(async (element: questionInterface) => {
+                element.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
+                element.correct_answer = 'A';
+            });
             return responseData.questions;
         }
 
@@ -306,7 +336,7 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
 
 export async function handleGetQuestions(): Promise<questionInterface[]> {
     try {
-        const response = await fetch('http://localhost:3001/questions', {
+        const response = await fetch('http://localhost:3001/getQuestions/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -330,77 +360,56 @@ export async function handleGetQuestions(): Promise<questionInterface[]> {
     }
 }
 
-export async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInterface[]> {
-    await new Promise(resolve => setTimeout(resolve, 500));
+export async function handleGetSimpleMockTests(date: Date): Promise<simuladoSimpleInterface[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 500));
+    
+        const response = await fetch('http://localhost:3001/getMockTestsByDateAndProfile/' + date, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-    return [
-        {
-            id: 1,
-            totalQuestions: 10,
-            totalCorrect: 7,
-            date: new Date(2021, 4, 1),
-            time: 60,
-            subjects: {
-                'Matemática': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Português': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Ciencias': {
-                    totalQuestions: 5,
-                    totalCorrect: 2
-                },
-                'História': {
-                    totalQuestions: 5,
-                    totalCorrect: 3
-                }
-                
-            }
-        },
-        {
-            id: 2,
-            totalQuestions: 10,
-            totalCorrect: 8,
-            date: new Date(2021, 4, 1),
-            time: 60,
-            subjects: {
-                'Matemática': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Português': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                }
-            }
-        },
-        {
-            id: 3,
-            totalQuestions: 10,
-            totalCorrect: 8,
-            date: new Date(2021, 4, 1),
-            time: 60,
-            subjects: {
-                'Matemática': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Português': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                }
-            }
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.simulados;
         }
-    ];
+
+    } catch (err: any) {
+        return [];
+    }
 
 }
-
 type questionMapInterface = questionInterface[];
 //ID e Alternativa (O index é o número da questão na prova.)
 type questionMapResultInterface = [number, (string | null)][];  
+
+
+export async function handleGetQuestions_MockTestByMockTestId(mockTestId: number): Promise<question_MockTestInterface[]> {
+    try {
+        const response = await fetch('http://localhost:3001/getQuestions_MockTest' + mockTestId, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.questions_mocktest;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
 
 //Retorna o simulado que foi adicionado
 export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoSimpleInterface | null> {
@@ -461,7 +470,7 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 export async function generateNewSimulado(amount: number): Promise<string>{
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
-        const response = await fetch('http://localhost:3001/questions/'+amount, {
+        const response = await fetch('http://localhost:3001/getQuestions/'+amount, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -484,7 +493,7 @@ export async function generateNewSimulado(amount: number): Promise<string>{
 export async function handleGetAreas(): Promise<areaInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areas', {
+        const response = await fetch('http://localhost:3001/getAreas', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -578,7 +587,7 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
 export async function handleGetAreaById(id: number): Promise<areaInterface | null> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areas/'+id, {
+        const response = await fetch('http://localhost:3001/getArea/'+id, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -606,11 +615,63 @@ export async function handleGetAreaById(id: number): Promise<areaInterface | nul
     }
 }
 
+export async function handleGetTopParentAreaById(id: number): Promise<areaInterface | null> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/getTopArea/'+id, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return {
+                id: responseData.area.id,
+                name: responseData.area.name,
+                parent_id: responseData.area.parent_id
+            };
+        }
+
+    } catch (err: any) {
+        return null;
+    }
+}
+
 export async function handlePutQuestion(question: questionInterface): Promise<boolean> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch('http://localhost:3001/questions/'+question.id, {
             method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(question)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            console.log(responseData.message);
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
+
+export async function handlePostQuestion(question: questionInterface): Promise<boolean> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/questions', {
+            method: 'POST',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
@@ -633,7 +694,7 @@ export async function handlePutQuestion(question: questionInterface): Promise<bo
 export async function handleDeleteQuestion(id: number): Promise<boolean> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questions/'+id, {
+        const response = await fetch('http://localhost:3001/getQuestions/'+id, {
             method: 'DELETE',
             credentials: 'include',
             headers: {

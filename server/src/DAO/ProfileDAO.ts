@@ -122,23 +122,11 @@ export class ProfileDAO {
                     id: id
                 }
             });
-
-            if (result) {
-                const profile: ProfileDTO = {
-                    id: result.id,
-                    name: result.name,
-                    email: result.email,
-                    password: result.password,
-                    profile_picture: result.profile_picture,
-                    creation_date: result.creation_date,
-                    total_correct_answers: result.total_correct_answers,
-                    total_answers: result.total_answers
-                };
-                return profile;
-            }
-            else {
+            
+            if (!result) {
                 throw new Error('Perfil não encontrado');
             }
+            return result as ProfileDTO;
         } catch (error) {
             throw error;
         }
@@ -153,22 +141,10 @@ export class ProfileDAO {
                 }
             });
 
-            if (result) {
-                const profile: ProfileDTO = {
-                    id: result.id,
-                    name: result.name,
-                    email: result.email,
-                    password: result.password,
-                    profile_picture: result.profile_picture,
-                    creation_date: result.creation_date,
-                    total_correct_answers: result.total_correct_answers,
-                    total_answers: result.total_answers
-                };
-                return profile;
-            }
-            else {
+            if (!result) {
                 throw new Error('Perfil não encontrado');
             }
+            return result as ProfileDTO;
 
         } catch (error) {
             throw error;
@@ -181,7 +157,7 @@ export class ProfileDAO {
             const isPasswordCorrect = await comparePasswords(password, profile.password);
 
             if (isPasswordCorrect) {
-                return profile;
+                return profile as ProfileDTO;
             } else {
                 throw new Error('Senha e/ou email incorretos');
             }
