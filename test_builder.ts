@@ -89,8 +89,11 @@ class TestBuilder{
     buildAll()
     {
         if(this.testBlueprintList) {
+            let listOfQuestionList = [{}]
             for(const test of this.testBlueprintList){
+                listOfQuestionList.push(this.buildTest(test));
             }
+            return listOfQuestionList;
         }
         else {
             console.error("Erro: TestBlueprintList está vazio");
@@ -100,6 +103,10 @@ class TestBuilder{
     buildTest(blueprint:TestBlueprint)
     {
         let questionList: { [key: string]: any[] } = {};
+        const proportions = difficultyProportions[blueprint.difficultyLevel];
+        let maxval = 0;
+        for (const val of proportions) maxval+=val;
+        const difficultyCountInSubject =  {}
         for (const subject in blueprint.questionBySubject) {
             const numberOfQuestions = blueprint.questionBySubject[subject];
             if(blueprint.difficultyLevel === DifficultyLevel.RANDOM)
@@ -114,12 +121,6 @@ class TestBuilder{
             if(blueprint.difficultyType === DifficultyType.INDIVIDUAL)
             {
                 //Ou seja, a dificuldade é construída pela dificuldade individual das questões. Uma questão difícil sempre vai ser difícil
-                const proportions = difficultyProportions[blueprint.difficultyLevel];
-                let maxval = 0;
-                for (const val of proportions) maxval+=val;
-                const difficultyCountInSubject =  {}
-                for (const subject in blueprint.questionBySubject)
-                {
                     const questionCount = blueprint.questionBySubject[subject]
                     difficultyCountInSubject[subject] = {}
                     questionList[subject] = []
@@ -141,7 +142,6 @@ class TestBuilder{
                         }
                     }
                    
-                }
             }
             if(blueprint.difficultyType === DifficultyType.AREA)
             {
@@ -151,7 +151,8 @@ class TestBuilder{
             if(blueprint.difficultyLevel === DifficultyLevel.MIMIC)
             {
                 alert("Não implementado")
-                //A ideia disso é imitar
+                //A ideia disso é imitar a forma das provas do CTI: a proporção de questões fáceis/médias/difíceis e 
+                //o número de áreas.
             }
         }
         return questionList;
