@@ -3,7 +3,7 @@ import Navbar from '../Navbar'
 import DaySelector from './DaySelector'
 import { useState } from 'react'
 import date from 'date-and-time'
-import { handleGetAreaById, handleGetQuestion, handleGetQuestions_MockTestByMockTestId, handleGetSimpleMockTests, handleGetTopParentAreaById } from '../../controllers/userController'
+import { handleGetAnswersByQuestionsIds, handleGetAreaById, handleGetAreasByQuestionsIds, handleGetQuestion, handleGetQuestions_MockTestByMockTestId, handleGetSimpleMockTests, handleGetTopParentAreaById, handleGetTopParentAreasByIds } from '../../controllers/userController'
 import { simuladoSimpleInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
@@ -57,24 +57,25 @@ const History = () => {
         let responseListas: simuladoSimpleInterface[] = await handleGetSimpleMockTests(day);
         for (let i = 0; i < responseSimulados.length; ++i) {
             const responseQuestoesSimulado = await handleGetQuestions_MockTestByMockTestId(responseSimulados[i].id);
-            let areas = {};
 
-            for (let j = 0; j < responseQuestoesSimulado.length; ++j) {
-                const responseQuestoes = await handleGetQuestion(responseQuestoesSimulado[j].question_id);
-                if (responseQuestoes === null) {
-                    showAlert('Erro ao buscar questões');
-                    return [[], []];
-                }
-                const area = await handleGetTopParentAreaById(responseQuestoes.area_id);
-                if (area === null) {
-                    showAlert('Erro ao buscar área');
-                    return [[], []];
-                }
-                
-                let correctAnswer;
-                
-                //responseSimulados[i].subjects[]
-            }
+            // responseQuestoesSimulado.forEach((questao_simulado) => {
+            //     let responseRespostas = handleGetAnswersByQuestionsIds([questao_simulado.question_id]);
+            //     responseRespostas.then((respostas) => {
+            //         let correct = respostas.filter((resposta) => resposta.is_correct);
+            //         let subject = handleGetAreaById(questao_simulado.question_id);
+            //         subject.then((subject) => {
+            //             if (responseSimulados[i].subjects[subject.name] === undefined) {
+            //                 responseSimulados[i].subjects[subject.name] = {
+            //                     totalQuestions: 0,
+            //                     totalCorrect: 0
+            //                 }
+            //             }
+            //             responseSimulados[i].subjects[subject.name].totalQuestions += 1;
+            //             responseSimulados[i].subjects[subject.name].totalCorrect += correct.length;
+            //         })
+            //     })
+            // });
+        }
 
             responseSimulados[i].subjects = {};
         }

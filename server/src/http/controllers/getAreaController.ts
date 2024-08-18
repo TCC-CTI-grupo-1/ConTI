@@ -1,5 +1,6 @@
 import { AreaDAO } from "../../DAO/AreaDAO";
 import { AreaDTO } from "../../DTO/AreaDTO";
+import { QuestionDAO } from "../../DAO/QuestionDAO";
 import { Request, Response } from "express";
 
 export async function getAreaController(req: Request, res: Response) {
@@ -12,6 +13,28 @@ export async function getAreaController(req: Request, res: Response) {
     }
 }
 
+export async function getAreaByIdController(req: Request, res: Response) {
+    const id = req.params.id;
+    const areaDAO = new AreaDAO();
+    
+    if (isNaN(Number(id))) {
+        return res.status(400).json({ message: "ID deve ser um número" });
+    }
+
+    try {
+        const area: AreaDTO = await areaDAO.searchAreaById(Number(id));
+        if (area) {
+            //console.log(area);
+            return res.json({ area: area });
+        } else {
+            return res.status(404).json({ message: "Área não encontrada" });
+        }
+    } catch (error: any) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+
 export async function getTopParentAreaByIdController(req: Request, res: Response) {
     const id = req.params.id;
     const areaDAO = new AreaDAO();
@@ -23,6 +46,30 @@ export async function getTopParentAreaByIdController(req: Request, res: Response
     try {
         const area: AreaDTO = await areaDAO.searchTopParentAreaById(Number(req.params.id));
         res.json({ area: area });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getTopParentAreasByIdsController(req: Request, res: Response) {
+    const ids = JSON.parse(req.params.ids) as number[];
+    const areaDAO = new AreaDAO();
+    
+    try {
+        const areas: AreaDTO[] = await areaDAO.listTopParentAreasByIds(ids);
+        res.json({ areas: areas });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getAreasIdsByQuestionsIdsController(req: Request, res: Response) {
+    const questions_ids = JSON.parse(req.params.questions_ids) as number[];
+    const questionDAO = new QuestionDAO();
+    
+    try {
+        const areas_ids: number[] = await questionDAO.listAreasIdsByQuestionsIds(questions_ids);
+        res.json({ areas_ids: areas_ids });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }

@@ -7,7 +7,7 @@ export class AnswerDAO {
     registerAnswer = async (answer: AnswerDTO) => {
         try {
             const client = await connectionDAO.getConnection();
-            const createdAnswer = await client.answer.create({
+            await client.answer.create({
                 data: {
                     id: answer.id,
                     question_id: answer.question_id,
@@ -25,7 +25,7 @@ export class AnswerDAO {
     updateAnswer = async (answer: AnswerDTO) => {
         try {
             const client = await connectionDAO.getConnection();
-            const updatedAnswer = await client.answer.update({
+            await client.answer.update({
                 where: {
                     id: answer.id
                 },
@@ -45,7 +45,7 @@ export class AnswerDAO {
     deleteAnswer = async (id: number) => {
         try {
             const client = await connectionDAO.getConnection();
-            const deletedAnswer = await client.answer.delete({
+            await client.answer.delete({
                 where: {
                     id: id
                 }
@@ -72,7 +72,7 @@ export class AnswerDAO {
         }
     }
 
-    listAnswersByQuestionId = async (question_id: number) => {
+    listAnswersByQuestionId = async (question_id: number): Promise<AnswerDTO[]> => {
         try {
             const client = await connectionDAO.getConnection();
             const answers = await client.answer.findMany({
@@ -82,6 +82,23 @@ export class AnswerDAO {
             });
             return answers as AnswerDTO[];
         } catch (error) {
+            throw error;
+        }
+    }
+
+    listAnswersByQuestionsIds = async (questions_ids: number[]): Promise<AnswerDTO[]> => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const answers = await client.answer.findMany({
+                where: {
+                    question_id: {
+                        in: questions_ids
+                    }
+                }
+            });
+            return answers as AnswerDTO[];
+        }
+        catch (error) {
             throw error;
         }
     }

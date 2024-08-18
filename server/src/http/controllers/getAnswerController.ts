@@ -17,3 +17,15 @@ export async function getAnswersByQuestionIdController(req: Request, res: Respon
         res.status(500).json({ message: error.message });
     }
 }
+
+export async function getAnswersByQuestionsIdsController(req: Request, res: Response) {
+    const questions_ids = JSON.parse(req.params.questions_ids) as number[];
+    const answerDAO = new AnswerDAO();
+    
+    try {
+        const answers: AnswerDTO[] = await answerDAO.listAnswersByQuestionsIds(questions_ids);
+        res.json({ answers: answers });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}

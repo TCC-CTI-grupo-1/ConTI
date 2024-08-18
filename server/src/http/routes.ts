@@ -6,20 +6,22 @@ import { deleteProfileController } from './controllers/deleteProfileController';
 import { Request, Response } from "express";
 import { updateProfileController } from './controllers/updateProfileController';
 import { getProfileController } from './controllers/getProfileController';
-import { getAreaController, getTopParentAreaByIdController } from './controllers/getAreaController';
+import { getAreaController, getTopParentAreaByIdController,
+         getAreaByIdController, getTopParentAreasByIdsController,
+         getAreasIdsByQuestionsIdsController
+ } from './controllers/getAreaController';
 import { setAreaController } from './controllers/setAreaController';
 import { getMockTestsController, getMockTestsByDecrescentDateController,
             getMockTestsByDateAndProfileController
  } from './controllers/getMockTestController';
 import { setMockTestController } from './controllers/setMockTestController';
 import { getArea_ProfileController } from './controllers/getArea_ProfileController';
-import { getAreaByIdController } from './controllers/getAreaByIdController';
 import { getQuestionWithFiltersController, getQuestionByWeightsAndProfileController,
         getQuestionByIdController, getQuestionController
  } from './controllers/getQuestionController';
 import { putQuestionByIdController } from './controllers/putQuestionController';
 import { deleteQuestionByIdController } from './controllers/deleteQuestionController';
-import { getAnswersByQuestionIdController } from './controllers/getAnswerController';
+import { getAnswersByQuestionIdController, getAnswersByQuestionsIdsController } from './controllers/getAnswerController';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
@@ -34,8 +36,10 @@ export async function routes(app: any) {
     app.delete('/deleteUser', deleteProfileController);
     app.get('/getProfile', getProfileController);
     app.get('/getAreas', getAreaController);
+    app.get('/getAreas/questions/:ids', getAreasIdsByQuestionsIdsController);
     app.get('/getArea/:id', getAreaByIdController);
-    app.get('/getTopArea', getTopParentAreaByIdController);
+    app.get('/getTopArea/:id', getTopParentAreaByIdController);
+    app.get('/getTopAreas/:ids', getTopParentAreasByIdsController);
     app.post('/setArea', setAreaController);
     app.get('/getMockTests', getMockTestsController);
     app.get('/getMockTestbyDate', getMockTestsByDecrescentDateController);
@@ -50,5 +54,6 @@ export async function routes(app: any) {
     app.put('/questions/:id', putQuestionByIdController);
     app.delete('/question/:id', deleteQuestionByIdController);
     app.get('/getAnswers/question/:question_id', getAnswersByQuestionIdController);
+    app.get('/getAnswers/questions/:questions_ids', getAnswersByQuestionsIdsController);
 
 }
