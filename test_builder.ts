@@ -111,7 +111,8 @@ class TestBuilder{
             const numberOfQuestions = blueprint.questionBySubject[subject];
             if(blueprint.difficultyLevel === DifficultyLevel.RANDOM)
             {
-                const row = this.runQuery(`SELECT * FROM questions WHERE subject_id = ${nameToId[subject]} ORDER BY RANDOM()`)
+                const row = this.runQuery(`SELECT * FROM questions WHERE subject_id = ${nameToId[subject]} ORDER BY RANDOM()`) //<- nn tem conexão com o BD
+                for(let i=0;i<difficultyCountInSubject[subject][difficulty];i++)
                 questionList[subject] = []
                 for(let i=0;i<numberOfQuestions;i++)
                 {
@@ -135,7 +136,7 @@ class TestBuilder{
                     }
                     for (const difficulty in difficultyCountInSubject[subject])
                     {
-                        const row = this.runQuery(`SELECT * FROM question WHERE ${difficultyToErrorRatioCondition[difficulty]} ORDER BY RANDOM()`)
+                        const row = this.runQuery(`SELECT * FROM question WHERE ${difficultyToErrorRatioCondition[difficulty]} ORDER BY RANDOM()`) //<- nn tem conexão com o BD
                         for(let i=0;i<difficultyCountInSubject[subject][difficulty];i++)
                         {
                             questionList[subject].push(row[i]);
