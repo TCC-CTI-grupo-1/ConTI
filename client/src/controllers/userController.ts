@@ -1,3 +1,4 @@
+
 import { json } from 'react-router-dom';
 import { Profile } from '../../../server/src/types/express-session';
 import { questionInterface, simuladoSimpleInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface } from './interfaces';
@@ -366,7 +367,7 @@ export async function handleGetSimpleMockTests(date: Date): Promise<simuladoSimp
     
         const response = await fetch('http://localhost:3001/getMockTestsByDateAndProfile/' + date, {
             method: 'GET',
-            credentials: 'include',
+            credentials: 'include',ednis 
             headers: {
                 'Content-Type': 'application/json'
             }
