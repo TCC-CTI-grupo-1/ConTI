@@ -84,15 +84,19 @@
             <textarea required id="d"> </textarea>
         </label>
         <label>
+            Alternativa E (Opcional, só existe nos mais antigos): 
+            <textarea id="e"></textarea>
+        </label>
+        <label>
             Texto adicional
             <textarea id="texto_adicional"> </textarea>
         </label>
         <label>
             Imagem:
-            <input type="file" id="imagem">
+            <input type="checkbox" id="imagem">
         </label>
         <button id="enviar" onclick="marcos()">Adicionar questão</button>
-        <button onclick="baixar()" type="submit" value="Baixar json">
+        <button onclick="baixar()" type="submit" value="Baixar json">Baixar json</button>
         </div>
     <script>
             const anoV = document.querySelector('#ano');
@@ -103,6 +107,7 @@
             const alternativaBV = document.querySelector('#b');
             const alternativaCV = document.querySelector('#c');
             const alternativaDV = document.querySelector('#d');
+            const alternativaEV = document.querySelector('#e');
             const textoAdicionalV = document.querySelector('#texto_adicional');
             const imagemV = document.querySelector('#imagem');
         let bigstring = ""
@@ -122,6 +127,7 @@
                 alternativaBV.value = matches[4];
                 alternativaCV.value = matches[5];
                 alternativaDV.value = matches[6];
+                alternativaEV.value = "";
             }
         });
         function marcos(normal=true)
@@ -134,8 +140,9 @@
             const alternativaB = document.querySelector('#b').value;
             const alternativaC = document.querySelector('#c').value;
             const alternativaD = document.querySelector('#d').value;
+            const alternativaE = document.querySelector('#e').value;
             const textoAdicional = document.querySelector('#texto_adicional').value;
-            const imagem = document.querySelector('#imagem').value;
+            const imagem = document.querySelector('#imagem').checked? "on" : "off";
 
             const question = {
                 ano: ano,
@@ -146,6 +153,7 @@
                 alternativaB: alternativaB,
                 alternativaC: alternativaC,
                 alternativaD: alternativaD,
+                alternativaE: alternativaE,
                 textoAdicional: textoAdicional,
                 imagem: imagem,
             };
@@ -168,7 +176,7 @@
             const alternativaC = document.querySelector('#c').value;
             const alternativaD = document.querySelector('#d').value;
             const textoAdicional = document.querySelector('#texto_adicional').value;
-            const imagem = document.querySelector('#imagem').value;
+            const imagem = document.querySelector('#imagem').value.checked;
             event.preventDefault();
             marcos(false)
             bigstring += "]";
