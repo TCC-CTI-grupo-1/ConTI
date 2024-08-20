@@ -35,18 +35,24 @@ export interface question_MockTestInterface{
 }
 
 //Usado para mostrar o histórico de simulados
-export interface simuladoSimpleInterface{
+export interface simuladoInterface{
+    UUID: string,
+    creation_date: Date,
     id: number,
-    totalQuestions: number,
-    totalCorrect: number,
-    date: Date,
-    time: number,
+    profile_id: number,
+    test_type: string,
+    time_limit: number,
+    time_spent: number,
+    title: string,
+    total_answers: number,
+    total_correct_answers: number,
+
     subjects: {
         [key: string]: {
-            totalQuestions: number,
-            totalCorrect: number
+            total_answers: number,
+            total_correct_answers: number,
         }
-    }
+    }[],
 }
 
 //Usado quando carregamos o simulado em si (Com os id's das questões a as letras marcadas)

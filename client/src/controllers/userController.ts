@@ -365,7 +365,7 @@ async function handleGetAnswers(questionID: number): Promise<string[]> {
     }
 }
 
-export async function handleGetSimpleMockTests(date: Date): Promise<simuladoSimpleInterface[]> {
+export async function handleGetMockTests(date: Date): Promise<simuladoSimpleInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 500));
     
