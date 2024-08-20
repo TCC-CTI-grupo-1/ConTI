@@ -52,7 +52,7 @@ export async function getTopParentAreaByIdController(req: Request, res: Response
 }
 
 export async function getTopParentAreasByIdsController(req: Request, res: Response) {
-    const ids = JSON.parse(req.params.body) as number[];
+    const ids = JSON.parse(req.body) as number[];
     const areaDAO = new AreaDAO();
     
     try {
@@ -80,7 +80,7 @@ export async function getAreaIdByQuestionIdController(req: Request, res: Respons
 }
 
 export async function getAreasIdsByQuestionsIdsController(req: Request, res: Response) {
-    const questions_ids = JSON.parse(req.params.body) as number[];
+    const questions_ids = JSON.parse(req.body) as number[];
     const questionDAO = new QuestionDAO();
     
     try {

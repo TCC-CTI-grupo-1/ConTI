@@ -478,7 +478,7 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 export async function generateNewSimulado(amount: number): Promise<string>{
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
-        const response = await fetch('http://localhost:3001/getQuestions/'+amount, {
+        const response = await fetch('http://localhost:3001/questions/'+amount, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -791,6 +791,7 @@ export async function handleDeleteQuestion(id: number): Promise<boolean> {
         }
 
     } catch (err: any) {
+        showAlert(err.message);
         return false;
     }
 }
