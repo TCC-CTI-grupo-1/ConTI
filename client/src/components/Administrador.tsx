@@ -37,11 +37,11 @@ const Admistrator = () => {
         question_text: '',
         awnsers: ['', '', '', '', ''],
         correct_answer: 'A',
-        area_id: 0,
+        area_id: 1,
         additional_info: '',
         has_image: false,
         has_latex: false,
-        difficulty: "",
+        difficulty: 'facil',
         official_test_name: '',
         question_creator: '',
         question_number: 0,
@@ -147,11 +147,11 @@ const Admistrator = () => {
                                     question_text: '',
                                     awnsers: ['', '', '', '', ''],
                                     correct_answer: 'A',
-                                    area_id: 0,
+                                    area_id: 1,
                                     additional_info: '',
                                     has_image: false,
                                     has_latex: false,
-                                    difficulty: "",
+                                    difficulty: "facil",
                                     official_test_name: '',
                                     question_creator: '',
                                     question_number: 0,
@@ -221,7 +221,12 @@ const Admistrator = () => {
                         ></textarea>
                         <div>
                             <p>Informacoes adicionais:</p>
-                            <textarea name="info" id="info"></textarea>
+                            <textarea name="info" id="info"
+                            value={novaQst.additional_info}
+                            onChange={(e) => {
+                                setNovaQst({...novaQst, additional_info: e.target.value});
+                            }}
+                            ></textarea>
                         </div>
                         
                     </div>           
@@ -321,9 +326,9 @@ const Admistrator = () => {
 
                             <label htmlFor="info">Dificuldade: </label>
                             <select name="info" id="info">
-                                <option value="1">Fácil</option>
-                                <option value="2">Médio</option>
-                                <option value="3">Díficil</option>
+                                <option value="1">facil</option>
+                                <option value="2">medio</option>
+                                <option value="3">dificil</option>
                             </select>
 
                         </div>

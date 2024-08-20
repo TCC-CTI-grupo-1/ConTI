@@ -65,7 +65,7 @@ const History = () => {
             //         let subject = handleGetAreaById(questao_simulado.question_id);
             //         subject.then((subject) => {
             //             if (responseSimulados[i].subjects[subject.name] === undefined) {
-            //                 responseSimulados[i].subjects[subject.name] = {
+            //                 responseSimulados[i].subjects[subject.name] = {//
             //                     totalQuestions: 0,
             //                     totalCorrect: 0
             //                 }
@@ -75,11 +75,11 @@ const History = () => {
             //         })
             //     })
             // });
-        }
+        // }
 
-            responseSimulados[i].subjects = {};
-        }
-        return [responseSimulados, responseListas];
+        //     responseSimulados[i].subjects = {};
+        // }
+        // return [responseSimulados, responseListas];
     }
 
     function openOverlay(questionClicked: number){
@@ -271,5 +271,6 @@ const History = () => {
             </Modal>
         </>
       )
+    }
 }
 export default History

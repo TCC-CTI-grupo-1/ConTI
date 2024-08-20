@@ -23,6 +23,8 @@ import { putQuestionByIdController } from './controllers/putQuestionController';
 import { deleteQuestionByIdController } from './controllers/deleteQuestionController';
 import { getAnswersByQuestionIdController, getAnswersByQuestionsIdsController } from './controllers/getAnswerController';
 
+import { postQuestionController } from './controllers/postQuestionController';
+
 export async function routes(app: any) {
     app.post('/signup', signupController);
     app.post('/login', loginController);
@@ -55,5 +57,6 @@ export async function routes(app: any) {
     app.delete('/question/:id', deleteQuestionByIdController);
     app.get('/getAnswers/question/:question_id', getAnswersByQuestionIdController);
     app.get('/getAnswers/questions/:questions_ids', getAnswersByQuestionsIdsController);
+    app.post('/questions', postQuestionController);
 
 }

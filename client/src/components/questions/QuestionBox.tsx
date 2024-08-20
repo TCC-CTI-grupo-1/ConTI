@@ -43,7 +43,7 @@ const QuestionBox = ({  question, area }: Props) => {
           <div className="q-id">
             <p>Q{question.id}</p>
           </div>
-          <div className="category">{area.name}</div>
+          <div className="category"><p>{area.name}</p></div>
           <div className="year">
             <p>Ano: {question.question_year}</p>
           </div>
