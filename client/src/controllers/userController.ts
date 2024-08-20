@@ -368,7 +368,7 @@ export async function handleGetSimpleMockTests(date: Date): Promise<simuladoSimp
     
         const response = await fetch('http://localhost:3001/getMockTestsByDateAndProfile/' + date, {
             method: 'GET',
-            credentials: 'include',ednis 
+            credentials: 'include', 
             headers: {
                 'Content-Type': 'application/json'
             }

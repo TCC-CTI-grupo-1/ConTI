@@ -58,28 +58,29 @@ const History = () => {
         for (let i = 0; i < responseSimulados.length; ++i) {
             const responseQuestoesSimulado = await handleGetQuestions_MockTestByMockTestId(responseSimulados[i].id);
 
-            // responseQuestoesSimulado.forEach((questao_simulado) => {
-            //     let responseRespostas = handleGetAnswersByQuestionsIds([questao_simulado.question_id]);
-            //     responseRespostas.then((respostas) => {
-            //         let correct = respostas.filter((resposta) => resposta.is_correct);
-            //         let subject = handleGetAreaById(questao_simulado.question_id);
-            //         subject.then((subject) => {
-            //             if (responseSimulados[i].subjects[subject.name] === undefined) {
-            //                 responseSimulados[i].subjects[subject.name] = {//
-            //                     totalQuestions: 0,
-            //                     totalCorrect: 0
-            //                 }
-            //             }
-            //             responseSimulados[i].subjects[subject.name].totalQuestions += 1;
-            //             responseSimulados[i].subjects[subject.name].totalCorrect += correct.length;
-            //         })
-            //     })
-            // });
-        // }
-
-        //     responseSimulados[i].subjects = {};
-        // }
-        // return [responseSimulados, responseListas];
+            responseQuestoesSimulado.forEach((questao_simulado) => {
+                let responseRespostas = handleGetAnswersByQuestionsIds([questao_simulado.question_id]);
+                responseRespostas.then((respostas) => {
+                    let correct = respostas.filter((resposta) => resposta.is_correct);
+                    let subject = handleGetAreaById(questao_simulado.question_id);
+                    subject.then((subject) => {
+                        if (subject == null) {
+                            return;
+                        }
+                        if (responseSimulados[i].subjects[subject.name] === undefined) {
+                            responseSimulados[i].subjects[subject.name] = {//
+                                totalQuestions: 0,
+                                totalCorrect: 0
+                            }
+                        }
+                        responseSimulados[i].subjects[subject.name].totalQuestions += 1;
+                        responseSimulados[i].subjects[subject.name].totalCorrect += correct.length;
+                    })
+                })
+            });
+            responseSimulados[i].subjects = {};
+        }
+        return [responseSimulados, responseListas];
     }
 
     function openOverlay(questionClicked: number){
@@ -272,5 +273,4 @@ const History = () => {
         </>
       )
     }
-}
 export default History
