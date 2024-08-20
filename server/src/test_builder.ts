@@ -1,15 +1,16 @@
-import {MockTestDTO} from "./server/src/DTO/MockTestDTO";
-1
+import {ConnectionDAO} from "./DAO/ConnectionDAO";
+import { QuestionDTO } from "./DTO/QuestionDTO";
 
 
+const conn = new ConnectionDAO();
 
 
 enum DifficultyLevel{
-    EASY,
-    MEDIUM,
-    HARD,
-    MIMIC,
-    RANDOM
+    EASY = 1,
+    MEDIUM = 2,
+    HARD = 3 ,
+    MIMIC = 4,
+    RANDOM = 5
 };
 
 enum DifficultyType{
@@ -23,17 +24,18 @@ const buildProportions = function(...args:number[])
         hard: args[2]
     }
 }
+let difficultyProportions:{[key:number]:{[key:string]:number}};
 
-const difficultyProportions =  {
+difficultyProportions = {
     [DifficultyLevel.EASY] : buildProportions(3,2,1),
     [DifficultyLevel.MEDIUM] : buildProportions(1,1,1),
     [DifficultyLevel.HARD] : buildProportions(1,2,3)
 }
 
-const difficultyToErrorRatioCondition = {
-    "easy" : "total_correct_answers / total_answers > 0.75",
-    "medium" : "total_correct_answers / total_answers > 0.5 AND total_correct_answers / total_answers <=0.5",
-    "hard" : "total_correct_answers / total_answers < 0.5"
+const difficultyToErrorRatioCondition:{[key:string]:Function} = {
+    "easy" : function(a:number,b:number){return a / b > 0.75},
+    "medium" : function(a:number,b:number){return a / b > 0.5 && a/b <=0.75},
+    "hard" : function(a:number,b:number){return a / b <=0.5}
 }
 
 
@@ -49,14 +51,43 @@ interface ITestBuilder{
     testBlueprint:TestBlueprint[] | undefined
 }
 
-const nameToId = {
-    "portugues" : 2
+const nameToId = async function(subject:string)
+{
+    try {
+        const client = await conn.getConnection();
+        let parent_id:number|null = 0;
+        let subject_id = -1;
+        while(parent_id !=null){
+        const area = await client.area.findMany({
+            where: {
+                name:subject
+            }
+        });
+        parent_id = area[0].parent_id;
+        subject_id = area[0].id;
+    }
+    return subject_id;
+        
+    }
+    catch(e)
+    {
+        throw e;
+    }
 }
 
-function getRandomInInterval(min,max)
+const shuffle = function(array:any[])
 {
-    return Math.floor(Math.random() * (max-min) +min);
-} 
+    var count = array.length,
+    randomnumber,
+    temp;
+    while( count ){
+    randomnumber = Math.random() * count-- | 0;
+    temp = array[count];
+    array[count] = array[randomnumber];
+    array[randomnumber] = temp
+    }
+}
+
 
 class TestBlueprint implements ITestBlueprint{
     totalQuestions: number;
@@ -69,10 +100,9 @@ class TestBlueprint implements ITestBlueprint{
         this.questionBySubject = questionBySubject;
         let totalSum = 0;
         for (const key in questionBySubject) {
-            if (questionBySubject.hasOwnProperty(key)) {
-                const value = questionBySubject[key];
-                totalSum+=value;
-            }
+            const value = this.questionBySubject[key];
+            totalSum+=value;
+            
         }
         console.error("Erro na construção da planta da prova: Número de questões por matéria deve ser igual ao número total");
         this.difficultyLevel = difficultyRating;
@@ -100,18 +130,24 @@ class TestBuilder{
         }
         
     }
-    buildTest(blueprint:TestBlueprint)
+    async buildTest(blueprint:TestBlueprint)
     {
-        let questionList: { [key: string]: any[] } = {};
+        let questionList: { [key: string]: QuestionDTO[] } = {};
         const proportions = difficultyProportions[blueprint.difficultyLevel];
         let maxval = 0;
-        for (const val of proportions) maxval+=val;
-        const difficultyCountInSubject =  {}
+        for (const val in proportions) maxval+=proportions[val];
+        const difficultyCountInSubject:{[key:string]:{[key:string]:number}} = {};
         for (const subject in blueprint.questionBySubject) {
             const numberOfQuestions = blueprint.questionBySubject[subject];
             if(blueprint.difficultyLevel === DifficultyLevel.RANDOM)
             {
-                const row = this.runQuery(`SELECT * FROM questions WHERE subject_id = ${nameToId[subject]} ORDER BY RANDOM()`) //<- nn tem conexão com o BD
+                const client= await conn.getConnection();
+                const row = await client.question.findMany({
+                    where:{
+                        area_id: await nameToId(subject)
+                    }
+                });
+                shuffle(row);
                 questionList[subject] = []
                 for(let i=0;i<numberOfQuestions;i++)
                 {
@@ -135,7 +171,18 @@ class TestBuilder{
                     }
                     for (const difficulty in difficultyCountInSubject[subject])
                     {
-                        const row = this.runQuery(`SELECT * FROM question WHERE ${difficultyToErrorRatioCondition[difficulty]} ORDER BY RANDOM()`) //<- nn tem conexão com o BD
+                        const client = await conn.getConnection();
+                        const rows = await client.question.findMany({
+                            where:{    
+                                area_id: await nameToId(subject)
+                            }
+                        });
+                        const row = rows.filter(r => {
+                            const totalC = r.total_correct_answers;
+                            const totalA = r.total_answers;
+                            difficultyToErrorRatioCondition[subject](totalC,totalA);
+                        })
+                        shuffle(row);
                         for(let i=0;i<difficultyCountInSubject[subject][difficulty];i++)
                         {
                             questionList[subject].push(row[i]);
@@ -145,22 +192,18 @@ class TestBuilder{
             }
             if(blueprint.difficultyType === DifficultyType.AREA)
             {   
-                alert("Não implementei ainda!");
+                console.warn("Não implementei ainda!");
                 
                 //TODO: pensar no algoritmo que constrói baseado nos indicadores do usuário
             }
             if(blueprint.difficultyLevel === DifficultyLevel.MIMIC)
             {
-                alert("Não implementado")
+                console.warn("Não implementado")
                 //A ideia disso é imitar a forma das provas do CTI: a proporção de questões fáceis/médias/difíceis e 
                 //o número de áreas.
             }
         }
         return questionList;
-    }
-    runQuery(query:string)
-    {
-        return ["porra nenhuma"]
     }
 }
 
