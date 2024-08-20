@@ -25,7 +25,7 @@ export interface questionInterface{
     question_year: number, 
 
     correct_answer: string,
-    awnsers: string[],
+    answers: string[],
 }
 
 export interface question_MockTestInterface{

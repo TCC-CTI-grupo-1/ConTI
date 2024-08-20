@@ -273,11 +273,11 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
                 responseData.question.areaName = area.name;
             }
             //fazer o fetch das alternativas
-            const awnsers = await handleGetAwnsers(questionID);
-            if(awnsers.length === 0){
+            const answers = await handleGetAnswers(questionID);
+            if(answers.length === 0){
                 throw new Error('Erro ao pegar alternativas');
             }
-            responseData.question.awnsers = awnsers;
+            responseData.question.answers = answers;
             return responseData.question;
         }
     } catch{
@@ -286,7 +286,7 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 
 }
 
-async function handleGetAwnsers(questionID: number): Promise<string[]> {
+async function handleGetAnswers(questionID: number): Promise<string[]> {
     try{
         const response = await fetch('http://localhost:3001/getAnswers/question/' + questionID, {
             method: 'GET',
@@ -300,7 +300,7 @@ async function handleGetAwnsers(questionID: number): Promise<string[]> {
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return responseData.awnsers;
+            return responseData.answers;
         }
     } catch{
         return [];
@@ -323,7 +323,7 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
         } else {
             console.log(responseData.questions);
             await responseData.questions.forEach(async (element: questionInterface) => {
-                element.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
+                element.answers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
                 element.correct_answer = 'A';
             });
             return responseData.questions;
@@ -350,7 +350,7 @@ export async function handleGetQuestions(): Promise<questionInterface[]> {
         } else {
             await responseData.questions.forEach(async (element: questionInterface) => {
                 element.correct_answer = 'A';
-                element.awnsers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
+                element.answers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
             });
             return responseData.questions;
         }

@@ -32,7 +32,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
 
     // Garante que o array de refs tenha o tamanho necessário
     if (alternativasRef.current.length === 0) {
-        let length = question.awnsers.length;
+        let length = question.answers.length;
         alternativasRef.current = Array.from({ length }, () => React.createRef());
     }
 
@@ -159,7 +159,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
             </h4>
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 
-                {question.awnsers.map((alternative, index) => (
+                {question.answers.map((alternative, index) => (
                     <div key={index} ref={alternativasRef.current[index]}>
                         <span>
                             <p> {String.fromCharCode(65 + index)} </p>
