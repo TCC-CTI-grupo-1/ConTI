@@ -121,10 +121,10 @@ export async function handleLogin(email: string, password: string, remember: boo
 
     }
 }
-
+ 
 export async function handleGetUser(): Promise<Profile | null> {
     try {
-        const response = await fetch('http://localhost:3001/userSession', {
+        const response = await fetch('http://localhost:3001/user', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -142,14 +142,15 @@ export async function handleGetUser(): Promise<Profile | null> {
     }
 }
 
-export async function handleChange(name: string, email: string): Promise<boolean> {
+//que eu saiba isso n faz nd
+/*export async function handleChange(name: string, email: string): Promise<boolean> {
     try {
         const data = {
             name: name,
             email: email
         };
 
-        const response = await fetch('http://localhost:3001/updateUser', {
+        const response = await fetch('http://localhost:3001/user', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -167,12 +168,12 @@ export async function handleChange(name: string, email: string): Promise<boolean
     } catch (err: any) {
         return false;
     }
-}
+}*/
 
 
 export async function handleSaveChanges(Profile: Profile): Promise<string | true> {
     try {
-        const response = await fetch('http://localhost:3001/updateUser', {
+        const response = await fetch('http://localhost:3001/user', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -216,7 +217,7 @@ export async function handleLogout() {
 }
 export async function handleDeleteAccount() {
     try {
-        const response = await fetch('http://localhost:3001/deleteUser', {
+        const response = await fetch('http://localhost:3001/user', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -253,9 +254,11 @@ export async function handleDeleteAccount() {
 
 
 
+//GET QUESTIONS
+
 export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> {
     try{
-        const response = await fetch('http://localhost:3001/getQuestion/' + questionID, {
+        const response = await fetch('http://localhost:3001/questions/' + questionID, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -288,9 +291,9 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 
 }
 
-async function handleGetAnswers(questionID: number): Promise<string[]> {
-    try{
-        const response = await fetch('http://localhost:3001/getAnswers/question/' + questionID, {
+export async function handleGetQuestions(): Promise<questionInterface[]> {
+    try {
+        const response = await fetch('http://localhost:3001/questions/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -302,16 +305,21 @@ async function handleGetAnswers(questionID: number): Promise<string[]> {
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return responseData.answers;
+            await responseData.questions.forEach(async (element: questionInterface) => {
+                element.correct_answer = 'A';
+                element.answers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
+            });
+            return responseData.questions;
         }
-    } catch{
+
+    } catch (err: any) {
         return [];
     }
 }
 
 export async function handleGetFilteredQuestions(filters: questionFilters): Promise<questionInterface[]> {
     try {
-        const response = await fetch('http://localhost:3001/getQuestions/' + JSON.stringify(filters), {
+        const response = await fetch('http://localhost:3001/questions/filter/' + JSON.stringify(filters), {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -336,9 +344,9 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
     }
 }
 
-export async function handleGetQuestions(): Promise<questionInterface[]> {
-    try {
-        const response = await fetch('http://localhost:3001/getQuestions/', {
+async function handleGetAnswers(questionID: number): Promise<string[]> {
+    try{
+        const response = await fetch('http://localhost:3001/answers/question/' + questionID, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -350,14 +358,9 @@ export async function handleGetQuestions(): Promise<questionInterface[]> {
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            await responseData.questions.forEach(async (element: questionInterface) => {
-                element.correct_answer = 'A';
-                element.answers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
-            });
-            return responseData.questions;
+            return responseData.answers;
         }
-
-    } catch (err: any) {
+    } catch{
         return [];
     }
 }
@@ -366,9 +369,9 @@ export async function handleGetSimpleMockTests(date: Date): Promise<simuladoSimp
     try {
         await new Promise(resolve => setTimeout(resolve, 500));
     
-        const response = await fetch('http://localhost:3001/getMockTestsByDateAndProfile/' + date, {
+        const response = await fetch('http://localhost:3001/mockTests/date/' + date, {
             method: 'GET',
-            credentials: 'include',ednis 
+            credentials: 'include', 
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -386,14 +389,14 @@ export async function handleGetSimpleMockTests(date: Date): Promise<simuladoSimp
     }
 
 }
-type questionMapInterface = questionInterface[];
+
 //ID e Alternativa (O index é o número da questão na prova.)
 type questionMapResultInterface = [number, (string | null)][];  
 
 
 export async function handleGetQuestions_MockTestByMockTestId(mockTestId: number): Promise<question_MockTestInterface[]> {
     try {
-        const response = await fetch('http://localhost:3001/getQuestions_MockTest' + mockTestId, {
+        const response = await fetch('http://localhost:3001/mockTests/' + mockTestId, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -413,7 +416,7 @@ export async function handleGetQuestions_MockTestByMockTestId(mockTestId: number
     }
 }
 
-//Retorna o simulado que foi adicionado
+//Retorna o simulado que foi adicionado (NN FEITO)
 export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoSimpleInterface | null> {
     //Código PLACEHOLDER.
     try {
@@ -440,6 +443,7 @@ export async function handlePostSimulado(questionsList: questionMapResultInterfa
     }
 }
 
+//NN FEITO
 export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {
     //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
     try {
@@ -469,6 +473,8 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 
 //Atenção, a magica acontece aqui:
 
+//Essa função parece muito errada
+/*
 export async function generateNewSimulado(amount: number): Promise<string>{
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -490,12 +496,12 @@ export async function generateNewSimulado(amount: number): Promise<string>{
     catch (err: any) {
         return err.message;
     }
-}
+}*/
 
 export async function handleGetAreas(): Promise<areaInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/getAreas', {
+        const response = await fetch('http://localhost:3001/areas', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -518,12 +524,13 @@ export async function handleGetAreas(): Promise<areaInterface[]> {
 export async function handleGetTopParentAreasByIds(ids: number[]): Promise<areaInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/getTopAreas/' + JSON.stringify(ids), {
+        const response = await fetch('http://localhost:3001/areas/top' + JSON.stringify(ids), {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(ids),
         });
 
         const responseData = await response.json();
@@ -541,12 +548,13 @@ export async function handleGetTopParentAreasByIds(ids: number[]): Promise<areaI
 export async function handleGetAreasByQuestionsIds(questions_ids: number[]): Promise<number[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/getAreas/questions/' + JSON.stringify(questions_ids), {
+        const response = await fetch('http://localhost:3001/areas/questions', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(questions_ids),
         });
 
         const responseData = await response.json();
@@ -562,6 +570,7 @@ export async function handleGetAreasByQuestionsIds(questions_ids: number[]): Pro
 }
 
 //Função que executa handleGetAreas e transforma em um hashMap [id] => area
+
 export async function handleGetAreasMap(): Promise<{[id: number]: areaInterface}> {
     try{
         const areas = await handleGetAreas();
@@ -587,7 +596,7 @@ export async function handlePostArea(nomeArea: string, areaPai: string | null): 
             parent: areaPai
         };
 
-        const response = await fetch('http://localhost:3001/setArea', {
+        const response = await fetch('http://localhost:3001/areas', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -612,8 +621,8 @@ export async function handlePostArea(nomeArea: string, areaPai: string | null): 
 export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/getArea_Profile', {
-            method: 'POST',
+        const response = await fetch('http://localhost:3001/areaProfile', {
+            method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
@@ -635,7 +644,7 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
 export async function handleGetAreaById(id: number): Promise<areaInterface | null> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/getArea/'+id, {
+        const response = await fetch('http://localhost:3001/areas/'+id, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -666,7 +675,7 @@ export async function handleGetAreaById(id: number): Promise<areaInterface | nul
 export async function handleGetTopParentAreaById(id: number): Promise<areaInterface | null> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/getTopArea/'+id, {
+        const response = await fetch('http://localhost:3001/areas/top/'+id, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -743,7 +752,7 @@ export async function handlePostQuestion(question: questionInterface): Promise<b
 export async function handleDeleteQuestion(id: number): Promise<boolean> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/getQuestions/'+id, {
+        const response = await fetch('http://localhost:3001/questions/'+id, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -766,12 +775,13 @@ export async function handleDeleteQuestion(id: number): Promise<boolean> {
 export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): Promise<respostaInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/getAnswers/questions/' + JSON.stringify(questions_ids), {
+        const response = await fetch('http://localhost:3001/answers/questions', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(questions_ids),
         });
 
         const responseData = await response.json();
