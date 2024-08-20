@@ -37,11 +37,11 @@ const Admistrator = () => {
         question_text: '',
         answers: ['', '', '', '', ''],
         correct_answer: 'A',
-        area_id: 1,
+        area_id: 0,
         additional_info: '',
         has_image: false,
         has_latex: false,
-        difficulty: 'facil',
+        difficulty: "",
         official_test_name: '',
         question_creator: '',
         question_number: 0,
@@ -152,11 +152,11 @@ const Admistrator = () => {
                                     question_text: '',
                                     answers: ['', '', '', '', ''],
                                     correct_answer: 'A',
-                                    area_id: 1,
+                                    area_id: 0,
                                     additional_info: '',
                                     has_image: false,
                                     has_latex: false,
-                                    difficulty: "facil",
+                                    difficulty: "",
                                     official_test_name: '',
                                     question_creator: '',
                                     question_number: 0,
@@ -215,6 +215,24 @@ const Admistrator = () => {
             <ModalCloseButton />
             <ModalBody>
                 <div className="qst-edit">
+                    <div className={!novaQst.id?"hidden":"text"}>
+                        <textarea name="automatico" id="auto"
+                        onChange={(e)=>{
+                            const regex = /(\d+)\s*([\S\s]*)\s*\(A\)([\S\s]*)\s*\(B\)([\S\s]*)\s*\(C\)([\S\s]*)\s*\(D\)([\S\s]*)\s*\(E\)([\S\s]*)\s*/gm;
+                            const matches = regex.exec(e.target.value);
+                            for(const match in matches)
+                            {
+                                setNovaQst({
+                                    ...novaQst,
+                                    question_number: parseInt(matches[1]),
+                                    question_text: matches[2],
+                                    answers:[matches[3],matches[4],matches[5],matches[6],matches[7]],
+
+
+                                });
+                            }
+                        }}></textarea>
+                    </div>
                     <div className="text">
                         <p>Enunciado</p>
                         <textarea name="enunciado" id="enunciado"
@@ -226,12 +244,7 @@ const Admistrator = () => {
                         ></textarea>
                         <div>
                             <p>Informacoes adicionais:</p>
-                            <textarea name="info" id="info"
-                            value={novaQst.additional_info}
-                            onChange={(e) => {
-                                setNovaQst({...novaQst, additional_info: e.target.value});
-                            }}
-                            ></textarea>
+                            <textarea name="info" id="info"></textarea>
                         </div>
                         
                     </div>           
@@ -241,9 +254,9 @@ const Admistrator = () => {
                             <input type="text" placeholder={`Alternativa ${String.fromCharCode(65 + index)}`} key={index} 
                             value={novaQst.answers[index]}
                             onChange={(e) => {
-                                let newanswers = [...novaQst.answers];
-                                newanswers[index] = e.target.value;
-                                setNovaQst({...novaQst, answers: newanswers});
+                                let newAnswers = [...novaQst.answers];
+                                newAnswers[index] = e.target.value;
+                                setNovaQst({...novaQst, answers: newAnswers});
                             }}
                             />
 
@@ -331,9 +344,9 @@ const Admistrator = () => {
 
                             <label htmlFor="info">Dificuldade: </label>
                             <select name="info" id="info">
-                                <option value="1">facil</option>
-                                <option value="2">medio</option>
-                                <option value="3">dificil</option>
+                                <option value="1">Fácil</option>
+                                <option value="2">Médio</option>
+                                <option value="3">Díficil</option>
                             </select>
 
                         </div>

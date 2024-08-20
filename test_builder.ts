@@ -112,7 +112,6 @@ class TestBuilder{
             if(blueprint.difficultyLevel === DifficultyLevel.RANDOM)
             {
                 const row = this.runQuery(`SELECT * FROM questions WHERE subject_id = ${nameToId[subject]} ORDER BY RANDOM()`) //<- nn tem conexão com o BD
-                for(let i=0;i<difficultyCountInSubject[subject][difficulty];i++)
                 questionList[subject] = []
                 for(let i=0;i<numberOfQuestions;i++)
                 {
