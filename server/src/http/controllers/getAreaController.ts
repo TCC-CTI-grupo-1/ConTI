@@ -24,7 +24,6 @@ export async function getAreaByIdController(req: Request, res: Response) {
     try {
         const area: AreaDTO = await areaDAO.searchAreaById(Number(id));
         if (area) {
-            console.log("Area: ", area);
             return res.json({ area: area });
         } else {
             return res.status(404).json({ message: "Área não encontrada" });
@@ -51,18 +50,6 @@ export async function getTopParentAreaByIdController(req: Request, res: Response
     }
 }
 
-export async function getTopParentAreasByIdsController(req: Request, res: Response) {
-    const ids = JSON.parse(req.body) as number[];
-    const areaDAO = new AreaDAO();
-    
-    try {
-        const areas: AreaDTO[] = await areaDAO.listTopParentAreasByIds(ids);
-        res.json({ areas: areas });
-    } catch (error: any) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
 export async function getAreaIdByQuestionIdController(req: Request, res: Response) {
     const question_id = req.params.question_id;
     const questionDAO = new QuestionDAO();
@@ -80,7 +67,7 @@ export async function getAreaIdByQuestionIdController(req: Request, res: Respons
 }
 
 export async function getAreasIdsByQuestionsIdsController(req: Request, res: Response) {
-    const questions_ids = JSON.parse(req.body) as number[];
+    const questions_ids = JSON.parse(req.body.questions_ids) as number[];
     const questionDAO = new QuestionDAO();
     
     try {

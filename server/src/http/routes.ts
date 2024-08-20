@@ -7,8 +7,7 @@ import { Request, Response } from "express";
 import { updateProfileController } from './controllers/updateProfileController';
 import { getProfileController } from './controllers/getProfileController';
 import { getAreaController, getTopParentAreaByIdController,
-         getAreaByIdController, getTopParentAreasByIdsController,
-         getAreasIdsByQuestionsIdsController,
+         getAreaByIdController, getAreasIdsByQuestionsIdsController,
          getAreaIdByQuestionIdController
  } from './controllers/getAreaController';
 import { setAreaController } from './controllers/setAreaController';
@@ -64,7 +63,6 @@ export async function routes(app: any) {
     app.get('/area/question/:question_id', getAreaIdByQuestionIdController);
 
     app.get('/areas/top/:id', getTopParentAreaByIdController);
-    app.get('/areas/top', getTopParentAreasByIdsController);
 
     app.post('/areas', setAreaController);
 

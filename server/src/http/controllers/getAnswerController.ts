@@ -19,11 +19,7 @@ export async function getAnswersByQuestionIdController(req: Request, res: Respon
 }
 
 export async function getAnswersByQuestionsIdsController(req: Request, res: Response) {
-<<<<<<< HEAD
     const questions_ids = req.body.questions_ids;
-=======
-    const questions_ids = JSON.parse(req.body) as number[];
->>>>>>> 5a8ccf6bbd8f6235e8829581f99c25cfe4cdcd80
     const answerDAO = new AnswerDAO();
     
     try {
