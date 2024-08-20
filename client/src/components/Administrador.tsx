@@ -382,6 +382,11 @@ const Admistrator = () => {
                         handlePostQuestion(novaQst).then((resp) => {
                             if(resp){
                                 showAlert("Questão cadastrada com sucesso!", "success");
+                                setLoading(true);
+                                handleGetQuestions().then((questions) => {
+                                    setQuestions(questions);
+                                    setLoading(false);
+                                });
                             }
                             else{
                                 showAlert("Erro ao cadastrar questão");
@@ -402,9 +407,15 @@ const Admistrator = () => {
                             handlePutQuestion(novaQst).then((resp) => {   
                                 if(resp){
                                     showAlert("Questão editada com sucesso!", "success");
+                                    setLoading(true);
+                                    handleGetQuestions().then((questions) => {
+                                        setQuestions(questions);
+                                        setLoading(false);
+                                    });
                                 }
                                 else{
                                     showAlert("Erro ao editar questão");
+                                    
                                 }
                             }
                             );
@@ -423,6 +434,11 @@ const Admistrator = () => {
                             handleDeleteQuestion(novaQst.id).then((resp) => {
                                 if(resp){
                                     showAlert("Questão deletada com sucesso!", "success");
+                                    setLoading(true);
+                                    handleGetQuestions().then((questions) => {
+                                        setQuestions(questions);
+                                        setLoading(false);
+                                    });
                                 }
                                 else{
                                     showAlert("Erro ao deletar questão");
