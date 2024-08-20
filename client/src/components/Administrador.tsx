@@ -35,13 +35,13 @@ const Admistrator = () => {
     const [novaQst, setNovaQst] = useState<questionInterface>({
         id: 0,
         question_text: '',
-        awnsers: ['', '', '', '', ''],
+        answers: ['', '', '', '', ''],
         correct_answer: 'A',
-        area_id: 1,
+        area_id: 0,
         additional_info: '',
         has_image: false,
         has_latex: false,
-        difficulty: 'facil',
+        difficulty: "",
         official_test_name: '',
         question_creator: '',
         question_number: 0,
@@ -69,6 +69,11 @@ const Admistrator = () => {
             showAlert("Erro cadastrando area");
         }
 
+    }
+
+    function getLastPageNumber(){
+        let numberOfQuestionsPerPage = 6;
+        return Math.ceil(questions.length / numberOfQuestionsPerPage);
     }
 
     async function handleThings(){
@@ -145,13 +150,13 @@ const Admistrator = () => {
                                 let questionLimpa = {
                                     id: 0,
                                     question_text: '',
-                                    awnsers: ['', '', '', '', ''],
+                                    answers: ['', '', '', '', ''],
                                     correct_answer: 'A',
-                                    area_id: 1,
+                                    area_id: 0,
                                     additional_info: '',
                                     has_image: false,
                                     has_latex: false,
-                                    difficulty: "facil",
+                                    difficulty: "",
                                     official_test_name: '',
                                     question_creator: '',
                                     question_number: 0,
@@ -161,7 +166,7 @@ const Admistrator = () => {
                                 onOpen();
                             }}>Adicionar questão</Button>
                             <div className="page">
-                                <h3>Pagina: {pagina}</h3>
+                                <h3>Pagina: {pagina} / {getLastPageNumber()}</h3>
                                 <Button onClick={() => {
                                     setPagina(pagina-1);
                                 }} size="xs">Anterior</Button>
@@ -177,7 +182,7 @@ const Admistrator = () => {
 
                             {!loading && <div className="adm-box">
                                 {questions.map((question, index) => {
-                                    return index > 7 * (pagina - 1) && index < 7 * pagina &&
+                                    return index >= 6 * (pagina - 1) && index < 6 * pagina &&
                                     (areas[question.area_id] === undefined ?  null :
                                     <><QuestionBox key={index} question={question} area={areas[question.area_id]}/>
                                         <div className="btn">
@@ -206,10 +211,28 @@ const Admistrator = () => {
             >
             <ModalOverlay />
             <ModalContent>
-            <ModalHeader>Editando questão {novaQst.id}</ModalHeader>
+            <ModalHeader>{novaQst.id === 0 ? "Adicionando questão": `Editando questão ${novaQst.id}`}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
                 <div className="qst-edit">
+                    <div className={!novaQst.id?"hidden":"text"}>
+                        <textarea name="automatico" id="auto"
+                        onChange={(e)=>{
+                            const regex = /(\d+)\s*([\S\s]*)\s*\(A\)([\S\s]*)\s*\(B\)([\S\s]*)\s*\(C\)([\S\s]*)\s*\(D\)([\S\s]*)\s*\(E\)([\S\s]*)\s*/gm;
+                            const matches = regex.exec(e.target.value);
+                            for(const match in matches)
+                            {
+                                setNovaQst({
+                                    ...novaQst,
+                                    question_number: parseInt(matches[1]),
+                                    question_text: matches[2],
+                                    answers:[matches[3],matches[4],matches[5],matches[6],matches[7]],
+
+
+                                });
+                            }
+                        }}></textarea>
+                    </div>
                     <div className="text">
                         <p>Enunciado</p>
                         <textarea name="enunciado" id="enunciado"
@@ -221,24 +244,19 @@ const Admistrator = () => {
                         ></textarea>
                         <div>
                             <p>Informacoes adicionais:</p>
-                            <textarea name="info" id="info"
-                            value={novaQst.additional_info}
-                            onChange={(e) => {
-                                setNovaQst({...novaQst, additional_info: e.target.value});
-                            }}
-                            ></textarea>
+                            <textarea name="info" id="info"></textarea>
                         </div>
                         
                     </div>           
-                    <div className="awnsers">
+                    <div className="answers">
                         <p>Alternativas</p>
-                        {[...Array(novaQst.awnsers[5] ? 5 : 4)].map((_, index) => (
+                        {[...Array(novaQst.answers[5] ? 5 : 4)].map((_, index) => (
                             <input type="text" placeholder={`Alternativa ${String.fromCharCode(65 + index)}`} key={index} 
-                            value={novaQst.awnsers[index]}
+                            value={novaQst.answers[index]}
                             onChange={(e) => {
-                                let newAwnsers = [...novaQst.awnsers];
-                                newAwnsers[index] = e.target.value;
-                                setNovaQst({...novaQst, awnsers: newAwnsers});
+                                let newAnswers = [...novaQst.answers];
+                                newAnswers[index] = e.target.value;
+                                setNovaQst({...novaQst, answers: newAnswers});
                             }}
                             />
 
@@ -250,7 +268,7 @@ const Admistrator = () => {
                         <input type="text" placeholder="Alternativa E" />*/}
 
                     </div>
-                    <div className="awnsers">
+                    <div className="answers">
                         <p>Opções</p>
                         
                         <div>
@@ -307,7 +325,7 @@ const Admistrator = () => {
                                 <option value="B">B</option>
                                 <option value="C">C</option>
                                 <option value="D">D</option>
-                                {novaQst.awnsers[5] && <option value="E">E</option>}
+                                {novaQst.answers[5] && <option value="E">E</option>}
                             </select>
                         </div>
                         <div>
@@ -326,9 +344,9 @@ const Admistrator = () => {
 
                             <label htmlFor="info">Dificuldade: </label>
                             <select name="info" id="info">
-                                <option value="1">facil</option>
-                                <option value="2">medio</option>
-                                <option value="3">dificil</option>
+                                <option value="1">Fácil</option>
+                                <option value="2">Médio</option>
+                                <option value="3">Díficil</option>
                             </select>
 
                         </div>

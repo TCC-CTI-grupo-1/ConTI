@@ -24,39 +24,65 @@ import { deleteQuestionByIdController } from './controllers/deleteQuestionContro
 import { getAnswersByQuestionIdController, getAnswersByQuestionsIdsController } from './controllers/getAnswerController';
 
 import { postQuestionController } from './controllers/postQuestionController';
+import { getQuestion_MockTestController } from './controllers/getQuestion_MockTest';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
     app.post('/login', loginController);
-    app.get('/teste', (req: Request, res: Response) => {
-        let isLoggedIn: boolean = req.session.isLoggedIn ?? false;
-        res.json({'isLoggedIn': true});
-    });
-    app.get('/userSession', getProfileSessionController);
-    app.post('/updateUser', updateProfileController);
     app.post('/logout', logoutController);
-    app.delete('/deleteUser', deleteProfileController);
-    app.get('/getProfile', getProfileController);
-    app.get('/getAreas', getAreaController);
-    app.get('/getAreas/questions/:ids', getAreasIdsByQuestionsIdsController);
-    app.get('/getArea/:id', getAreaByIdController);
-    app.get('/getTopArea/:id', getTopParentAreaByIdController);
-    app.get('/getTopAreas/:ids', getTopParentAreasByIdsController);
-    app.post('/setArea', setAreaController);
-    app.get('/getMockTests', getMockTestsController);
-    app.get('/getMockTestbyDate', getMockTestsByDecrescentDateController);
-    app.post('/setMockTest', setMockTestController);
-    app.post('/getArea_Profile', getArea_ProfileController);
-    app.get('/getQuestions/:filter', getQuestionWithFiltersController);
-    app.get('/getQuestions/:weight', getQuestionByWeightsAndProfileController);
-    app.get('/getQuestion/:id', getQuestionByIdController);
-    app.get('/getQuestions', getQuestionController);
-    app.get('/getMockTestsByDateAndProfile/:date', getMockTestsByDateAndProfileController);
-    app.get('/getQuestions_MockTest/:id', getQuestionController);
+
+
+    // '/user/'
+    //Recebe (sabe qual é) o usuario pela sessão
+    app.get('/user', getProfileSessionController);
+
+    app.post('/user', updateProfileController);
+
+    app.delete('/user', deleteProfileController); 
+
+
+    // '/questions/'
+    app.get('/questions', getQuestionController);
+    app.get('/questions/:id', getQuestionByIdController);
+    app.get('/questions/weight/:weight', getQuestionByWeightsAndProfileController);
+    app.get('/questions/filter/:filter', getQuestionWithFiltersController); //De novo, não seria melhor enviar o filtro pelo body?
+
+
+
     app.put('/questions/:id', putQuestionByIdController);
-    app.delete('/question/:id', deleteQuestionByIdController);
-    app.get('/getAnswers/question/:question_id', getAnswersByQuestionIdController);
-    app.get('/getAnswers/questions/:questions_ids', getAnswersByQuestionsIdsController);
+
     app.post('/questions', postQuestionController);
+
+    app.delete('/questions/:id', deleteQuestionByIdController);
+
+
+    // '/area/'
+    app.get('/areas', getAreaController);
+    app.get('/areas/:id', getAreaByIdController);
+    app.get('/areas/questions', getAreasIdsByQuestionsIdsController); //Não seria mudar isso aqui pra enviar os ID's pelo body?
+    app.get('/areas/top/:id', getTopParentAreaByIdController);
+    app.get('/areas/top', getTopParentAreasByIdsController); //Acho melhor, aqui támbem, enviar os ID's pelo body
+
+    app.post('/areas', setAreaController);
+
+    // '/answers/'
+    app.get('/answers/question/:question_id', getAnswersByQuestionIdController); //ver se deixo no plural aqui
+    app.get('/answers/questions', getAnswersByQuestionsIdsController); //Acho melhor, aqui támbem, enviar os ID's pelo body
+
+    // '/mockTest/'
+    app.get('/mockTests', getMockTestsController);
+    app.get('/mockTests/:id', getQuestion_MockTestController); //praq isso serve?
+    app.get('/mockTests/date/:date', getMockTestsByDateAndProfileController);
+    app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
+
+    app.post('/mockTests', setMockTestController);
+
+    // '/profile/'
+    app.get('/profile', getProfileController);
+
+
+    // '/areaProfile/'
+    app.get('/areaProfile', getArea_ProfileController);
+
 
 }
