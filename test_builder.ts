@@ -89,7 +89,7 @@ class TestBuilder{
     buildAll()
     {
         if(this.testBlueprintList) {
-            let listOfQuestionList = [{}]
+            let listOfQuestionList = [{}] 
             for(const test of this.testBlueprintList){
                 listOfQuestionList.push(this.buildTest(test));
             }
@@ -144,8 +144,9 @@ class TestBuilder{
                    
             }
             if(blueprint.difficultyType === DifficultyType.AREA)
-            {
+            {   
                 alert("Não implementei ainda!");
+                
                 //TODO: pensar no algoritmo que constrói baseado nos indicadores do usuário
             }
             if(blueprint.difficultyLevel === DifficultyLevel.MIMIC)
