@@ -3,7 +3,7 @@ import Navbar from '../Navbar'
 import DaySelector from './DaySelector'
 import { useState } from 'react'
 import date from 'date-and-time'
-import { handleGetAnswersByQuestionsIds, handleGetAreaById, handleGetAreasByQuestionsIds, handleGetQuestion, handleGetQuestions_MockTestByMockTestId, handleGetSimpleMockTests, handleGetTopParentAreaById, handleGetTopParentAreasByIds } from '../../controllers/userController'
+import { handleGetAnswersByQuestionId, handleGetAnswersByQuestionsIds, handleGetAreaById, handleGetAreaIdByQuestionId, handleGetAreasByQuestionsIds, handleGetQuestion, handleGetQuestion_MockTestsByMockTestId, handleGetSimpleMockTests, handleGetTopParentAreaById, handleGetTopParentAreasByIds } from '../../controllers/userController'
 import { simuladoSimpleInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
@@ -26,7 +26,9 @@ const History = () => {
 
     const {onOpen, onClose, isOpen} = useDisclosure();
 
-    const [activeDay, setActiveDay] = useState<Date>(new Date());
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const [activeDay, setActiveDay] = useState<Date>(today);
 
     const [simuladosAndListas, setSimuladosAndListas] = useState<[simuladoSimpleInterface[], simuladoSimpleInterface[]] | null>(null); //[simulados, listas]
 
@@ -56,30 +58,38 @@ const History = () => {
         let responseSimulados: simuladoSimpleInterface[] = await handleGetSimpleMockTests(day);
         let responseListas: simuladoSimpleInterface[] = await handleGetSimpleMockTests(day);
         for (let i = 0; i < responseSimulados.length; ++i) {
-            const responseQuestoesSimulado = await handleGetQuestions_MockTestByMockTestId(responseSimulados[i].id);
+            const responseQuestoesSimulado = await handleGetQuestion_MockTestsByMockTestId(responseSimulados[i].id);
+            
+            responseQuestoesSimulado.forEach(async (questao_simulado) => {
+                const subjectId = await handleGetAreaIdByQuestionId(questao_simulado.question_id);
 
-            responseQuestoesSimulado.forEach((questao_simulado) => {
-                let responseRespostas = handleGetAnswersByQuestionsIds([questao_simulado.question_id]);
-                responseRespostas.then((respostas) => {
-                    let correct = respostas.filter((resposta) => resposta.is_correct);
-                    let subject = handleGetAreaById(questao_simulado.question_id);
-                    subject.then((subject) => {
-                        if (subject == null) {
-                            return;
-                        }
-                        if (responseSimulados[i].subjects[subject.name] === undefined) {
-                            responseSimulados[i].subjects[subject.name] = {//
-                                totalQuestions: 0,
-                                totalCorrect: 0
-                            }
-                        }
-                        responseSimulados[i].subjects[subject.name].totalQuestions += 1;
-                        responseSimulados[i].subjects[subject.name].totalCorrect += correct.length;
-                    })
-                })
-            });
+                if (subjectId == null) {
+                    return;
+                }
+                
+                const subject = await handleGetAreaById(subjectId);
+                if (subject == null) {
+                    return;
+                }
+                
+                if (responseSimulados[i].subjects[subject.name] === undefined) {
+                    responseSimulados[i].subjects[subject.name] = {
+                        totalQuestions: 0,
+                        totalCorrect: 0
+                    }
+                }
+                responseSimulados[i].subjects[subject.name].totalQuestions++;
+                let responseRespostas = await handleGetAnswersByQuestionId(questao_simulado.question_id);
+
+                responseRespostas.forEach(async (resposta) => {
+                    if (resposta.is_correct && resposta.id === questao_simulado.answer_id) {
+                        responseSimulados[i].subjects[subject.name].totalCorrect++;
+                    }
+                });
+            }); 
             responseSimulados[i].subjects = {};
         }
+        console.log (responseSimulados);
         return [responseSimulados, responseListas];
     }
 
@@ -107,7 +117,7 @@ const History = () => {
                 <div id="historyOverlay">
                     <h2>Simulado #{simuladosAndListas[i][j].id}</h2>
                     <p>Tempo consumudo: {simuladosAndListas[i][j].time} minutos</p>
-                    <p>Feito dia: {date.format(simuladosAndListas[i][j].date, 'DD/MM/YYYY')}</p>
+
                     <h3>{simuladosAndListas[i][j].totalCorrect}/{simuladosAndListas[i][j].totalQuestions}</h3>
                     <div className="progress">
                         <div style={{width: (simuladosAndListas[i][j].totalCorrect * 100 / simuladosAndListas[i][j].totalQuestions ) + '%'}}></div>
@@ -220,6 +230,7 @@ const History = () => {
                                                                 <p>Tempo consumido: {lista.time}min</p>
                                                                 <div className="materias">
                                                                     {
+                                                                        (lista.subjects) &&
                                                                         Object.keys(lista.subjects).map((subject, index) => {
                                                                             return (
                                                                                 <div key={index}>
@@ -265,7 +276,7 @@ const History = () => {
                         navegate(`/simulado/${retrurnActiveQuestionId()}`);
                     }}>
                     Ver prova
-                    </Button>
+                    </Button>   
 
                 </ModalFooter>
                 </ModalContent>

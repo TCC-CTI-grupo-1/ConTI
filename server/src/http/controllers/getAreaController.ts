@@ -24,7 +24,7 @@ export async function getAreaByIdController(req: Request, res: Response) {
     try {
         const area: AreaDTO = await areaDAO.searchAreaById(Number(id));
         if (area) {
-            //console.log(area);
+            console.log("Area: ", area);
             return res.json({ area: area });
         } else {
             return res.status(404).json({ message: "Área não encontrada" });
@@ -58,6 +58,22 @@ export async function getTopParentAreasByIdsController(req: Request, res: Respon
     try {
         const areas: AreaDTO[] = await areaDAO.listTopParentAreasByIds(ids);
         res.json({ areas: areas });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getAreaIdByQuestionIdController(req: Request, res: Response) {
+    const question_id = req.params.question_id;
+    const questionDAO = new QuestionDAO();
+    
+    if (isNaN(Number(question_id))) {
+        return res.status(400).json({ message: "ID deve ser um número" });
+    }
+
+    try {
+        const area_id: number = await questionDAO.searchAreaIdByQuestionId(Number(question_id));
+        res.json({ area_id: area_id });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }

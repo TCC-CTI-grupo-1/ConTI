@@ -381,7 +381,7 @@ export async function handleGetSimpleMockTests(date: Date): Promise<simuladoSimp
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return responseData.simulados;
+            return responseData.mockTests;
         }
 
     } catch (err: any) {
@@ -394,9 +394,9 @@ export async function handleGetSimpleMockTests(date: Date): Promise<simuladoSimp
 type questionMapResultInterface = [number, (string | null)][];  
 
 
-export async function handleGetQuestions_MockTestByMockTestId(mockTestId: number): Promise<question_MockTestInterface[]> {
+export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number): Promise<question_MockTestInterface[]> {
     try {
-        const response = await fetch('http://localhost:3001/mockTests/' + mockTestId, {
+        const response = await fetch('http://localhost:3001/question_MockTests/' + mockTestId, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -408,7 +408,7 @@ export async function handleGetQuestions_MockTestByMockTestId(mockTestId: number
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return responseData.questions_mocktest;
+            return responseData.question_mockTests;
         }
 
     } catch (err: any) {
@@ -474,7 +474,7 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 //Atenção, a magica acontece aqui:
 
 //Essa função parece muito errada
-/*
+
 export async function generateNewSimulado(amount: number): Promise<string>{
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -496,7 +496,7 @@ export async function generateNewSimulado(amount: number): Promise<string>{
     catch (err: any) {
         return err.message;
     }
-}*/
+}
 
 export async function handleGetAreas(): Promise<areaInterface[]> {
     try {
@@ -644,7 +644,7 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
 export async function handleGetAreaById(id: number): Promise<areaInterface | null> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areas/'+id, {
+        const response = await fetch('http://localhost:3001/area/'+id, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -669,6 +669,29 @@ export async function handleGetAreaById(id: number): Promise<areaInterface | nul
             name: 'SOUGAY',
             parent_id: null
         };
+    }
+}
+
+export async function handleGetAreaIdByQuestionId(question_id: number): Promise<number | null> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/area/question/' + question_id, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.area_id;
+        }
+
+    } catch (err: any) {
+        return null;
     }
 }
 
@@ -772,6 +795,29 @@ export async function handleDeleteQuestion(id: number): Promise<boolean> {
     }
 }
 
+export async function handleGetAnswersByQuestionId(question_id: number): Promise<respostaInterface[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/answers/question/' + question_id, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.answers;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
 export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): Promise<respostaInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -781,7 +827,7 @@ export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): P
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(questions_ids),
+            body: JSON.stringify(questions_ids)
         });
 
         const responseData = await response.json();

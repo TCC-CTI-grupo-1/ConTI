@@ -8,7 +8,8 @@ import { updateProfileController } from './controllers/updateProfileController';
 import { getProfileController } from './controllers/getProfileController';
 import { getAreaController, getTopParentAreaByIdController,
          getAreaByIdController, getTopParentAreasByIdsController,
-         getAreasIdsByQuestionsIdsController
+         getAreasIdsByQuestionsIdsController,
+         getAreaIdByQuestionIdController
  } from './controllers/getAreaController';
 import { setAreaController } from './controllers/setAreaController';
 import { getMockTestsController, getMockTestsByDecrescentDateController,
@@ -24,7 +25,7 @@ import { deleteQuestionByIdController } from './controllers/deleteQuestionContro
 import { getAnswersByQuestionIdController, getAnswersByQuestionsIdsController } from './controllers/getAnswerController';
 
 import { postQuestionController } from './controllers/postQuestionController';
-import { getQuestion_MockTestController } from './controllers/getQuestion_MockTest';
+import { getQuestion_MockTestsController } from './controllers/getQuestion_MockTest';
 
 export async function routes(app: any) {
     app.post('/signup', signupController);
@@ -45,7 +46,7 @@ export async function routes(app: any) {
     app.get('/questions', getQuestionController);
     app.get('/questions/:id', getQuestionByIdController);
     app.get('/questions/weight/:weight', getQuestionByWeightsAndProfileController);
-    app.get('/questions/filter/:filter', getQuestionWithFiltersController); //De novo, não seria melhor enviar o filtro pelo body?
+    app.get('/questions/filter/:filter', getQuestionWithFiltersController);
 
 
 
@@ -58,20 +59,21 @@ export async function routes(app: any) {
 
     // '/area/'
     app.get('/areas', getAreaController);
-    app.get('/areas/:id', getAreaByIdController);
-    app.get('/areas/questions', getAreasIdsByQuestionsIdsController); //Não seria mudar isso aqui pra enviar os ID's pelo body?
+    app.get('/area/:id', getAreaByIdController);
+    app.get('/areas/questions', getAreasIdsByQuestionsIdsController);
+    app.get('/area/question/:question_id', getAreaIdByQuestionIdController);
+
     app.get('/areas/top/:id', getTopParentAreaByIdController);
-    app.get('/areas/top', getTopParentAreasByIdsController); //Acho melhor, aqui támbem, enviar os ID's pelo body
+    app.get('/areas/top', getTopParentAreasByIdsController);
 
     app.post('/areas', setAreaController);
 
     // '/answers/'
-    app.get('/answers/question/:question_id', getAnswersByQuestionIdController); //ver se deixo no plural aqui
-    app.get('/answers/questions', getAnswersByQuestionsIdsController); //Acho melhor, aqui támbem, enviar os ID's pelo body
+    app.get('/answers/question/:question_id', getAnswersByQuestionIdController);
+    app.get('/answers/questions', getAnswersByQuestionsIdsController);
 
     // '/mockTest/'
     app.get('/mockTests', getMockTestsController);
-    app.get('/mockTests/:id', getQuestion_MockTestController); //praq isso serve?
     app.get('/mockTests/date/:date', getMockTestsByDateAndProfileController);
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
 
@@ -80,9 +82,10 @@ export async function routes(app: any) {
     // '/profile/'
     app.get('/profile', getProfileController);
 
-
     // '/areaProfile/'
     app.get('/areaProfile', getArea_ProfileController);
 
+    // '/question_MockTest/'
+    app.get('/question_MockTests/:id', getQuestion_MockTestsController);
 
 }

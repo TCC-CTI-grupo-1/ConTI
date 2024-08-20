@@ -302,6 +302,26 @@ export class QuestionDAO {
         }
     }
 
+    searchAreaIdByQuestionId = async (questionID: number): Promise<number> => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.question.findUnique({
+                where: {
+                    id: questionID
+                }
+            });
+
+            if (result) {
+                return result.area_id;
+            } else {
+                throw new Error("Questão não encontrada");
+            }
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
     // searchQuestionParentArea = async (areaID: number) => {
     //     try {
     //         const areaDAO: AreaDAO = new AreaDAO();
