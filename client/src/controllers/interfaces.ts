@@ -24,8 +24,11 @@ export interface questionInterface{
     question_text: string,
     question_year: number, 
 
-    correct_answer: string,
-    answers: string[],
+    answers: {
+        name: string;
+        id: number;
+        isCorrect: boolean;
+    }[],
 }
 
 export interface question_MockTestInterface{
@@ -52,15 +55,7 @@ export interface simuladoInterface{
             total_answers: number,
             total_correct_answers: number,
         }
-    }[],
-}
-
-//Usado quando carregamos o simulado em si (Com os id's das questões a as letras marcadas)
-export interface simuladoInterface{
-    id: number,
-    questions: [number, string | null][],
-    date: Date,
-    time: number,
+    },
 }
 
 // NÃO DÁ PRA SÓ PEGAR DO DTO? EM SERVER... MELHOR, NÃO?...

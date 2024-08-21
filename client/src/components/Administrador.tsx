@@ -35,8 +35,7 @@ const Admistrator = () => {
     const [novaQst, setNovaQst] = useState<questionInterface>({
         id: 0,
         question_text: '',
-        answers: ['', '', '', '', ''],
-        correct_answer: 'A',
+        answers: [{name: '', id: 0, isCorrect: false}],
         area_id: 0,
         additional_info: '',
         has_image: false,
@@ -150,8 +149,7 @@ const Admistrator = () => {
                                 let questionLimpa = {
                                     id: 0,
                                     question_text: '',
-                                    answers: ['', '', '', '', ''],
-                                    correct_answer: 'A',
+                                    answers: [{name: '', id: 0, isCorrect: false}],
                                     area_id: 0,
                                     additional_info: '',
                                     has_image: false,
@@ -222,14 +220,7 @@ const Admistrator = () => {
                             const matches = regex.exec(e.target.value);
                             for(const match in matches)
                             {
-                                setNovaQst({
-                                    ...novaQst,
-                                    question_number: parseInt(matches[1]),
-                                    question_text: matches[2],
-                                    answers:[matches[3],matches[4],matches[5],matches[6],matches[7]],
-
-
-                                });
+                                //ver oq fazer aqui
                             }
                         }}></textarea>
                     </div>
@@ -252,10 +243,10 @@ const Admistrator = () => {
                         <p>Alternativas</p>
                         {[...Array(novaQst.answers[5] ? 5 : 4)].map((_, index) => (
                             <input type="text" placeholder={`Alternativa ${String.fromCharCode(65 + index)}`} key={index} 
-                            value={novaQst.answers[index]}
+                            value={novaQst.answers[index].name}
                             onChange={(e) => {
                                 let newAnswers = [...novaQst.answers];
-                                newAnswers[index] = e.target.value;
+                                newAnswers[index].name = e.target.value;
                                 setNovaQst({...novaQst, answers: newAnswers});
                             }}
                             />
@@ -315,12 +306,7 @@ const Admistrator = () => {
                     <div className="options">
                         <div>
                             <label htmlFor="correta">Alternativa correta: </label>
-                            <select name="correta" id="correta" value={
-                                novaQst.correct_answer
-                            } onChange={(e) => {
-                                setNovaQst({...novaQst, correct_answer: e.target.value});
-                            }
-                            }>
+                            <select name="correta" id="correta">
                                 <option value="A">A</option>
                                 <option value="B">B</option>
                                 <option value="C">C</option>

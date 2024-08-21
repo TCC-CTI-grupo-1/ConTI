@@ -322,6 +322,45 @@ export class QuestionDAO {
         }
     }
 
+    listQuestionsByIds = async (questionsIDs: number[]): Promise<QuestionDTO[]> => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.question.findMany({
+                where: {
+                    id: {
+                        in: questionsIDs
+                    }
+                }
+            });
+
+            const questions: QuestionDTO[] = [];
+
+            result.forEach((result: any) => {
+                const question: QuestionDTO = {
+                    id: result.id,
+                    question_text: result.question_text,
+                    question_year: result.question_year,
+                    total_answers: result.total_answers,
+                    total_correct_answers: result.total_correct_answers,
+                    difficulty: result.difficulty,
+                    additional_info: result.additional_info,
+                    area_id: result.area_id,
+                    question_creator: result.question_creator,
+                    official_test_name: result.official_test_name,
+                    question_number: result.question_number,
+                    has_image: result.has_image,
+                    has_latex: result.has_latex
+                };
+                questions.push(question);
+            });
+
+            return questions;
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
     // searchQuestionParentArea = async (areaID: number) => {
     //     try {
     //         const areaDAO: AreaDAO = new AreaDAO();

@@ -4,8 +4,8 @@ import DaySelector from './DaySelector'
 import { useState } from 'react'
 import date from 'date-and-time'
 import { handleGetAnswersByQuestionId, handleGetAnswersByQuestionsIds, handleGetAreaById, handleGetAreaIdByQuestionId, handleGetAreasByQuestionsIds, handleGetQuestion, handleGetQuestion_MockTestsByMockTestId, 
-    handleGetMockTests, handleGetTopParentAreaById, handleGetTopParentAreasByIds } from '../../controllers/userController'
-import { simuladoInterface } from '../../controllers/interfaces'
+    handleGetMockTests, handleGetTopParentAreaById, handleGetTopParentAreasByIds, handleGetQuestionsByIds, handleGetAreasMap, handleGetQuestions } from '../../controllers/userController'
+import { areaInterface, questionInterface, simuladoInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -31,86 +31,146 @@ const History = () => {
     today.setHours(0, 0, 0, 0);
     const [activeDay, setActiveDay] = useState<Date>(today);
 
-    const [simuladosAndListas, setSimuladosAndListas] = useState<[simuladoInterface[] | null, simuladoInterface[] | null]>([null, null]); //[simulados, listas]
+    const [simulados, setSimulados] = useState<simuladoInterface[]>([]);
+    const [listas, setListas] = useState<simuladoInterface[]>([]);
 
     const [activeQuestionOverlay, setActiveQuestionOverlay] = useState<number>(11); //[simulados, listas
 
     const [loading, setLoading] = useState(true);
+    const [loading2, setLoading2] = useState(true);
 
     const navegate = useNavigate();
 
-    useEffect(() => {
-        setLoading(true);
-        
-        handleSimuladosAndListas();
-    }, [activeDay])
+    const [areas, setAreas] = useState<{[key: string]: areaInterface}>({});
 
-    async function handleSimuladosAndListas()
-    {
-        let response = await getSimuladosAndListas(activeDay);
+    const [questions, setQuestions] = useState<questionInterface[]>([]);
 
-        if(response[0] === null && response[1] === null){
-            showAlert("Nenhum simulado ou lista encontrado, você provavelmente não está logado", "error");
+    async function handleSetAreasMap(){
+        const areasMap = await handleGetAreasMap();
+
+        if(Object.keys(areasMap).length === 0){
+            showAlert("Erro ao carregar areas");
             return;
         }
 
-        setSimuladosAndListas(response);
-
+        setAreas(areasMap);
+        console.log(areasMap);
     }
 
     useEffect(() => {
-        if(simuladosAndListas[0] !== null && simuladosAndListas[1] !== null)
-        {
-            console.log("SIMULADOS AND LISTAS");
-            console.log(simuladosAndListas);
-            setLoading(false);
-        }
-    }, [simuladosAndListas])
+        setLoading(true);
+        handleSetAreasMap().then(() => {
+            handleGetQuestions().then((question) => {
+                setQuestions(question);
+                console.log(question);
+                setLoading(false);
+            });
+        });  
+    }, []);
+
+    useEffect(() => {
+        setLoading2(true);
+        handleSimuladosAndListas();
+    }, [activeDay]);
+
+
+    async function handleSimuladosAndListas()
+    {
+        let response = await getSimulados(activeDay);
+
+        setSimulados(response);
+
+        let response2 = await getListas(activeDay);
+
+        setListas(response2);
+
+        setLoading2(false);
+    }
 
     //[simulados, listas]
-    async function getSimuladosAndListas(date: Date): Promise<[simuladoInterface[] | null, simuladoInterface[] | null]>{
+    async function getSimulados(date: Date): Promise<simuladoInterface[]>{
         //Pega os simulados e listas feitos no dia
         let day = new Date(date);
 
-        let responseSimulados: simuladoInterface[] | null= await handleGetMockTests(day);
-        if(responseSimulados.length === 0){
-            responseSimulados = null;
-        }
-        else{
-            responseSimulados.forEach(async (simulado) => {
-                let questions = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
-                let subjects: {[key: string]: {totalCorrect: number, totalQuestions: number}} = {};
-                let totalCorrect = 0;
-                let totalQuestions = 0;
-                questions.forEach(async (question) => {
-                    let questionInfo = await handleGetQuestion(question.question_id);
+        let responseSimulados: simuladoInterface[] = await handleGetMockTests(day);
+        responseSimulados.forEach(async (simulado) => {
+            let questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
+            let questionIdsArray: number[] = [];
+            /*questionMockTests.forEach(questionMockTest => {
+                questionIdsArray.push(questionMockTest.question_id);
+            });*/
 
-                    if(questionInfo === null){
-                        return;
+            let subjects: {
+                [key: string]: {
+                    total_answers: number;
+                    total_correct_answers: number;
+                };
+            } = {};
+            questionMockTests.forEach(qmt => {
+                let qst = questions.find(question => question.id === qmt.question_id);
+                if(qst === undefined){
+                    return;
+                }
+                let areaID = qst.area_id;
+                let area = areas[areaID];
+                let areaName = area.name;
+                if(subjects[areaName] === undefined){
+                    subjects[areaName] = {total_answers: 0, total_correct_answers: 0};
+                }
+                subjects[areaName].total_answers++;
+                let correctAwnserID = qst.answers.find(answer => answer.isCorrect);
+                if(correctAwnserID !== undefined){
+                    let isCorrect = correctAwnserID.id === qmt.answer_id;
+                    if(isCorrect){
+                        subjects[areaName].total_correct_answers++;
                     }
-                    let subject = await handleGetAreaById(questionInfo.area_id);
-                    let subjectName = subject ? subject.name : null;
-                    if(subjectName !== null){
-                        subjects[subjectName] = { totalCorrect: 0, totalQuestions: 0 };
-                    }
-                    totalQuestions += 1;
-                    if(correctAnswerText === correctAnswer.text){
-                        totalCorrect += 1;
-                    }
-                });
-                simulado.subjects = subjects;
-                simulado.total_correct_answers = totalCorrect;
-                simulado.total_answers = totalQuestions;
-            });
-        }
-        let responseListas: simuladoInterface[] | null = await handleGetMockTests(day);
-        if(responseListas.length === 0){
-            responseListas = null;
-        }
-
-        console.log (responseSimulados);
-        return [responseSimulados, responseListas];
+                }
+            })
+            console.log(subjects);
+            simulado.subjects = subjects
+            
+        });
+        return responseSimulados;
     }
+
+    async function getListas(date: Date): Promise<simuladoInterface[]>{
+        //Pega os simulados e listas feitos no dia
+        let day = new Date(date);
+
+        let responseSimulados: simuladoInterface[] = await handleGetMockTests(day);
+        responseSimulados.forEach(async (simulado) => {
+            let questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
+            let questionIdsArray: number[] = [];
+            questionMockTests.forEach(questionMockTest => {
+                questionIdsArray.push(questionMockTest.question_id);
+            });
+
+            let questions = await handleGetQuestionsByIds(questionIdsArray);
+            let subjects: {
+                [key: string]: {
+                    total_answers: number;
+                    total_correct_answers: number;
+                };
+            } = {};
+            questions.forEach(question => {
+                let areaID = question.area_id;
+                let area = areas[areaID];
+                let areaName = area.name;
+                if(subjects[areaName] === undefined){
+                    subjects[areaName] = {total_answers: 0, total_correct_answers: 0};
+                }
+                subjects[areaName].total_answers++;
+                let isCorrect = question.answers.find(answer => answer.id === questionMockTests.find(questionMockTest => questionMockTest.question_id === question.id)!.answer_id) !== undefined;
+                if(isCorrect){
+                    subjects[areaName].total_correct_answers++;
+                }
+            })
+            simulado.subjects = subjects
+            
+        });
+        return responseSimulados;
+    }
+  
 
     function openOverlay(questionClicked: number){
         //Abre o overlay com a questão clicada
@@ -120,9 +180,9 @@ const History = () => {
 
     function retrurnActiveQuestionId(): number{
         //Retorna o id da questão clicada
-        let i = activeQuestionOverlay % 10 === 1 ? 0 : 1;
-        let j = Math.floor(activeQuestionOverlay/10) - 1;
-        return simuladosAndListas[i] ? (simuladosAndListas[i][j] !== undefined ? simuladosAndListas[i][j].id : 0) : 0;
+        let i = activeQuestionOverlay % 10 === 1 ? 0 : 1; //0 = simulados, 1 = listas
+        let j = Math.floor(activeQuestionOverlay/10) - 1; //Index do simulado ou lista
+        return i === 0 ? simulados[j].id : listas[j].id;
     }
 
     function returnJSXOverlay(): JSX.Element{
@@ -130,30 +190,34 @@ const History = () => {
         //Retorna o JSX do overlay
         let i = activeQuestionOverlay % 10 === 1 ? 0 : 1;
         let j = Math.floor(activeQuestionOverlay/10) - 1;
-        if (simuladosAndListas[i] && simuladosAndListas[i][j] !== undefined)
+        if (i === 0 ? simulados[j] !== undefined : listas[j] !== undefined)
         {
             return (
                 <div id="historyOverlay">
-                    <h2>Simulado #{simuladosAndListas[i][j].id}</h2>
-                    <p>Tempo consumudo: {simuladosAndListas[i][j].time_spent} minutos</p>
+                    <h2>Simulado #{i === 0 ? simulados[j].id : listas[j].id}</h2>
+                    <p>Tempo consumudo: {i === 0 ? simulados[j].time_spent : listas[j].time_spent} minutos</p>
 
-                    <h3>{simuladosAndListas[i][j].total_correct_answers}/{simuladosAndListas[i][j].total_answers}</h3>
+                    <h3>{i === 0 ? simulados[j].total_correct_answers : listas[j].total_correct_answers}
+                        /
+                        {i === 0 ? simulados[j].total_answers : listas[j].total_answers}</h3>
                     <div className="progress">
-                        <div style={{width: (simuladosAndListas[i][j].total_correct_answers * 100 / simuladosAndListas[i][j].total_correct_answers ) + '%'}}></div>
+                        <div style={{width: (i === 0 ? simulados[j].total_answers : listas[j].total_answers * 100 / i === 0 ? simulados[j].total_correct_answers : listas[j].total_correct_answers ) + '%'}}></div>
                     </div>
                     <div className="materias">
                         {
-                            (simuladosAndListas[i][j].subjects) &&
-                            Object.keys(simuladosAndListas[i][j].subjects).map((subject, index) => {
+                            (i === 0 ? simulados[j].subjects : listas[j].subjects) &&
+                            Object.keys(i === 0 ? simulados[j].subjects : listas[j].subjects).map((subject, index) => {
                                 
-                                return simuladosAndListas[i] && simuladosAndListas[i][j] ?(
+                                let subjectts = i === 0 ? simulados[j].subjects : listas[j].subjects;
+
+                                return (
                                     <div key={index}>
-                                        <p>{subject} [{simuladosAndListas[i][j].subjects![subject].totalCorrect}/{simuladosAndListas[i][j].subjects![subject].totalQuestions}]</p>
+                                        <p>{subject} [{subjectts[subject].total_correct_answers}/{subjectts[subject].total_answers}]</p>
                                         <div className="progress">
-                                            <div style={{width: (simuladosAndListas[i][j].subjects![subject].totalCorrect * 100 / simuladosAndListas[i][j].subjects![subject].totalQuestions ) + '%'}} />
+                                            <div style={{width: (subjectts[subject].total_correct_answers * 100 / subjectts[subject].total_correct_answers) + '%'}} />
                                         </div>
                                     </div>
-                                ) : (<></>)
+                                )
                             })
                         }
                     </div>
@@ -177,7 +241,7 @@ const History = () => {
     }
 
     return (
-        <>
+        <>{loading ? <h1>Carrregando</h1> :
             <div id="history" className="flex-container full-screen-size">
                     <Navbar screen="history"/>
                     <div className="container">
@@ -190,7 +254,7 @@ const History = () => {
                             <DaySelector handleChangeDay={setActiveDay} />
                             <div>
                                 {
-                                    loading ?
+                                    loading2 ?
                                     <h1>Carregando...</h1>
                                     :
                                     <>
@@ -198,7 +262,8 @@ const History = () => {
                                             <h2>Simulados</h2>
                                             <div>        
                                                 {
-                                                    simuladosAndListas[0] && simuladosAndListas[0].map((simulado, index) => {
+                                                    simulados.length === 0 ? <p>Nenhum simulado feito nesse dia</p> :
+                                                    simulados.map((simulado, index) => {
                                                         return (
                                                             <div key={index} className="provaCard"
                                                             onClick={() => {
@@ -217,9 +282,9 @@ const History = () => {
                                                                             return (
                                                                                 <div key={index}>
                                                                                     <p>{subject}</p>
-                                                                                    <h4>{simulado.subjects![subject].totalCorrect}/{simulado.subjects![subject].totalQuestions}</h4>
+                                                                                    <h4>{simulado.subjects![subject].total_correct_answers}/{simulado.subjects![subject].total_answers}</h4>
                                                                                     <div className="progress">
-                                                                                        <div style={{width: `${(simulado.subjects![subject].totalCorrect/simulado.subjects![subject].totalQuestions)*100}%`}}></div>
+                                                                                        <div style={{width: `${(simulado.subjects![subject].total_correct_answers/simulado.subjects![subject].total_answers)*100}%`}}></div>
                                                                                     </div>
                                                                                 </div>
                                                                             )
@@ -238,7 +303,8 @@ const History = () => {
                                             <h2>Listas</h2>
                                             <div>
                                                 {
-                                                    simuladosAndListas[1] && simuladosAndListas[1].map((lista, index) => {
+                                                    listas.length === 0 ? <p>Nenhuma lista feita nesse dia</p> :
+                                                    listas.map((lista, index) => {
                                                         return (
                                                             <div key={index} className="provaCard"
                                                             onClick={() => {
@@ -257,9 +323,9 @@ const History = () => {
                                                                             return (
                                                                                 <div key={index}>
                                                                                     <p>{subject}</p>
-                                                                                    <h4>{lista.subjects![subject].totalCorrect}/{lista.subjects![subject].totalQuestions}</h4>
+                                                                                    <h4>{lista.subjects![subject].total_correct_answers}/{lista.subjects![subject].total_answers}</h4>
                                                                                     <div className="progress">
-                                                                                        <div style={{width: `${(lista.subjects![subject].totalCorrect/lista.subjects![subject].totalQuestions)*100}%`}}></div>
+                                                                                        <div style={{width: `${(lista.subjects![subject].total_correct_answers/lista.subjects![subject].total_answers)*100}%`}}></div>
                                                                                     </div>
                                                                                 </div>
                                                                             )
@@ -279,6 +345,7 @@ const History = () => {
 
                     </div>
             </div>
+            }
             <Modal
                 isCentered
                 onClose={onClose}

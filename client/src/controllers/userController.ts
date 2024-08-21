@@ -1,7 +1,7 @@
 
 import { json } from 'react-router-dom';
 import { Profile } from '../../../server/src/types/express-session';
-import { questionInterface, simuladoSimpleInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface } from './interfaces';
+import { questionInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface } from './interfaces';
 import { questionFilters } from './interfaces';
 import { showAlert } from '../App';
 
@@ -291,6 +291,55 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 
 }
 
+export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<questionInterface[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/questions/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                questionIDS: questions_ids
+            })
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            await responseData.questions.forEach(async (element: questionInterface) => {
+                element.answers = [{
+                    name: 'JORGE1',
+                    id: 1,
+                    isCorrect: false,
+                }, {
+                    name: 'KAKAK2',
+                    id: 2,
+                    isCorrect: false,
+                }, {
+                    name: 'MARIA3',
+                    id: 3,
+                    isCorrect: true,
+                }, {
+                    name: 'girfgiurw',
+                    id: 4,
+                    isCorrect: false,
+                }, {
+                    name: 'BITIRIRI',
+                    id: 5,
+                    isCorrect: false,
+                }]
+            });
+            return responseData.questions;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
 export async function handleGetQuestions(): Promise<questionInterface[]> {
     try {
         const response = await fetch('http://localhost:3001/questions/', {
@@ -306,8 +355,27 @@ export async function handleGetQuestions(): Promise<questionInterface[]> {
             throw new Error(responseData.message);
         } else {
             await responseData.questions.forEach(async (element: questionInterface) => {
-                element.correct_answer = 'A';
-                element.answers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
+                element.answers = [{
+                    name: 'JORGE1',
+                    id: 1,
+                    isCorrect: false,
+                }, {
+                    name: 'KAKAK2',
+                    id: 2,
+                    isCorrect: true,
+                }, {
+                    name: 'MARIA3',
+                    id: 3,
+                    isCorrect: false,
+                }, {
+                    name: 'girfgiurw',
+                    id: 4,
+                    isCorrect: false,
+                }, {
+                    name: 'BITIRIRI',
+                    id: 5,
+                    isCorrect: false,
+                }]
             });
             return responseData.questions;
         }
@@ -333,8 +401,27 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
         } else {
             console.log(responseData.questions);
             await responseData.questions.forEach(async (element: questionInterface) => {
-                element.answers = ['JORGE1', 'KAKAK2', 'MARIA3', 'girfgiurw', 'BITIRIRI'];
-                element.correct_answer = 'A';
+                element.answers = [{
+                    name: 'JORGE1',
+                    id: 1,
+                    isCorrect: false,
+                }, {
+                    name: 'KAKAK2',
+                    id: 2,
+                    isCorrect: false,
+                }, {
+                    name: 'MARIA3',
+                    id: 3,
+                    isCorrect: false,
+                }, {
+                    name: 'girfgiurw',
+                    id: 4,
+                    isCorrect: false,
+                }, {
+                    name: 'BITIRIRI',
+                    id: 5,
+                    isCorrect: false,
+                }]
             });
             return responseData.questions;
         }
@@ -365,7 +452,7 @@ async function handleGetAnswers(questionID: number): Promise<string[]> {
     }
 }
 
-export async function handleGetMockTests(date: Date): Promise<simuladoSimpleInterface[]> {
+export async function handleGetMockTests(date: Date): Promise<simuladoInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 500));
     
@@ -417,27 +504,11 @@ export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number
 }
 
 //Retorna o simulado que foi adicionado (NN FEITO)
-export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoSimpleInterface | null> {
+export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoInterface | null> {
     //Código PLACEHOLDER.
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
-        return {
-            id: 1,
-            totalQuestions: 10,
-            totalCorrect: 7,
-            date: new Date(2021, 4, 1),
-            time: 60,
-            subjects: {
-                'Matemática': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Português': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                }
-            }
-        }
+        return null;
     } catch (err: any) {
         return null;
     }
@@ -448,24 +519,7 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
     //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
-        return {
-            id: 1,
-            questions: 
-            [
-                [1, 'A'],
-                [2, 'B'],
-                [3, 'C'],
-                [4, 'D'],
-                [5, 'E'],
-                [6, 'A'],
-                [7, 'B'],
-                [8, 'C'],
-                [9, 'D'],
-                [10, 'E']
-            ],
-            date: new Date(2021, 4, 1),
-            time: 60
-        }
+        return null;
     } catch (err: any) {
         return null;
     }

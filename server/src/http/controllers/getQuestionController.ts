@@ -6,7 +6,17 @@ import { questionFilters } from "../../types/client/interfaces";
 export async function getQuestionController(req: Request, res: Response) {
     const questionDAO = new QuestionDAO();
     try {
-        const questions: QuestionDTO[] = await questionDAO.listQuestions();
+        let questions: QuestionDTO[] = [];
+        
+        /*if(req.body !== undefined && req.body.questionIDS !== undefined) {
+            const questionIDS = req.body.questionIDS;
+            questions = await questionDAO.listQuestionsByIds(questionIDS);
+        }
+        else{
+        }*/
+
+        questions = await questionDAO.listQuestions();
+
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
