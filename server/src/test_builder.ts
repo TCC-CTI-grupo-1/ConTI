@@ -39,7 +39,6 @@ const difficultyToErrorRatioCondition:{[key:string]:Function} = {
 }
 
 
-
 interface ITestBlueprint{
     totalQuestions:number,
     questionBySubject:{[key:string]:number},
@@ -51,7 +50,7 @@ interface ITestBuilder{
     testBlueprint:TestBlueprint[] | undefined
 }
 
-const nameToId = async function(subject:string)
+const nameToId = async function(subject:string):Promise<number>
 {
     try {
         const client = await conn.getConnection();
@@ -73,6 +72,70 @@ const nameToId = async function(subject:string)
     {
         throw e;
     }
+}
+
+const idToName= async function(id:number):Promise<string>
+{
+    try{
+        const client = await conn.getConnection();
+        const result = await client.area.findUnique({
+            where: {
+                id: id
+            }
+        });
+        if(result)
+        return result.name;
+        else
+        return "Deu erro :(";
+    }
+    catch(e)
+    {
+        throw e;
+    }
+}
+
+const getTestProportions = async function(test:string)
+{
+    const client = await conn.getConnection();
+    const rows = await client.question.findMany({
+        where: {
+            official_test_name: test
+        }
+    });
+    type simpleMap = { [key:string]:number};
+    const difficultyCount:simpleMap = {};
+    const areaCount:simpleMap = {};
+    const idToNameCache:{[key:number]:string} = {};
+    let totalQuestions = 0;
+
+    for(const row of rows)
+    {
+        totalQuestions++;
+        if(!idToNameCache[row.area_id])
+        {
+            const name = await idToName(row.area_id);
+            areaCount[name] = 1;
+            idToNameCache[row.area_id] = name;
+        }
+        else {
+            areaCount[idToNameCache[row.area_id]]++;
+        }
+        difficultyCount[row.difficulty]++;
+    }
+    const difficultyProportions:simpleMap = {};
+    const areaProportions:simpleMap = {};
+    const testProportions:{[key:string]:simpleMap} = {};
+    for(const a in areaCount)
+    {
+        areaProportions[a] = areaCount[a]/rows.length;
+    }
+    for(const a in difficultyCount)
+    {
+        difficultyProportions[a] = difficultyCount[a]/rows.length;
+    }
+    testProportions['difficulty'] = difficultyProportions;
+    testProportions['area'] = areaProportions;
+    return testProportions;
 }
 
 const shuffle = function(array:any[])
