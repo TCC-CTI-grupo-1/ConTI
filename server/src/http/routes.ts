@@ -17,7 +17,8 @@ import { getMockTestsController, getMockTestsByDecrescentDateController,
 import { setMockTestController } from './controllers/setMockTestController';
 import { getArea_ProfileController } from './controllers/getArea_ProfileController';
 import { getQuestionWithFiltersController, getQuestionByWeightsAndProfileController,
-        getQuestionByIdController, getQuestionController
+        getQuestionByIdController, getQuestionController,
+        getQuestionsByIdsController
  } from './controllers/getQuestionController';
 import { putQuestionByIdController } from './controllers/putQuestionController';
 import { deleteQuestionByIdController } from './controllers/deleteQuestionController';
@@ -46,6 +47,7 @@ export async function routes(app: any) {
     app.get('/questions/:id', getQuestionByIdController);
     app.get('/questions/weight/:weight', getQuestionByWeightsAndProfileController);
     app.get('/questions/filter/:filter', getQuestionWithFiltersController);
+    app.get('/questionsByIds/', getQuestionsByIdsController);
 
 
 

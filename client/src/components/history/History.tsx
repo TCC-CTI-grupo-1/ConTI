@@ -43,7 +43,7 @@ const History = () => {
 
     const [areas, setAreas] = useState<{[key: string]: areaInterface}>({});
 
-    const [questions, setQuestions] = useState<questionInterface[]>([]);
+    const [questionsGlobal, setQuestionsGlobal] = useState<questionInterface[]>([]);
 
     async function handleSetAreasMap(){
         const areasMap = await handleGetAreasMap();
@@ -61,7 +61,7 @@ const History = () => {
         setLoading(true);
         handleSetAreasMap().then(() => {
             handleGetQuestions().then((question) => {
-                setQuestions(question);
+                setQuestionsGlobal(question);
                 console.log(question);
                 setLoading(false);
             });
@@ -93,42 +93,33 @@ const History = () => {
         let day = new Date(date);
 
         let responseSimulados: simuladoInterface[] = await handleGetMockTests(day);
+
         responseSimulados.forEach(async (simulado) => {
             let questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
-            let questionIdsArray: number[] = [];
-            /*questionMockTests.forEach(questionMockTest => {
-                questionIdsArray.push(questionMockTest.question_id);
-            });*/
-
+            let questions = await handleGetQuestionsByIds(questionMockTests.map(qmt => qmt.question_id));
+            console.log("questions", questions);
+            
             let subjects: {
                 [key: string]: {
                     total_answers: number;
                     total_correct_answers: number;
                 };
             } = {};
-            questionMockTests.forEach(qmt => {
-                let qst = questions.find(question => question.id === qmt.question_id);
-                if(qst === undefined){
-                    return;
-                }
-                let areaID = qst.area_id;
+            questions.forEach(question => {
+                let areaID = question.area_id;
                 let area = areas[areaID];
                 let areaName = area.name;
                 if(subjects[areaName] === undefined){
                     subjects[areaName] = {total_answers: 0, total_correct_answers: 0};
                 }
                 subjects[areaName].total_answers++;
-                let correctAwnserID = qst.answers.find(answer => answer.isCorrect);
-                if(correctAwnserID !== undefined){
-                    let isCorrect = correctAwnserID.id === qmt.answer_id;
-                    if(isCorrect){
-                        subjects[areaName].total_correct_answers++;
-                    }
+                let isCorrect = question.answers.find(answer => answer.id === questionMockTests.find(questionMockTest => questionMockTest.question_id === question.id)!.answer_id) !== undefined;
+                if(isCorrect){
+                    subjects[areaName].total_correct_answers++;
                 }
             })
-            console.log(subjects);
+            console.log("subjects", subjects);
             simulado.subjects = subjects
-            
         });
         return responseSimulados;
     }

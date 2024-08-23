@@ -294,7 +294,7 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<questionInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questions/', {
+        const response = await fetch('http://localhost:3001/questionsByIds', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -309,29 +309,6 @@ export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            await responseData.questions.forEach(async (element: questionInterface) => {
-                element.answers = [{
-                    name: 'JORGE1',
-                    id: 1,
-                    isCorrect: false,
-                }, {
-                    name: 'KAKAK2',
-                    id: 2,
-                    isCorrect: false,
-                }, {
-                    name: 'MARIA3',
-                    id: 3,
-                    isCorrect: true,
-                }, {
-                    name: 'girfgiurw',
-                    id: 4,
-                    isCorrect: false,
-                }, {
-                    name: 'BITIRIRI',
-                    id: 5,
-                    isCorrect: false,
-                }]
-            });
             return responseData.questions;
         }
 
@@ -354,29 +331,6 @@ export async function handleGetQuestions(): Promise<questionInterface[]> {
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            await responseData.questions.forEach(async (element: questionInterface) => {
-                element.answers = [{
-                    name: 'JORGE1',
-                    id: 1,
-                    isCorrect: false,
-                }, {
-                    name: 'KAKAK2',
-                    id: 2,
-                    isCorrect: true,
-                }, {
-                    name: 'MARIA3',
-                    id: 3,
-                    isCorrect: false,
-                }, {
-                    name: 'girfgiurw',
-                    id: 4,
-                    isCorrect: false,
-                }, {
-                    name: 'BITIRIRI',
-                    id: 5,
-                    isCorrect: false,
-                }]
-            });
             return responseData.questions;
         }
 
@@ -399,30 +353,6 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            console.log(responseData.questions);
-            await responseData.questions.forEach(async (element: questionInterface) => {
-                element.answers = [{
-                    name: 'JORGE1',
-                    id: 1,
-                    isCorrect: false,
-                }, {
-                    name: 'KAKAK2',
-                    id: 2,
-                    isCorrect: false,
-                }, {
-                    name: 'MARIA3',
-                    id: 3,
-                    isCorrect: false,
-                }, {
-                    name: 'girfgiurw',
-                    id: 4,
-                    isCorrect: false,
-                }, {
-                    name: 'BITIRIRI',
-                    id: 5,
-                    isCorrect: false,
-                }]
-            });
             return responseData.questions;
         }
 

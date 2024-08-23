@@ -70,3 +70,14 @@ export async function getQuestionByWeightsAndProfileController(req: Request, res
         res.status(500).json({ message: error.message });
     }
 }
+
+export async function getQuestionsByIdsController(req: Request, res: Response) {
+    const questionDAO = new QuestionDAO();
+    try {
+        const questionIDS = req.body.questionIDS;
+        const questions: QuestionDTO[] = await questionDAO.listQuestionsByIds(questionIDS);
+        res.json({ questions: questions });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}

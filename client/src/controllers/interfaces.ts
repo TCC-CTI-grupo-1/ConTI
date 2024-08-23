@@ -24,11 +24,7 @@ export interface questionInterface{
     question_text: string,
     question_year: number, 
 
-    answers: {
-        name: string;
-        id: number;
-        isCorrect: boolean;
-    }[],
+    answers: respostaInterface[];
 }
 
 export interface question_MockTestInterface{
