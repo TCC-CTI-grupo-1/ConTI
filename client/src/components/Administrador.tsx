@@ -35,7 +35,12 @@ const Admistrator = () => {
     const [novaQst, setNovaQst] = useState<questionInterface>({
         id: 0,
         question_text: '',
-        answers: [{name: '', id: 0, isCorrect: false}],
+        answers: [{name: '', id: 0, isCorrect: false},
+                {name: '', id: 0, isCorrect: false},
+                {name: '', id: 0, isCorrect: false},
+                {name: '', id: 0, isCorrect: false},
+                {name: '', id: 0, isCorrect: false}
+        ],
         area_id: 0,
         additional_info: '',
         has_image: false,
@@ -149,7 +154,12 @@ const Admistrator = () => {
                                 let questionLimpa = {
                                     id: 0,
                                     question_text: '',
-                                    answers: [{name: '', id: 0, isCorrect: false}],
+                                    answers: [{name: '', id: 0, isCorrect: false},
+                                            {name: '', id: 0, isCorrect: false},
+                                            {name: '', id: 0, isCorrect: false},
+                                            {name: '', id: 0, isCorrect: false},
+                                            {name: '', id: 0, isCorrect: false}
+                                    ],
                                     area_id: 0,
                                     additional_info: '',
                                     has_image: false,
@@ -187,6 +197,7 @@ const Admistrator = () => {
                                             <Button size={'xs'} onClick={() => {
                                                 let editQst: questionInterface;
                                                 editQst = question;
+                                                console.log(editQst);
                                                 setNovaQst(editQst);
                                                 onOpen();
                                             }}>Editar</Button>
@@ -238,7 +249,7 @@ const Admistrator = () => {
                             <textarea name="info" id="info"></textarea>
                         </div>
                         
-                    </div>           
+                    </div>              
                     <div className="answers">
                         <p>Alternativas</p>
                         {[...Array(novaQst.answers[5] ? 5 : 4)].map((_, index) => (
