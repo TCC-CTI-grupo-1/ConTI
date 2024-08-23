@@ -40,7 +40,8 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
 
     const [showAnswer, setShowAnswer] = useState(false);
 
-    const correctAnswer = isCorrecao !== undefined ? question.correct_answer.toUpperCase() : null;
+    const correctAnswer = isCorrecao !== undefined ? 
+    question.answers.map((answer, index) => answer.isCorrect ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0] : null;
 
     const addClassToAlternative = useCallback((letter: string) => {
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
@@ -164,7 +165,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
                         <span>
                             <p> {String.fromCharCode(65 + index)} </p>
                         </span>
-                        <p> {alternative} </p>
+                        <p> {alternative.name} </p>
                     </div>
                 ))}
 
