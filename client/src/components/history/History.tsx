@@ -4,7 +4,7 @@ import DaySelector from './DaySelector'
 import { useState } from 'react'
 import date from 'date-and-time'
 import { handleGetAnswersByQuestionId, handleGetAnswersByQuestionsIds, handleGetAreaById, handleGetAreaIdByQuestionId, handleGetAreasByQuestionsIds, handleGetQuestion, handleGetQuestion_MockTestsByMockTestId, 
-    handleGetMockTests, handleGetTopParentAreaById, handleGetTopParentAreasByIds, handleGetQuestionsByIds, handleGetAreasMap, handleGetQuestions } from '../../controllers/userController'
+    handleGetMockTestsByDateAndProfile, handleGetTopParentAreaById, handleGetTopParentAreasByIds, handleGetQuestionsByIds, handleGetAreasMap, handleGetQuestions } from '../../controllers/userController'
 import { areaInterface, questionInterface, simuladoInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
@@ -92,7 +92,7 @@ const History = () => {
         //Pega os simulados e listas feitos no dia
         let day = new Date(date);
 
-        let responseSimulados: simuladoInterface[] = await handleGetMockTests(day);
+        let responseSimulados: simuladoInterface[] = await handleGetMockTestsByDateAndProfile(day);
 
         responseSimulados.forEach(async (simulado) => {
             let questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
@@ -128,7 +128,7 @@ const History = () => {
         //Pega os simulados e listas feitos no dia
         let day = new Date(date);
 
-        let responseSimulados: simuladoInterface[] = await handleGetMockTests(day);
+        let responseSimulados: simuladoInterface[] = await handleGetMockTestsByDateAndProfile(day);
         responseSimulados.forEach(async (simulado) => {
             let questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
             let questionIdsArray: number[] = [];

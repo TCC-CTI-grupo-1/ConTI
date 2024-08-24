@@ -382,10 +382,10 @@ async function handleGetAnswers(questionID: number): Promise<string[]> {
     }
 }
 
-export async function handleGetMockTests(date: Date): Promise<simuladoInterface[]> {
+export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<simuladoInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 500));
-    
+        
         const response = await fetch('http://localhost:3001/mockTests/date/' + date, {
             method: 'GET',
             credentials: 'include', 
@@ -398,6 +398,7 @@ export async function handleGetMockTests(date: Date): Promise<simuladoInterface[
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
+            console.log(date);
             return responseData.mockTests;
         }
 
