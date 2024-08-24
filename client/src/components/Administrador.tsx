@@ -7,7 +7,7 @@ import { Select } from '@chakra-ui/react'
 import { handlePostArea } from "./../controllers/userController";
 import { showAlert } from "./../App";
 import { handleGetQuestions } from "./../controllers/userController";
-import { areaInterface, questionInterface } from "../controllers/interfaces";
+import { areaInterface, questionInterface, respostaInterface } from "../controllers/interfaces";
 import QuestionBox from "./questions/QuestionBox";
 import { handlePutQuestion, handleDeleteQuestion, handlePostQuestion } from "./../controllers/userController";
 
@@ -32,15 +32,19 @@ const Admistrator = () => {
 
     const {onOpen, onClose, isOpen} = useDisclosure();
 
+    const respostasVario: respostaInterface[] = [
+        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
+        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
+        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
+        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
+        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
+        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0}
+    ];
+
     const [novaQst, setNovaQst] = useState<questionInterface>({
         id: 0,
         question_text: '',
-        answers: [{name: '', id: 0, isCorrect: false},
-                {name: '', id: 0, isCorrect: false},
-                {name: '', id: 0, isCorrect: false},
-                {name: '', id: 0, isCorrect: false},
-                {name: '', id: 0, isCorrect: false}
-        ],
+        answers: respostasVario,
         area_id: 0,
         additional_info: '',
         has_image: false,
@@ -99,6 +103,7 @@ const Admistrator = () => {
         setQuestions(questions);
         console.log(questions);
 
+        await new Promise((resolve) => setTimeout(resolve, 1500)); //Se for muito rapido de alguma maneira dá erro.
         setLoading(false);
     }
 
@@ -154,12 +159,7 @@ const Admistrator = () => {
                                 let questionLimpa = {
                                     id: 0,
                                     question_text: '',
-                                    answers: [{name: '', id: 0, isCorrect: false},
-                                            {name: '', id: 0, isCorrect: false},
-                                            {name: '', id: 0, isCorrect: false},
-                                            {name: '', id: 0, isCorrect: false},
-                                            {name: '', id: 0, isCorrect: false}
-                                    ],
+                                    answers: respostasVario,
                                     area_id: 0,
                                     additional_info: '',
                                     has_image: false,
@@ -252,17 +252,18 @@ const Admistrator = () => {
                     </div>              
                     <div className="answers">
                         <p>Alternativas</p>
-                        {[...Array(novaQst.answers[5] ? 5 : 4)].map((_, index) => (
-                            <input type="text" placeholder={`Alternativa ${String.fromCharCode(65 + index)}`} key={index} 
-                            value={novaQst.answers[index].name}
+                        {novaQst.answers.map((answer, index) => {
+                            return (<input type="text" placeholder={`Alternativa ${answer.question_letter}`} key={answer.id} 
+                            value={answer.answer}
                             onChange={(e) => {
                                 let newAnswers = [...novaQst.answers];
-                                newAnswers[index].name = e.target.value;
+                                newAnswers[index].answer = e.target.value;
                                 setNovaQst({...novaQst, answers: newAnswers});
                             }}
-                            />
+                            />)
+                        })
 
-                        ))}
+                        }
                         {/*<input type="text" placeholder="Alternativa A" />
                         <input type="text" placeholder="Alternativa B" />
                         <input type="text" placeholder="Alternativa C" />
@@ -454,3 +455,4 @@ const Admistrator = () => {
 }
 
 export default Admistrator;
+

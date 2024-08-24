@@ -26,7 +26,7 @@ import { getAnswersByQuestionIdController, getAnswersByQuestionsIdsController } 
 
 import { postQuestionController } from './controllers/postQuestionController';
 import { getQuestion_MockTestsController } from './controllers/getQuestion_MockTest';
-
+import { putAnswerController } from './controllers/putAnswerController';
 export async function routes(app: any) {
     app.post('/signup', signupController);
     app.post('/login', loginController);
@@ -70,7 +70,9 @@ export async function routes(app: any) {
 
     // '/answers/'
     app.get('/answers/question/:question_id', getAnswersByQuestionIdController);
+    app.put('/answers/question/:question_id', putAnswerController);
     app.get('/answers/questions', getAnswersByQuestionsIdsController);
+
 
     // '/mockTest/'
     app.get('/mockTests', getMockTestsController);

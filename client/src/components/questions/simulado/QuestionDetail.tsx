@@ -32,7 +32,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
 
     // Garante que o array de refs tenha o tamanho necessário
     if (alternativasRef.current.length === 0) {
-        let length = question.answers.length;
+        let length = question.answers ? question.answers.length : 0;
         alternativasRef.current = Array.from({ length }, () => React.createRef());
     }
 
@@ -41,7 +41,8 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
     const [showAnswer, setShowAnswer] = useState(false);
 
     const correctAnswer = isCorrecao !== undefined ? 
-    question.answers.map((answer, index) => answer.isCorrect ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0] : null;
+    question.answers &&
+    question.answers.map((answer, index) => answer.is_correct ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0] : null;
 
     const addClassToAlternative = useCallback((letter: string) => {
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
@@ -160,12 +161,12 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
             </h4>
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 
-                {question.answers.map((alternative, index) => (
+                {question.answers && question.answers.map((alternative, index) => (
                     <div key={index} ref={alternativasRef.current[index]}>
                         <span>
-                            <p> {String.fromCharCode(65 + index)} </p>
+                            <p> {alternative.question_letter} </p>
                         </span>
-                        <p> {alternative.name} </p>
+                        <p> {alternative.answer} </p>
                     </div>
                 ))}
 

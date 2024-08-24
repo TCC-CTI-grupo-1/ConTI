@@ -331,6 +331,14 @@ export async function handleGetQuestions(): Promise<questionInterface[]> {
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
+            responseData.questions.forEach(async (question: questionInterface) => {
+                const answers:respostaInterface[] = await handleGetAnswers(question.id);
+                if(answers.length === 0){
+                    throw new Error('Erro ao pegar alternativas');
+                }
+                question.answers = answers;
+            });
+
             return responseData.questions;
         }
 
@@ -361,7 +369,7 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
     }
 }
 
-async function handleGetAnswers(questionID: number): Promise<string[]> {
+async function handleGetAnswers(questionID: number): Promise<respostaInterface[]> {
     try{
         const response = await fetch('http://localhost:3001/answers/question/' + questionID, {
             method: 'GET',
@@ -709,7 +717,7 @@ export async function handleGetTopParentAreaById(id: number): Promise<areaInterf
 export async function handlePutQuestion(question: questionInterface): Promise<boolean> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questions/'+question.id, {
+        const response1 = await fetch('http://localhost:3001/questions/'+question.id, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -718,10 +726,21 @@ export async function handlePutQuestion(question: questionInterface): Promise<bo
             body: JSON.stringify(question)
         });
 
-        const responseData = await response.json();
-        if (!response.ok) {
-            console.log(responseData.message);
-            throw new Error(responseData.message);
+        const response2 = await fetch('http://localhost:3001/answers/question/'+question.id, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(question.answers)
+        });
+
+        const responseData1 = await response1.json();
+        const responseData2 = await response2.json();
+
+        if (!response1.ok && !response2.ok) {
+            //console.log(responseData.message);
+            throw new Error(responseData1.message + ' ' + responseData2.message); 
         } else {
             return true;
         }
