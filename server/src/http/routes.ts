@@ -47,7 +47,7 @@ export async function routes(app: any) {
     app.get('/questions/:id', getQuestionByIdController);
     app.get('/questions/weight/:weight', getQuestionByWeightsAndProfileController);
     app.get('/questions/filter/:filter', getQuestionWithFiltersController);
-    app.get('/questionsByIds/', getQuestionsByIdsController);
+    app.get('/questionsByIds/:ids', getQuestionsByIdsController);
 
 
 

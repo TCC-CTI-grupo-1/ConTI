@@ -74,7 +74,7 @@ export async function getQuestionByWeightsAndProfileController(req: Request, res
 export async function getQuestionsByIdsController(req: Request, res: Response) {
     const questionDAO = new QuestionDAO();
     try {
-        const questionIDS = req.body.questionIDS;
+        const questionIDS = JSON.parse(req.params.ids) as number[];
         const questions: QuestionDTO[] = await questionDAO.listQuestionsByIds(questionIDS);
         res.json({ questions: questions });
     } catch (error: any) {

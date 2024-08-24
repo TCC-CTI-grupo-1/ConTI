@@ -294,15 +294,12 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<questionInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questionsByIds', {
+        const response = await fetch('http://localhost:3001/questionsByIds/' + JSON.stringify(questions_ids), {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                questionIDS: questions_ids
-            })
+            }
         });
 
         const responseData = await response.json();
@@ -390,10 +387,10 @@ async function handleGetAnswers(questionID: number): Promise<respostaInterface[]
     }
 }
 
-export async function handleGetMockTests(date: Date): Promise<simuladoInterface[]> {
+export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<simuladoInterface[]> {
     try {
         await new Promise(resolve => setTimeout(resolve, 500));
-    
+        
         const response = await fetch('http://localhost:3001/mockTests/date/' + date, {
             method: 'GET',
             credentials: 'include', 
@@ -406,6 +403,7 @@ export async function handleGetMockTests(date: Date): Promise<simuladoInterface[
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
+            console.log(date);
             return responseData.mockTests;
         }
 
