@@ -71,7 +71,7 @@ export async function routes(app: any) {
     // '/answers/'
     app.get('/answers/question/:question_id', getAnswersByQuestionIdController);
     app.put('/answers/question/:question_id', putAnswerController);
-    app.get('/answers/questions', getAnswersByQuestionsIdsController);
+    app.get('/answers/questions/:questions_ids', getAnswersByQuestionsIdsController);
 
 
     // '/mockTest/'

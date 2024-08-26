@@ -95,10 +95,10 @@ const History = () => {
         let responseSimulados: simuladoInterface[] = await handleGetMockTestsByDateAndProfile(day);
 
         responseSimulados.forEach(async (simulado) => {
-            let questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
-            let questions = await handleGetQuestionsByIds(questionMockTests.map(qmt => qmt.question_id));
-            console.log("questions", questions);
-            
+            const questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
+            const questions = await handleGetQuestionsByIds(questionMockTests.map(qmt => qmt.question_id));
+            const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
+            const answersMockTests = answers.filter(answer => questionMockTests.find(qmt => qmt.answer_id === answer.id) !== undefined);
             let subjects: {
                 [key: string]: {
                     total_answers: number;
@@ -106,15 +106,14 @@ const History = () => {
                 };
             } = {};
             questions.forEach(question => {
-                let areaID = question.area_id;
-                let area = areas[areaID];
-                let areaName = area.name;
+                const areaID = question.area_id;
+                const area = areas[areaID];
+                const areaName = area.name;
                 if(subjects[areaName] === undefined){
                     subjects[areaName] = {total_answers: 0, total_correct_answers: 0};
                 }
                 subjects[areaName].total_answers++;
-                let isCorrect = question.answers.find(answer => answer.id === questionMockTests.find(questionMockTest => questionMockTest.question_id === question.id)!.answer_id) !== undefined;
-                if(isCorrect){
+                if (answersMockTests.find(answer => answer.question_id === question.id && answer.is_correct) !== undefined){
                     subjects[areaName].total_correct_answers++;
                 }
             })
@@ -129,14 +128,12 @@ const History = () => {
         let day = new Date(date);
 
         let responseSimulados: simuladoInterface[] = await handleGetMockTestsByDateAndProfile(day);
-        responseSimulados.forEach(async (simulado) => {
-            let questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
-            let questionIdsArray: number[] = [];
-            questionMockTests.forEach(questionMockTest => {
-                questionIdsArray.push(questionMockTest.question_id);
-            });
 
-            let questions = await handleGetQuestionsByIds(questionIdsArray);
+        responseSimulados.forEach(async (simulado) => {
+            const questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
+            const questions = await handleGetQuestionsByIds(questionMockTests.map(qmt => qmt.question_id));
+            const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
+            const answersMockTests = answers.filter(answer => questionMockTests.find(qmt => qmt.answer_id === answer.id) !== undefined);
             let subjects: {
                 [key: string]: {
                     total_answers: number;
@@ -144,20 +141,19 @@ const History = () => {
                 };
             } = {};
             questions.forEach(question => {
-                let areaID = question.area_id;
-                let area = areas[areaID];
-                let areaName = area.name;
+                const areaID = question.area_id;
+                const area = areas[areaID];
+                const areaName = area.name;
                 if(subjects[areaName] === undefined){
                     subjects[areaName] = {total_answers: 0, total_correct_answers: 0};
                 }
                 subjects[areaName].total_answers++;
-                let isCorrect = question.answers.find(answer => answer.id === questionMockTests.find(questionMockTest => questionMockTest.question_id === question.id)!.answer_id) !== undefined;
-                if(isCorrect){
+                if (answersMockTests.find(answer => answer.question_id === question.id && answer.is_correct) !== undefined){
                     subjects[areaName].total_correct_answers++;
                 }
             })
+            console.log("subjects", subjects);
             simulado.subjects = subjects
-            
         });
         return responseSimulados;
     }
@@ -228,7 +224,6 @@ const History = () => {
 
     function showDate(){
         let date = new Date(activeDay);
-        console.log(date.toISOString());
     }
 
     return (

@@ -19,7 +19,7 @@ export async function getAnswersByQuestionIdController(req: Request, res: Respon
 }
 
 export async function getAnswersByQuestionsIdsController(req: Request, res: Response) {
-    const questions_ids = req.body.questions_ids;
+    const questions_ids = JSON.parse(req.params.questions_ids) as number[];
     const answerDAO = new AnswerDAO();
     
     try {
