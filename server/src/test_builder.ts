@@ -102,7 +102,7 @@ const getTestProportions = async function(test:string)
             official_test_name: test
         }
     });
-    type simpleMap = { [key:string]:number};
+    type simpleMap = { [key:string|number]:number};
     const difficultyCount:simpleMap = {};
     const areaCount:simpleMap = {};
     const idToNameCache:{[key:number]:string} = {};
@@ -111,11 +111,10 @@ const getTestProportions = async function(test:string)
     for(const row of rows)
     {
         totalQuestions++;
-        if(!idToNameCache[row.area_id])
+        if(!areaCount[row.area_id])
         {
-            const name = await idToName(row.area_id);
+            const name = await row.area_id;
             areaCount[name] = 1;
-            idToNameCache[row.area_id] = name;
         }
         else {
             areaCount[idToNameCache[row.area_id]]++;
