@@ -258,7 +258,7 @@ export async function handleDeleteAccount() {
 
 export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> {
     try{
-        const response = await fetch('http://localhost:3001/questions/' + questionID, {
+        const response = await fetch('http://localhost:3001/questions/id/' + questionID, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -468,16 +468,19 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 
 //Essa função parece muito errada
 
+// não é 'generate', tá mais pra 'get'
 export async function generateNewSimulado(amount: number): Promise<string>{
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
-        const response = await fetch('http://localhost:3001/questions/'+amount, {
-            method: 'POST',
+        console.log("here i am")
+        const response = await fetch('http://localhost:3001/areas/questions/fala/', {
+            method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
+        console.log("here i am")
 
         const responseData = await response.json();
         if (!response.ok) {
@@ -779,7 +782,7 @@ export async function handlePostQuestion(question: questionInterface): Promise<b
 export async function handleDeleteQuestion(id: number): Promise<boolean> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questions/'+id, {
+        const response = await fetch('http://localhost:3001/questionsById/'+id, {
             method: 'DELETE',
             credentials: 'include',
             headers: {

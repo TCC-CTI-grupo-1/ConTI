@@ -10,13 +10,13 @@ import { getAreaController, getTopParentAreaByIdController,
          getAreaByIdController, getAreasIdsByQuestionsIdsController,
          getAreaIdByQuestionIdController
  } from './controllers/getAreaController';
-import { setAreaController } from './controllers/setAreaController';
+import { postAreaController } from './controllers/setAreaController';
 import { getMockTestsController, getMockTestsByDecrescentDateController,
             getMockTestsByDateAndProfileController
  } from './controllers/getMockTestController';
 import { setMockTestController } from './controllers/setMockTestController';
 import { getArea_ProfileController } from './controllers/getArea_ProfileController';
-import { getQuestionWithFiltersController, getQuestionByWeightsAndProfileController,
+import { getQuestionWithFiltersController, getQuestionsForNewMockTestByProfileController,
         getQuestionByIdController, getQuestionController,
         getQuestionsByIdsController
  } from './controllers/getQuestionController';
@@ -44,10 +44,10 @@ export async function routes(app: any) {
 
     // '/questions/'
     app.get('/questions', getQuestionController);
-    app.get('/questions/:id', getQuestionByIdController);
-    app.get('/questions/weight/:weight', getQuestionByWeightsAndProfileController);
-    app.get('/questions/filter/:filter', getQuestionWithFiltersController);
+    app.get('/questionsById/:id', getQuestionByIdController);
+    app.get('/questionsByFil/filter/:filter', getQuestionWithFiltersController);
     app.get('/questionsByIds/:ids', getQuestionsByIdsController);
+    app.get('/questions/fala', getQuestionsForNewMockTestByProfileController);
 
 
 
@@ -55,7 +55,7 @@ export async function routes(app: any) {
 
     app.post('/questions', postQuestionController);
 
-    app.delete('/questions/:id', deleteQuestionByIdController);
+    app.delete('/questionsById/:id', deleteQuestionByIdController);
 
 
     // '/area/'
@@ -66,7 +66,7 @@ export async function routes(app: any) {
 
     app.get('/areas/top/:id', getTopParentAreaByIdController);
 
-    app.post('/areas', setAreaController);
+    app.post('/areas', postAreaController);
 
     // '/answers/'
     app.get('/answers/question/:question_id', getAnswersByQuestionIdController);

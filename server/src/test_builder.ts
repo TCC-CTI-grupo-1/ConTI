@@ -151,7 +151,7 @@ const shuffle = function(array:any[])
 }
 
 
-class TestBlueprint implements ITestBlueprint{
+export class TestBlueprint implements ITestBlueprint{
     totalQuestions: number;
     questionBySubject: {[key:string]:number};
     difficultyLevel: DifficultyLevel;
@@ -172,7 +172,7 @@ class TestBlueprint implements ITestBlueprint{
     }
 }
 
-class TestBuilder{
+export class TestBuilder{
     testBlueprintList:TestBlueprint[] | undefined
     constructor(testBlueprint:TestBlueprint[] | undefined)
     {
@@ -265,7 +265,29 @@ class TestBuilder{
                 //o número de áreas.
             }
         }
-        return questionList;
+        const questionDTOList: QuestionDTO[] = [];
+        for (const subject in questionList) {
+            const questions = questionList[subject];
+            for (const question of questions) {
+                const questionDTO: QuestionDTO = {
+                    id: question.id,
+                    area_id: question.area_id,
+                    question_text: question.question_text,
+                    question_year: question.question_year,
+                    total_answers: question.total_answers,
+                    total_correct_answers: question.total_correct_answers,
+                    difficulty: question.difficulty,
+                    additional_info: question.additional_info,
+                    question_creator: question.question_creator,
+                    official_test_name: question.official_test_name,
+                    question_number: question.question_number,
+                    has_image: question.has_image,
+                    has_latex: question.has_latex
+                };
+                questionDTOList.push(questionDTO);
+            }
+        }
+        return questionDTOList;
     }
 }
 

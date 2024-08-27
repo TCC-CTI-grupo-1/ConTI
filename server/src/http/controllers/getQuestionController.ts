@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { QuestionDAO } from "../../DAO/QuestionDAO";
 import { QuestionDTO } from "../../DTO/QuestionDTO";
 import { questionFilters } from "../../types/client/interfaces";
+import { TestBuilder, TestBlueprint } from "../../test_builder";
+import test from "node:test";
 
 export async function getQuestionController(req: Request, res: Response) {
     const questionDAO = new QuestionDAO();
@@ -51,7 +53,7 @@ export async function getQuestionWithFiltersController(req: Request, res: Respon
     }
 }
 
-export async function getQuestionByWeightsAndProfileController(req: Request, res: Response) {
+export async function getQuestionsForNewMockTestByProfileController(req: Request, res: Response) {
     if(req.session === undefined) {
         return res.status(404).json({ message: 'Sessão não inicializada' });
     }
@@ -64,7 +66,11 @@ export async function getQuestionByWeightsAndProfileController(req: Request, res
     const questionDAO = new QuestionDAO();
     try {
         const profileId = req.session.profile.id;
-        const questions: QuestionDTO[] = await questionDAO.listQuestionsByWeightsAndProfile(profileId, 10);
+        const test_blueprint = new TestBlueprint();
+        
+        const test_builder = new TestBuilder([]);
+        const questions = await test_builder.buildTest(test_blueprint);
+        console.log(questions);
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
