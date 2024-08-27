@@ -15,7 +15,11 @@ export async function updateProfileController(req: Request, res: Response) {
         id: req.body.id,
         name: req.body.name,
         email: req.body.email,
-        creation_date: req.body.creation_date
+        creation_date: req.body.creation_date,
+        profile_picture: req.body.profile_picture,
+        total_correct_answers: req.body.total_correct_answers,
+        total_answers: req.body.total_answers,
+        password: req.body.password
       }
       req.session.profile = sessionProfile;
       

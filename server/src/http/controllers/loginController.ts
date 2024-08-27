@@ -13,7 +13,11 @@ export async function loginController(req: Request, res: Response) {
         id: profileDTO.id,
         name: profileDTO.name,
         email: profileDTO.email,
-        creation_date: profileDTO.creation_date
+        creation_date: profileDTO.creation_date,
+        profile_picture: profileDTO.profile_picture,
+        total_correct_answers: profileDTO.total_correct_answers,
+        total_answers: profileDTO.total_answers,
+        password: ''
       }
       req.session.profile = sessionProfile;
       
