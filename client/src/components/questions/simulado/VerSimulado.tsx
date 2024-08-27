@@ -1,15 +1,13 @@
 import Simulado from "./Respostas"
 import { useState, useEffect } from "react"
-import { questionInterface, simuladoSimpleInterface } from "../../../controllers/interfaces"
-import { handleGetQuestion, handlePostSimulado } from "../../../controllers/userController"
-import date from 'date-and-time'
-import { useNavigate } from "react-router-dom"
-import { handleGetSimulado } from "../../../controllers/userController"
+import { questionInterface, respostaInterface } from "../../../controllers/interfaces"
+import { handleGetQuestion } from "../../../controllers/userController"
+//import { useNavigate } from "react-router-dom"
+import { handleGetQuestion_MockTestsByMockTestId } from "../../../controllers/userController"
 import { useParams } from "react-router-dom"
-import { simuladoInterface } from "../../../controllers/interfaces"
 
 
-  type questionResultsInterface = [questionInterface, (string | null)][];
+  type questionResultsInterface = [questionInterface, (respostaInterface | null)][];
 
 const SimuladoFrame = () => {
     const { id } = useParams();
@@ -18,14 +16,15 @@ const SimuladoFrame = () => {
     const [loading, setLoading] = useState(true);
     const [pontuacao, setPontuacao] = useState<boolean[]>([]);
 
-    const navegate = useNavigate();
+    //const navegate = useNavigate();
 
     useEffect(() => {
         const getSimulado = async () => {
             
             let newQuestionsHashMap: questionResultsInterface = [];
 
-            const simulado = await handleGetSimulado(Number(id));
+            const simulado = await handleGetQuestion_MockTestsByMockTestId(Number(id));
+
 
             console.log(typeof(simulado));
 
@@ -35,16 +34,30 @@ const SimuladoFrame = () => {
             }
 
             let newPontuacao: boolean[] = [];
-            await Promise.all(simulado.questions.map(async (question, index) => {
-                const questionData = await handleGetQuestion(question[0]);
-                newQuestionsHashMap.push([questionData, question[1]]);
-
-                if(questionData.alternativaCorreta.toUpperCase() === question[1]?.toUpperCase()){
-                    newPontuacao.push(true);
-                }
+            await Promise.all(simulado.map(async (question) => {
+                const questionData = await handleGetQuestion(question.question_id);
+                if(questionData !== null)
+                    {
+                        let jorge = questionData.answers.find((a) => a.id === question.answer_id)
+                        newQuestionsHashMap.push([questionData, jorge !== undefined ? jorge : null]);
+                        let correctAnswer = questionData.answers.find((a) => a.is_correct === true);
+                        if(correctAnswer === undefined){
+                            console.error("Erro ao carregar questão " + question.question_id);
+                        }
+                        else{
+                            if(correctAnswer.id === question.answer_id){
+                                newPontuacao.push(true);
+                            }
+                            else{
+                                newPontuacao.push(false);
+                            }
+                        }
+                        
+                    }
                 else{
-                    newPontuacao.push(false);
+                    console.error("Erro ao carregar questão " + question.question_id);
                 }
+                
             }));
 
             setQuestionsHashMap(newQuestionsHashMap);

@@ -98,6 +98,8 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                             else{
                                 markQuestionAsSelected(index, false);
                             }
+
+                            setResultsHashMap(newResultsHashMap);
                         }}
                         qNumber={cont}
                     />
@@ -212,7 +214,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
         <div className="allQuestionsModal">
             
             {
-                questionsHashMap.map((question, index) => {
+                questionsHashMap.map((_, index) => {
                     return (<h3 key={index}
                     
                     onClick={() => {

@@ -1,7 +1,5 @@
-import React from 'react'
 import ArrowIcon from '../../assets/ArrowIcon';
 import { useState } from 'react';
-import date from 'date-and-time';
 
 interface Props{
     handleChangeDay: (day: Date) => void;

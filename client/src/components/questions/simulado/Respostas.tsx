@@ -1,8 +1,8 @@
 import QuestionDetail from "./QuestionDetail";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Button from "../../Button";
 import ArrowIcon from "../../../assets/ArrowIcon";
-import { questionInterface } from "../../../controllers/interfaces";
+import { questionInterface, respostaInterface } from "../../../controllers/interfaces";
 import { useNavigate } from "react-router-dom";
 import Numbers from "./Numbers";
 import { handleQuestionNumberClick } from "./Numbers";
@@ -17,7 +17,7 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
   
-type questionResultsInterface = [questionInterface, (string | null)][];
+type questionResultsInterface = [questionInterface, (respostaInterface | null)][];
 
 interface Props {
     questionsHashMap: questionResultsInterface;
@@ -32,7 +32,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
 
     const [activeQuestion, setActiveQuestion] = useState(0);
 
-    function markQuestionAsSelected(questionNumber: number, selected: boolean) {
+    /*function markQuestionAsSelected(questionNumber: number, selected: boolean) {
         const questionSpan = document.getElementById(`question-${questionNumber}`);
         if (questionSpan) {
             if (selected) {
@@ -41,7 +41,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                 questionSpan.classList.remove("selected");
             }
         }
-    }
+    }*/
 
     const returnQuestionDetail = () => {
         let cont = 0;
@@ -56,7 +56,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                 >
                     <QuestionDetail 
                         question={questionMap[0]} 
-                        isCorrecao={questionMap[1]}
+                        isCorrecao={questionMap[1]?.answer}
                     />
                 </div>
             );
@@ -135,7 +135,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
             {
                 questionsHashMap.map((question, index) => {
                     return <h3 key={question[0].id} className={
-                        (question[1]?.toUpperCase() === question[0].alternativaCorreta.toUpperCase() ?
+                        (question[1]?.answer?.toUpperCase() === question[0].answers.find(answer => answer.is_correct == true) ?
                         'correct' : 'wrong') + ' ' +
                         (activeQuestion == index ? 'active' : '')
                     }

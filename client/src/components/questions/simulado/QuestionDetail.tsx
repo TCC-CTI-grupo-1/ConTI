@@ -135,7 +135,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
     }, []);
 
     //saporranfunciona
-    function validateWordText(word: string): string {
+    /*function validateWordText(word: string): string {
         //aqui está como "line" mas na verdade é cada palavra.
         const n_caracteres = 100;
         let returnedWord = '';
@@ -146,7 +146,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
             returnedWord = word;
         }
         return returnedWord;
-    }
+    }*/
 
     //
     //OiFernando

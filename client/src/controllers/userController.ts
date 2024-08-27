@@ -1,5 +1,5 @@
 
-import { json } from 'react-router-dom';
+//import { json } from 'react-router-dom';
 import { Profile } from '../../../server/src/types/express-session';
 import { questionInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface } from './interfaces';
 import { questionFilters } from './interfaces';
@@ -445,7 +445,8 @@ export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number
 export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoInterface | null> {
     //Código PLACEHOLDER.
     try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        await new Promise(resolve => setTimeout(resolve, 1000 * questionsList.length));
         return null;
     } catch (err: any) {
         return null;
@@ -456,7 +457,7 @@ export async function handlePostSimulado(questionsList: questionMapResultInterfa
 export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {
     //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
     try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 1000 * id/100));
         return null;
     } catch (err: any) {
         return null;

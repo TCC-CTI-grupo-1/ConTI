@@ -10,15 +10,8 @@ interface Props{
 
 const UserIcon = ({iconColor='black', onIconClick}:Props) => {
 
-    const [color, setColor] = useState(iconColor);
+    const [color, _] = useState(iconColor);
 
-    function handleChangeColor(){
-        if(color == 'white'){
-            setColor('black');
-        }else{
-            setColor('white');
-        }
-    }
 
     return(
 

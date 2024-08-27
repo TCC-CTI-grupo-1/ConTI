@@ -1,5 +1,4 @@
-import React from 'react';
-import { Button, useBreakpointValue, ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Button, useBreakpointValue } from '@chakra-ui/react';
 
 interface Props {
     children: any;
