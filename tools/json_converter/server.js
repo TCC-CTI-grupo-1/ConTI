@@ -21,8 +21,20 @@ client.connect()
     .then(() => console.log('Connected to PostgreSQL'))
     .catch(err => console.error('Connection error', err.stack));
 
+app.get('/marcos', async() => {
+    console.warn("Foi")
+    try {
+        client.query(`DELETE FROM answer WHERE answer=''`);
+    }
+    catch(err)
+    {
+
+    }
+} );
 
 app.post('/submit-answers',async (req, res) => {
+    client.query(`DELETE FROM answer WHERE answer=''`);
+
     const {year,number,letter} = req.body;
     if (!year || !number || !letter) {
         return res.status(400).send('answer is required');
