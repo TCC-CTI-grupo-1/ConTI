@@ -472,17 +472,16 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 export async function generateNewSimulado(amount: number): Promise<string>{
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
-        console.log("here i am")
-        const response = await fetch('http://localhost:3001/areas/questions/fala/', {
+        const response = await fetch('http://localhost:3001/questions/newMockTest/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-        console.log("here i am")
 
         const responseData = await response.json();
+        console.log("questions: ", responseData.questions);
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {

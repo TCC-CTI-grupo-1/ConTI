@@ -55,21 +55,29 @@ export async function getQuestionWithFiltersController(req: Request, res: Respon
 
 export async function getQuestionsForNewMockTestByProfileController(req: Request, res: Response) {
     if(req.session === undefined) {
+        console.log("sessão não inicializada")
         return res.status(404).json({ message: 'Sessão não inicializada' });
     }
     if (!req.session.isLoggedIn) {
+        console.log("usuário não logado")
         return res.status(401).json({ message: 'Usuário não logado' });
     }
     if(req.session.profile === undefined) {
+        console.log("perfil não encontrado")
         return res.status(404).json({ message: 'Perfil não encontrado' });
     }
+    console.log("testes")
     const questionDAO = new QuestionDAO();
     try {
         const profileId = req.session.profile.id;
         const test_blueprint = new TestBlueprint();
+        console.log("testes3")
         
         const test_builder = new TestBuilder([]);
+        console.log("testes2")
         const questions = await test_builder.buildTest(test_blueprint);
+        console.log("testes4")
+
         console.log(questions);
         res.json({ questions: questions });
     } catch (error: any) {
