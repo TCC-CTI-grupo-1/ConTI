@@ -7,26 +7,40 @@ import {
   MenuOptionGroup,
   Button,
   Checkbox,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import LocalButton from "../Button";
 import { showAlert } from "../../App";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import { useState } from "react";
-import Question from "./QuestionBox";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { questionInterface } from "../../controllers/interfaces";
+import { questionInterface, areaInterface } from "../../controllers/interfaces";
 import { questionFilters as options } from "../../controllers/interfaces";
-import { handleGetQuestions } from "../../controllers/userController";
+import { handleGetFilteredQuestions, handleGetAreasMap } from "../../controllers/userController";
+import QuestionBox from "./QuestionBox";
 
 const Filters = () => {
   const navegate = useNavigate();
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const anos = [2024, 2023, 2022];
+  const dificuldade = ["facil", "medio", "dificil"];
+
   const [options, setOptions] = useState<options>({
-    ano: ["2024", "2023", "2022"],
-    dificuldade: ["easy", "medium", "hard", "take-the-l"],
-    disciplina: ["math", "port", "naturais", "humanas"],
+    ano: anos,
+    dificuldade: dificuldade,
+    disciplina: [],
     alreadyAnswered: false,
-    mySimulations: false,
+    myMockTests: false,
+    //mySimulations: false,
   });
 
   function handleSelectChange(
@@ -34,7 +48,31 @@ const Filters = () => {
     option: "ano" | "dificuldade" | "disciplina"
   ) {
     let newOptions = options;
+    console.log("Alterando n sei oq é isso");
+    console.log(e);
     newOptions[option] = e;
+    if(e.length === 0){
+      switch(option){
+        case "ano":
+          newOptions[option] = anos;
+          break;
+        case "dificuldade":
+          newOptions[option] = dificuldade;
+          break;
+        case "disciplina":
+          newOptions[option] = [];
+          break;
+      }
+    }
+
+    if(option == "ano"){
+      //conver 'e' de ['2024', '2023'] para [2024, 2023]
+      newOptions[option] = e.map((element: string) => {
+        return parseInt(element);
+      });
+    }
+
+    
     console.log(newOptions);
     setOptions(newOptions);
   }
@@ -43,21 +81,42 @@ const Filters = () => {
     questionInterface[]
   >([]);
 
-  function handleGetFilteredQuestions(){
+  function handleGetFilteredQuestionsLocal(){
     setLoading(true);
     console.log(options);
-    handleGetQuestions(options).then((questions) => {
+    handleGetFilteredQuestions(options).then((questions) => {
       setFilteredQuestions(questions);
       setLoading(false);
     });
   }
   
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  async function handleAreasMap(){
+    const areasMap = await handleGetAreasMap();
+
+    if(Object.keys(areasMap).length === 0){
+        showAlert("Erro ao carregar areas");
+        return;
+    }
+
+    setAreas(areasMap);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    handleAreasMap();
+  }, []);
+
+  const [areas, setAreas] = useState<{[id: number]: areaInterface}>({});
 
   return (
+    <>
     <div id="questions">
       <div className="filters box">
-        <h3>Filtros</h3>
+        <h3 onClick={() => {
+          console.log(areas);
+        }}>Filtros</h3>
         <div className="options">
           <div>
             <Menu closeOnSelect={false}>
@@ -108,9 +167,9 @@ const Filters = () => {
                         handleSelectChange(e, "dificuldade");
                       }}
                     >
-                      <MenuItemOption value="easy">Fácil</MenuItemOption>
-                      <MenuItemOption value="medium">Médio</MenuItemOption>
-                      <MenuItemOption value="hard">Difícil</MenuItemOption>
+                      <MenuItemOption value="facil">Fácil</MenuItemOption>
+                      <MenuItemOption value="medio">Médio</MenuItemOption>
+                      <MenuItemOption value="dificil">Difícil</MenuItemOption>
                     </MenuOptionGroup>
                   </MenuList>
                 </>
@@ -119,40 +178,13 @@ const Filters = () => {
           </div>
 
           <div>
-            <Menu closeOnSelect={false}>
-              {({ isOpen }) => (
-                <>
-                  <MenuButton
-                    as={Button}
-                    colorScheme={isOpen ? "blue" : "gray"}
-                    rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                  >
-                    Disciplina
-                  </MenuButton>
-                  <MenuList minWidth="240px">
-                    <MenuOptionGroup
-                      title="Disciplina"
-                      type="checkbox"
-                      onChange={(e) => {
-                        handleSelectChange(e, "disciplina");
-                      }}
-                    >
-                      <MenuItemOption value="math">Matemática</MenuItemOption>
-                      <MenuItemOption value="port">Português</MenuItemOption>
-                      <MenuItemOption value="naturais">
-                        Ciências Naturais
-                      </MenuItemOption>
-                      <MenuItemOption value="humanas">
-                        Ciências Humanas
-                      </MenuItemOption>
-                    </MenuOptionGroup>
-                  </MenuList>
-                </>
-              )}
-            </Menu>
+            <Button
+            onClick={onOpen}><span>Selecionar disciplina</span></Button>
           </div>
         </div>
         <div className="more-options">
+
+          {/*
           <p>Excluir questões:</p>
           <Checkbox
             onChange={(e) => {
@@ -160,14 +192,17 @@ const Filters = () => {
             }}
           >
             De meus simulados
-          </Checkbox>
+          </Checkbox>*/
+          }
           <Checkbox
             onChange={(e) => {
-              setOptions({ ...options, mySimulations: e.target.checked });
+              setOptions({ ...options, alreadyAnswered: e.target.checked });
             }}
           >
             Já respondidas
           </Checkbox>
+          
+
           <LocalButton
             colorScheme="red"
             variant={"outline"}
@@ -187,7 +222,7 @@ const Filters = () => {
 
           <LocalButton colorScheme="blue" variant={"solid"}
           onClick={
-            handleGetFilteredQuestions
+            handleGetFilteredQuestionsLocal
           }>
             Aplicar filtros
           </LocalButton>
@@ -229,12 +264,64 @@ const Filters = () => {
             <h2>Carregando...</h2>
           ) : (
             filteredQuestions.map((question, index) => {
-              return <Question key={index} question={question} />;
+              return areas[question.area_id] ? (<QuestionBox
+                key={index}
+                question={question}
+                area={areas[question.area_id]}
+                />) : <p>Area da questão {question.id} não encontrada</p>;
             })
           )}
         </div>
       </div>
     </div>
+
+    <Modal
+        isCentered
+        onClose={onClose}
+        isOpen={isOpen}
+        motionPreset='slideInBottom'
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Selecione uma ou mais areas para o filtro</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <div id="filtro-ver-areas">
+            {areas ? Object.keys(areas).map((key) => {
+                return (
+                <Checkbox
+                  key={key}
+                  onChange={(e) => {
+                  let newOptions = { ...options };
+                  if (e.target.checked) {
+                    newOptions.disciplina.push(areas[parseInt(key)].name);
+                  } else {
+                    newOptions.disciplina = newOptions.disciplina.filter(
+                    (element) => {
+                      return element !== areas[parseInt(key)].name;
+                    }
+                    );
+                  }
+                  console.log(newOptions);
+                  setOptions(newOptions);
+                  }}
+                >
+                  {areas[parseInt(key)].name} + {String(options.disciplina.map((element) => {
+                    return element === areas[parseInt(key)].name;
+                  }).includes(true) !== undefined)}
+                </Checkbox>
+                );
+            } ) : <p>Carregando...</p>}
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

@@ -1,31 +1,51 @@
+import {useState,useEffect} from 'react';
 interface Props{
     color: string;
     radius: number;
     filledPercentage: number;
-    animation?: string | "";
+    animation?: boolean | false;
 }
-
 const PI = 3.1415926535897932384;
-function percentageToCircle(filledPercentage: number, radius: number){
-    return radius * PI * 2 * filledPercentage/100;
+const animationSpeedInMS = 10;
+
+function percentageToCircle(percentage: number, radius: number){
+    return radius * PI * 2 * percentage/100;
 }
 
-const ProgressBar = ({color, radius, filledPercentage, animation = ""}: Props) =>  {
-
+const ProgressBar = ({color, radius, filledPercentage, animation = false}: Props) =>  {
+    const [currentPercentage, setCurrentPercentage] = useState(0);
     const progressSize = radius*2+20;
-    console.log(filledPercentage)
-    console.log(percentageToCircle(filledPercentage, radius))
+
+    useEffect(() => {
+        if (animation) {
+            const interval = setInterval(() => {
+                setCurrentPercentage(prevPercentage => {
+                    if (prevPercentage < filledPercentage) {
+                        return prevPercentage + 1;
+                    }
+                    clearInterval(interval);
+                    return prevPercentage;
+                });
+            }, animationSpeedInMS); 
+
+            return () => clearInterval(interval);
+        }
+    }, [filledPercentage, animation]);
+
+    const percentage = animation ? currentPercentage : filledPercentage;
+
     return (
         <div className='progress-bar-container' style={{width: (progressSize + 'px'), height: (progressSize + 'px')}}>
             <div className='progress-bar-outline'>
                 <div className='progress-bar-inner-circle'>
-                    <div className='progress-bar-text'>{filledPercentage}%</div>
+                    <div className='progress-bar-text'>{percentage}%</div>
                 </div>
             </div>
             <svg viewBox={"0 0 " + (progressSize) + ' ' + (progressSize)} version="1.1" xmlns="https://www.w3.org/2000/svg" 
             width={progressSize} height = {progressSize}>  
-                <circle className = {animation} cx= "50%" cy ="50%" r = {radius} 
-                stroke={color} strokeDasharray = {percentageToCircle(filledPercentage, radius) + ' 1000000000'}></circle>
+                <circle cx="50%" cy="50%" r = {radius} stroke='#F5F5F5'></circle>
+                <circle cx= "50%" cy ="50%" r = {radius} 
+                stroke={color} strokeDasharray = {percentageToCircle(percentage, radius) + ' 1000000000'}></circle>
             </svg>
         </div>
     )

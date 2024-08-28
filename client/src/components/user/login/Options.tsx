@@ -21,12 +21,14 @@ const Options = ({type, onClick, changeScreen, loading, onRemember}: Props) => {
                         <a>Esqueceu a senha?</a>
                     </div>
                     <Button onClick={onClick} 
-                    loading={loading}>
+                    loading={loading}
+                    width="100%">
                         {type == 'login' ? 'LOGIN' : 'CADASTRAR-SE'}
                     </Button>
                     
                     <p>ou</p>
-                    <Button variant='outline' onClick={() => {showAlert('GOOGLE!', 'success')}} >
+                    <Button variant='outline' onClick={() => {showAlert('GOOGLE!', 'success')}} 
+                    width="100%">
                         Login com o google
                     </Button>
 

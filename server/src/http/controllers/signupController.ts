@@ -25,12 +25,16 @@ export async function signupController(req: Request, res: Response) {
         id: profileDTO.id,
         name: profileDTO.name,
         email: profileDTO.email,
-        creation_date: profileDTO.creation_date
+        creation_date: profileDTO.creation_date,
+        profile_picture: profileDTO.profile_picture,
+        total_correct_answers: profileDTO.total_correct_answers,
+        total_answers: profileDTO.total_answers,
+        password: ''
       }
       req.session.profile = sessionProfile;
       
     
-      res.json({ message: 'Perfil cadastrado com sucesso' });
+      res.status(201).json({ message: 'Perfil cadastrado com sucesso' });
     } catch (error: any) {
       res.status(409).json({ message: error.message });
     }

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Button, useBreakpointValue, ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Button, useBreakpointValue } from '@chakra-ui/react';
 
 interface Props {
     children: any;
@@ -9,13 +8,17 @@ interface Props {
     colorScheme?: 'blue' | 'red' | 'gray'
     width?: '100%' | 'auto' | 'fit-content'
     rightIcon?: any
+    size?: 'xs' | 'sm' | 'md' | 'lg'
 
 }
 
 const LocalButton = ({ children, onClick, variant = 'solid', loading = false, 
-    colorScheme = 'blue', width = 'fit-content', rightIcon }: Props) => {
+    colorScheme = 'blue', width = 'fit-content', rightIcon, size }: Props) => {
     
-    const size = useBreakpointValue({ base: 'xs', sm: 'xs', md: 'sm', lg: 'md' });
+    let defultSize = useBreakpointValue({ base: 'xs', sm: 'xs', md: 'sm', lg: 'md' });
+    if(size !== undefined){
+        defultSize = size;
+    }
 
     return (
         <Button
@@ -24,7 +27,7 @@ const LocalButton = ({ children, onClick, variant = 'solid', loading = false,
             width={width}
             onClick={onClick}
             isLoading={loading}
-            size={size}
+            size={defultSize}
             rightIcon={rightIcon}
             
         >

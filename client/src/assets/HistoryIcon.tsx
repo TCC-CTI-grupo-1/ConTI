@@ -10,15 +10,7 @@ interface Props{
 
 const HistoryIcon = ({iconColor='black', onIconClick}:Props) => {
 
-    const [color, setColor] = useState(iconColor);
-
-    function handleChangeColor(){
-        if(color == 'white'){
-            setColor('black');
-        }else{
-            setColor('white');
-        }
-    }
+    const [color, _] = useState(iconColor);
 
     return(
 

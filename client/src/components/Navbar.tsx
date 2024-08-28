@@ -11,7 +11,7 @@ import { useState } from "react";
 
 
 interface Props{
-    screen: 'home' | 'profile' | 'database' | 'history' | 'newtest';
+    screen: 'home' | 'profile' | 'database' | 'history' | 'newtest' | 'adm';
 }
 
 const Navbar = ({screen}:Props) => {
@@ -45,7 +45,7 @@ const Navbar = ({screen}:Props) => {
                 <div className="icon">
                     <HomeIcon iconColor={checkActiveScreen('home')}
                     onIconClick={() => {navegate('/')}}/>
-                    <p className={checkActiveScreen('home')}>Home</p>
+                    <p  className={checkActiveScreen('home')}>Home</p>
                 </div>
                                         
                 <div className="icon">
@@ -70,6 +70,12 @@ const Navbar = ({screen}:Props) => {
                         <HistoryIcon iconColor={checkActiveScreen('history')}
                         onIconClick={() => {navegate('/history')}}/>
                         <p className={checkActiveScreen('history')}>Histórico</p>
+                </div>
+
+                <div className="icon">
+                        <UserIcon iconColor={checkActiveScreen('adm')}
+                        onIconClick={() => {navegate('/adm')}}/>
+                        <p className={checkActiveScreen('adm')}>Histórico</p>
                 </div>
 
 

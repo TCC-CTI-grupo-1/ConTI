@@ -1,7 +1,6 @@
 import { ConnectionDAO } from './ConnectionDAO';
 import { ProfileDTO } from '../DTO/ProfileDTO';
 import { hashPassword, comparePasswords } from '../hidden/hidden';
-import { throwDeprecation } from 'process';
 
 const connectionDAO = new ConnectionDAO();
 export class ProfileDAO {
@@ -17,7 +16,7 @@ export class ProfileDAO {
                     profile_picture: profile.profile_picture,
                     creation_date: profile.creation_date,
                     total_correct_answers: profile.total_correct_answers,
-                    total_incorrect_answers: profile.total_incorrect_answers
+                    total_answers: profile.total_answers
                 }
             });
             return createdProfile;
@@ -25,6 +24,7 @@ export class ProfileDAO {
             if (error.code === 'P2002') {
                 throw new Error('E-mail já cadastrado');
             }
+            throw error;
         }
     }
 
@@ -42,13 +42,14 @@ export class ProfileDAO {
                 profile_picture: profile.profile_picture,
                 creation_date: profile.creation_date,
                 total_correct_answers: profile.total_correct_answers,
-                total_incorrect_answers: profile.total_incorrect_answers
+                total_answers: profile.total_answers
             }
         });
         } catch (error: any) {
             if (error.code === 'P2002') {
                 throw new Error('Email já cadastrado');
             }
+            throw error;
         }
     }
 
@@ -68,16 +69,21 @@ export class ProfileDAO {
             if (error.code === 'P2002') {
                 throw new Error('Email já cadastrado');
             }
+            throw error;
         }
     }
 
     deleteProfile = async (profile: ProfileDTO) => {
-        const client = await connectionDAO.getConnection();
-        await client.profile.delete({
-            where: {
-                id: profile.id
-            }
-        });
+        try {
+            const client = await connectionDAO.getConnection();
+            await client.profile.delete({
+                where: {
+                    id: profile.id
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
     }
 
     listProfiles = async () => {
@@ -96,7 +102,7 @@ export class ProfileDAO {
                 profile_picture: result.profile_picture,
                 creation_date: result.creation_date,
                 total_correct_answers: result.total_correct_answers,
-                total_incorrect_answers: result.total_incorrect_answers
+                total_answers: result.total_answers
             };
             profiles.push(profile);
         });
@@ -116,23 +122,11 @@ export class ProfileDAO {
                     id: id
                 }
             });
-
-            if (result) {
-                const profile: ProfileDTO = {
-                    id: result.id,
-                    name: result.name,
-                    email: result.email,
-                    password: result.password,
-                    profile_picture: result.profile_picture,
-                    creation_date: result.creation_date,
-                    total_correct_answers: result.total_correct_answers,
-                    total_incorrect_answers: result.total_incorrect_answers
-                };
-                return profile;
-            }
-            else {
+            
+            if (!result) {
                 throw new Error('Perfil não encontrado');
             }
+            return result as ProfileDTO;
         } catch (error) {
             throw error;
         }
@@ -147,22 +141,10 @@ export class ProfileDAO {
                 }
             });
 
-            if (result) {
-                const profile: ProfileDTO = {
-                    id: result.id,
-                    name: result.name,
-                    email: result.email,
-                    password: result.password,
-                    profile_picture: result.profile_picture,
-                    creation_date: result.creation_date,
-                    total_correct_answers: result.total_correct_answers,
-                    total_incorrect_answers: result.total_incorrect_answers
-                };
-                return profile;
-            }
-            else {
+            if (!result) {
                 throw new Error('Perfil não encontrado');
             }
+            return result as ProfileDTO;
 
         } catch (error) {
             throw error;
@@ -175,7 +157,7 @@ export class ProfileDAO {
             const isPasswordCorrect = await comparePasswords(password, profile.password);
 
             if (isPasswordCorrect) {
-                return profile;
+                return profile as ProfileDTO;
             } else {
                 throw new Error('Senha e/ou email incorretos');
             }

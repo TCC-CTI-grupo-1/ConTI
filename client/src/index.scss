@@ -91,6 +91,7 @@ input::-ms-clear {
   --chakra-colors-blue-900: #0041a2 !important;
   /* Mais escuro */
 
+  --chakra-sizes-xl: 70% !important;
 }
 
 body {
@@ -174,7 +175,87 @@ H4{
   border-radius: var(--border-radius);
   border: 1px solid black;
   transform: translate(0px, 0px);
+  &.admin{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    & .page{
+      width: 100%;
+      display: flex;
+      gap: var(--padding-2);
+      align-items: center;
+      margin: var(--padding-2) 0;
+      & input{
+        flex: 1;
+        padding: var(--padding-3);
+      }
+    }
+  }
+  & .inputs{
+    grid-area: 1/2;
+     & textarea{
+      width: 100%;
+      border: 1px solid black;
+      border-radius: var(--border-radius);
+      height: 300px;
+     }
+  }
 }
+
+.adm-box{
+  display: flex;
+  grid-area: 1/1;
+  flex-direction: column;
+  gap: var(--padding-3);
+  & > .btn{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: var(--padding-3);
+    margin-bottom: var(--padding-2);
+  }
+}
+
+.qst-edit{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+
+  & .text{
+    grid-area: 1/1/3/3;
+    & textarea{
+      width: 100%;
+      border: 1px solid black;
+      border-radius: var(--border-radius);
+    }
+    & > textarea{
+      min-height: 200px;
+    }
+  }
+  & .answers{
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-6);
+    & > div{
+      display: flex;
+      gap: var(--padding-3);
+    }
+    & input{
+      width: 90%;
+      margin-left: var(--padding-3);
+      outline: none;
+      border-bottom: 1px solid black;
+      padding: var(--padding-6);
+    }
+  }
+  & .options{
+    grid-area: 4/1/5/3;
+    display: flex;
+    gap: var(--padding-3);
+    margin: var(--padding-3) 0;
+    width: 100%;
+  }
+} 
 
 .center {
   display: flex;
@@ -1053,32 +1134,34 @@ COMPONENTES GERAIS DO FERNANDO
   height: 200px;
   position: relative;
 
-  .progress-bar-container div {
+
+  & div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
+    //border: 1px solid black;
     border-radius: 50%;
   }
 
-  .progress-bar-outline {
+  & .progress-bar-outline {
     width: 100%;
     height: 100%;
 
-    .progress-bar-inner-circle {
-      width: 90%;
+    & .progress-bar-inner-circle {
+      width: 90% ;
       height: 90%;
       background: none;
+      
 
-      .progress-bar-text {
+      & .progress-bar-text {
         font-size: 1.5em;
         font-weight: 600;
       }
     }
   }
 
-  svg {
+  & svg {
     fill: none;
     stroke-linecap: round;
     position: absolute;
@@ -1210,7 +1293,7 @@ COMPONENTES GERAIS DO FERNANDO
               cursor: pointer;
             }
 
-            &>h3 {
+            &>h4 {
               flex: 1;
             }
           }
@@ -1462,71 +1545,101 @@ COMPONENTES GERAIS DO FERNANDO
   }
 }
 
-.question-box {
-
-  background-color: var(--background-color);
-  display: flex;
-  align-items: center;
+.question-bigbox{
   margin: 0 var(--margin-medium);
-  cursor: pointer;
-
-  &>div {
-    padding: var(--padding-4);
-  }
-
-  &>.q-id {
-    background-color: var(--primary-color-30);
+  border-radius: var(--border-radius);
+  &.open{
     border: 1px solid var(--primary-color);
-    border-top-left-radius: var(--border-radius);
-    border-bottom-left-radius: var(--border-radius);
+    & .q-id, & .category, & .year, & .difficulty{
+      border: none;
+      border-top: none !important;
+      border-left: none !important;
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
   }
-
-  &>.category {
+  & > .question-box {
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
     display: flex;
-    flex: 1;
-    gap: var(--padding-3);
+    align-items: center;
 
-    border-top: 1px solid var(--primary-color);
-    border-bottom: 1px solid var(--primary-color);
-  }
+    cursor: pointer;
 
-  &>.year {
-    color: var(--primary-color);
-    padding: var(--padding-4) var(--padding-3);
-    border-top: 1px solid var(--primary-color);
-    border-bottom: 1px solid var(--primary-color);
-  }
-
-  &>.difficulty {
-    background-color: var(--color-red-50);
-    color: white;
-    border: 1px solid var(--color-red);
-    padding: var(--padding-4);
-    border-top-right-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
-    width: 10%;
-    text-align: center;
-
-    &.easy {
-      background-color: var(--color-green-50);
-      border: 1px solid var(--color-green);
+    &>div {
+      padding: var(--padding-4);
     }
 
-    &.medium {
-      background-color: var(--primary-color-50);
+    &>.q-id {
+      background-color: var(--primary-color-30);
       border: 1px solid var(--primary-color);
+      border-top-left-radius: var(--border-radius);
+      border-bottom-left-radius: var(--border-radius);
     }
 
-    &.hard {
+    &>.category {
+      display: flex;
+      flex: 1;
+      gap: var(--padding-3);
+
+      border-top: 1px solid var(--primary-color);
+      border-bottom: 1px solid var(--primary-color);
+    }
+
+    &>.year {
+      color: var(--primary-color);
+      padding: var(--padding-4) var(--padding-3);
+      border-top: 1px solid var(--primary-color);
+      border-bottom: 1px solid var(--primary-color);
+    }
+
+    &>.difficulty {
       background-color: var(--color-red-50);
+      color: white;
       border: 1px solid var(--color-red);
-    }
-  }
+      padding: var(--padding-4);
+      border-top-right-radius: var(--border-radius);
+      border-bottom-right-radius: var(--border-radius);
+      width: 10%;
+      text-align: center;
 
+      &.easy {
+        background-color: var(--color-green-50);
+        border: 1px solid var(--color-green);
+      }
+
+      &.medium {
+        background-color: var(--primary-color-50);
+        border: 1px solid var(--primary-color);
+      }
+
+      &.hard {
+        background-color: var(--color-red-50);
+        border: 1px solid var(--color-red);
+      }
+    }
+
+  }
 }
 
 .question {
-
+  margin: var(--padding-6);
+  min-width: 50vw;
+  &.small{
+    max-width: 100%;
+    & > .alternatives {
+      gap: var(--padding-6);
+      margin: var(--padding-5);
+      & > div{
+        padding: var(--padding-6);
+        border: none;
+      }
+    }
+    &>.options{
+      align-items: center;
+      justify-content: center;
+    }
+  }
   max-width: 75%;
   border: none;
   &>.alternatives {
@@ -1706,7 +1819,7 @@ COMPONENTES GERAIS DO FERNANDO
   }
   & > .content{
     height: 100vh;
-    padding: 0 var(--padding-1);
+    padding: 0;
     flex: 1;
     gap: var(--padding-3);
     display: flex;
@@ -1734,6 +1847,15 @@ COMPONENTES GERAIS DO FERNANDO
       width: 100%;
       justify-content: center;
     }
+  }
+  #question-number-container{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background-color: var(--primary-color);
+    width: 1.5rem;
+    aspect-ratio:1/1;
+    color: var(--text-white);
   }
 }
 
@@ -1866,7 +1988,9 @@ COMPONENTES GERAIS DO FERNANDO
       &:hover::after{
         opacity: 1;
       }
-
+      & h2, & p{
+        text-align: center;
+      }
       &::after{
         content: '';
         display: block;
@@ -1921,6 +2045,11 @@ COMPONENTES GERAIS DO FERNANDO
   }
 }
 
+#filtro-ver-areas{
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 1500px) {
   :root {
     --margin-big: 90px;
@@ -1967,6 +2096,10 @@ COMPONENTES GERAIS DO FERNANDO
   //para o chakra
   span{
     font-size: 0.8rem !important;
+  }
+
+  .question{
+    max-width: 75vw;
   }
 }
 

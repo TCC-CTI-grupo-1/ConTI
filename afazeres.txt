@@ -20,6 +20,7 @@ SIMULADO
 
 - Diminuir fonte alternativa
 - tirar "de onde a questão veio" quando você faz um simulado.
+- Marcar questão para revisão
 
 Mudar o botão finalizar simulado para uma tela que 
 é carregada quando você passa da ultima quatão

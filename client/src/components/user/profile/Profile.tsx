@@ -4,8 +4,7 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import Status from "./Status";
 import Config from "./Config";
-import Background from "../Background";
-
+import Admnistrador from "./../../Administrador";
 const Profile = () => {
 
     const [tela, setTela] = useState<number>(0);
@@ -53,6 +52,7 @@ const Profile = () => {
                 <div className="content">
                     {tela == 0 && <Status />}
                     {tela == 1 && <Config />}
+                    {tela == 2 && <Admnistrador />}
                 </div>
             </div>
         </div>

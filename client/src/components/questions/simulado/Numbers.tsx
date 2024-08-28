@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import ArrowIcon from '../../../assets/ArrowIcon'
-import { questionInterface } from '../../../controllers/interfaces'
+import { useEffect } from 'react'
 import MenuIcon from '../../../assets/MenuIcon'
 
 interface Props{
@@ -31,7 +29,7 @@ const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0,
         questionsHashMap.forEach((question, index) => {
             questions.push(
                 <span
-                    key={index}
+                    key={question}
                     id={`question-${index}`}
                     className={`${respostasCorretas ? respostasCorretas[index] ? "correct" : "incorrect" : ""}`}
                     onClick={() => {

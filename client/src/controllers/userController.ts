@@ -1,6 +1,9 @@
+
+//import { json } from 'react-router-dom';
 import { Profile } from '../../../server/src/types/express-session';
-import { questionInterface, simuladoSimpleInterface, simuladoInterface } from './interfaces';
+import { questionInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface } from './interfaces';
 import { questionFilters } from './interfaces';
+import { showAlert } from '../App';
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.', 't'];
@@ -110,6 +113,7 @@ export async function handleLogin(email: string, password: string, remember: boo
             throw new Error(responseData.message);
         } else {
             //window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
+            //fernando sofre de disfunção erétil
             return [true, "Login bem sucedido"];
         }
     } catch (err: any) {
@@ -117,18 +121,16 @@ export async function handleLogin(email: string, password: string, remember: boo
 
     }
 }
-
+ 
 export async function handleGetUser(): Promise<Profile | null> {
     try {
-        const response = await fetch('http://localhost:3001/userSession', {
+        const response = await fetch('http://localhost:3001/user', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-
-        console.log("DAAAAAAAAAAAAAAAAAAAAAAAA")
         const responseData = await response.json();
         if (!response.ok) {
             throw new Error(responseData.message);
@@ -140,14 +142,15 @@ export async function handleGetUser(): Promise<Profile | null> {
     }
 }
 
-export async function handleChange(name: string, email: string): Promise<boolean> {
+//que eu saiba isso n faz nd
+/*export async function handleChange(name: string, email: string): Promise<boolean> {
     try {
         const data = {
             name: name,
             email: email
         };
 
-        const response = await fetch('http://localhost:3001/updateUser', {
+        const response = await fetch('http://localhost:3001/user', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -165,12 +168,12 @@ export async function handleChange(name: string, email: string): Promise<boolean
     } catch (err: any) {
         return false;
     }
-}
+}*/
 
 
 export async function handleSaveChanges(Profile: Profile): Promise<string | true> {
     try {
-        const response = await fetch('http://localhost:3001/updateUser', {
+        const response = await fetch('http://localhost:3001/user', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -214,7 +217,7 @@ export async function handleLogout() {
 }
 export async function handleDeleteAccount() {
     try {
-        const response = await fetch('http://localhost:3001/deleteUser', {
+        const response = await fetch('http://localhost:3001/user', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -249,245 +252,213 @@ export async function handleDeleteAccount() {
     }
 }
 
-export async function handleGetQuestion(questionID: number): Promise<questionInterface> {
-    //Fazer um timeout de 300ms:
-    
-    if (questionID % 2 === 0) {
-        return {
-            id: questionID * 100,
-            subject: {
-                name: 'Matemática',
-                sub: {
-                    name: 'Álgebra',
-                    sub: {
-                        name: 'Equações'
-                    }
-                }
-            },
-            difficulty: 'easy',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['1', '7', '9', '5', '49'],
-            alternativaCorreta: 'a'
-        };
-    } else {
-        return {
-            id: questionID * 100,
-            subject: {
-                name: 'Português',
-                sub: {
-                    name: 'Gramática',
-                    sub: {
-                        name: 'Sintaxe'
-                    }
-                }
-            },
-            difficulty: 'medium',
-            year: 2021,
-            enunciado: 'TesteDaPrimeiraLinha:11111111111111111111111111111111111111111111111111111 '+
-            'SegundaLinha:222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
-            alternativaCorreta: 'B'
-        };
+
+
+//GET QUESTIONS
+
+export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> {
+    try{
+        const response = await fetch('http://localhost:3001/questions/id/' + questionID, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.question;
+        }
+    } catch{
+        return null;
     }
 
 }
 
-export async function handleGetQuestions(filters: questionFilters): Promise<questionInterface[]> {
-    await new Promise(resolve => setTimeout(resolve, 10));
-    return [
-        {
-            id: 1,
-            subject: {
-                name: 'Matemática',
-                sub: {
-                    name: 'Álgebra',
-                    sub: {
-                        name: 'Equações'
-                    }
-                }
-            },
-            difficulty: 'easy',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['1', '7', '9', '5', '49'],
-            alternativaCorreta: 'a'
-        },
-        {
-            id: 2,
-            subject: {
-                name: 'Português',
-                sub: {
-                    name: 'Gramática',
-                    sub: {
-                        name: 'Sintaxe'
-                    }
-                }
-            },
-            difficulty: 'medium',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
-            alternativaCorreta: 'b'
-        },
-        {
-            id: 3,
-            subject: {
-                name: 'Matemática',
-                sub: {
-                    name: 'Álgebra',
-                    sub: {
-                        name: 'Equações'
-                    }
-                }
-            },
-            difficulty: 'hard',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['1', '7', '9', '5', '49'],
-            alternativaCorreta: 'c'
-        },
-        {
-            id: 4,
-            subject: {
-                name: 'Português',
-                sub: {
-                    name: 'Gramática',
-                    sub: {
-                        name: 'Sintaxe'
-                    }
-                }
-            },
-            difficulty: 'hard',
-            year: 2021,
-            enunciado: 'Qual é a raiz quadrada de 49?',
-            alternativas: ['Triste', 'Feliz', 'Sério', 'Bravo', 'L'],
-            alternativaCorreta: 'd'
+export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<questionInterface[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/questionsByIds/' + JSON.stringify(questions_ids), {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.questions;
         }
-    ];
+
+    } catch (err: any) {
+        return [];
+    }
 }
 
-export async function handleGetSimpleSimulados(data: Date): Promise<simuladoSimpleInterface[]> {
-    await new Promise(resolve => setTimeout(resolve, 500));
+export async function handleGetQuestions(): Promise<questionInterface[]> {
+    try {
+        const response = await fetch('http://localhost:3001/questions/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-    return [
-        {
-            id: 1,
-            totalQuestions: 10,
-            totalCorrect: 7,
-            date: new Date(2021, 4, 1),
-            time: 60,
-            subjects: {
-                'Matemática': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Português': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Ciencias': {
-                    totalQuestions: 5,
-                    totalCorrect: 2
-                },
-                'História': {
-                    totalQuestions: 5,
-                    totalCorrect: 3
-                }
-                
-            }
-        },
-        {
-            id: 2,
-            totalQuestions: 10,
-            totalCorrect: 8,
-            date: new Date(2021, 4, 1),
-            time: 60,
-            subjects: {
-                'Matemática': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Português': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                }
-            }
-        },
-        {
-            id: 3,
-            totalQuestions: 10,
-            totalCorrect: 8,
-            date: new Date(2021, 4, 1),
-            time: 60,
-            subjects: {
-                'Matemática': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Português': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                }
-            }
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.questions;
         }
-    ];
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
+export async function handleGetFilteredQuestions(filters: questionFilters): Promise<questionInterface[]> {
+    try {
+        const response = await fetch('http://localhost:3001/questions/filter/' + JSON.stringify(filters), {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.questions;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
+export async function handleGetAnswersByQuestionId(questionIDs: number[]): Promise<respostaInterface[]> {
+    try{
+        const response = await fetch('http://localhost:3001/answers/question/' + questionIDs, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.answers;
+        }
+    } catch{
+        return [];
+    }
+}
+
+
+export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): Promise<respostaInterface[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/answers/questions/' + JSON.stringify(questions_ids), {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.answers;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
+export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<simuladoInterface[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const response = await fetch('http://localhost:3001/mockTests/date/' + date, {
+            method: 'GET',
+            credentials: 'include', 
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.mockTests;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
 
 }
 
-type questionMapInterface = questionInterface[];
 //ID e Alternativa (O index é o número da questão na prova.)
 type questionMapResultInterface = [number, (string | null)][];  
 
-//Retorna o simulado que foi adicionado
-export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoSimpleInterface | null> {
+
+export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number): Promise<question_MockTestInterface[]> {
+    try {
+        const response = await fetch('http://localhost:3001/question_MockTests/' + mockTestId, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.question_mockTests;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
+//Retorna o simulado que foi adicionado (NN FEITO)
+export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoInterface | null> {
     //Código PLACEHOLDER.
     try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        return {
-            id: 1,
-            totalQuestions: 10,
-            totalCorrect: 7,
-            date: new Date(2021, 4, 1),
-            time: 60,
-            subjects: {
-                'Matemática': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                },
-                'Português': {
-                    totalQuestions: 5,
-                    totalCorrect: 4
-                }
-            }
-        }
+        
+        await new Promise(resolve => setTimeout(resolve, 1000 * questionsList.length));
+        return null;
     } catch (err: any) {
         return null;
     }
 }
 
+//NN FEITO
 export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {
     //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
     try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        return {
-            id: 1,
-            questions: 
-            [
-                [1, 'A'],
-                [2, 'B'],
-                [3, 'C'],
-                [4, 'D'],
-                [5, 'E'],
-                [6, 'A'],
-                [7, 'B'],
-                [8, 'C'],
-                [9, 'D'],
-                [10, 'E']
-            ],
-            date: new Date(2021, 4, 1),
-            time: 60
-        }
+        await new Promise(resolve => setTimeout(resolve, 1000 * id/100));
+        return null;
     } catch (err: any) {
         return null;
     }
@@ -495,10 +466,341 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 
 //Atenção, a magica acontece aqui:
 
-export async function generateNewSimulado(): Promise<string>{
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    //UID do simulado (talvez não vamos usar, ai retorne booleano)
-    return '34ghGTH33EDWF@#wfdw';
+//Essa função parece muito errada
+
+// não é 'generate', tá mais pra 'get'
+export async function generateNewSimulado(amount: number): Promise<string>{
+    try {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        console.log("here i am")
+        const response = await fetch('http://localhost:3001/areas/questions/fala/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("here i am")
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.questions;
+        }
+    }
+    catch (err: any) {
+        return err.message;
+    }
+}
+
+export async function handleGetAreas(): Promise<areaInterface[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/areas', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.areas;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
+export async function handleGetTopParentAreasByIds(ids: number[]): Promise<areaInterface[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/areas/top' + JSON.stringify(ids), {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ids),
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.areas;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
+export async function handleGetAreasByQuestionsIds(questions_ids: number[]): Promise<number[]> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/areas/questions', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(questions_ids),
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.areas;
+        }
+
+    } catch (err: any) {
+        return [];
+    }
+}
+
+//Função que executa handleGetAreas e transforma em um hashMap [id] => area
+
+export async function handleGetAreasMap(): Promise<{[id: number]: areaInterface}> {
+    try{
+        const areas = await handleGetAreas();
+        if(areas.length === 0){
+            throw new Error('Erro ao pegar areas');
+        }
+        let areasMap: {[id: number]: areaInterface} = {};
+        areas.forEach((area) => {
+            areasMap[area.id] = area;
+        });
+        return areasMap;
+    }
+    catch(err: any){
+        return {};
+    }
+}
+
+export async function handlePostArea(nomeArea: string, areaPai: string | null): Promise<boolean>{
+    try {        
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        const data = {
+            name: nomeArea,
+            parent: areaPai
+        };
+
+        const response = await fetch('http://localhost:3001/areas', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
+
+export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/areaProfile', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.areas_profile;
+        }
+
+    } catch (err: any) {
+        return null;
+    }
+}
+
+export async function handleGetAreaById(id: number): Promise<areaInterface | null> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/area/'+id, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return {
+                id: responseData.area.id,
+                name: responseData.area.name,
+                parent_id: responseData.area.parent_id
+            };
+        }
+
+    } catch (err: any) {
+        return {
+            id: 0,
+            name: 'SOUGAY',
+            parent_id: null
+        };
+    }
+}
+
+export async function handleGetAreaIdByQuestionId(question_id: number): Promise<number | null> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/area/question/' + question_id, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.area_id;
+        }
+
+    } catch (err: any) {
+        return null;
+    }
+}
+
+export async function handleGetTopParentAreaById(id: number): Promise<areaInterface | null> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/areas/top/'+id, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return {
+                id: responseData.area.id,
+                name: responseData.area.name,
+                parent_id: responseData.area.parent_id
+            };
+        }
+
+    } catch (err: any) {
+        return null;
+    }
+}
+
+export async function handlePutQuestion(question: questionInterface): Promise<boolean> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response1 = await fetch('http://localhost:3001/questions/'+question.id, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(question)
+        });
+
+        const response2 = await fetch('http://localhost:3001/answers/question/'+question.id, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(question.answers)
+        });
+
+        const responseData1 = await response1.json();
+        const responseData2 = await response2.json();
+
+        if (!response1.ok && !response2.ok) {
+            //console.log(responseData.message);
+            throw new Error(responseData1.message + ' ' + responseData2.message); 
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
+
+export async function handlePostQuestion(question: questionInterface): Promise<boolean> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/questions', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(question)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        showAlert(err.message);
+        return false;
+    }
+}
+
+export async function handleDeleteQuestion(id: number): Promise<boolean> {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch('http://localhost:3001/questionsById/'+id, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        showAlert(err.message);
+        return false;
+    }
 }
 
 

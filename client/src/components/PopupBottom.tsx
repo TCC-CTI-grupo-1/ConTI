@@ -15,8 +15,8 @@ const PopupBottom = ({enabled, handleDescartar, handleSaveChanges}: Props) => {
             <div className={"popup-bottom " + (enabled && 'enabled')}>
                 <p>Você tem mudanças não salvas</p>
                 <div>
-                    <Button text='Descartar' variant='outline' onClick={handleDescartar}/>
-                    <Button text='Salvar' onClick={handleSaveChanges}/> {}
+                    <Button variant='outline' onClick={handleDescartar}>Descartar</Button>
+                    <Button onClick={handleSaveChanges}>Salvar</Button>
                 </div>
             </div>
         </>
