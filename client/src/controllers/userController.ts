@@ -1,5 +1,5 @@
 
-import { json } from 'react-router-dom';
+//import { json } from 'react-router-dom';
 import { Profile } from '../../../server/src/types/express-session';
 import { questionInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface } from './interfaces';
 import { questionFilters } from './interfaces';
@@ -258,7 +258,7 @@ export async function handleDeleteAccount() {
 
 export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> {
     try{
-        const response = await fetch('http://localhost:3001/questions/' + questionID, {
+        const response = await fetch('http://localhost:3001/questions/id/' + questionID, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -445,7 +445,8 @@ export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number
 export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoInterface | null> {
     //Código PLACEHOLDER.
     try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        await new Promise(resolve => setTimeout(resolve, 1000 * questionsList.length));
         return null;
     } catch (err: any) {
         return null;
@@ -456,7 +457,7 @@ export async function handlePostSimulado(questionsList: questionMapResultInterfa
 export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {
     //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
     try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 1000 * id/100));
         return null;
     } catch (err: any) {
         return null;
@@ -467,11 +468,12 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 
 //Essa função parece muito errada
 
+// não é 'generate', tá mais pra 'get'
 export async function generateNewSimulado(amount: number): Promise<string>{
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
-        const response = await fetch('http://localhost:3001/questions/'+amount, {
-            method: 'POST',
+        const response = await fetch('http://localhost:3001/questions/newMockTest/', {
+            method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
@@ -479,6 +481,7 @@ export async function generateNewSimulado(amount: number): Promise<string>{
         });
 
         const responseData = await response.json();
+        console.log("questions: ", responseData.questions);
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
@@ -778,7 +781,7 @@ export async function handlePostQuestion(question: questionInterface): Promise<b
 export async function handleDeleteQuestion(id: number): Promise<boolean> {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questions/'+id, {
+        const response = await fetch('http://localhost:3001/questionsById/'+id, {
             method: 'DELETE',
             credentials: 'include',
             headers: {

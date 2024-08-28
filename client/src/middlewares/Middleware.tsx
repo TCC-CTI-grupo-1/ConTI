@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import User from '../components/user/login/User';
+import { Navigate } from 'react-router-dom';
 
 class Middleware{
     routeToDisplay (

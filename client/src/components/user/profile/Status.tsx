@@ -4,10 +4,9 @@ import { ProgressBar } from "../../ProgressBar";
 import { handleGetArea_Profile } from "../../../controllers/userController";
 import { area_ProfileInterface } from "../../../controllers/interfaces";
 import { areaInterface } from "../../../controllers/interfaces";
-import { handleGetAreaById } from "../../../controllers/userController";
 import { handleGetAreas } from "../../../controllers/userController";
 
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
 import mat from '../../../assets/areasIcons/1.png';
 import port from '../../../assets/areasIcons/2.png';
@@ -18,7 +17,7 @@ import { showAlert } from "../../../App";
 
 const Status = () => {
 
-    const navegate = useNavigate();
+    //const navegate = useNavigate();
     const [loading, setLoading] = useState<boolean>(true);
     const [doesProfileExist, setDoesProfileExist] = useState<boolean>(false);
     const [profileStatus, setProfileStatus] = useState<{[id:number]: area_ProfileInterface}>({});

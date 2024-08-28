@@ -2,7 +2,7 @@ import Navbar from "./Navbar"
 import { useState, useEffect } from "react";
 import Button from "././Button"
 import Input from "././Input";
-import { handleDeleteAccount, handleGetAreasMap, handleLogout, handleSaveChanges } from "./../controllers/userController";
+import { handleGetAreasMap } from "./../controllers/userController";
 import { Select } from '@chakra-ui/react'
 import { handlePostArea } from "./../controllers/userController";
 import { showAlert } from "./../App";
@@ -226,13 +226,9 @@ const Admistrator = () => {
                 <div className="qst-edit">
                     <div className={!novaQst.id?"hidden":"text"}>
                         <textarea name="automatico" id="auto"
-                        onChange={(e)=>{
-                            const regex = /(\d+)\s*([\S\s]*)\s*\(A\)([\S\s]*)\s*\(B\)([\S\s]*)\s*\(C\)([\S\s]*)\s*\(D\)([\S\s]*)\s*\(E\)([\S\s]*)\s*/gm;
-                            const matches = regex.exec(e.target.value);
-                            for(const match in matches)
-                            {
-                                //ver oq fazer aqui
-                            }
+                        onChange={(/*e*/)=>{
+                            //const regex = /(\d+)\s*([\S\s]*)\s*\(A\)([\S\s]*)\s*\(B\)([\S\s]*)\s*\(C\)([\S\s]*)\s*\(D\)([\S\s]*)\s*\(E\)([\S\s]*)\s*/gm;
+                            //const matches = regex.exec(e.target.value);
                         }}></textarea>
                     </div>
                     <div className="text">

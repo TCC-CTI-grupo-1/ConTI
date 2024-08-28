@@ -1,6 +1,6 @@
 import Simulado from "./Simulado"
 import { useState, useEffect } from "react"
-import { questionInterface, simuladoSimpleInterface } from "../../../controllers/interfaces"
+import { questionInterface, simuladoInterface } from "../../../controllers/interfaces"
 import { handleGetQuestion, handlePostSimulado } from "../../../controllers/userController"
 import date from 'date-and-time'
 import { useNavigate } from "react-router-dom"
@@ -12,7 +12,6 @@ import {
     ModalHeader,
     ModalFooter,
     ModalBody,
-    ModalCloseButton,
     useDisclosure,
     Button,
     Spinner
@@ -30,7 +29,7 @@ const SimuladoFrame = ({questionsList}:Props) => {
 
     const [questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface | null>(null);
     const [loading, setLoading] = useState(true);
-    const [completeSimulado, setCompleteSimulado] = useState<simuladoSimpleInterface | null>(null);
+    const [completeSimulado, setCompleteSimulado] = useState<simuladoInterface | null>(null);
 
     //A unica utilidade disso é impedir que o usuario clique no botão de finalizar simulado mais de uma vez enquanto ele está sendo corrigido
     const [isSimuladoAwaitActive, setIsSimuladoAwaitActive] = useState(false);
@@ -65,7 +64,9 @@ const SimuladoFrame = ({questionsList}:Props) => {
             const questionsHashMap: questionMapInterface = [];
             for(let i = 0; i < questionsList.length; i++){
                 const question = await handleGetQuestion(questionsList[i]);
-                questionsHashMap.push(question);
+                if(question !== null) {
+                    questionsHashMap.push(question);
+                }
             }
             setQuestionsHashMap(questionsHashMap);
             setLoading(false);
@@ -90,20 +91,20 @@ const SimuladoFrame = ({questionsList}:Props) => {
             return (
             <div id="historyOverlay">
                     <h2>Simulado #{completeSimulado.id}</h2>
-                    <p>Tempo consumudo: {completeSimulado.time} minutos</p>
-                    <p>Feito dia: {date.format(completeSimulado.date, 'DD/MM/YYYY')}</p>
-                    <h3>{completeSimulado.totalCorrect}/{completeSimulado.totalQuestions}</h3>
+                    <p>Tempo consumudo: {completeSimulado.time_spent} minutos</p>
+                    <p>Feito dia: {date.format(completeSimulado.creation_date, 'DD/MM/YYYY')}</p>
+                    <h3>{completeSimulado.total_correct_answers}/{completeSimulado.total_answers}</h3>
                     <div className="progress">
-                        <div style={{width: (completeSimulado.totalCorrect * 100 / completeSimulado.totalQuestions ) + '%'}}></div>
+                        <div style={{width: (completeSimulado.total_correct_answers * 100 / completeSimulado.total_answers ) + '%'}}></div>
                     </div>
                     <div className="materias">
                         {
                             Object.keys(completeSimulado.subjects).map((subject, index) => {
                                 return (
                                     <div key={index}>
-                                        <p>{subject} [{completeSimulado.subjects[subject].totalCorrect}/{completeSimulado.subjects[subject].totalQuestions}]</p>
+                                        <p>{subject} [{completeSimulado.subjects[subject].total_correct_answers}/{completeSimulado.subjects[subject].total_answers}]</p>
                                         <div className="progress">
-                                            <div style={{width: (completeSimulado.subjects[subject].totalCorrect * 100 / completeSimulado.subjects[subject].totalQuestions ) + '%'}} />
+                                            <div style={{width: (completeSimulado.subjects[subject].total_correct_answers * 100 / completeSimulado.subjects[subject].total_answers ) + '%'}} />
                                         </div>
                                     </div>
                                 )

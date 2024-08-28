@@ -15,13 +15,11 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  flexbox
 } from "@chakra-ui/react";
 import LocalButton from "../Button";
 import { showAlert } from "../../App";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
-import Question from "./QuestionBox";
 import { useNavigate } from "react-router-dom";
 import { questionInterface, areaInterface } from "../../controllers/interfaces";
 import { questionFilters as options } from "../../controllers/interfaces";

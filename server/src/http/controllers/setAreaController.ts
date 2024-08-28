@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AreaDAO } from '../../DAO/AreaDAO';
 
-export async function setAreaController(req: Request, res: Response) {
+export async function postAreaController(req: Request, res: Response) {
     const areaDAO = new AreaDAO();
     try {
         await areaDAO.registerArea(req.body);

@@ -1,17 +1,15 @@
 // Date: 03/08/2021
 import { questionInterface } from "../../controllers/interfaces";
-import { SubjectCategory } from "../../controllers/interfaces";
 import { useState } from "react";
 import QuestionDetail from "./simulado/QuestionDetail";
 import { areaInterface } from "../../controllers/interfaces";
-import { handleGetAreasMap } from "../../controllers/userController";
 
 interface Props {
   question: questionInterface;
   area: areaInterface; 
 }
 
-const getCategoryElements = (subject: SubjectCategory): JSX.Element[] => {
+/*const getCategoryElements = (subject: SubjectCategory): JSX.Element[] => {
   const elements: JSX.Element[] = [];
   let current: SubjectCategory | undefined = subject;
 
@@ -24,7 +22,7 @@ const getCategoryElements = (subject: SubjectCategory): JSX.Element[] => {
   }
 
   return elements;
-};
+};*/
 
 const QuestionBox = ({  question, area }: Props) => {
 

@@ -7,15 +7,7 @@ interface Props{
 
 const HomeIcon = ({iconColor='black', onIconClick}:Props) => {
 
-    const [color, setColor] = useState(iconColor);
-
-    function handleChangeColor(){
-        if(color == 'white'){
-            setColor('black');
-        }else{
-            setColor('white');
-        }
-    }
+    const [color, _] = useState(iconColor);
 
     return(
         <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"
