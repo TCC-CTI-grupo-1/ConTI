@@ -33,9 +33,9 @@ difficultyProportions = {
 }
 
 const difficultyToErrorRatioCondition:{[key:string]:Function} = {
-    "easy" : function(a:number,b:number){return a / b > 0.75},
-    "medium" : function(a:number,b:number){return a / b > 0.5 && a/b <=0.75},
-    "hard" : function(a:number,b:number){return a / b <=0.5}
+    easy : function(a:number,b:number){return (a+1) / (b+1) > 0.75},
+    medium : function(a:number,b:number){return (a+1) / (b+1) > 0.5 && (a+1)/(b+1) <=0.75},
+    hard : function(a:number,b:number){return (a+1) / (b+1) <=0.5}
 }
 
 
@@ -239,10 +239,10 @@ export class TestBuilder{
                     {
                         if(proportion == "medium")
                         {
-                            difficultyCountInSubject[nsubject] = {proportion: Math.ceil(questionCount - Math.floor(questionCount * proportions['easy'] /maxval) - Math.floor(questionCount * proportions['hard'] / maxval))}
+                            difficultyCountInSubject[nsubject][proportion] = Math.ceil(questionCount - Math.floor(questionCount * proportions['easy'] /maxval) - Math.floor(questionCount * proportions['hard'] / maxval))
                         }
                         else
-                            difficultyCountInSubject[nsubject] = {proportion: Math.floor(proportions[proportion] * questionCount / maxval)}
+                            difficultyCountInSubject[nsubject][proportion] = Math.floor(proportions[proportion] * questionCount / maxval)
                     }
                     console.log("passou for 1")
                     for (const difficulty in difficultyCountInSubject[nsubject])
@@ -255,11 +255,8 @@ export class TestBuilder{
                             }
                         });
                         console.log("passou for 2 - dentro")
-                        const row = rows.filter(r => {
-                            const totalC = r.total_correct_answers;
-                            const totalA = r.total_answers;
-                            difficultyToErrorRatioCondition[nsubject](totalC,totalA);
-                        })
+                        const filterQuery = function(r:any){ console.log("Filtrando row",r);return difficultyToErrorRatioCondition[difficulty](r.total_correct_answers,r.total_answers)}; 
+                        const row = rows.filter(filterQuery);
                         console.log("antes shuffle")
                         shuffle(row);
                         console.log("depois s")
