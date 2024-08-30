@@ -207,6 +207,7 @@ export async function handleLogout() {
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
+            localStorage.setItem('isLoggedIn', 'false');
             window.location.href = 'http://localhost:5173/';
             // return [true, "Logout bem sucedido"];
         }

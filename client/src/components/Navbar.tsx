@@ -7,7 +7,7 @@ import HistoryIcon from "../assets/HistoryIcon";
 import NewTestIcon from "../assets/NewTestIcon.tsx";
 
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 interface Props{
@@ -19,6 +19,10 @@ const Navbar = ({screen}:Props) => {
 
     const [active, setActive] = useState(false);
 
+    const [isUserLogged, setIsUserLogged] = useState(false);
+
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === "true" ? true : false;
+
     function checkActiveScreen(localScreen: string): 'white' | 'black' {
         if(screen == localScreen)
         {
@@ -28,6 +32,13 @@ const Navbar = ({screen}:Props) => {
             return('black');
         }
     }
+
+    useEffect(() => {
+        if(sessionStorage.getItem('isLoggedIn'))
+        {
+            setIsUserLogged(true);
+        }
+    }, []);
 
     return (
         <div id="nav">
@@ -60,17 +71,23 @@ const Navbar = ({screen}:Props) => {
                     <p className={checkActiveScreen('database')}>Banco de questões</p>
                 </div>
                 
-                <div className="icon">
+                {isLoggedIn &&<div className="icon">
                     <UserIcon iconColor={checkActiveScreen('profile')}
                     onIconClick={() => {navegate('/profile')}}/>
                     <p className={checkActiveScreen('profile')}>Perfil</p>
-                </div>
+                </div>}
                 
-                <div className="icon">
+                {isLoggedIn &&<div className="icon">
                         <HistoryIcon iconColor={checkActiveScreen('history')}
                         onIconClick={() => {navegate('/history')}}/>
                         <p className={checkActiveScreen('history')}>Histórico</p>
-                </div>
+                </div>}
+
+                {!isLoggedIn &&<div className="icon">
+                        <UserIcon iconColor={checkActiveScreen('profile')}
+                        onIconClick={() => {navegate('/login')}}/>
+                        <p className={checkActiveScreen('profile')}>Login</p>
+                </div>}
 
                 <div className="icon">
                         <UserIcon iconColor={checkActiveScreen('adm')}
