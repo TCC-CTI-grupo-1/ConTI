@@ -1,10 +1,11 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../Navbar'
 import DaySelector from './DaySelector'
 import { useState } from 'react'
-import { handleGetAnswersByQuestionsIds, handleGetQuestion_MockTestsByMockTestId, 
-    handleGetMockTestsByDateAndProfile, handleGetQuestionsByIds, handleGetAreasMap, handleGetQuestions } from '../../controllers/userController'
-import { areaInterface, simuladoInterface } from '../../controllers/interfaces'
+import date from 'date-and-time'
+import { handleGetAnswersByQuestionId, handleGetAnswersByQuestionsIds, handleGetAreaById, handleGetAreaIdByQuestionId, handleGetAreasByQuestionsIds, handleGetQuestion, handleGetQuestion_MockTestsByMockTestId, 
+    handleGetMockTestsByDateAndProfile, handleGetTopParentAreaById, handleGetTopParentAreasByIds, handleGetQuestionsByIds, handleGetAreasMap, handleGetQuestions } from '../../controllers/userController'
+import { areaInterface, questionInterface, simuladoInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -18,6 +19,7 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
+    Spinner
   } from '@chakra-ui/react'
 import { showAlert } from '../../App'
 
@@ -25,9 +27,7 @@ const History = () => {
 
     const {onOpen, onClose, isOpen} = useDisclosure();
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const [activeDay, setActiveDay] = useState<Date>(today);
+    const [activeDate, setActiveDate] = useState<Date>(new Date());
 
     const [simulados, setSimulados] = useState<simuladoInterface[]>([]);
     const [listas, setListas] = useState<simuladoInterface[]>([]);
@@ -41,7 +41,7 @@ const History = () => {
 
     const [areas, setAreas] = useState<{[key: string]: areaInterface}>({});
 
-    //const [questionsGlobal, setQuestionsGlobal] = useState<questionInterface[]>([]);
+    const [questionsGlobal, setQuestionsGlobal] = useState<questionInterface[]>([]);
 
     async function handleSetAreasMap(){
         const areasMap = await handleGetAreasMap();
@@ -59,7 +59,7 @@ const History = () => {
         setLoading(true);
         handleSetAreasMap().then(() => {
             handleGetQuestions().then((question) => {
-                //setQuestionsGlobal(question);
+                setQuestionsGlobal(question);
                 console.log(question);
                 setLoading(false);
             });
@@ -69,16 +69,16 @@ const History = () => {
     useEffect(() => {
         setLoading2(true);
         handleSimuladosAndListas();
-    }, [activeDay]);
+    }, [activeDate]);
 
 
     async function handleSimuladosAndListas()
     {
-        let response = await getSimulados(activeDay);
+        let response = await getSimulados(activeDate);
 
         setSimulados(response);
 
-        let response2 = await getListas(activeDay);
+        let response2 = await getListas(activeDate);
 
         setListas(response2);
 
@@ -221,8 +221,7 @@ const History = () => {
     }
 
     function showDate(){
-        let date = new Date(activeDay);
-        console.log(date);
+        let date = new Date(activeDate);
     }
 
     return (
@@ -236,7 +235,7 @@ const History = () => {
                         <div className="inversed-border"></div>
                         <div className="content">
                             <h3>Veja seus simulados anteriores e quais são os pontos com mais dificuldade.</h3>
-                            <DaySelector handleChangeDay={setActiveDay} />
+                            <DaySelector handleChangeDay={setActiveDate} />
                             <div>
                                 {
                                     loading2 ?

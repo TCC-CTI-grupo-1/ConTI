@@ -24,10 +24,10 @@ model profile {
 model answer {
   id                Int                 @id @default(autoincrement())
   question_id       Int
-  total_answers     Int                 @default(0)
   answer            String
   is_correct        Boolean
   question_letter   String?             @db.Char(1)
+  total_answers     Int                 @default(0)
   question          question            @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   question_mockTest question_mockTest[]
 }
@@ -173,7 +173,7 @@ model mockTest {
   total_correct_answers Int                 @default(0)
   time_limit            Int
   time_spent            Int                 @default(0)
-  creation_date         DateTime            @default(now()) @db.Timestamp(6)
+  creation_date_tz      DateTime            @default(now()) @db.Timestamptz(6)
   test_type             mocktesttype
   UUID                  String              @unique @db.VarChar(255)
   total_answers         Int                 @default(0)

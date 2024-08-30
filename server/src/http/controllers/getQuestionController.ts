@@ -66,19 +66,13 @@ export async function getQuestionsForNewMockTestByProfileController(req: Request
         console.log("perfil não encontrado")
         return res.status(404).json({ message: 'Perfil não encontrado' });
     }
-    console.log("testes")
+    
     const questionDAO = new QuestionDAO();
     try {
         const profileId = req.session.profile.id;
         const test_blueprint = new TestBlueprint();
-        console.log("testes3")
-        
         const test_builder = new TestBuilder([]);
-        console.log("testes2")
         const questions = await test_builder.buildTest(test_blueprint);
-        console.log("testes4")
-
-        console.log(questions);
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
