@@ -56,7 +56,8 @@ const Login = ({changeLoginPage}:Props) => {
             if (loginSuccess) {
                 showAlert("Login bem sucedido!", "success");
                 //console.log("L");
-                navigate("/profile");
+                localStorage.setItem('isLoggedIn', 'true');
+                navigate("/");
             }
             else{
                 //console.log("E");

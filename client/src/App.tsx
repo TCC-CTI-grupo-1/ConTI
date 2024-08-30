@@ -9,6 +9,8 @@ import QuestionDatabase from './components/questions/QuestionDatabase';
 import AllTests from './components/questions/AllTests';
 import NewTest from './components/newtest/NewTest';
 import Admnistrador from './components/Administrador';
+import { handleGetUser } from './controllers/userController';
+import { useState } from 'react';
 
 //Middlewares
 import Middleware from './middlewares/Middleware';
@@ -32,9 +34,6 @@ const showAlert = (message: string,
   }
 };
 
-
-
-
 function App() {
 
 
@@ -47,24 +46,42 @@ function App() {
 
     const middleware = new Middleware();
 
+    const [loading, setLoading] = useState(true);
+
+    async function checkUser(){
+        const user = await handleGetUser();
+        localStorage.setItem('isLoggedIn', 'false');
+        if(user)
+        {
+            localStorage.setItem('isLoggedIn', 'true');
+            middleware.setIsUserLogged(true);
+        }
+        setLoading(false);
+    }
+
     return (
-        <div className='app'>
-        <div id='alert-box-container'></div>
-        <Routes>
-          <Route path='/' element={ <Home /> } />
-          <Route path='/newtest' element={ <NewTest /> } />
-          <Route path='/login' element={ <User /> } />
+        <div className='app' onLoad={checkUser}>
+          <div id='alert-box-container'></div>
+          { loading ? <div><h1>Carregando o literal fucking app</h1>
+          <p>Demorando muito? tente novamente:</p>
+          <button onClick={checkUser}>TENTAR</button>
+          </div> :
+            <Routes>
+              <Route path='/' element={ <Home /> } />
+              <Route path='/newtest' element={ <NewTest /> } />
+              <Route path='/login' element={ <User /> } />
 
-          <Route path='/profile' element={middleware.routeToDisplay(['isLoggedIn'], <Profile />)} />
-          <Route path='/history' element={ <History /> } />
+              <Route path='/profile' element={middleware.routeToDisplay(['isLoggedIn'], <Profile />)} />
+              <Route path='/history' element={middleware.routeToDisplay(['isLoggedIn'], <History />) } />
 
-          <Route path='/alltests' element={ <AllTests /> } />   
-          <Route path='/questions' element={<QuestionDatabase />} />
-          <Route path='/questions/:id' element={<QuestionDatabase />} />
-          <Route path='/test' element={<SimuladoFrame questionsList={[11,22,3,4,5]}/>} />
-          <Route path='/simulado/:id' element={<SimuladoVer />} />
-          <Route path='/adm' element={<Admnistrador />} />
-        </Routes>
+              <Route path='/alltests' element={ <AllTests /> } />   
+              <Route path='/questions' element={<QuestionDatabase />} />
+              <Route path='/questions/:id' element={<QuestionDatabase />} />
+              <Route path='/test' element={<SimuladoFrame questionsList={[11,22,3,4,5]}/>} />
+              <Route path='/simulado/:id' element={<SimuladoVer />} />
+              <Route path='/adm' element={<Admnistrador />} />
+            </Routes>
+          }
         </div>
     );
 }

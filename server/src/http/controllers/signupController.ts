@@ -20,6 +20,7 @@ export async function signupController(req: Request, res: Response) {
       await profileDAO.registerProfile(req.body);
       const profileDTO: ProfileDTO = await profileDAO.searchprofileByEmail(req.body.email);
       req.session.isLoggedIn = true;
+      
       req.session.cookie.maxAge = (req.body.remember) ? (1000 * 60 * 60 * 24 * 30) : (req.session.cookie.maxAge);
       const sessionProfile = {
         id: profileDTO.id,
@@ -33,7 +34,7 @@ export async function signupController(req: Request, res: Response) {
       }
       req.session.profile = sessionProfile;
       
-    
+      
       res.status(201).json({ message: 'Perfil cadastrado com sucesso' });
     } catch (error: any) {
       res.status(409).json({ message: error.message });
