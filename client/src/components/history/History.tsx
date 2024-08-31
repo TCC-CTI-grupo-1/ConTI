@@ -58,11 +58,7 @@ const History = () => {
     useEffect(() => {
         setLoading(true);
         handleSetAreasMap().then(() => {
-            handleGetQuestions().then((question) => {
-                setQuestionsGlobal(question);
-                console.log(question);
-                setLoading(false);
-            });
+            setLoading(false);
         });  
     }, []);
 

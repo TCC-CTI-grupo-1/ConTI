@@ -41,8 +41,10 @@ export async function getMockTestsByDateAndProfileController(req: Request, res: 
         if(matches) gmt = matches[1];
         
         date = new Date(date.getTime() + (Number(gmt) * 60 * 60 * 1000));
+        date.setHours(0, 0, 0, 0);
 
         const mockTests = await mockTestDAO.listMockTestsByCreationDateAscendentAndProfileId(date, req.session.profile.id);
+        
         res.json({ mockTests });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
