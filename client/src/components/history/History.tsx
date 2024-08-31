@@ -57,10 +57,14 @@ const History = () => {
 
     useEffect(() => {
         setLoading(true);
-        handleSetAreasMap().then(() => {
-            setLoading(false);
-        });  
+        handleSetAreasMap();
     }, []);
+
+    useEffect(() => {
+        if(Object.keys(areas).length !== 0){
+            setLoading(false);
+        }
+    }, [areas]);
 
     useEffect(() => {
         setLoading2(true);
