@@ -35,9 +35,9 @@ input::-ms-clear {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --primary-color: rgba(0, 102, 255, 1);
+  --primary-color: rgb(255, 0, 0);
   --primary-color-80: rgba(0, 102, 255, 0.7);
-  --primary-color-50: rgba(0, 102, 255, 0.5);
+  --primary-color-50: rgba(0, 102, 255, 0.5); 
   --primary-color-30: rgba(0, 102, 255, 0.3);
   --primary-color-10: rgba(0, 102, 255, 0.1);
   --background-color: white;
@@ -77,13 +77,13 @@ input::-ms-clear {
   --font-size: 1rem;
 
   //Reescrevendo chakra
-  --chakra-colors-blue-50: #ebf8ff !important;
+  --chakra-colors-blue-50: #ebf8ff !important;   //chakra --> biblioteca de componentes pré-prontos 
   /* Mais clara */
   --chakra-colors-blue-100: #cbe4ff !important;
   --chakra-colors-blue-200: #aad0ff !important;
   --chakra-colors-blue-300: #88bbff !important;
   --chakra-colors-blue-400: #6697ff !important;
-  --chakra-colors-blue-500: #0066FF !important;
+  --chakra-colors-blue-500: var(--primary-color) !important;
   /* Cor principal */
   --chakra-colors-blue-600: #035fe9 !important;
   --chakra-colors-blue-700: #0050c9 !important;
@@ -93,7 +93,6 @@ input::-ms-clear {
 
   --chakra-sizes-xl: 70% !important;
 }
-
 body {
   font-family: Lexend, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
   overflow-x: hidden;
@@ -317,7 +316,7 @@ H4{
       background-color: var(--background-color-2);
     }
 
-    //Change the texto color when input focused
+    //Change the text color when input focused
     & input:focus+.inputFocused {
       & > p {
         top: calc(var(--padding-4) * -1);

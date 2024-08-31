@@ -204,6 +204,7 @@ export class TestBuilder{
     }
     async buildTest(blueprint:TestBlueprint)
     {
+        const cacheID: {[key:number]:Boolean} = {};
         let questionList: { [key: number]: QuestionDTO[] } = {};
         const proportions = difficultyProportions[blueprint.difficultyLevel];
         let maxval = 0;
@@ -211,7 +212,7 @@ export class TestBuilder{
         const difficultyCountInSubject:{[key:number]:{[key:string]:number}} = {};
         for (const subject in blueprint.questionBySubject) {
             const nsubject = Number(subject);
-            const numberOfQuestions = blueprint.questionBySubject[nsubject];
+            let numberOfQuestions = blueprint.questionBySubject[nsubject];
             if(blueprint.difficultyLevel === DifficultyLevel.RANDOM)
             {
                 const client= await conn.getConnection();
@@ -224,7 +225,14 @@ export class TestBuilder{
                 questionList[nsubject] = []
                 for(let i=0;i<numberOfQuestions;i++)
                 {
-                    questionList[nsubject].push(row[i]);
+                    if(!cacheID[row[i].id])
+                    {
+                        questionList[nsubject].push(row[i]);
+                        cacheID[row[i].id] = true;
+                    }
+                    else{
+                        numberOfQuestions++;
+                    }
                 }
             }
             if(blueprint.difficultyType === DifficultyType.INDIVIDUAL)
@@ -255,9 +263,7 @@ export class TestBuilder{
                         });
                         
                         const filterQuery = function(r:any){ return difficultyToErrorRatioCondition[difficulty](r.total_correct_answers,r.total_answers)}; 
-                        const row = rows.filter(filterQuery);
-                        const cacheID: {[key:number]:Boolean} = {};
-                        
+                        const row = rows.filter(filterQuery);                        
                         shuffle(row);
                         
                         for(let i=0;i<difficultyCountInSubject[nsubject][difficulty];i++)
