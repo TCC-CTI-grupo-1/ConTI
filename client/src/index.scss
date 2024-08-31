@@ -2039,6 +2039,10 @@ COMPONENTES GERAIS DO FERNANDO
       color: var(--primary-color);
       opacity: 0.7;
     }
+    &.notAnswered{
+      color: var(--color-black);
+      opacity: 0.7;
+    }
     &:hover{
       opacity: 1;
     }

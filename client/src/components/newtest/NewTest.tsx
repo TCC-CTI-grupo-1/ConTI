@@ -24,7 +24,6 @@ const NewTest = () => {
 
     async function handlegenerateNewSimulado(){
         setLoading(true);
-        await generateNewSimulado(10);
         navigate('/test');
     }
 

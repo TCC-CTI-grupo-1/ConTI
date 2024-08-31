@@ -94,8 +94,9 @@ const History = () => {
 
         responseSimulados.forEach(async (simulado) => {
             const questionMockTests = await handleGetQuestion_MockTestsByMockTestId(simulado.id);
-            const questions = await handleGetQuestionsByIds(questionMockTests.map(qmt => qmt.question_id));
+            let questions = await handleGetQuestionsByIds(questionMockTests.map(qmt => qmt.question_id));
             const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
+
             const answersMockTests = answers.filter(answer => questionMockTests.find(qmt => qmt.answer_id === answer.id) !== undefined);
             let subjects: {
                 [key: string]: {

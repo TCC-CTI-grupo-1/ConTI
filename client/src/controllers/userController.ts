@@ -470,7 +470,7 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 //Essa função parece muito errada
 
 // não é 'generate', tá mais pra 'get'
-export async function generateNewSimulado(amount: number): Promise<string>{
+export async function generateNewSimulado(amount: number): Promise<questionInterface[]>{
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
         const response = await fetch('http://localhost:3001/questions/newMockTest/', {

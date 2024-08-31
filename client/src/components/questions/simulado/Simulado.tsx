@@ -215,11 +215,13 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             
             {
                 questionsHashMap.map((_, index) => {
-                    return (<h3 key={index}
+                    return (<h3 key={index} className={`questionNumber ${resultsHashMap[index] == undefined || resultsHashMap[index][1] == null ? 'notAnswered' : ''} 
+                    ${activeQuestion === index ? 'active' : ''}`}
                     
                     onClick={() => {
+                        onClose2();
                         handleQuestionNumberClick(index, setActiveQuestion);
-                        onClose();
+                        
                     }}
                     >{index + 1}</h3>
                     );

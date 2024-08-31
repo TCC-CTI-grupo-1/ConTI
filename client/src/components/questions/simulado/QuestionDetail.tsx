@@ -49,6 +49,8 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
 
         const alternatives = questionRef.current.querySelectorAll('.alternatives div');
 
+        //console.log(letter);
+
         alternatives.forEach((alternative) => {
             alternative.classList.remove('active');
             const alternativeLetter = alternative.querySelector('p')?.textContent;
@@ -84,9 +86,11 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
         if(alternativasRef.current.length === 0) return showAlert('Ocorreu um erro ao encontrar as alternativas. Tente novamente. [0]');    
         if (!showAnswer) {
             //console.log('add click event listener');
+            console.log(alternativasRef.current);
             alternativasRef.current.forEach((alternativa) => {
                 if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [1]');
                 
+                //console.log(alternativa.current);
                 alternativa.current.addEventListener('click', handleClick);
                 
                 const letra = alternativa.current.querySelector('p')
@@ -162,7 +166,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 
                 {question.answers && question.answers.map((alternative, index) => (
-                    <div key={index} ref={alternativasRef.current[index]}>
+                    <div key={index} ref={alternativasRef.current[index]} className={String(index)}>
                         <span>
                             <p> {alternative.question_letter} </p>
                         </span>

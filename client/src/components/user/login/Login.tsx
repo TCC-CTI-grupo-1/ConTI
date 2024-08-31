@@ -58,6 +58,8 @@ const Login = ({changeLoginPage}:Props) => {
                 //console.log("L");
                 localStorage.setItem('isLoggedIn', 'true');
                 navigate("/");
+                //refresh the page
+                window.location.reload();
             }
             else{
                 //console.log("E");

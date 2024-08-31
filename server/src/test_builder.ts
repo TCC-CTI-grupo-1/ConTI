@@ -256,12 +256,18 @@ export class TestBuilder{
                         
                         const filterQuery = function(r:any){ return difficultyToErrorRatioCondition[difficulty](r.total_correct_answers,r.total_answers)}; 
                         const row = rows.filter(filterQuery);
+                        const cacheID: {[key:number]:Boolean} = {};
                         
                         shuffle(row);
                         
                         for(let i=0;i<difficultyCountInSubject[nsubject][difficulty];i++)
                         {
+                            if(cacheID[row[i].id]) {
+                                difficultyCountInSubject[nsubject][difficulty]++;
+                                continue;
+                            }
                             questionList[nsubject].push(row[i]);
+                            cacheID[row[i].id] = true;
                         }
                     }
                    

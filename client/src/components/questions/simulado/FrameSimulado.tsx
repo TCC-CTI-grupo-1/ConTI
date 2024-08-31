@@ -1,7 +1,7 @@
 import Simulado from "./Simulado"
 import { useState, useEffect } from "react"
-import { questionInterface, simuladoInterface } from "../../../controllers/interfaces"
-import { handleGetQuestion, handlePostSimulado } from "../../../controllers/userController"
+import { questionInterface, respostaInterface, simuladoInterface } from "../../../controllers/interfaces"
+import { handleGetQuestion, handlePostSimulado, generateNewSimulado, handleGetAnswersByQuestionsIds } from "../../../controllers/userController"
 import date from 'date-and-time'
 import { useNavigate } from "react-router-dom"
 
@@ -20,11 +20,7 @@ import {
 type questionMapInterface = questionInterface[];
 type questionMapResultInterface = [number, (string | null)][];  
 
-interface Props{
-    questionsList: number[],
-}
-
-const SimuladoFrame = ({questionsList}:Props) => {
+const SimuladoFrame = () => {
     const {onOpen, onClose, isOpen} = useDisclosure();
 
     const [questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface | null>(null);
@@ -61,18 +57,23 @@ const SimuladoFrame = ({questionsList}:Props) => {
 
     useEffect(() => {
         const getQuestions = async () => {
-            const questionsHashMap: questionMapInterface = [];
-            for(let i = 0; i < questionsList.length; i++){
-                const question = await handleGetQuestion(questionsList[i]);
-                if(question !== null) {
-                    questionsHashMap.push(question);
-                }
-            }
-            setQuestionsHashMap(questionsHashMap);
-            setLoading(false);
+                console.log("Getting questions");
+                let questions = await generateNewSimulado(10);
+                console.log("Getitng answers");
+                const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
+
+                questions.forEach(question => {
+                    let qstAnswer: respostaInterface[] | undefined = answers.filter(ans => ans.question_id === question.id);
+                    //Organiza as alternativas na ordem "A" "B" "C" "D" "E", por answer.question_letter;
+                    question.answers = qstAnswer?.sort((a, b) => a.question_letter.charCodeAt(0) - b.question_letter.charCodeAt(0));
+                setQuestionsHashMap(questions);
+
+                setLoading(false);
+
+            }); 
         }
         getQuestions();
-    }, [questionsList]);
+    }, []);
 
     function returnJSXOverlay(): JSX.Element{
 
