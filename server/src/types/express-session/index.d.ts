@@ -9,6 +9,7 @@ export interface Profile {
     creation_date: Date;
     total_correct_answers: number;
     total_answers: number;
+    total_mock_tests: number;
 }
 
 declare module "express-session" {
