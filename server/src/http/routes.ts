@@ -79,7 +79,7 @@ export async function routes(app: any) {
     app.get('/mockTests/date/:date', getMockTestsByDateAndProfileController);
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
 
-    app.post('/mockTests', setMockTestController);
+    app.post('/mockTest', setMockTestController);
 
     // '/profile/'
     app.get('/profile', getProfileController);

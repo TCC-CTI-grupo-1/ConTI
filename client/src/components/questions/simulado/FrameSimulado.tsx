@@ -50,25 +50,26 @@ const SimuladoFrame = () => {
     async function handleFinishSimulado(respostas: questionMapResultInterface){
         onOpen();
         setIsSimuladoAwaitActive(true);
-        const simulado = await handlePostSimulado(respostas);
+        const simulado = await handlePostSimulado(respostas, "automatico", 50);
         setCompleteSimulado(simulado);
-        console.log(respostas);
+        
     }
 
     useEffect(() => {
         const getQuestions = async () => {
-                console.log("Getting questions");
+            
                 let questions = await generateNewSimulado(10);
-                console.log("Getitng answers");
+                
                 const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
 
                 questions.forEach(question => {
                     let qstAnswer: respostaInterface[] | undefined = answers.filter(ans => ans.question_id === question.id);
                     //Organiza as alternativas na ordem "A" "B" "C" "D" "E", por answer.question_letter;
                     question.answers = qstAnswer?.sort((a, b) => a.question_letter.charCodeAt(0) - b.question_letter.charCodeAt(0));
-                setQuestionsHashMap(questions);
+                    setQuestionsHashMap(questions);
+                    
 
-                setLoading(false);
+                    setLoading(false);
 
             }); 
         }

@@ -443,10 +443,27 @@ export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number
 }
 
 //Retorna o simulado que foi adicionado (NN FEITO)
-export async function handlePostSimulado(questionsList: questionMapResultInterface): Promise<simuladoInterface | null> {
+export async function handlePostSimulado(questionsList: questionMapResultInterface, tipo: string, time_limit: number): Promise<simuladoInterface | null> {
     //Código PLACEHOLDER.
     try {
-        
+        let name = "Simulado";
+        if (tipo === 'automatico') {
+            const profile = await handleGetUser();
+            name = "Simulado " + profile?.total_mock_tests;
+        }
+        const dataForMockTest = {
+            type: tipo,
+            time_limit: time_limit,
+            title: name
+        };
+        const response = await fetch('http://localhost:3001/mockTest/', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataForMockTest)
+        });
         await new Promise(resolve => setTimeout(resolve, 1000 * questionsList.length));
         return null;
     } catch (err: any) {
