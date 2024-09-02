@@ -44,9 +44,9 @@ export async function routes(app: any) {
 
     // '/questions/'
     app.get('/questions', getQuestionController);
-    app.get('/questionsById/:id', getQuestionByIdController);
-    app.get('/questionsByFil/filter/:filter', getQuestionWithFiltersController);
-    app.get('/questionsByIds/:ids', getQuestionsByIdsController);
+    app.get('/questions/:id', getQuestionByIdController);
+    app.get('/questions/filter/:filter', getQuestionWithFiltersController);
+    app.get('/questions/ids/:ids', getQuestionsByIdsController);
     app.get('/questions/newMockTest', getQuestionsForNewMockTestByProfileController);
 
 
@@ -55,7 +55,7 @@ export async function routes(app: any) {
 
     app.post('/questions', postQuestionController);
 
-    app.delete('/questionsById/:id', deleteQuestionByIdController);
+    app.delete('/questions/:id', deleteQuestionByIdController);
 
 
     // '/area/'

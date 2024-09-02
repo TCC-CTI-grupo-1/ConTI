@@ -1,13 +1,13 @@
 import Simulado from "./Respostas"
 import { useState, useEffect } from "react"
 import { questionInterface, respostaInterface } from "../../../controllers/interfaces"
-import { handleGetQuestion } from "../../../controllers/userController"
+import { handleGetQuestion, handleGetAnswersByQuestionId } from "../../../controllers/userController"
 //import { useNavigate } from "react-router-dom"
 import { handleGetQuestion_MockTestsByMockTestId } from "../../../controllers/userController"
 import { useParams } from "react-router-dom"
 
 
-  type questionResultsInterface = [questionInterface, (respostaInterface | null)][];
+  type questionResultsInterface = [questionInterface, (respostaInterface | null), answers:respostaInterface][];
 
 const SimuladoFrame = () => {
     const { id } = useParams();
@@ -36,11 +36,12 @@ const SimuladoFrame = () => {
             let newPontuacao: boolean[] = [];
             await Promise.all(simulado.map(async (question) => {
                 const questionData = await handleGetQuestion(question.question_id);
+                const answers = await handleGetAnswersByQuestionId(question.question_id);
                 if(questionData !== null)
                     {
-                        let jorge = questionData.answers.find((a) => a.id === question.answer_id)
-                        newQuestionsHashMap.push([questionData, jorge !== undefined ? jorge : null]);
-                        let correctAnswer = questionData.answers.find((a) => a.is_correct === true);
+                        let jorge = answers.find((a) => a.id === question.answer_id)
+                        newQuestionsHashMap.push([questionData, jorge !== undefined ? jorge : null, jorge]);
+                        let correctAnswer = answers.find((a) => a.is_correct === true);
                         if(correctAnswer === undefined){
                             console.error("Erro ao carregar questão " + question.question_id);
                         }

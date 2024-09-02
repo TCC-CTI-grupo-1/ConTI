@@ -63,12 +63,17 @@ const History = () => {
     useEffect(() => {
         if(Object.keys(areas).length !== 0){
             setLoading(false);
+
+            setLoading2(true);
+            handleSimuladosAndListas();
         }
     }, [areas]);
 
     useEffect(() => {
-        setLoading2(true);
-        handleSimuladosAndListas();
+        if(Object.keys(areas).length !== 0){
+            setLoading2(true);
+            handleSimuladosAndListas();
+        }
     }, [activeDate]);
 
 
