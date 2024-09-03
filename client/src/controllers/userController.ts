@@ -454,7 +454,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             name = "Simulado " + (profile.total_mock_tests + 1);
         }
         const dataForMockTest = {
-            type: tipo,
+            test_type: tipo,
             time_limit: time_limit,
             title: name
         };
@@ -469,7 +469,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
         });
 
         const responseData = await response.json();
-        
+        console.log(responseData)
         const data = {
             mocktest_id: responseData.mockTest.id,
             questions: questionsList

@@ -13,7 +13,8 @@ export async function postMockTestController(req: Request, res: Response) {
         if(req.session.profile === undefined) {
             return res.status(404).json({ message: 'Perfil não encontrado' });
         }
-        req.body.UUID = "UUID";
+        req.body.UUID = "UUID " + Math.random();
+        req.body.profile_id = req.session.profile.id;
         const mockTest = await mockTestDAO.registerMockTest(req.body);
         res.json({ mockTest });
     } catch (error: any) {
