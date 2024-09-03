@@ -25,7 +25,8 @@ const SimuladoFrame = () => {
 
     const [questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface | null>(null);
     const [loading, setLoading] = useState(true);
-    const [completeSimulado, setCompleteSimulado] = useState<simuladoInterface | null>(null);
+    const [simulado, setSimulado] = useState<simuladoInterface>({} as simuladoInterface);
+    const [isSimuladoFinished, setIsSimuladoFinished] = useState<boolean>(false);
 
     //A unica utilidade disso é impedir que o usuario clique no botão de finalizar simulado mais de uma vez enquanto ele está sendo corrigido
     const [isSimuladoAwaitActive, setIsSimuladoAwaitActive] = useState(false);
@@ -51,14 +52,15 @@ const SimuladoFrame = () => {
         onOpen();
         setIsSimuladoAwaitActive(true);
         const simulado = await handlePostSimulado(respostas, "automatico", 50);
-        setCompleteSimulado(simulado);
+        setSimulado(simulado);
         
     }
 
     useEffect(() => {
+        let questions: questionInterface[] = [];
         const getQuestions = async () => {
             
-                let questions = await generateNewSimulado(10);
+                questions = await generateNewSimulado(10);
                 
                 const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
 
@@ -74,11 +76,19 @@ const SimuladoFrame = () => {
             }); 
         }
         getQuestions();
+        
+        const postSimulado = async () => {
+            const simulado = await handlePostSimulado(questions, "automatico", 50);
+            if (simulado !== null) {
+                setSimulado(simulado);
+            }
+        }
+        postSimulado();
     }, []);
 
     function returnJSXOverlay(): JSX.Element{
 
-        if (completeSimulado === null) {
+        if (isSimuladoFinished === null) {
             return (
             <div id="historyOverlay">
                 <div id="loading">
@@ -92,21 +102,21 @@ const SimuladoFrame = () => {
         else{
             return (
             <div id="historyOverlay">
-                    <h2>Simulado #{completeSimulado.id}</h2>
-                    <p>Tempo consumudo: {completeSimulado.time_spent} minutos</p>
-                    <p>Feito dia: {date.format(completeSimulado.creation_date, 'DD/MM/YYYY')}</p>
-                    <h3>{completeSimulado.total_correct_answers}/{completeSimulado.total_answers}</h3>
+                    <h2>Simulado #{simulado.id}</h2>
+                    <p>Tempo consumudo: {simulado.time_spent} minutos</p>
+                    <p>Feito dia: {date.format(simulado.creation_date, 'DD/MM/YYYY')}</p>
+                    <h3>{simulado.total_correct_answers}/{simulado.total_answers}</h3>
                     <div className="progress">
-                        <div style={{width: (completeSimulado.total_correct_answers * 100 / completeSimulado.total_answers ) + '%'}}></div>
+                        <div style={{width: (simulado.total_correct_answers * 100 / simulado.total_answers ) + '%'}}></div>
                     </div>
                     <div className="materias">
                         {
-                            Object.keys(completeSimulado.subjects).map((subject, index) => {
+                            Object.keys(simulado.subjects).map((subject, index) => {
                                 return (
                                     <div key={index}>
-                                        <p>{subject} [{completeSimulado.subjects[subject].total_correct_answers}/{completeSimulado.subjects[subject].total_answers}]</p>
+                                        <p>{subject} [{simulado.subjects[subject].total_correct_answers}/{simulado.subjects[subject].total_answers}]</p>
                                         <div className="progress">
-                                            <div style={{width: (completeSimulado.subjects[subject].total_correct_answers * 100 / completeSimulado.subjects[subject].total_answers ) + '%'}} />
+                                            <div style={{width: (simulado.subjects[subject].total_correct_answers * 100 / simulado.subjects[subject].total_answers ) + '%'}} />
                                         </div>
                                     </div>
                                 )
@@ -138,12 +148,12 @@ const SimuladoFrame = () => {
             >
                 <ModalOverlay />
                 <ModalContent>
-                <ModalHeader>{completeSimulado === null ? 'Corrigindo...' : 'Informações detalhadas'}</ModalHeader>
+                <ModalHeader>{simulado === null ? 'Corrigindo...' : 'Informações detalhadas'}</ModalHeader>
                 <ModalBody>
                     {returnJSXOverlay()}
                 </ModalBody> 
                     <ModalFooter>
-                        {completeSimulado !== null && <>
+                        {simulado !== null && <>
                             <Button variant='ghost' mr={3} onClick={() => {
                                 navegate('/');
                             }}>Voltar ao home</Button>

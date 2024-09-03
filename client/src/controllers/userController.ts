@@ -1,7 +1,6 @@
 
 //import { json } from 'react-router-dom';
-import { Profile } from '../../../server/src/types/express-session';
-import { questionInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface } from './interfaces';
+import { questionInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface, profileInterface } from './interfaces';
 import { questionFilters } from './interfaces';
 import { showAlert } from '../App';
 
@@ -122,7 +121,7 @@ export async function handleLogin(email: string, password: string, remember: boo
     }
 }
  
-export async function handleGetUser(): Promise<Profile | null> {
+export async function handleGetUser(): Promise<profileInterface | null> {
     try {
         const response = await fetch('http://localhost:3001/user', {
             method: 'GET',
@@ -417,7 +416,7 @@ export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<si
 }
 
 //ID e Alternativa (O index é o número da questão na prova.)
-type questionMapResultInterface = [number, (string | null)][];  
+type questionMapResultInterface = [number, (number | null)][];  
 
 
 export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number): Promise<question_MockTestInterface[]> {
@@ -443,19 +442,23 @@ export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number
 }
 
 //Retorna o simulado que foi adicionado (NN FEITO)
-export async function handlePostSimulado(questionsList: questionMapResultInterface, tipo: string, time_limit: number): Promise<simuladoInterface | null> {
+export async function handlePostSimulado(questionsList: questionInterface[], tipo: string, time_limit: number): Promise<simuladoInterface | null> {
     //Código PLACEHOLDER.
     try {
         let name = "Simulado";
         if (tipo === 'automatico') {
             const profile = await handleGetUser();
-            name = "Simulado " + profile?.total_mock_tests;
+            if (!profile) {
+                return null;
+            }
+            name = "Simulado " + (profile.total_mock_tests + 1);
         }
         const dataForMockTest = {
             type: tipo,
             time_limit: time_limit,
             title: name
         };
+        console.log(dataForMockTest);
         const response = await fetch('http://localhost:3001/mockTest/', {
             method: 'POST',
             credentials: 'include',
@@ -464,8 +467,30 @@ export async function handlePostSimulado(questionsList: questionMapResultInterfa
             },
             body: JSON.stringify(dataForMockTest)
         });
-        await new Promise(resolve => setTimeout(resolve, 1000 * questionsList.length));
-        return null;
+
+        const responseData = await response.json();
+        
+        const data = {
+            mocktest_id: responseData.mockTest.id,
+            questions: questionsList
+        };
+
+        const responseQuestions = await fetch('http://localhost:3001/mockTest/questions/', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseDataQuestions = await responseQuestions.json();
+
+        if (!response.ok || !responseQuestions.ok) {
+            throw new Error(responseData.message + ' ' + responseDataQuestions.message);
+        } else {
+            return responseData.mockTest;
+        }
     } catch (err: any) {
         return null;
     }
@@ -490,6 +515,7 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 export async function generateNewSimulado(amount: number): Promise<questionInterface[]>{
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
+        
         const response = await fetch('http://localhost:3001/questions/newMockTest/', {
             method: 'GET',
             credentials: 'include',
@@ -499,7 +525,7 @@ export async function generateNewSimulado(amount: number): Promise<questionInter
         });
 
         const responseData = await response.json();
-        console.log("questions: ", responseData.questions);
+        
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {

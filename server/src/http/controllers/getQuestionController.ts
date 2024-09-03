@@ -42,7 +42,7 @@ export async function getQuestionByIdController(req: Request, res: Response) {
     }
 }
 
-export async function getQuestionWithFiltersController(req: Request, res: Response) {
+export async function getQuestionsWithFiltersController(req: Request, res: Response) {
     const questionDAO = new QuestionDAO();
     try {
         const filter = JSON.parse(req.params.filter) as questionFilters;
@@ -55,19 +55,16 @@ export async function getQuestionWithFiltersController(req: Request, res: Respon
 
 export async function getQuestionsForNewMockTestByProfileController(req: Request, res: Response) {
     if(req.session === undefined) {
-        console.log("sessão não inicializada")
         return res.status(404).json({ message: 'Sessão não inicializada' });
     }
     if (!req.session.isLoggedIn) {
-        console.log("usuário não logado")
         return res.status(401).json({ message: 'Usuário não logado' });
     }
     if(req.session.profile === undefined) {
-        console.log("perfil não encontrado")
         return res.status(404).json({ message: 'Perfil não encontrado' });
     }
     
-    const questionDAO = new QuestionDAO();
+    
     try {
         const profileId = req.session.profile.id;
         const test_blueprint = new TestBlueprint();

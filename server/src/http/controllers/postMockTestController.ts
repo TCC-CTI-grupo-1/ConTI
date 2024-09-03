@@ -1,7 +1,7 @@
 import { MockTestDAO } from "../../DAO/MockTestDAO";
 import { Request, Response } from "express";
 
-export async function setMockTestController(req: Request, res: Response) {
+export async function postMockTestController(req: Request, res: Response) {
     const mockTestDAO = new MockTestDAO();
     try {
         if(req.session === undefined) {
