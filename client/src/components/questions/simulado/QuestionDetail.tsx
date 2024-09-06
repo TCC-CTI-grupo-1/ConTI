@@ -1,10 +1,14 @@
 import  LocalButton from '../../Button';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { questionInterface } from '../../../controllers/interfaces';
+import { questionInterface, respostaInterface } from '../../../controllers/interfaces';
 import { showAlert } from '../../../App';
+
+//Esse é tipo, o pior código ja escrito na historia, ele faz 4 coisas quando deveria fazer uma
+//boa sorte
 
 interface Props {
     question: questionInterface;
+    answers: respostaInterface[];
     qNumber?: number; //Numero da questão no simulado
     isSimulado?: boolean;
     isAnswersSelected?: (value: string | null) => void; //Executado quando o usuario marca/desmarca uma alternativa
@@ -32,7 +36,7 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
 
     // Garante que o array de refs tenha o tamanho necessário
     if (alternativasRef.current.length === 0) {
-        let length = question.answers ? question.answers.length : 0;
+        let length = answers.length;
         alternativasRef.current = Array.from({ length }, () => React.createRef());
     }
 
@@ -41,8 +45,7 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
     const [showAnswer, setShowAnswer] = useState(false);
 
     const correctAnswer = isCorrecao !== undefined ? 
-    question.answers &&
-    question.answers.map((answer, index) => answer.is_correct ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0] : null;
+    answers.map((answer, index) => answer.is_correct ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0] : null;
 
     const addClassToAlternative = useCallback((letter: string) => {
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
@@ -85,6 +88,7 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
     function checkAlternativas(){
         if(alternativasRef.current.length === 0) return showAlert('Ocorreu um erro ao encontrar as alternativas. Tente novamente. [0]');    
         if (!showAnswer) {
+            //Eu literalmente não faço ideia do que isso faz
             //console.log('add click event listener');
             console.log(alternativasRef.current);
             alternativasRef.current.forEach((alternativa) => {
@@ -112,7 +116,21 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
             });
         } else {
             // remove click event listener
-            //console.log('remove click event listener');
+            
+            //Alternativa que o cara marcou está com 'active'
+
+            alternativasRef.current.forEach((alternativa) => {
+                if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [3]');
+                const letra = alternativa.current.querySelector('p');
+                
+                if(letra){
+                    if(letra.textContent == selectedAwnser){
+                        alternativa.current.classList.add('correct');
+                    }
+                }
+
+            });
+
             cleanupEvenListeners();
         }
 
@@ -165,7 +183,7 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
             </h4>
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 
-                {question.answers && question.answers.map((alternative, index) => (
+                {answers.map((alternative, index) => (
                     <div key={index} ref={alternativasRef.current[index]} className={String(index)}>
                         <span>
                             <p> {alternative.question_letter} </p>

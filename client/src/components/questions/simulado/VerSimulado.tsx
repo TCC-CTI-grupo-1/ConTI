@@ -5,7 +5,8 @@ import { handleGetQuestion, handleGetAnswersByQuestionId } from "../../../contro
 //import { useNavigate } from "react-router-dom"
 import { handleGetQuestion_MockTestsByMockTestId } from "../../../controllers/userController"
 import { useParams } from "react-router-dom"
-
+import { handleGetQuestionsByIds } from "../../../controllers/userController"
+import { handleGetAnswersByQuestionsIds } from "../../../controllers/userController"
 
   type questionResultsInterface = [questionInterface, (respostaInterface | null), answers:respostaInterface[]][];
 
@@ -34,7 +35,49 @@ const SimuladoFrame = () => {
             }
 
             let newPontuacao: boolean[] = [];
-            await Promise.all(simulado.map(async (question) => {
+
+            const allQuestions = await handleGetQuestionsByIds(simulado.map((q) => q.question_id));
+            const allAnswers = await handleGetAnswersByQuestionsIds(simulado.map((q) => q.question_id));
+
+            if(allQuestions === null || allAnswers === null){
+                console.error("Erro ao carregar questões");
+                return;
+            }
+
+            allQuestions.forEach((question) => {
+                let respostas = allAnswers.filter((a) => a.question_id === question.id);
+                let correctAnswer = respostas.find((a) => a.is_correct === true);
+                let alternativaMarcadaID = simulado.find((s) => s.question_id === question.id);
+                if(alternativaMarcadaID === undefined){
+                    console.error("Erro ao carregar questão " + question.id);
+                    newPontuacao.push(false);
+                    newQuestionsHashMap.push([question, null, respostas]);
+                    return;
+                }
+
+                let alternativaMarcada = respostas.find((a) => a.id === alternativaMarcadaID.answer_id);
+
+                if(correctAnswer === undefined){
+                    console.error("Erro ao carregar questão " + question.id);
+                }
+                else{
+                    if(alternativaMarcada !== undefined){
+                        if(correctAnswer.id === alternativaMarcadaID.answer_id){
+                            newPontuacao.push(true);
+                        }
+                        else{
+                            newPontuacao.push(false);
+                        }
+                    }
+                    else{
+                        newPontuacao.push(false);
+                    }
+                }
+
+                newQuestionsHashMap.push([question, alternativaMarcada ? alternativaMarcada : null, respostas]);
+            });
+
+            /*await Promise.all(simulado.map(async (question) => {
                 const questionData = await handleGetQuestion(question.question_id); 
                 const answers = await handleGetAnswersByQuestionId(question.question_id);
                 if(questionData !== null)
@@ -59,11 +102,13 @@ const SimuladoFrame = () => {
                     console.error("Erro ao carregar questão " + question.question_id);
                 }
                 
-            }));
+            })); */
 
             setQuestionsHashMap(newQuestionsHashMap);
             setLoading(false);
             setPontuacao(newPontuacao);
+
+            console.log(newQuestionsHashMap);
         }
 
         console.log(id);
