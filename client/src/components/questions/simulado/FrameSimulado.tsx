@@ -57,33 +57,41 @@ const SimuladoFrame = () => {
     }
 
     useEffect(() => {
-        let questions: questionInterface[] = [];
         const getQuestions = async () => {
-            
-                questions = await generateNewSimulado(10);
+                let questions: questionInterface[] = await generateNewSimulado(10);
                 
-                const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
-
-                questions.forEach(question => {
-                    let qstAnswer: respostaInterface[] | undefined = answers.filter(ans => ans.question_id === question.id);
-                    //Organiza as alternativas na ordem "A" "B" "C" "D" "E", por answer.question_letter;
-                    question.answers = qstAnswer?.sort((a, b) => a.question_letter.charCodeAt(0) - b.question_letter.charCodeAt(0));
-                    setQuestionsHashMap(questions);
-                    
-
-                    setLoading(false);
-
-            }); 
+                return questions;
         }
-        getQuestions();
-        
-        const postSimulado = async () => {
+
+        const getQuestionsWithAnswers = async (questions: questionInterface[]) => {
+            const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
+
+            questions.forEach(question => {
+                let qstAnswer: respostaInterface[] | undefined = answers.filter(ans => ans.question_id === question.id);
+                //Organiza as alternativas na ordem "A" "B" "C" "D" "E", por answer.question_letter;
+                question.answers = qstAnswer?.sort((a, b) => a.question_letter.charCodeAt(0) - b.question_letter.charCodeAt(0));
+                setQuestionsHashMap(questions);
+                
+
+                setLoading(false);
+            });
+            return questions;
+        }
+
+        const postSimulado = async (questions: questionInterface[]) => {
             const simulado = await handlePostSimulado(questions, "automatico", 50);
             if (simulado !== null) {
                 setSimulado(simulado);
             }
         }
-        postSimulado();
+
+
+        getQuestions().then((questions) => {
+            postSimulado(questions);
+        });
+
+
+        
     }, []);
 
     function returnJSXOverlay(): JSX.Element{

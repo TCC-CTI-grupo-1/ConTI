@@ -30,7 +30,7 @@ export interface questionInterface{
 export interface question_MockTestInterface{
     question_id: number,
     mocktest_id: number,
-    answer_id: number,
+    answer_id: number | null
 }
 
 //Usado para mostrar o histórico de simulados

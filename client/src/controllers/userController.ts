@@ -458,7 +458,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             time_limit: time_limit,
             title: name
         };
-        console.log(dataForMockTest);
+        
         const response = await fetch('http://localhost:3001/mockTest/', {
             method: 'POST',
             credentials: 'include',
@@ -469,13 +469,21 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
         });
 
         const responseData = await response.json();
-        console.log(responseData)
+        
+        const questions_mocktest: question_MockTestInterface[] = [];
+        questionsList.forEach((question) => {
+            questions_mocktest.push({
+                question_id: question.id,
+                mocktest_id: responseData.mockTest.id,
+                answer_id: null
+            });
+        });
         const data = {
             mocktest_id: responseData.mockTest.id,
-            questions: questionsList
+            questions_mocktest: questions_mocktest
         };
 
-        const responseQuestions = await fetch('http://localhost:3001/mockTest/questions/', {
+        const responseQuestions = await fetch('http://localhost:3001/questions_MockTest/', {
             method: 'POST',
             credentials: 'include',
             headers: {
