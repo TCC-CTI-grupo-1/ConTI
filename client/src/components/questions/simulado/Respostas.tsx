@@ -17,7 +17,7 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
   
-type questionResultsInterface = [questionInterface, (respostaInterface | null)][];
+type questionResultsInterface = [questionInterface, (respostaInterface | null), answers: respostaInterface[]][];
 
 interface Props {
     questionsHashMap: questionResultsInterface;

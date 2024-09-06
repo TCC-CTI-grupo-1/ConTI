@@ -7,7 +7,7 @@ import { handleGetQuestion_MockTestsByMockTestId } from "../../../controllers/us
 import { useParams } from "react-router-dom"
 
 
-  type questionResultsInterface = [questionInterface, (respostaInterface | null), answers:respostaInterface][];
+  type questionResultsInterface = [questionInterface, (respostaInterface | null), answers:respostaInterface[]][];
 
 const SimuladoFrame = () => {
     const { id } = useParams();
@@ -29,18 +29,18 @@ const SimuladoFrame = () => {
             console.log(typeof(simulado));
 
             if(simulado === null){
-                console.log("SUICIDIO")
+                console.log("Simulado não encontrado");
                 return;
             }
 
             let newPontuacao: boolean[] = [];
             await Promise.all(simulado.map(async (question) => {
-                const questionData = await handleGetQuestion(question.question_id);
+                const questionData = await handleGetQuestion(question.question_id); 
                 const answers = await handleGetAnswersByQuestionId(question.question_id);
                 if(questionData !== null)
                     {
-                        let jorge = answers.find((a) => a.id === question.answer_id)
-                        newQuestionsHashMap.push([questionData, jorge !== undefined ? jorge : null, jorge]);
+                        let respostas = answers.find((a) => a.id === question.answer_id)
+                        newQuestionsHashMap.push([questionData, respostas !== undefined ? respostas : null, answers]);
                         let correctAnswer = answers.find((a) => a.is_correct === true);
                         if(correctAnswer === undefined){
                             console.error("Erro ao carregar questão " + question.question_id);
