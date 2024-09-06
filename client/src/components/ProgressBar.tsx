@@ -5,7 +5,7 @@ interface Props{
     filledPercentage: number;
     animation?: boolean | false;
 }
-const PI = 3.1415926535897932384;
+const PI = 3.1415926535897932384626433832795028841971693937512582897094459230781640686208998628034825342117067;
 const animationSpeedInMS = 10;
 
 function percentageToCircle(percentage: number, radius: number){

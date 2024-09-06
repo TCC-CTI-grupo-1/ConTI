@@ -88,7 +88,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                     <QuestionDetail 
                         isSimulado 
                         question={questionMap} 
-                        isAwnserSelected={(value: string | null) => {
+                        isAnswersSelected={(value: string | null) => {
                             const newResultsHashMap = resultsHashMap;
                             newResultsHashMap[index] = [questionMap.id, value];
                             if(value != null)

@@ -7,7 +7,7 @@ interface Props {
     question: questionInterface;
     qNumber?: number; //Numero da questão no simulado
     isSimulado?: boolean;
-    isAwnserSelected?: (value: string | null) => void; //Executado quando o usuario marca/desmarca uma alternativa
+    isAnswersSelected?: (value: string | null) => void; //Executado quando o usuario marca/desmarca uma alternativa
     isCorrecao?: string | null | undefined | true;
     /*
     --> Se for string coloca a alernativa correta na string que o cara marcou
@@ -19,13 +19,13 @@ interface Props {
     type?: "small" | "big";
 }
 
-function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrecao = undefined, qNumber, type = "big" }: Props) {
+function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorrecao = undefined, qNumber, type = "big" }: Props) {
 
-    const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
+    const [selectedAnswers, setSelectedAnswers] = useState<string | null>(null);
 
     useEffect(() => {
-        isAwnserSelected && isAwnserSelected(selectedAwnser);
-    }, [selectedAwnser]);
+        isAnswersSelected && isAnswersSelected(selectedAnswers);
+    }, [selectedAnswers]);
 
 
     const alternativasRef = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
@@ -56,7 +56,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
             const alternativeLetter = alternative.querySelector('p')?.textContent;
             if (alternativeLetter === letter) {
                 alternative.classList.add('active');
-                setSelectedAwnser(letter);
+                setSelectedAnswers(letter);
             }
         });
     }, []);
@@ -132,7 +132,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
 
     useEffect(() => {
         if (isCorrecao !== undefined && isCorrecao !== true) {
-            setSelectedAwnser(isCorrecao);
+            setSelectedAnswers(isCorrecao);
             addClassToAlternative(isCorrecao === null ? '' : isCorrecao);
             setShowAnswer(true);
         }

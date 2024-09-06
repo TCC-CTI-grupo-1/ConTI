@@ -62,7 +62,7 @@ function App() {
     return (
         <div className='app' onLoad={checkUser}>
           <div id='alert-box-container'></div>
-          { loading ? <div><h1>Carregando o literal fucking app</h1>
+          { loading && false ? <div><h1>Carregando o literal fucking app</h1>
           <p>Demorando muito? tente novamente:</p>
           <button onClick={checkUser}>TENTAR</button>
           </div> :

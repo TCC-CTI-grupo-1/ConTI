@@ -1,10 +1,10 @@
 
 //import { json } from 'react-router-dom';
-import { questionInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface, profileInterface } from './interfaces';
-import { questionFilters } from './interfaces';
-import { showAlert } from '../App';
+import { Profile } from '../../../server/src/types/express-session';
+import { area_ProfileInterface, profileInterface } from './interfaces';
 
-const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
+
+const  validateEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.', 't'];
 
     //Deve ter só 1 '@'
@@ -23,7 +23,7 @@ const validadeEmail = (email: string): string[] => { //Deveria mudar string[] pa
     return newIsEmailValid;
 }
 
-const validadePassword = (password: string): number[] => {
+const  validatePassword = (password: string): number[] => {
 
     /*Password regras:
     1. Pelo menos 8 caracteres
@@ -112,7 +112,7 @@ export async function handleLogin(email: string, password: string, remember: boo
             throw new Error(responseData.message);
         } else {
             //window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
-            //fernando sofre de disfunção erétil
+            //NÃO, NÃO SOFRE
             return [true, "Login bem sucedido"];
         }
     } catch (err: any) {
@@ -121,6 +121,8 @@ export async function handleLogin(email: string, password: string, remember: boo
     }
 }
  
+
+// ^ LoginController
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
         const response = await fetch('http://localhost:3001/user', {
@@ -170,7 +172,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 }*/
 
 
-export async function handleSaveChanges(Profile: Profile): Promise<string | true> {
+export async function handleSaveChanges(Profile: Profile): Promise<string | true> {// userController.ts
     try {
         const response = await fetch('http://localhost:3001/user', {
             method: 'POST',
@@ -193,7 +195,7 @@ export async function handleSaveChanges(Profile: Profile): Promise<string | true
     }
 }
 
-export async function handleLogout() {
+export async function handleLogout() {// userController.ts
     try {
         const response = await fetch('http://localhost:3001/logout', {
             method: 'POST',
@@ -215,7 +217,7 @@ export async function handleLogout() {
     }
 
 }
-export async function handleDeleteAccount() {
+export async function handleDeleteAccount() { // userController.ts
     try {
         const response = await fetch('http://localhost:3001/user', {
             method: 'DELETE',
@@ -256,408 +258,17 @@ export async function handleDeleteAccount() {
 
 //GET QUESTIONS
 
-export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> {
-    try{
-        const response = await fetch('http://localhost:3001/questions/' + questionID, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
 
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.question;
-        }
-    } catch{
-        return null;
-    }
-
-}
-
-export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<questionInterface[]> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questions/ids/' + JSON.stringify(questions_ids), {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.questions;
-        }
-
-    } catch (err: any) {
-        return [];
-    }
-}
-
-export async function handleGetQuestions(): Promise<questionInterface[]> {
-    try {
-        const response = await fetch('http://localhost:3001/questions/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.questions;
-        }
-
-    } catch (err: any) {
-        return [];
-    }
-}
-
-export async function handleGetFilteredQuestions(filters: questionFilters): Promise<questionInterface[]> {
-    try {
-        const response = await fetch('http://localhost:3001/questions/filter/' + JSON.stringify(filters), {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.questions;
-        }
-
-    } catch (err: any) {
-        return [];
-    }
-}
-
-export async function handleGetAnswersByQuestionId(questionID: number): Promise<respostaInterface[]> {
-    try{
-        const response = await fetch('http://localhost:3001/answers/question/' + questionID, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.answers;
-        }
-    } catch{
-        return [];
-    }
-}
-
-
-export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): Promise<respostaInterface[]> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/answers/questions/' + JSON.stringify(questions_ids), {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.answers;
-        }
-
-    } catch (err: any) {
-        return [];
-    }
-}
-
-export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<simuladoInterface[]> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const response = await fetch('http://localhost:3001/mockTests/date/' + date, {
-            method: 'GET',
-            credentials: 'include', 
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.mockTests;
-        }
-
-    } catch (err: any) {
-        return [];
-    }
-
-}
 
 //ID e Alternativa (O index é o número da questão na prova.)
 type questionMapResultInterface = [number, (number | null)][];  
 
 
-export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number): Promise<question_MockTestInterface[]> {
-    try {
-        const response = await fetch('http://localhost:3001/question_MockTests/' + mockTestId, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.question_mockTests;
-        }
-
-    } catch (err: any) {
-        return [];
-    }
-}
 
 //Retorna o simulado que foi adicionado (NN FEITO)
-export async function handlePostSimulado(questionsList: questionInterface[], tipo: string, time_limit: number): Promise<simuladoInterface | null> {
-    //Código PLACEHOLDER.
-    try {
-        let name = "Simulado";
-        if (tipo === 'automatico') {
-            const profile = await handleGetUser();
-            if (!profile) {
-                return null;
-            }
-            name = "Simulado " + (profile.total_mock_tests + 1);
-        }
-        const dataForMockTest = {
-            test_type: tipo,
-            time_limit: time_limit,
-            title: name
-        };
-        console.log(dataForMockTest);
-        const response = await fetch('http://localhost:3001/mockTest/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataForMockTest)
-        });
 
-        const responseData = await response.json();
-        console.log(responseData)
-        const data = {
-            mocktest_id: responseData.mockTest.id,
-            questions: questionsList
-        };
 
-        const responseQuestions = await fetch('http://localhost:3001/mockTest/questions/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        const responseDataQuestions = await responseQuestions.json();
-
-        if (!response.ok || !responseQuestions.ok) {
-            throw new Error(responseData.message + ' ' + responseDataQuestions.message);
-        } else {
-            return responseData.mockTest;
-        }
-    } catch (err: any) {
-        return null;
-    }
-}
-
-//NN FEITO
-export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {
-    //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000 * id/100));
-        return null;
-    } catch (err: any) {
-        return null;
-    }
-}
-
-//Atenção, a magica acontece aqui:
-
-//Essa função parece muito errada
-
-// não é 'generate', tá mais pra 'get'
-export async function generateNewSimulado(amount: number): Promise<questionInterface[]>{
-    try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        
-        const response = await fetch('http://localhost:3001/questions/newMockTest/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.questions;
-        }
-    }
-    catch (err: any) {
-        return err.message;
-    }
-}
-
-export async function handleGetAreas(): Promise<areaInterface[]> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areas', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.areas;
-        }
-
-    } catch (err: any) {
-        return [];
-    }
-}
-
-export async function handleGetTopParentAreasByIds(ids: number[]): Promise<areaInterface[]> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areas/top' + JSON.stringify(ids), {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(ids),
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.areas;
-        }
-
-    } catch (err: any) {
-        return [];
-    }
-}
-
-export async function handleGetAreasByQuestionsIds(questions_ids: number[]): Promise<number[]> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areas/questions', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(questions_ids),
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.areas;
-        }
-
-    } catch (err: any) {
-        return [];
-    }
-}
-
-//Função que executa handleGetAreas e transforma em um hashMap [id] => area
-
-export async function handleGetAreasMap(): Promise<{[id: number]: areaInterface}> {
-    try{
-        const areas = await handleGetAreas();
-        if(areas.length === 0){
-            throw new Error('Erro ao pegar areas');
-        }
-        let areasMap: {[id: number]: areaInterface} = {};
-        areas.forEach((area) => {
-            areasMap[area.id] = area;
-        });
-        return areasMap;
-    }
-    catch(err: any){
-        return {};
-    }
-}
-
-export async function handlePostArea(nomeArea: string, areaPai: string | null): Promise<boolean>{
-    try {        
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        const data = {
-            name: nomeArea,
-            parent: areaPai
-        };
-
-        const response = await fetch('http://localhost:3001/areas', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        const responseData = await response.json();
-
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return true;
-        }
-
-    } catch (err: any) {
-        return false;
-    }
-}
-
-export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> {
+export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //userController.ts
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch('http://localhost:3001/areaProfile', {
@@ -680,171 +291,7 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
     }
 }
 
-export async function handleGetAreaById(id: number): Promise<areaInterface | null> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/area/'+id, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return {
-                id: responseData.area.id,
-                name: responseData.area.name,
-                parent_id: responseData.area.parent_id
-            };
-        }
-
-    } catch (err: any) {
-        return {
-            id: 0,
-            name: 'SOUGAY',
-            parent_id: null
-        };
-    }
-}
-
-export async function handleGetAreaIdByQuestionId(question_id: number): Promise<number | null> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/area/question/' + question_id, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return responseData.area_id;
-        }
-
-    } catch (err: any) {
-        return null;
-    }
-}
-
-export async function handleGetTopParentAreaById(id: number): Promise<areaInterface | null> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areas/top/'+id, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return {
-                id: responseData.area.id,
-                name: responseData.area.name,
-                parent_id: responseData.area.parent_id
-            };
-        }
-
-    } catch (err: any) {
-        return null;
-    }
-}
-
-export async function handlePutQuestion(question: questionInterface): Promise<boolean> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response1 = await fetch('http://localhost:3001/questions/'+question.id, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(question)
-        });
-
-        const response2 = await fetch('http://localhost:3001/answers/question/'+question.id, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(question.answers)
-        });
-
-        const responseData1 = await response1.json();
-        const responseData2 = await response2.json();
-
-        if (!response1.ok && !response2.ok) {
-            //console.log(responseData.message);
-            throw new Error(responseData1.message + ' ' + responseData2.message); 
-        } else {
-            return true;
-        }
-
-    } catch (err: any) {
-        return false;
-    }
-}
-
-export async function handlePostQuestion(question: questionInterface): Promise<boolean> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questions', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(question)
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return true;
-        }
-
-    } catch (err: any) {
-        showAlert(err.message);
-        return false;
-    }
-}
-
-export async function handleDeleteQuestion(id: number): Promise<boolean> {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questionsById/'+id, {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        } else {
-            return true;
-        }
-
-    } catch (err: any) {
-        showAlert(err.message);
-        return false;
-    }
-}
 
 
-export { validadeEmail, validadePassword }
+
+export {  validateEmail,  validatePassword }

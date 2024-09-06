@@ -31,8 +31,8 @@ const Filters = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const anos = [2024, 2023, 2022];
-  const dificuldade = ["facil", "medio", "dificil"];
+  const anos:number[] = [];
+  const dificuldade:string[] = [];
 
   const [options, setOptions] = useState<options>({
     ano: anos,
@@ -66,7 +66,7 @@ const Filters = () => {
     }
 
     if(option == "ano"){
-      //conver 'e' de ['2024', '2023'] para [2024, 2023]
+      //converter 'e' de ['2024', '2023'] para [2024, 2023]
       newOptions[option] = e.map((element: string) => {
         return parseInt(element);
       });
@@ -306,9 +306,11 @@ const Filters = () => {
                   setOptions(newOptions);
                   }}
                 >
-                  {areas[parseInt(key)].name} + {String(options.disciplina.map((element) => {
+                  {areas[parseInt(key)].name}  
+                  
+                  {false? String(options.disciplina.map((element) => {
                     return element === areas[parseInt(key)].name;
-                  }).includes(true) !== undefined)}
+                  }).includes(true) !== undefined) : "" /*Isso não faz sentido. Adicionando o false? para retirar*/}
                 </Checkbox>
                 );
             } ) : <p>Carregando...</p>}
