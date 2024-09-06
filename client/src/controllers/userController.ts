@@ -3,6 +3,7 @@
 import { questionInterface, simuladoInterface, areaInterface, area_ProfileInterface, question_MockTestInterface, respostaInterface, profileInterface } from './interfaces';
 import { questionFilters } from './interfaces';
 import { showAlert } from '../App';
+import { Profile } from '../../../server/src/types/express-session'; /*não e assim q se faz mas dá (por hora) */
 
 const validadeEmail = (email: string): string[] => { //Deveria mudar string[] para uma interface??
     let newIsEmailValid = ['@', '.', 't'];
@@ -170,7 +171,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 }*/
 
 
-export async function handleSaveChanges(Profile: Profile): Promise<string | true> {
+export async function handleSaveChanges(profile: Profile): Promise<string | true> {
     try {
         const response = await fetch('http://localhost:3001/user', {
             method: 'POST',
@@ -178,7 +179,7 @@ export async function handleSaveChanges(Profile: Profile): Promise<string | true
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(Profile)
+            body: JSON.stringify(profile)
         });
 
         const responseData = await response.json();

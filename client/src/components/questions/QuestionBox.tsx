@@ -1,12 +1,13 @@
 // Date: 03/08/2021
-import { questionInterface } from "../../controllers/interfaces";
+import { questionInterface, respostaInterface } from "../../controllers/interfaces";
 import { useState } from "react";
-import QuestionDetail from "./simulado/QuestionDetail";
+import QstDetail from "./simulado/QstDetail";
 import { areaInterface } from "../../controllers/interfaces";
 
 interface Props {
   question: questionInterface;
   area: areaInterface; 
+  answers: respostaInterface[];
 }
 
 /*const getCategoryElements = (subject: SubjectCategory): JSX.Element[] => {
@@ -24,7 +25,7 @@ interface Props {
   return elements;
 };*/
 
-const QuestionBox = ({  question, area }: Props) => {
+const QuestionBox = ({ question, answers, area }: Props) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -50,7 +51,7 @@ const QuestionBox = ({  question, area }: Props) => {
             </p>
           </div>
         </div>
-        {isOpen && <QuestionDetail question={question} type="small" isCorrecao/>  }
+        {isOpen && <QstDetail question={question} type="small" answers={answers}/>  }
       </div>
     </>
   );

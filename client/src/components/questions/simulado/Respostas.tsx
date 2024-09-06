@@ -55,6 +55,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                     style={{ display: activeQuestion === index ? "flex" : "none" }}
                 >
                     <QuestionDetail 
+                        answers={questionMap[2]}
                         question={questionMap[0]} 
                         isCorrecao={questionMap[1]?.answer}
                     />
@@ -135,7 +136,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
             {
                 questionsHashMap.map((question, index) => {
                     return <h3 key={question[0].id} className={
-                        (question[1]?.answer?.toUpperCase() === question[0].answers.find(answer => answer.is_correct == true) ?
+                        ( pontuacao[index] ?
                         'correct' : 'wrong') + ' ' +
                         (activeQuestion == index ? 'active' : '')
                     }
