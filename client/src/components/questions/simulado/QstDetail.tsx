@@ -15,11 +15,10 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
     const questionRef = useRef<HTMLDivElement>(null);
     const alternativasRef = useRef(new Array());
     const correctAnswer = answers.map((answer, index) => answer.is_correct ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0];
-    const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
 
     function cleanupEvenListeners(){
         alternativasRef.current.forEach((alternativa) => {
-            if(alternativa === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
+            if(alternativa === null) return;
             alternativa.removeEventListener('click', handleClick);
         });
     }
@@ -36,9 +35,7 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
             alternative.classList.remove('active');
             const alternativeLetter = alternative.querySelector('p')?.textContent;
             if (alternativeLetter === letter) {
-                alternative.classList.add('active');
-                setSelectedAwnser(letter);
-            }
+                alternative.classList.add('active');            }
         });
     }, []);
 
@@ -65,7 +62,7 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
             alternativasRef.current.forEach((alternativa) => {
                 console.log("alternativa");
                 console.log(alternativa);
-                if(alternativa === null || alternativa === undefined) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [1]');
+                if(alternativa === null || alternativa === undefined) return;   
                 
                 //console.log(alternativa.current);
                 alternativa.addEventListener('click', handleClick);

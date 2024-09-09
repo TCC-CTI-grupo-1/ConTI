@@ -1,4 +1,4 @@
-import QuestionDetail from "./QuestionDetail";
+import QstDetailRespostas from "./QstDetailResposas";
 import { useState } from "react";
 import Button from "../../Button";
 import ArrowIcon from "../../../assets/ArrowIcon";
@@ -54,10 +54,10 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                     key={cont}
                     style={{ display: activeQuestion === index ? "flex" : "none" }}
                 >
-                    <QuestionDetail 
+                    <QstDetailRespostas 
                         answers={questionMap[2]}
                         question={questionMap[0]} 
-                        isCorrecao={questionMap[1]?.answer}
+                        selectedAnswer={questionMap[1] ? questionMap[1].id : -1}
                     />
                 </div>
             );
