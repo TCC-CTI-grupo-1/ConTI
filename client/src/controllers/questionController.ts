@@ -77,7 +77,6 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
                 'Content-Type': 'application/json'
             }
         });
-
         const responseData = await response.json();
         if (!response.ok) {
             throw new Error(responseData.message);
@@ -86,6 +85,8 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
         }
 
     } catch (err: any) {
+        console.warn("Erro: ", err.message);
+        throw err;
         return [];
     }
 }

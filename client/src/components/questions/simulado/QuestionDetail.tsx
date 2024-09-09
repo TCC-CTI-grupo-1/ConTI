@@ -23,7 +23,7 @@ interface Props {
     type?: "small" | "big";
 }
 
-function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorrecao = undefined, qNumber, type = "big" }: Props) {
+function QuestionDetail({ question, answers, isSimulado=false, isAnswersSelected, isCorrecao = undefined, qNumber, type = "big" }: Props) {
 
     const [selectedAnswers, setSelectedAnswers] = useState<string | null>(null);
 
@@ -124,7 +124,7 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
                 const letra = alternativa.current.querySelector('p');
                 
                 if(letra){
-                    if(letra.textContent == selectedAwnser){
+                    if(letra.textContent == selectedAnswers){
                         alternativa.current.classList.add('correct');
                     }
                 }
