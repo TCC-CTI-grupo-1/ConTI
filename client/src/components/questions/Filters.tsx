@@ -24,7 +24,8 @@ import { useNavigate } from "react-router-dom";
 import { questionInterface, areaInterface, respostaInterface } from "../../controllers/interfaces";
 import { questionFilters as options } from "../../controllers/interfaces";
 import { handleGetFilteredQuestions} from "../../controllers/questionController";
-import {handleGetAreasMap, handleGetAnswersByQuestionsIds } from "../../controllers/areaController";
+import {handleGetAreasMap } from "../../controllers/areasController";
+import { handleGetAnswersByQuestionsIds } from "../../controllers/answerController";
 import QuestionBox from "./QuestionBox";
 
 const Filters = () => {
@@ -91,6 +92,10 @@ const Filters = () => {
       answers: respostaInterface[];
     }[] = []
     let questions = await handleGetFilteredQuestions(options);
+
+    console.log("Questões: ");
+    console.log(questions);
+
     let questionIds: number[] = [];
 
     questions.forEach((question) => {
