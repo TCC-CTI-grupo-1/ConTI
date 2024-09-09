@@ -23,7 +23,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { questionInterface, areaInterface, respostaInterface } from "../../controllers/interfaces";
 import { questionFilters as options } from "../../controllers/interfaces";
-import { handleGetFilteredQuestions, handleGetAreasMap, handleGetAnswersByQuestionsIds } from "../../controllers/userController";
+import { handleGetFilteredQuestions} from "../../controllers/questionController";
+import {handleGetAreasMap, handleGetAnswersByQuestionsIds } from "../../controllers/areaController";
 import QuestionBox from "./QuestionBox";
 
 const Filters = () => {

@@ -13,7 +13,7 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
 import { useState } from "react"
-import { generateNewSimulado } from "../../controllers/userController"
+import { generateNewSimulado } from "../../controllers/mockTestController"
 
 const NewTest = () => {
 

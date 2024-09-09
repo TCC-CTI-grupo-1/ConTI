@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import QuestionDetail from './simulado/QuestionDetail';
 import { useNavigate } from 'react-router-dom';
 import { questionInterface } from '../../controllers/interfaces';
-import { handleGetQuestion } from '../../controllers/userController';
+import { handleGetQuestion } from '../../controllers/questionController';
 
 const QuestionDatabase = () => {
     const { id } = useParams(); // Acessando o ID da pergunta da rota

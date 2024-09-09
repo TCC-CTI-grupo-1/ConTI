@@ -1,7 +1,9 @@
 import Simulado from "./Simulado"
 import { useState, useEffect } from "react"
 import { questionInterface, respostaInterface, simuladoInterface } from "../../../controllers/interfaces"
-import { handleGetQuestion, handlePostSimulado, generateNewSimulado, handleGetAnswersByQuestionsIds } from "../../../controllers/userController"
+import { handleGetQuestion} from "../../../controllers/questionController"
+import { handlePostSimulado, generateNewSimulado} from "../../../controllers/mockTestController"
+import {handleGetAnswersByQuestionsIds } from "../../../controllers/answerController"
 import date from 'date-and-time'
 import { useNavigate } from "react-router-dom"
 

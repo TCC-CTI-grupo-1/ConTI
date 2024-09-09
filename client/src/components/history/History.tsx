@@ -3,8 +3,12 @@ import Navbar from '../Navbar'
 import DaySelector from './DaySelector'
 import { useState } from 'react'
 import date from 'date-and-time'
-import { handleGetAnswersByQuestionId, handleGetAnswersByQuestionsIds, handleGetAreaById, handleGetAreaIdByQuestionId, handleGetAreasByQuestionsIds, handleGetQuestion, handleGetQuestion_MockTestsByMockTestId, 
-    handleGetMockTestsByDateAndProfile, handleGetTopParentAreaById, handleGetTopParentAreasByIds, handleGetQuestionsByIds, handleGetAreasMap, handleGetQuestions } from '../../controllers/userController'
+import { handleGetAnswersByQuestionsIds } from '../../controllers/answerController';
+import { handleGetQuestion_MockTestsByMockTestId } from '../../controllers/questionMockTestController'
+import { handleGetMockTestsByDateAndProfile } from '../../controllers/mockTestController'
+import { handleGetQuestionsByIds } from '../../controllers/questionController'
+import { handleGetAreasMap } from '../../controllers/areasController'
+
 import { areaInterface, questionInterface, simuladoInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 

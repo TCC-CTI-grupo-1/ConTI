@@ -1,12 +1,13 @@
 import Simulado from "./Respostas"
 import { useState, useEffect } from "react"
 import { questionInterface, respostaInterface } from "../../../controllers/interfaces"
-import { handleGetQuestion, handleGetAnswersByQuestionId } from "../../../controllers/userController"
+/*import { handleGetQuestion } from "../../../controllers/questionController"
+import { handleGetAnswersByQuestionId } from "../../../controllers/answerController"*/
 //import { useNavigate } from "react-router-dom"
-import { handleGetQuestion_MockTestsByMockTestId } from "../../../controllers/userController"
+import { handleGetQuestion_MockTestsByMockTestId } from "../../../controllers/questionMockTestController"
 import { useParams } from "react-router-dom"
-import { handleGetQuestionsByIds } from "../../../controllers/userController"
-import { handleGetAnswersByQuestionsIds } from "../../../controllers/userController"
+import { handleGetQuestionsByIds } from "../../../controllers/questionController"
+import { handleGetAnswersByQuestionsIds } from "../../../controllers/answerController"
 
   type questionResultsInterface = [questionInterface, (respostaInterface | null), answers:respostaInterface[]][];
 
