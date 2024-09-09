@@ -15,11 +15,12 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
     const questionRef = useRef<HTMLDivElement>(null);
     const alternativasRef = useRef(new Array());
     const correctAnswer = answers.map((answer, index) => answer.is_correct ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0];
+    const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
 
     function cleanupEvenListeners(){
         alternativasRef.current.forEach((alternativa) => {
-            if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
-            alternativa.current.removeEventListener('click', handleClick);
+            if(alternativa === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
+            alternativa.removeEventListener('click', handleClick);
         });
     }
 
@@ -28,7 +29,6 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
 
         const alternatives = questionRef.current.querySelectorAll('.alternatives div');
 
-        const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
 
         //console.log(letter);
 
@@ -63,15 +63,17 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
             //console.log('add click event listener');
             console.log(alternativasRef.current);
             alternativasRef.current.forEach((alternativa) => {
-                if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [1]');
+                console.log("alternativa");
+                console.log(alternativa);
+                if(alternativa === null || alternativa === undefined) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [1]');
                 
                 //console.log(alternativa.current);
-                alternativa.current.addEventListener('click', handleClick);
+                alternativa.addEventListener('click', handleClick);
                 
-                const letra = alternativa.current.querySelector('p')
+                const letra = alternativa.querySelector('p')
                 if(letra){
                     if (letra.textContent == correctAnswer) {
-                        alternativa.current.classList.add('correct');
+                        alternativa.classList.add('correct');
                     }
                     else{
                         if (letra.textContent == null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [2]');

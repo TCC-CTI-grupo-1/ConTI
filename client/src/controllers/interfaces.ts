@@ -24,7 +24,8 @@ export interface questionInterface{
     question_text: string,
     question_year: number, 
 
-    answers: respostaInterface[];
+    total_answers: number;
+    total_correct_answers: number;
 }
 
 export interface question_MockTestInterface{

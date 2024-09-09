@@ -91,6 +91,7 @@ const Filters = () => {
       question: questionInterface;
       answers: respostaInterface[];
     }[] = []
+
     let questions = await handleGetFilteredQuestions(options);
 
     console.log("Questões: ");
@@ -103,6 +104,9 @@ const Filters = () => {
     });
   
     let answers = await handleGetAnswersByQuestionsIds(questionIds);
+
+    console.log("Respostas: ");
+    console.log(answers);
 
     if(questions === null || answers === null){
       showAlert("Erro ao carregar questões");
