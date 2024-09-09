@@ -58,7 +58,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             questions: questionsList
         };
 
-        const responseQuestions = await fetch('http://localhost:3001/mockTest/questions/', {
+        const responseQuestions = await fetch('http://localhost:3001/questions_MockTest/', {
             method: 'POST',
             credentials: 'include',
             headers: {

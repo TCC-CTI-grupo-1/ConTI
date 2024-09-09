@@ -162,7 +162,7 @@ const Filters = () => {
                       title="Ano"
                       type="checkbox"
                       onChange={(e) => {
-                        //console.log(e);
+                        console.log(e);
                         handleSelectChange(e, "ano");
                       }}
                     >

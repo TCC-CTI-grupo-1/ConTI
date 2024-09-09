@@ -30,7 +30,7 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
 
         const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
 
-        //console.log(letter);
+        console.log(letter);
 
         alternatives.forEach((alternative) => {
             alternative.classList.remove('active');
@@ -60,12 +60,12 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
         if(alternativasRef.current.length === 0) return showAlert('Ocorreu um erro ao encontrar as alternativas. Tente novamente. [0]');    
         if (!showAnswer) {
             //Eu literalmente não faço ideia do que isso faz
-            //console.log('add click event listener');
+            console.log('add click event listener');
             console.log(alternativasRef.current);
             alternativasRef.current.forEach((alternativa) => {
                 if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [1]');
                 
-                //console.log(alternativa.current);
+                console.log(alternativa.current);
                 alternativa.current.addEventListener('click', handleClick);
                 
                 const letra = alternativa.current.querySelector('p')
@@ -77,7 +77,7 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
                         if (letra.textContent == null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [2]');
                         letra.textContent = letra.textContent?.replace(/\s/g, '');
                         correctAnswer?.replace(/\s/g, '');
-                        //console.log('letra: ' + letra.textContent + " correctAnswer: " + correctAnswer + " letra=correctAnswer: " + (letra.textContent == correctAnswer));
+                        console.log('letra: ' + letra.textContent + " correctAnswer: " + correctAnswer + " letra=correctAnswer: " + (letra.textContent == correctAnswer));
                     }
                 }
                 else{
@@ -92,7 +92,7 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
         }
 
         return () => {
-            //console.log('cleanup event listeners');
+            console.log('cleanup event listeners');
             cleanupEvenListeners();
         };
     }

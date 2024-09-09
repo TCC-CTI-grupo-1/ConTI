@@ -19,7 +19,7 @@ import Middleware from './middlewares/Middleware';
 import { Routes, Route } from "react-router-dom"
 import SimuladoFrame from './components/questions/simulado/FrameSimulado';
 
-
+console.log = function(){};
 const showAlert = (message: string, 
     type?: 'error' | 'success' | 'warning' | 'info',
     description?: string) => {
