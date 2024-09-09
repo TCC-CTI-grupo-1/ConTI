@@ -23,7 +23,7 @@ interface Props {
     type?: "small" | "big";
 }
 
-function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorrecao = undefined, qNumber, type = "big" }: Props) {
+function QuestionDetail({ question, answers, isSimulado=false, isAnswersSelected, isCorrecao = undefined, qNumber, type = "big" }: Props) {
 
     const [selectedAnswers, setSelectedAnswers] = useState<string | null>(null);
 
@@ -52,7 +52,7 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
 
         const alternatives = questionRef.current.querySelectorAll('.alternatives div');
 
-        //console.log(letter);
+        console.log(letter);
 
         alternatives.forEach((alternative) => {
             alternative.classList.remove('active');
@@ -89,12 +89,12 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
         if(alternativasRef.current.length === 0) return showAlert('Ocorreu um erro ao encontrar as alternativas. Tente novamente. [0]');    
         if (!showAnswer) {
             //Eu literalmente não faço ideia do que isso faz
-            //console.log('add click event listener');
+            console.log('add click event listener');
             console.log(alternativasRef.current);
             alternativasRef.current.forEach((alternativa) => {
                 if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [1]');
                 
-                //console.log(alternativa.current);
+                console.log(alternativa.current);
                 alternativa.current.addEventListener('click', handleClick);
                 
                 const letra = alternativa.current.querySelector('p')
@@ -106,7 +106,7 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
                         if (letra.textContent == null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [2]');
                         letra.textContent = letra.textContent?.replace(/\s/g, '');
                         correctAnswer?.replace(/\s/g, '');
-                        //console.log('letra: ' + letra.textContent + " correctAnswer: " + correctAnswer + " letra=correctAnswer: " + (letra.textContent == correctAnswer));
+                        console.log('letra: ' + letra.textContent + " correctAnswer: " + correctAnswer + " letra=correctAnswer: " + (letra.textContent == correctAnswer));
                     }
                 }
                 else{
@@ -124,7 +124,7 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
                 const letra = alternativa.current.querySelector('p');
                 
                 if(letra){
-                    if(letra.textContent == selectedAwnser){
+                    if(letra.textContent == selectedAnswers){
                         alternativa.current.classList.add('correct');
                     }
                 }
@@ -135,7 +135,7 @@ function QuestionDetail({ question, isSimulado=false, isAnswersSelected, isCorre
         }
 
         return () => {
-            //console.log('cleanup event listeners');
+            console.log('cleanup event listeners');
             cleanupEvenListeners();
         };
     }

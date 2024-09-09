@@ -55,14 +55,14 @@ const Login = ({changeLoginPage}:Props) => {
             console.log(loginSuccess);
             if (loginSuccess) {
                 showAlert("Login bem sucedido!", "success");
-                //console.log("L");
+                console.log("L");
                 localStorage.setItem('isLoggedIn', 'true');
                 navigate("/");
                 //refresh the page
                 window.location.reload();
             }
             else{
-                //console.log("E");
+                console.log("E");
                 showAlert(loginMessage, "error");
             }
         }

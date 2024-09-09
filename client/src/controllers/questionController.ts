@@ -77,7 +77,6 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
                 'Content-Type': 'application/json'
             }
         });
-
         const responseData = await response.json();
         if (!response.ok) {
             throw new Error(responseData.message);
@@ -122,7 +121,7 @@ export async function handlePutQuestion(question: questionInterface, answers: re
         const responseData2 = await response2.json();
 
         if (!response1.ok && !response2.ok) {
-            //console.log(responseData.message);
+            console.log(responseData1.message);
             throw new Error(responseData1.message + ' ' + responseData2.message); 
         } else {
             return true;

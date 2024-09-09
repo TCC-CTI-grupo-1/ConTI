@@ -141,7 +141,7 @@ const SimuladoFrame = () => {
 
   
     return (
-        loading ? <h2>Aguarde enquanto finalizamos o seu simulado... </h2> :
+        loading ? <h2>Aguarde enquanto preparamos o seu simulado... </h2> :
         <>
             {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
                 <Simulado questionsHashMap={questionsHashMap} handleFinishSimulado={handleGetRespostas} 
