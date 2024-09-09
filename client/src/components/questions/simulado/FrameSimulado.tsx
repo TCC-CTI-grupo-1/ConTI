@@ -50,6 +50,8 @@ const SimuladoFrame = () => {
         handleFinishSimulado(respostas);
     }
 
+    
+
     async function handleFinishSimulado(respostas: questionMapResultInterface){
         onOpen();
         setIsSimuladoAwaitActive(true);

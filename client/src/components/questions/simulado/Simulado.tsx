@@ -6,6 +6,7 @@ import { questionInterface } from "../../../controllers/interfaces";
 import { useNavigate } from "react-router-dom";
 import Numbers from "./Numbers";
 import { handleQuestionNumberClick } from "./Numbers";
+import { respostaInterface } from "../../../controllers/interfaces";
 
 import {
     Modal,
@@ -25,7 +26,10 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
   
-type questionMapInterface = questionInterface[];
+type questionMapInterface = {
+    question: questionInterface;
+    answers: respostaInterface[];
+}[];
 type questionMapResultInterface = [number, (string | null)][]; 
 
 interface Props {
