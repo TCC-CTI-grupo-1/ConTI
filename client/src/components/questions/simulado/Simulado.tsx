@@ -31,7 +31,7 @@ type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
 }[];
-type questionMapResultInterface = [number, (string | null)][]; 
+type questionMapResultInterface = [number, (number | null)][]; //[id questão, alternativa escolhida]	 
 
 interface Props {
     questionsHashMap: questionMapInterface;
@@ -96,7 +96,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                     <QstDetailSimulado 
                         question={questionMap.question}
                         answers={questionMap.answers} 
-                        isAnswersSelected={(value: string | null) => { //Essa função é executada quando o cara muda a alternativa que ele marcou
+                        isAnswersSelected={(value: number | null) => { //Essa função é executada quando o cara muda a alternativa que ele marcou
                             const newResultsHashMap = resultsHashMap;
                             newResultsHashMap[index] = [questionMap.question.id, value];
                             if(value != null)
@@ -121,11 +121,12 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
 
     useEffect(() => {
         let AlternativaDaQuestao = resultsHashMap[prevActiveQuestion] == undefined ? null : resultsHashMap[prevActiveQuestion][1];
-        // const question_MockTest: question_MockTestInterface = {
-        //     question_id: questionsHashMap[prevActiveQuestion].question.id,
-        //     mocktest_id: 0,
-        // };
-        // handlePutQuestion_MockTestById(question_MockTest);
+        const question_MockTest: question_MockTestInterface = {
+            question_id: questionsHashMap[prevActiveQuestion].question.id,
+            mocktest_id: 0,
+            answer_id: AlternativaDaQuestao
+        };
+        handlePutQuestion_MockTestById(question_MockTest);
         setPrevActiveQuestion(activeQuestion);
     }, [activeQuestion]);
 

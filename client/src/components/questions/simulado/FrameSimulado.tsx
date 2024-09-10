@@ -24,7 +24,7 @@ type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
 }[];
-type questionMapResultInterface = [number, (string | null)][];  
+type questionMapResultInterface = [number, (number | null)][];  
 
 const SimuladoFrame = () => {
     const [questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface | null>(null);
