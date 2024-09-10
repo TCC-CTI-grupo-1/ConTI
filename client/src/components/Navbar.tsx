@@ -59,11 +59,11 @@ const Navbar = ({screen}:Props) => {
                     <p  className={checkActiveScreen('home')}>Home</p>
                 </div>
                                         
-                <div className="icon">
+                {isLoggedIn &&<div className="icon">
                     <NewTestIcon iconColor={checkActiveScreen('newtest')}
                     onIconClick={() => {navegate('/newtest')}}/>
                     <p className={checkActiveScreen('newtest')}>Novo teste</p>
-                </div>
+                </div>}
 
                 <div className="icon">
                     <DatabaseIcon iconColor={checkActiveScreen('database')}

@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { questionInterface, respostaInterface } from '../../../controllers/interfaces';
-import LocalButton from '../../Button';
 import { showAlert } from '../../../App';
 
 interface Props {
