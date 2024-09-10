@@ -11,6 +11,7 @@ import NewTest from './components/newtest/NewTest';
 import Admnistrador from './components/Administrador';
 import { handleGetUser } from './controllers/userController';
 import { useEffect, useState } from 'react';
+import AboutUs from './components/aboutUs/AboutUs';
 
 //Middlewares
 import Middleware from './middlewares/Middleware';
@@ -74,6 +75,7 @@ function App() {
               <Route path='/newtest' element={middleware.routeToDisplay(['isLoggedIn'], <NewTest />)} />
               <Route path='/login' element={ <User /> } />
 
+              <Route path='/aboutUs' element={<AboutUs />} />
               <Route path='/profile' element={middleware.routeToDisplay(['isLoggedIn'], <Profile />)} />
               <Route path='/history' element={middleware.routeToDisplay(['isLoggedIn'], <History />) } />
 

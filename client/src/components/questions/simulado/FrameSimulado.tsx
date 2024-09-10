@@ -87,9 +87,11 @@ const SimuladoFrame = () => {
         getQuestions().then((questions) => {
             handleGetAnswersByQuestionsIds(questions.map((question) => question.id)).then((answers) => {
                 const questionsHashMap: questionMapInterface = questions.map((question, index) => {
+                    let newAnswers = answers.filter((answer) => answer.question_id === question.id)
+                    let newOrderedAnswers = newAnswers.sort((a, b) => a.question_letter.localeCompare(b.question_letter));
                     return {
                         question: question,
-                        answers: answers.filter((answer) => answer.question_id === question.id)
+                        answers: newOrderedAnswers              
                     }
                 });
                 setQuestionsHashMap(questionsHashMap);
@@ -150,7 +152,7 @@ const SimuladoFrame = () => {
         <>
             {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
                 <Simulado questionsHashMap={questionsHashMap} handleFinishSimulado={handleGetRespostas} 
-                isSimuladoFinished={isSimuladoAwaitActive}     
+                isSimuladoFinished={isSimuladoAwaitActive}   mockTestId={simulado.id}  
                 /> 
             }
         </>

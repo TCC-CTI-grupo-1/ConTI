@@ -28,6 +28,7 @@ import { postQuestionController } from './controllers/postQuestionController';
 import { getQuestion_MockTestsController } from './controllers/getQuestion_MockTest';
 import { putAnswerController } from './controllers/putAnswerController';
 import { postQuestions_MockTestController } from './controllers/postQuestions_MockTestController';
+import { putQuestion_MockTestController } from './controllers/putQuestion_MockTestController';
 export async function routes(app: any) {
     app.post('/signup', signupController);
     app.post('/login', loginController);
@@ -91,5 +92,6 @@ export async function routes(app: any) {
     // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
     app.post('/questions_MockTest', postQuestions_MockTestController);
+    app.put('/question_MockTest/:id', putQuestion_MockTestController);
 
 }
