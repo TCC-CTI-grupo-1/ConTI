@@ -1,8 +1,8 @@
 import QstDetailSimulado from "./QstDetailSimulado";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@chakra-ui/react";
 import ArrowIcon from "../../../assets/ArrowIcon";
-import { question_MockTestInterface, questionInterface } from "../../../controllers/interfaces";
+import { questionInterface } from "../../../controllers/interfaces";
 import { useNavigate } from "react-router-dom";
 import Numbers from "./Numbers";
 import { handleQuestionNumberClick } from "./Numbers";
@@ -25,32 +25,28 @@ import {
     AlertDialogCloseButton,
     useDisclosure,
   } from '@chakra-ui/react'
-import { handlePutQuestion_MockTestById } from "../../../controllers/questionMockTestController";
   
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
 }[];
-type questionMapResultInterface = [number, (number | null)][]; //[id questão, alternativa escolhida]	 
+type questionMapResultInterface = [number, (string | null)][]; 
 
 interface Props {
     questionsHashMap: questionMapInterface;
     handleFinishSimulado: (respostas: questionMapResultInterface) => void;
     isSimuladoFinished?: boolean;
-    mockTestId: number;
-
 }
 
 //Tudo aqui dentro é baseado no número da questão, e não no ID.
 
-const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=false, mockTestId }: Props) => {
+const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=false }: Props) => {
 
     console.log("SIMULADO!!!");
     console.log(questionsHashMap);
 
 
     const [activeQuestion, setActiveQuestion] = useState(0);
-    const [prevActiveQuestion, setPrevActiveQuestion] = useState(0);
 
     //Mapa que vai guardar as respostas do usuário (ou as respostas para vizualização)
     const [resultsHashMap, setResultsHashMap] = useState<questionMapResultInterface>([]);
@@ -96,7 +92,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                     <QstDetailSimulado 
                         question={questionMap.question}
                         answers={questionMap.answers} 
-                        isAnswersSelected={(value: number | null) => { //Essa função é executada quando o cara muda a alternativa que ele marcou
+                        isAnswersSelected={(value: string | null) => {
                             const newResultsHashMap = resultsHashMap;
                             newResultsHashMap[index] = [questionMap.question.id, value];
                             if(value != null)
@@ -119,16 +115,6 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
     };
 
 
-    useEffect(() => {
-        let AlternativaDaQuestao = resultsHashMap[prevActiveQuestion] == undefined ? null : resultsHashMap[prevActiveQuestion][1];
-        const question_MockTest: question_MockTestInterface = {
-            question_id: questionsHashMap[prevActiveQuestion].question.id,
-            mocktest_id: 0,
-            answer_id: AlternativaDaQuestao
-        };
-        handlePutQuestion_MockTestById(question_MockTest);
-        setPrevActiveQuestion(activeQuestion);
-    }, [activeQuestion]);
 
     const navegate = useNavigate();
 
