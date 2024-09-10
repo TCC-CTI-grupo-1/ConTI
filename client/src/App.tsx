@@ -39,10 +39,8 @@ function App() {
 
     const debugging = true;
 
-    if(!debugging)
-    {
-        console.log = function(){}
-    }
+    if(!debugging) console.log = function(){}
+    
 
     const middleware = new Middleware();
 

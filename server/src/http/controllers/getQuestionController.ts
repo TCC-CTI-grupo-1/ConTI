@@ -47,8 +47,10 @@ export async function getQuestionsWithFiltersController(req: Request, res: Respo
     try {
         const filter = JSON.parse(req.params.filter) as questionFilters;
         const questions: QuestionDTO[] = await questionDAO.listQuestionByFilters(filter);
+        console.log("Tamanho : ",questions.length);
         res.json({ questions: questions });
     } catch (error: any) {
+        console.log("deu erro")
         res.status(400).json({ message: error.message });
     }
 }

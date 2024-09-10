@@ -14,6 +14,12 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
 }));
+<<<<<<< Updated upstream
+=======
+const debugging = true;
+/*if(!debugging)
+    console.log = function(){};*/
+>>>>>>> Stashed changes
 app.use(express.json());
 
 app.use(session({
