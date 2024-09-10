@@ -64,7 +64,7 @@ export async function getQuestionsForNewMockTestByProfileController(req: Request
         return res.status(404).json({ message: 'Perfil não encontrado' });
     }
     
-    
+    console.log("AHAHAHAH")
     try {
         const profileId = req.session.profile.id;
         const test_blueprint = new TestBlueprint();

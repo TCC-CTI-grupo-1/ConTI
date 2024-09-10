@@ -66,7 +66,6 @@ function QuestionDetail({ question, answers, isSimulado=false, isAnswersSelected
 
     const handleClick = useCallback((event: Event) => {
         const target = event.currentTarget as HTMLElement;
-
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
 
         const selectedLetter = target.querySelector('p')?.textContent;

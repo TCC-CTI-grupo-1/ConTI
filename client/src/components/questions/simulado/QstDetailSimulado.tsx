@@ -56,7 +56,6 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
         if(alternativasRef.current.length === 0) return showAlert('Ocorreu um erro ao encontrar as alternativas. Tente novamente. [0]');    
         alternativasRef.current.forEach((alternativa) => {
             //console.log("alternativa");
-            //console.log(alternativa);
             if(alternativa === null || alternativa === undefined) return;   
             
             //console.log(alternativa.current);
@@ -75,27 +74,26 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
     return (
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
-            <div className={'box question'}>
-                <p id='question-number-container'>{qNumber}</p>
-                <h4>
-                {question.question_text}
-                </h4>
-                <div className={"alternatives"} ref={questionRef}>
-                    
-                    {answers.map((alternative, index) => (
-                        <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)}>
-                            <span>
-                                <p> {alternative.question_letter} </p>
-                            </span>
-                            <p> {alternative.answer} </p>
-                        </div>
-                    ))}
-    
+    <div className={'box question'}>
+        <p id='question-number-container'>{qNumber}</p>
+        <h4>
+            {question.question_text}
+        </h4>
+        <div className={"alternatives"} ref={questionRef}>
+            {alternativasRef.current = []} 
+            {answers.map((alternative, index) => (
+                <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)} >
+                    <span> 
+                        <p> {alternative.question_letter} </p>
+                    </span>
+                    <p> {alternative.answer} </p>
                 </div>
-                <div className="options">               
-                </div>
-            </div>
-            }
+            ))}
+        </div>
+        <div className="options">               
+        </div>
+    </div>
+}
         </>
         
         );
