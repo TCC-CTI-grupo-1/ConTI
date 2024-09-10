@@ -5,13 +5,13 @@ import { showAlert } from '../../../App';
 interface Props {
     question: questionInterface;
     answers: respostaInterface[];
-    isAnswersSelected: (value: string | null) => void
+    isAnswersSelected: (value: number | null) => void
     qNumber: number; //Numero da questão no simulado
 }
 
 const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Props) => {
 
-    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
     useEffect(() => {
         isAnswersSelected && isAnswersSelected(selectedAnswer);
@@ -33,7 +33,8 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
             const alternativeLetter = alternative.querySelector('p')?.textContent;
             if (alternativeLetter === letter) {
                 alternative.classList.add('active');  
-                setSelectedAnswer(letter);
+                let id = alternative.id;
+                setSelectedAnswer(Number(id));
             }
         });
     }, []);
@@ -83,7 +84,7 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
                 <div className={"alternatives"} ref={questionRef}>
                     
                     {answers.map((alternative, index) => (
-                        <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)}>
+                        <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)} id={String(alternative.id)}>
                             <span>
                                 <p> {alternative.question_letter} </p>
                             </span>
