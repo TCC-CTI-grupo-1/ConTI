@@ -150,7 +150,7 @@ const SimuladoFrame = () => {
         <>
             {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
                 <Simulado questionsHashMap={questionsHashMap} handleFinishSimulado={handleGetRespostas} 
-                isSimuladoFinished={isSimuladoAwaitActive}     
+                isSimuladoFinished={isSimuladoAwaitActive}   mockTestId={simulado.id}  
                 /> 
             }
         </>
