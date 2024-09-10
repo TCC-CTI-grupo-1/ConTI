@@ -6,13 +6,20 @@ import { showAlert } from '../../../App';
 interface Props {
     question: questionInterface;
     answers: respostaInterface[];
+    isAnswersSelected: (value: string | null) => void
+    qNumber: number; //Numero da questão no simulado
 }
 
-const QstDetail = ({question, answers}: Props) => {
+const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Props) => {
+
+    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+    useEffect(() => {
+        isAnswersSelected && isAnswersSelected(selectedAnswer);
+    }, [selectedAnswer]);
 
     const questionRef = useRef<HTMLDivElement>(null);
     const alternativasRef = useRef(new Array());
-    const correctAnswer = answers.map((answer, index) => answer.is_correct ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0];
 
     const addClassToAlternative = useCallback((letter: string) => {
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
@@ -26,7 +33,9 @@ const QstDetail = ({question, answers}: Props) => {
             alternative.classList.remove('active');
             const alternativeLetter = alternative.querySelector('p')?.textContent;
             if (alternativeLetter === letter) {
-                alternative.classList.add('active');            }
+                alternative.classList.add('active');  
+                setSelectedAnswer(letter);
+            }
         });
     }, []);
 
@@ -46,31 +55,33 @@ const QstDetail = ({question, answers}: Props) => {
 
     function checkAlternativas(){
         if(alternativasRef.current.length === 0) return showAlert('Ocorreu um erro ao encontrar as alternativas. Tente novamente. [0]');    
-        //Eu literalmente não faço ideia do que isso faz
-        console.log('add click event listener');
-        console.log(alternativasRef.current);
         alternativasRef.current.forEach((alternativa) => {
-            console.log("alternativa");
-            console.log(alternativa);
+            //console.log("alternativa");
+            //console.log(alternativa);
             if(alternativa === null || alternativa === undefined) return;   
             
             //console.log(alternativa.current);
-            alternativa.addEventListener('click', handleClick);
-            
+            alternativa.addEventListener('click', handleClick);         
         });
-        }
     }
+
+    useEffect(() => {
+        
+        checkAlternativas();
+
+        // Cleanup function to remove event listeners when the component unmounts or when showAnswer changes
+        
+    }, [handleClick]);
 
     return (
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
-            <div className={'box question ' + (type == "small" ? "small" : "")}>
-                {type !== "small" &&
-                <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>}
+            <div className={'box question'}>
+                <p id='question-number-container'>{qNumber}</p>
                 <h4>
                 {question.question_text}
                 </h4>
-                <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
+                <div className={"alternatives"} ref={questionRef}>
                     
                     {answers.map((alternative, index) => (
                         <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)}>
@@ -82,16 +93,7 @@ const QstDetail = ({question, answers}: Props) => {
                     ))}
     
                 </div>
-                <div className="options">
-                        <LocalButton colorScheme="blue" size={type === "small" ? "sm" : undefined}
-                        onClick={() => {
-                            setShowAnswer(!showAnswer);
-                        }}
-                        
-                        >{showAnswer ? 'Ocultar' : 'Responder'}</LocalButton>
-                        {type !== "small" && <LocalButton colorScheme="blue" variant='outline'
-                        onClick={() => {showAlert("Em construção", "warning")}}>Ver resolução comentada</LocalButton>}
-                    
+                <div className="options">               
                 </div>
             </div>
             }
@@ -100,4 +102,4 @@ const QstDetail = ({question, answers}: Props) => {
         );
 }
 
-export default QstDetail
+export default QstDetailSimulado

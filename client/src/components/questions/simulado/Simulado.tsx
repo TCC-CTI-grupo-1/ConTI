@@ -1,4 +1,4 @@
-import QuestionDetail from "./QuestionDetail";
+import QstDetailSimulado from "./QstDetailSimulado";
 import { useState, useRef } from "react";
 import { Button } from "@chakra-ui/react";
 import ArrowIcon from "../../../assets/ArrowIcon";
@@ -89,12 +89,12 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                     key={cont}
                     style={{ display: activeQuestion === index ? "flex" : "none" }}
                 >
-                    <QuestionDetail 
-                        isSimulado 
-                        question={questionMap} 
+                    <QstDetailSimulado 
+                        question={questionMap.question}
+                        answers={questionMap.answers} 
                         isAnswersSelected={(value: string | null) => {
                             const newResultsHashMap = resultsHashMap;
-                            newResultsHashMap[index] = [questionMap.id, value];
+                            newResultsHashMap[index] = [questionMap.question.id, value];
                             if(value != null)
                             {
                                 markQuestionAsSelected(index, true);
@@ -121,7 +121,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
     return (
         <>
         <div id="simulado">
-            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.id})} setActiveQuestion={setActiveQuestion} 
+            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.question.id})} setActiveQuestion={setActiveQuestion} 
             onMenuIconClick={onOpen2}
             />
             <div id="allQuestionsMargin"></div>

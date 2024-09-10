@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { questionInterface, respostaInterface, simuladoInterface } from "../../../controllers/interfaces"
 import { handleGetQuestion} from "../../../controllers/questionController"
 import { handlePostSimulado, generateNewSimulado} from "../../../controllers/mockTestController"
-import {handleGetAnswersByQuestionsIds } from "../../../controllers/answerController"
+import {handleGetAnswersByQuestionId, handleGetAnswersByQuestionsIds } from "../../../controllers/answerController"
 import date from 'date-and-time'
 import { useNavigate } from "react-router-dom"
 
@@ -18,15 +18,18 @@ import {
     Button,
     Spinner
   } from '@chakra-ui/react'
+import { showAlert } from "../../../App"
 
-type questionMapInterface = questionInterface[];
+type questionMapInterface = {
+    question: questionInterface;
+    answers: respostaInterface[];
+}[];
 type questionMapResultInterface = [number, (string | null)][];  
 
 const SimuladoFrame = () => {
-    const {onOpen, onClose, isOpen} = useDisclosure();
-
     const [questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [simulado, setSimulado] = useState<simuladoInterface>({} as simuladoInterface);
     const [isSimuladoFinished, setIsSimuladoFinished] = useState<boolean>(false);
 
@@ -53,10 +56,12 @@ const SimuladoFrame = () => {
     
 
     async function handleFinishSimulado(respostas: questionMapResultInterface){
-        onOpen();
         setIsSimuladoAwaitActive(true);
-        const simulado = await handlePostSimulado(respostas, "automatico", 50);
-        setSimulado(simulado);
+
+        navegate('/history');
+        showAlert("Simulado finalizado com sucesso!", "success");
+        //const simulado = await handlePostSimulado(respostas, "automatico", 50);
+        //setSimulado(simulado);
         
     }
 
@@ -67,31 +72,29 @@ const SimuladoFrame = () => {
                 return questions;
         }
 
-        const getQuestionsWithAnswers = async (questions: questionInterface[]) => {
-            const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
 
-            questions.forEach(question => {
-                let qstAnswer: respostaInterface[] | undefined = answers.filter(ans => ans.question_id === question.id);
-                //Organiza as alternativas na ordem "A" "B" "C" "D" "E", por answer.question_letter;
-                question.answers = qstAnswer?.sort((a, b) => a.question_letter.charCodeAt(0) - b.question_letter.charCodeAt(0));
-                setQuestionsHashMap(questions);
-                
-
-                setLoading(false);
-            });
-            return questions;
-        }
 
         const postSimulado = async (questions: questionInterface[]) => {
             const simulado = await handlePostSimulado(questions, "automatico", 50);
             if (simulado !== null) {
                 setSimulado(simulado);
+                console.log("JORGEJORGEJORGE");
+                setLoading(false);
             }
         }
 
 
         getQuestions().then((questions) => {
-            postSimulado(questions);
+            handleGetAnswersByQuestionsIds(questions.map((question) => question.id)).then((answers) => {
+                const questionsHashMap: questionMapInterface = questions.map((question, index) => {
+                    return {
+                        question: question,
+                        answers: answers.filter((answer) => answer.question_id === question.id)
+                    }
+                });
+                setQuestionsHashMap(questionsHashMap);
+                postSimulado(questions);
+            });
         });
 
 
@@ -150,34 +153,6 @@ const SimuladoFrame = () => {
                 isSimuladoFinished={isSimuladoAwaitActive}     
                 /> 
             }
-            <Modal
-                isCentered
-                onClose={onClose}
-                isOpen={isOpen}
-                motionPreset='slideInBottom'
-                closeOnEsc={false}
-                closeOnOverlayClick={false}
-            >
-                <ModalOverlay />
-                <ModalContent>
-                <ModalHeader>{simulado === null ? 'Corrigindo...' : 'Informações detalhadas'}</ModalHeader>
-                <ModalBody>
-                    {returnJSXOverlay()}
-                </ModalBody> 
-                    <ModalFooter>
-                        {simulado !== null && <>
-                            <Button variant='ghost' mr={3} onClick={() => {
-                                navegate('/');
-                            }}>Voltar ao home</Button>
-                            <Button colorScheme='blue' onClick={onClose}>
-                            Ver prova
-                            </Button>
-                            </>
-                        }
-
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
         </>
         
   )

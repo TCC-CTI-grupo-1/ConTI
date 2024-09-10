@@ -75,6 +75,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             return responseData.mockTest;
         }
     } catch (err: any) {
+        //console.log(err);   
         return null;
     }
 }
