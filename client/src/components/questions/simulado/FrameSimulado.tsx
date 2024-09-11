@@ -147,6 +147,8 @@ const SimuladoFrame = () => {
     }
 
   
+    //Esse código não tem erro
+    
     return (
         loading ? <h2>Aguarde enquanto preparamos o seu simulado... </h2> :
         <>
