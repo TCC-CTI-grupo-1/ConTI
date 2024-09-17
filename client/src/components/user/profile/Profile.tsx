@@ -44,7 +44,6 @@ const Profile = () => {
                     <div className="options" ref={options}>
                         <a className="active">Status do usuario</a>
                         <a>Configurações da conta</a>
-                        <a>Area do administrador</a>
                         {/*<div className='selected-line'></div>*/}
                     </div>
                 </div>
