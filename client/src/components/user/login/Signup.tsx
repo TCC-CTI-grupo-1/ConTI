@@ -101,8 +101,12 @@ const Signup = ({changeLoginPage}:Props) => {
             setLoading(false);
 
             if(signupSuccess == null){
-                showAlert("Cadastro efetuado com sucesso", 'success')
-                navigate('/profile');
+                showAlert("Cadastro bem sucedido!", "success");
+                console.log("L");
+                localStorage.setItem('isLoggedIn', 'true');
+                navigate("/");
+                //refresh the page
+                window.location.reload();
             }
             else{
                 showAlert("Erro: " + signupSuccess);
