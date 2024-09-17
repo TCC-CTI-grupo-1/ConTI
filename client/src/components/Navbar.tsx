@@ -8,7 +8,7 @@ import NewTestIcon from "../assets/NewTestIcon.tsx";
 import AdminIcon from "../assets/AdminIcon.tsx";
 
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 
 interface Props{
@@ -20,7 +20,7 @@ const Navbar = ({screen}:Props) => {
 
     const [active, setActive] = useState(false);
 
-    const [isUserLogged, setIsUserLogged] = useState(false);
+    //const [isUserLogged, setIsUserLogged] = useState(false);
 
     const isLoggedIn = localStorage.getItem('isLoggedIn') === "true" ? true : false;
 
@@ -34,12 +34,12 @@ const Navbar = ({screen}:Props) => {
         }
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(sessionStorage.getItem('isLoggedIn'))
         {
             setIsUserLogged(true);
         }
-    }, []);
+    }, []);*/
 
     return (
         <div id="nav">

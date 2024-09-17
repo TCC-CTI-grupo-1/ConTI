@@ -81,6 +81,16 @@ export class QuestionDAO {
     registerQuestion = async (question: QuestionDTO) => {
         try {
             const client = await connectionDAO.getConnection();
+
+            const area = await client.area.findUnique({
+                where: {
+                    id: question.area_id
+                }
+            });
+            if (!area) {
+                console.log("Área não encontrada");
+                return;
+            }
             await client.question.create({
                 data: {
                     question_text: question.question_text,

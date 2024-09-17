@@ -10,7 +10,11 @@ import { handleGetQuestions } from "./../controllers/questionController";
 import { areaInterface, questionInterface, respostaInterface } from "../controllers/interfaces";
 import QuestionBox from "./questions/QuestionBox";
 import { handlePutQuestion, handleDeleteQuestion, handlePostQuestion } from "./../controllers/questionController";
-
+import { handleGetAnswersByQuestionsIds } from "../controllers/answerController";
+type questionMapInterface = {
+    question: questionInterface;
+    answers: respostaInterface[];
+}[];
 import {
     Modal,
     ModalOverlay,
@@ -32,30 +36,39 @@ const Admistrator = () => {
 
     const {onOpen, onClose, isOpen} = useDisclosure();
 
-    const respostasVario: respostaInterface[] = [
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0}
-    ];
-
-    const [novaQst, setNovaQst] = useState<questionInterface>({
+    let novaQstLimpa = {
         id: 0,
         question_text: '',
-        answers: respostasVario,
-        area_id: 0,
+        area_id: 1,
         additional_info: '',
         has_image: false,
         has_latex: false,
-        difficulty: "",
+        difficulty: "facil",
         official_test_name: '',
         question_creator: '',
         question_number: 0,
         question_year: 0,
-    });
+        total_answers: 0,
+        total_correct_answers: 0,
+    }
+    const emptyAnswerTemplate = {
+        id: 0,
+        question_id: 0,
+        answer: '',
+        is_correct: false,
+        question_letter: '',
+        total_answers: 0,
+    }
+    let novaAltLimpa: respostaInterface[] = [];
+    for (let i = 0; i < 5; i++) {
+        novaAltLimpa.push({ ...emptyAnswerTemplate, id: i });
+    }
 
+    const [novaQst, setNovaQst] = useState<[questionInterface, respostaInterface[]]>([novaQstLimpa, novaAltLimpa]);
+
+
+
+    
     /*const [enunciadoQst, setEnunciadoQst] = useState<string>('');
     const [alternativaA, setAlternativaA] = useState<string>('');
     const [alternativaB, setAlternativaB] = useState<string>('');
@@ -65,7 +78,7 @@ const Admistrator = () => {
     const [alternativaCorreta, setAlternativaCorreta] = useState<string>('A');
     const [qstID, setQstID] = useState<number>(0);*/
 
-    const [questions, setQuestions] = useState<questionInterface[]>([]);
+    const [questionsMap, setQuestionsMap] = useState<questionMapInterface>([]);
     const [pagina, setPagina] = useState<number>(1);
 
     async function handlePostNovaArea(){
@@ -81,7 +94,7 @@ const Admistrator = () => {
 
     function getLastPageNumber(){
         let numberOfQuestionsPerPage = 6;
-        return Math.ceil(questions.length / numberOfQuestionsPerPage);
+        return Math.ceil(questionsMap.length / numberOfQuestionsPerPage);
     }
 
     async function handleThings(){
@@ -95,13 +108,31 @@ const Admistrator = () => {
         setAreas(areasMap);
         console.log(areasMap);
 
+        const getQuestions = async () => {
+            let questions: questionInterface[] = await handleGetQuestions();
+            
+            return questions;
+        }
 
-        const questions = await handleGetQuestions();
+        getQuestions().then((questions) => {
+            handleGetAnswersByQuestionsIds(questions.map((question) => question.id)).then((answers) => {
+                questions.sort((a, b) => a.id - b.id);
+                const questionsHashMap: questionMapInterface = questions.map((question, index) => {
+                    let newAnswers = answers.filter((answer) => answer.question_id === question.id)
+                    let newOrderedAnswers = newAnswers.sort((a, b) => a.question_letter.localeCompare(b.question_letter));
+                    return {
+                        question: question,
+                        answers: newOrderedAnswers              
+                    }
+                });
+                setQuestionsMap(questionsHashMap);
+            });
+        });
+
         //deixa questions em ordem crescente de ID
-        questions.sort((a, b) => a.id - b.id);
+        
 
-        setQuestions(questions);
-        console.log(questions);
+
 
         await new Promise((resolve) => setTimeout(resolve, 1500)); //Se for muito rapido de alguma maneira dá erro.
         setLoading(false);
@@ -145,7 +176,13 @@ const Admistrator = () => {
                                         <option value='none'>Nenhuma</option>
                                         {
                                             Object.values(areas).map((area, index) => {
-                                                return <option key={index} value={area.id}>{area.name}</option>
+                                                return <option key={index} value={area.id}
+                                                onClick={(e) => {
+                                                    let newQst = {...novaQst[0]};
+                                                    newQst.area_id = area.id;
+                                                    setNovaQst([newQst, novaQst[1]]);
+
+                                                }}>{area.name}</option>
                                             })
                                         }
                                     </Select>
@@ -156,21 +193,7 @@ const Admistrator = () => {
                         </div>
                         <div className="box admin">
                             <Button onClick={() => {
-                                let questionLimpa = {
-                                    id: 0,
-                                    question_text: '',
-                                    answers: respostasVario,
-                                    area_id: 0,
-                                    additional_info: '',
-                                    has_image: false,
-                                    has_latex: false,
-                                    difficulty: "",
-                                    official_test_name: '',
-                                    question_creator: '',
-                                    question_number: 0,
-                                    question_year: 0,
-                                }
-                                setNovaQst(questionLimpa);
+                                setNovaQst([novaQstLimpa, novaAltLimpa]);
                                 onOpen();
                             }}>Adicionar questão</Button>
                             <div className="page">
@@ -189,16 +212,17 @@ const Admistrator = () => {
                             </div>
 
                             {!loading && <div className="adm-box">
-                                {questions.map((question, index) => {
+                                {questionsMap.map((question, index) => {
                                     return index >= 6 * (pagina - 1) && index < 6 * pagina &&
-                                    (areas[question.area_id] === undefined ?  null :
-                                    <><QuestionBox key={index} question={question} area={areas[question.area_id]}/>
+                                    (areas[question.question.area_id] === undefined ?  null :
+                                    <><QuestionBox key={index} question={question.question} area={areas[question.question.area_id]} answers={question.answers}/>
                                         <div className="btn">
                                             <Button size={'xs'} onClick={() => {
                                                 let editQst: questionInterface;
-                                                editQst = question;
+                                                editQst = question.question;
+                                                let editAnswers: respostaInterface[] = question.answers;
                                                 console.log(editQst);
-                                                setNovaQst(editQst);
+                                                setNovaQst([editQst, editAnswers]);
                                                 onOpen();
                                             }}>Editar</Button>
                                         </div>
@@ -220,11 +244,11 @@ const Admistrator = () => {
             >
             <ModalOverlay />
             <ModalContent>
-            <ModalHeader>{novaQst.id === 0 ? "Adicionando questão": `Editando questão ${novaQst.id}`}</ModalHeader>
+            <ModalHeader>{novaQst[0].id === 0 ? "Adicionando questão": `Editando questão ${novaQst[0].id}`}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
                 <div className="qst-edit">
-                    <div className={!novaQst.id?"hidden":"text"}>
+                    <div className={!novaQst[0].id?"hidden":"text"}>
                         <textarea name="automatico" id="auto"
                         onChange={(/*e*/)=>{
                             //const regex = /(\d+)\s*([\S\s]*)\s*\(A\)([\S\s]*)\s*\(B\)([\S\s]*)\s*\(C\)([\S\s]*)\s*\(D\)([\S\s]*)\s*\(E\)([\S\s]*)\s*/gm;
@@ -234,27 +258,37 @@ const Admistrator = () => {
                     <div className="text">
                         <p>Enunciado</p>
                         <textarea name="enunciado" id="enunciado"
-                        value={novaQst.question_text}
+                        value={novaQst[0].question_text}
                         onChange={(e) => {
-                            setNovaQst({...novaQst, question_text: e.target.value});
+                            let newQst = {...novaQst[0]};
+                            newQst.question_text = e.target.value;
+                            setNovaQst([newQst, novaQst[1]]);
                             }
                         }
                         ></textarea>
                         <div>
                             <p>Informacoes adicionais:</p>
-                            <textarea name="info" id="info"></textarea>
+                            <textarea name="info" id="info"
+                            onChange={(e) => {
+                                let newQst = {...novaQst[0]};
+                                newQst.additional_info = e.target.value;
+                                setNovaQst([newQst, novaQst[1]]);
+                            }}></textarea>
                         </div>
                         
                     </div>              
                     <div className="answers">
-                        <p>Alternativas</p>
-                        {novaQst.answers.map((answer, index) => {
+                        <p
+                        onClick={() => {
+                            console.log(novaQst[1]);
+                        }}>Alternativas</p>
+                        {novaQst[1].map((answer, index) => {
                             return (<input type="text" placeholder={`Alternativa ${answer.question_letter}`} key={answer.id} 
                             value={answer.answer}
                             onChange={(e) => {
-                                let newAnswers = [...novaQst.answers];
+                                let newAnswers = [...novaQst[1]];
                                 newAnswers[index].answer = e.target.value;
-                                setNovaQst({...novaQst, answers: newAnswers});
+                                setNovaQst([novaQst[0], newAnswers]);
                             }}
                             />)
                         })
@@ -273,38 +307,46 @@ const Admistrator = () => {
                         <div>
                             <label htmlFor="info">Nome da prova oficial: </label>
                             <input type="text" name="info" id="info" 
-                            value={novaQst.official_test_name}
+                            value={novaQst[0].official_test_name}
                             onChange={(e) => {
-                                setNovaQst({...novaQst, official_test_name: e.target.value});
+                                let newQst = {...novaQst[0]};
+                                newQst.official_test_name = e.target.value;
+                                setNovaQst([newQst, novaQst[1]]);
                             }}
                             />
                         </div>
                         <div>
                             <label htmlFor="info">Ano da prova: </label>
                             <input type="number" name="info" id="info" 
-                            value={novaQst.question_year}
+                            value={novaQst[0].question_year}
                             onChange={(e) => {
                                 let ano = Number(e.target.value);
-                                setNovaQst({...novaQst, question_year: ano});
+                                let newQst = {...novaQst[0]};
+                                newQst.question_year = ano;
+                                setNovaQst([newQst, novaQst[1]]);
                             }}
                             />
                         </div>
                         <div>
                             <label htmlFor="info">Criador do orgão criadpr: </label>
                             <input type="text" name="info" id="info" 
-                            value={novaQst.question_creator}
+                            value={novaQst[0].question_creator}
                             onChange={(e) => {
-                                setNovaQst({...novaQst, question_creator: e.target.value});
+                                let newQst = {...novaQst[0]};
+                                newQst.question_creator = e.target.value;
+                                setNovaQst([newQst, novaQst[1]]);
                             }}
                             />
                         </div>
                         <div>
                             <label htmlFor="info">Numero da questão: </label>
                             <input type="number" name="info" id="info" 
-                            value={novaQst.question_number}
+                            value={novaQst[0].question_number}
                             onChange={(e) => {
                                 let num = Number(e.target.value);
-                                setNovaQst({...novaQst, question_number: num});
+                                let newQst = {...novaQst[0]};
+                                newQst.question_number = num;
+                                setNovaQst([newQst, novaQst[1]]);
                             }}
                             />
                         </div>
@@ -319,14 +361,14 @@ const Admistrator = () => {
                                 <option value="B">B</option>
                                 <option value="C">C</option>
                                 <option value="D">D</option>
-                                {novaQst.answers[5] && <option value="E">E</option>}
+                                {novaQst[1][5] && <option value="E">E</option>}
                             </select>
                         </div>
                         <div>
                             <label htmlFor="area">Area: </label>
                             <select name="area" id="area"
                             value={
-                                areas[novaQst.area_id] ? areas[novaQst.area_id].name : 0
+                                areas[novaQst[0].area_id] ? areas[novaQst[0].area_id].name : 0
                             }>
                                 {Object.values(areas).map((area, index) => {
                                     return <option key={index} value={area.id}>{area.name}</option>
@@ -347,9 +389,11 @@ const Admistrator = () => {
                         <div>
                             <label htmlFor="info">Tem imagem? </label>
                             <input type="checkbox" name="info" id="info" 
-                            value={novaQst.has_image ? 'checked' : ''}
+                            value={novaQst[0].has_image ? 'checked' : ''}
                             onChange={(e) => {
-                                setNovaQst({...novaQst, has_image: e.target.checked});
+                                let newQst = {...novaQst[0]};
+                                newQst.has_image = e.target.checked;
+                                setNovaQst([newQst, novaQst[1]]);
                             }}
                             />
                             
@@ -357,9 +401,11 @@ const Admistrator = () => {
                         <div>
                             <label htmlFor="info">Tem latex? </label>
                             <input type="checkbox" name="info" id="info" 
-                            value={novaQst.has_latex ? 'checked' : ''}
+                            value={novaQst[0].has_latex ? 'checked' : ''}
                             onChange={(e) => {
-                                setNovaQst({...novaQst, has_latex: e.target.checked});
+                                let newQst = {...novaQst[0]};
+                                newQst.has_latex = e.target.checked;
+                                setNovaQst([newQst, novaQst[1]]);
                             }}
                             />
                         </div>
@@ -369,18 +415,13 @@ const Admistrator = () => {
             </ModalBody>
             <ModalFooter>
                 {
-                    novaQst.id === 0 ?
+                    novaQst[0].id === 0 ?
                     <Button onClick={() => {
                         onClose();
                         showAlert("Cadastrando questão...", "warning");
-                        handlePostQuestion(novaQst).then((resp) => {
+                        handlePostQuestion(novaQst[0]).then((resp) => {
                             if(resp){
-                                showAlert("Questão cadastrada com sucesso!", "success");
-                                setLoading(true);
-                                handleGetQuestions().then((questions) => {
-                                    setQuestions(questions);
-                                    setLoading(false);
-                                });
+                                showAlert("Questão cadastrada com sucesso, por favor atualize a pagina [f5]", "success");
                             }
                             else{
                                 showAlert("Erro ao cadastrar questão");
@@ -392,20 +433,15 @@ const Admistrator = () => {
                         <Button colorScheme='blue' onClick={() => {
 
                             onClose();
-                            if(novaQst.id === 0){
+                            if(novaQst[0].id === 0){
                                 showAlert("Nenhuma questão selecionada para edução");
                                 return;
                             }
 
                             showAlert("Editando questão...", "warning");
-                            handlePutQuestion(novaQst).then((resp) => {   
+                            handlePutQuestion(novaQst[0], novaQst[1]).then((resp) => {   
                                 if(resp){
-                                    showAlert("Questão editada com sucesso!", "success");
-                                    setLoading(true);
-                                    handleGetQuestions().then((questions) => {
-                                        setQuestions(questions);
-                                        setLoading(false);
-                                    });
+                                    showAlert("Questão editada com sucesso, por favor atualize a pagina [f5]", "success");
                                 }
                                 else{
                                     showAlert("Erro ao editar questão");
@@ -419,20 +455,15 @@ const Admistrator = () => {
                         <Button colorScheme="red" onClick={() => {
                             onClose();
 
-                            if(novaQst.id === 0){
+                            if(novaQst[0].id === 0){
                                 showAlert("Nenhuma questão selecionada para deletar");
                                 return;
                             }
 
                             showAlert("Deletando questão...", "warning");
-                            handleDeleteQuestion(novaQst.id).then((resp) => {
+                            handleDeleteQuestion(novaQst[0].id).then((resp) => {
                                 if(resp){
-                                    showAlert("Questão deletada com sucesso!", "success");
-                                    setLoading(true);
-                                    handleGetQuestions().then((questions) => {
-                                        setQuestions(questions);
-                                        setLoading(false);
-                                    });
+                                    showAlert("Questão deletada com sucesso, por favor atualize a pagina [f5]", "success");
                                 }
                                 else{
                                     showAlert("Erro ao deletar questão");
