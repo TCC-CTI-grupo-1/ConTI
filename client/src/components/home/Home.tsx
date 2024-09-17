@@ -11,7 +11,7 @@ const Home = () => {
                 <div className="inversed-border"></div>
                 <div className="content">
                     <h1>Home</h1>
-                    <h1>o fernando é um viadão</h1>
+                    <h3>Atualmente em construção</h3>
                 </div>
             </div>
         </div>
