@@ -30,12 +30,14 @@ type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
 }[];
-type questionMapResultInterface = [number, (string | null)][]; 
+
+type questionMapResultInterface = [number, (number | null)][]; 
 
 interface Props {
     questionsHashMap: questionMapInterface;
     handleFinishSimulado: (respostas: questionMapResultInterface) => void;
     isSimuladoFinished?: boolean;
+    mockTestId: number;
 }
 
 //Tudo aqui dentro é baseado no número da questão, e não no ID.
@@ -94,7 +96,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                         answers={questionMap.answers} 
                         isAnswersSelected={(value: string | null) => {
                             const newResultsHashMap = resultsHashMap;
-                            newResultsHashMap[index] = [questionMap.question.id, value];
+                            newResultsHashMap[index] = [questionMap.question.id, Number(value)];
                             if(value != null)
                             {
                                 markQuestionAsSelected(index, true);
