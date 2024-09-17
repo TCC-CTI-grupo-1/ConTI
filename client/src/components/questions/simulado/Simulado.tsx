@@ -1,4 +1,4 @@
-import QuestionDetail from "./QuestionDetail";
+import QstDetailSimulado from "./QstDetailSimulado";
 import { useState, useRef } from "react";
 import { Button } from "@chakra-ui/react";
 import ArrowIcon from "../../../assets/ArrowIcon";
@@ -6,6 +6,7 @@ import { questionInterface } from "../../../controllers/interfaces";
 import { useNavigate } from "react-router-dom";
 import Numbers from "./Numbers";
 import { handleQuestionNumberClick } from "./Numbers";
+import { respostaInterface } from "../../../controllers/interfaces";
 
 import {
     Modal,
@@ -25,7 +26,10 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
   
-type questionMapInterface = questionInterface[];
+type questionMapInterface = {
+    question: questionInterface;
+    answers: respostaInterface[];
+}[];
 type questionMapResultInterface = [number, (string | null)][]; 
 
 interface Props {
@@ -85,12 +89,12 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                     key={cont}
                     style={{ display: activeQuestion === index ? "flex" : "none" }}
                 >
-                    <QuestionDetail 
-                        isSimulado 
-                        question={questionMap} 
-                        isAwnserSelected={(value: string | null) => {
+                    <QstDetailSimulado 
+                        question={questionMap.question}
+                        answers={questionMap.answers} 
+                        isAnswersSelected={(value: string | null) => {
                             const newResultsHashMap = resultsHashMap;
-                            newResultsHashMap[index] = [questionMap.id, value];
+                            newResultsHashMap[index] = [questionMap.question.id, value];
                             if(value != null)
                             {
                                 markQuestionAsSelected(index, true);
@@ -117,7 +121,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
     return (
         <>
         <div id="simulado">
-            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.id})} setActiveQuestion={setActiveQuestion} 
+            <Numbers questionsHashMap={questionsHashMap.map((q) => {return q.question.id})} setActiveQuestion={setActiveQuestion} 
             onMenuIconClick={onOpen2}
             />
             <div id="allQuestionsMargin"></div>
@@ -215,11 +219,13 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             
             {
                 questionsHashMap.map((_, index) => {
-                    return (<h3 key={index}
+                    return (<h3 key={index} className={`questionNumber ${resultsHashMap[index] == undefined || resultsHashMap[index][1] == null ? 'notAnswered' : ''} 
+                    ${activeQuestion === index ? 'active' : ''}`}
                     
                     onClick={() => {
+                        onClose2();
                         handleQuestionNumberClick(index, setActiveQuestion);
-                        onClose();
+                        
                     }}
                     >{index + 1}</h3>
                     );

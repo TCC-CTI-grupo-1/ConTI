@@ -4,7 +4,7 @@ import Options from "./Options";
 import Logo from './Logo';
 import { useNavigate } from "react-router-dom";
 
-import { validadeEmail, validadePassword, handleSignup } from '../../../controllers/userController';
+import {  validateEmail,  validatePassword, handleSignup } from '../../../controllers/userController';
 import { showAlert } from '../../../App';
 
 
@@ -38,14 +38,14 @@ const Signup = ({changeLoginPage}:Props) => {
 
     function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>){
         setEmail(e.target.value);
-        let newIsEmailValid = validadeEmail(e.target.value);
+        let newIsEmailValid =  validateEmail(e.target.value);
         setIsEmailValid(newIsEmailValid);
         
     }
 
     function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>){
         setPassword(e.target.value);
-        let newIsPasswordValid = validadePassword(e.target.value);
+        let newIsPasswordValid =  validatePassword(e.target.value);
         setIsPasswordValid(newIsPasswordValid);
         
     }
@@ -101,8 +101,12 @@ const Signup = ({changeLoginPage}:Props) => {
             setLoading(false);
 
             if(signupSuccess == null){
-                showAlert("Cadastro efetuado com sucesso", 'success')
-                navigate('/profile');
+                showAlert("Cadastro bem sucedido!", "success");
+                console.log("L");
+                localStorage.setItem('isLoggedIn', 'true');
+                navigate("/");
+                //refresh the page
+                window.location.reload();
             }
             else{
                 showAlert("Erro: " + signupSuccess);

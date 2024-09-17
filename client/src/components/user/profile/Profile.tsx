@@ -19,9 +19,9 @@ const Profile = () => {
                 handleChangeTela(index);
             });
         });
-        //console.log('useEffect');
+        console.log('useEffect');
         elements = Array.from(options.current?.querySelectorAll('a') ?? []);
-        //console.log(elements);
+        console.log(elements);
     }, [options]);
 
     function handleChangeTela(tela: number) {
@@ -44,7 +44,6 @@ const Profile = () => {
                     <div className="options" ref={options}>
                         <a className="active">Status do usuario</a>
                         <a>Configurações da conta</a>
-                        <a>Area do administrador</a>
                         {/*<div className='selected-line'></div>*/}
                     </div>
                 </div>

@@ -3,7 +3,7 @@ import { mocktesttype } from "@prisma/client";
 export class MockTestDTO {
     id: number;
     title: string;
-    creation_date: Date;
+    creation_date_tz: Date;
     profile_id: number;
     total_answers: number;
     total_correct_answers: number;
@@ -12,10 +12,10 @@ export class MockTestDTO {
     test_type: mocktesttype;
     UUID: string;
 
-    constructor(id: number, title: string, creation_date: Date, profile_id: number, total_answers: number, total_correct_answers: number, time_limit: number, time_spent: number, test_type: mocktesttype, UUID: string) {
+    constructor(id: number, title: string, creation_date_tz: Date, profile_id: number, total_answers: number, total_correct_answers: number, time_limit: number, time_spent: number, test_type: mocktesttype, UUID: string) {
         this.id = id;
         this.title = title;
-        this.creation_date = creation_date;
+        this.creation_date_tz = creation_date_tz;
         this.profile_id = profile_id;
         this.total_answers = total_answers;
         this.total_correct_answers = total_correct_answers;

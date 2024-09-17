@@ -1,7 +1,9 @@
 import Simulado from "./Simulado"
 import { useState, useEffect } from "react"
-import { questionInterface, simuladoInterface } from "../../../controllers/interfaces"
-import { handleGetQuestion, handlePostSimulado } from "../../../controllers/userController"
+import { questionInterface, respostaInterface, simuladoInterface } from "../../../controllers/interfaces"
+import { handleGetQuestion} from "../../../controllers/questionController"
+import { handlePostSimulado, generateNewSimulado} from "../../../controllers/mockTestController"
+import {handleGetAnswersByQuestionId, handleGetAnswersByQuestionsIds } from "../../../controllers/answerController"
 import date from 'date-and-time'
 import { useNavigate } from "react-router-dom"
 
@@ -16,20 +18,20 @@ import {
     Button,
     Spinner
   } from '@chakra-ui/react'
+import { showAlert } from "../../../App"
 
-type questionMapInterface = questionInterface[];
-type questionMapResultInterface = [number, (string | null)][];  
+type questionMapInterface = {
+    question: questionInterface;
+    answers: respostaInterface[];
+}[];
+type questionMapResultInterface = [number, (number | null)][];  
 
-interface Props{
-    questionsList: number[],
-}
-
-const SimuladoFrame = ({questionsList}:Props) => {
-    const {onOpen, onClose, isOpen} = useDisclosure();
-
+const SimuladoFrame = () => {
     const [questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface | null>(null);
     const [loading, setLoading] = useState(true);
-    const [completeSimulado, setCompleteSimulado] = useState<simuladoInterface | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [simulado, setSimulado] = useState<simuladoInterface>({} as simuladoInterface);
+    const [isSimuladoFinished, setIsSimuladoFinished] = useState<boolean>(false);
 
     //A unica utilidade disso é impedir que o usuario clique no botão de finalizar simulado mais de uma vez enquanto ele está sendo corrigido
     const [isSimuladoAwaitActive, setIsSimuladoAwaitActive] = useState(false);
@@ -51,32 +53,59 @@ const SimuladoFrame = ({questionsList}:Props) => {
         handleFinishSimulado(respostas);
     }
 
+    
+
     async function handleFinishSimulado(respostas: questionMapResultInterface){
-        onOpen();
         setIsSimuladoAwaitActive(true);
-        const simulado = await handlePostSimulado(respostas);
-        setCompleteSimulado(simulado);
-        console.log(respostas);
+
+        navegate('/history');
+        showAlert("Simulado finalizado com sucesso!", "success");
+        //const simulado = await handlePostSimulado(respostas, "automatico", 50);
+        //setSimulado(simulado);
+        
     }
 
     useEffect(() => {
         const getQuestions = async () => {
-            const questionsHashMap: questionMapInterface = [];
-            for(let i = 0; i < questionsList.length; i++){
-                const question = await handleGetQuestion(questionsList[i]);
-                if(question !== null) {
-                    questionsHashMap.push(question);
-                }
-            }
-            setQuestionsHashMap(questionsHashMap);
-            setLoading(false);
+                let questions: questionInterface[] = await generateNewSimulado(10);
+                
+                return questions;
         }
-        getQuestions();
-    }, [questionsList]);
+
+
+
+        const postSimulado = async (questions: questionInterface[]) => {
+            const simulado = await handlePostSimulado(questions, "automatico", 50);
+            if (simulado !== null) {
+                setSimulado(simulado);
+                console.log("JORGEJORGEJORGE");
+                setLoading(false);
+            }
+        }
+
+
+        getQuestions().then((questions) => {
+            handleGetAnswersByQuestionsIds(questions.map((question) => question.id)).then((answers) => {
+                const questionsHashMap: questionMapInterface = questions.map((question, index) => {
+                    let newAnswers = answers.filter((answer) => answer.question_id === question.id)
+                    let newOrderedAnswers = newAnswers.sort((a, b) => a.question_letter.localeCompare(b.question_letter));
+                    return {
+                        question: question,
+                        answers: newOrderedAnswers              
+                    }
+                });
+                setQuestionsHashMap(questionsHashMap);
+                postSimulado(questions);
+            });
+        });
+
+
+        
+    }, []);
 
     function returnJSXOverlay(): JSX.Element{
 
-        if (completeSimulado === null) {
+        if (isSimuladoFinished === null) {
             return (
             <div id="historyOverlay">
                 <div id="loading">
@@ -90,21 +119,21 @@ const SimuladoFrame = ({questionsList}:Props) => {
         else{
             return (
             <div id="historyOverlay">
-                    <h2>Simulado #{completeSimulado.id}</h2>
-                    <p>Tempo consumudo: {completeSimulado.time_spent} minutos</p>
-                    <p>Feito dia: {date.format(completeSimulado.creation_date, 'DD/MM/YYYY')}</p>
-                    <h3>{completeSimulado.total_correct_answers}/{completeSimulado.total_answers}</h3>
+                    <h2>Simulado #{simulado.id}</h2>
+                    <p>Tempo consumudo: {simulado.time_spent} minutos</p>
+                    <p>Feito dia: {date.format(simulado.creation_date, 'DD/MM/YYYY')}</p>
+                    <h3>{simulado.total_correct_answers}/{simulado.total_answers}</h3>
                     <div className="progress">
-                        <div style={{width: (completeSimulado.total_correct_answers * 100 / completeSimulado.total_answers ) + '%'}}></div>
+                        <div style={{width: (simulado.total_correct_answers * 100 / simulado.total_answers ) + '%'}}></div>
                     </div>
                     <div className="materias">
                         {
-                            Object.keys(completeSimulado.subjects).map((subject, index) => {
+                            Object.keys(simulado.subjects).map((subject, index) => {
                                 return (
                                     <div key={index}>
-                                        <p>{subject} [{completeSimulado.subjects[subject].total_correct_answers}/{completeSimulado.subjects[subject].total_answers}]</p>
+                                        <p>{subject} [{simulado.subjects[subject].total_correct_answers}/{simulado.subjects[subject].total_answers}]</p>
                                         <div className="progress">
-                                            <div style={{width: (completeSimulado.subjects[subject].total_correct_answers * 100 / completeSimulado.subjects[subject].total_answers ) + '%'}} />
+                                            <div style={{width: (simulado.subjects[subject].total_correct_answers * 100 / simulado.subjects[subject].total_answers ) + '%'}} />
                                         </div>
                                     </div>
                                 )
@@ -118,42 +147,16 @@ const SimuladoFrame = ({questionsList}:Props) => {
     }
 
   
+    //Esse código não tem erro
+    
     return (
-        loading ? <h2>Aguarde enquanto finalizamos o seu simulado... </h2> :
+        loading ? <h2>Aguarde enquanto preparamos o seu simulado... </h2> :
         <>
             {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
                 <Simulado questionsHashMap={questionsHashMap} handleFinishSimulado={handleGetRespostas} 
-                isSimuladoFinished={isSimuladoAwaitActive}     
+                isSimuladoFinished={isSimuladoAwaitActive}   mockTestId={simulado.id}  
                 /> 
             }
-            <Modal
-                isCentered
-                onClose={onClose}
-                isOpen={isOpen}
-                motionPreset='slideInBottom'
-                closeOnEsc={false}
-                closeOnOverlayClick={false}
-            >
-                <ModalOverlay />
-                <ModalContent>
-                <ModalHeader>{completeSimulado === null ? 'Corrigindo...' : 'Informações detalhadas'}</ModalHeader>
-                <ModalBody>
-                    {returnJSXOverlay()}
-                </ModalBody> 
-                    <ModalFooter>
-                        {completeSimulado !== null && <>
-                            <Button variant='ghost' mr={3} onClick={() => {
-                                navegate('/');
-                            }}>Voltar ao home</Button>
-                            <Button colorScheme='blue' onClick={onClose}>
-                            Ver prova
-                            </Button>
-                            </>
-                        }
-
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
         </>
         
   )

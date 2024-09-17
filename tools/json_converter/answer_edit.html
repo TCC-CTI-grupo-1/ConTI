@@ -23,11 +23,11 @@
             }
 
             try {
-                const response = await fetch(`http://localhost:3000/get-questions?year=${year}`);
+                const response = await fetch(`http://localhost:3000/marcos`);
                 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    console.error('Erro ao buscar questões:', errorText);
+                    console.error('Erro ao buestões:', errorText);
                     alert('Erro ao buscar questões. Verifique o console para mais detalhes.');
                     return;
                 }

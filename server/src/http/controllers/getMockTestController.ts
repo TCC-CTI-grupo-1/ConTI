@@ -33,13 +33,18 @@ export async function getMockTestsByDateAndProfileController(req: Request, res: 
     }
     const mockTestDAO = new MockTestDAO();
     try {
-        let dateString = req.params.date;
-        dateString = dateString.substring(28, 31);
-        const dateInt = parseInt(dateString);
-        let date = new Date(req.params.date);
-        const updatedDate = new Date(date.getTime() + dateInt * 60 * 60 * 1000);
-        updatedDate.setHours(0, 0, 0, 0);
-        const mockTests = await mockTestDAO.listMockTestsByCreationDateAscendentAndProfileId(updatedDate, req.session.profile.id);
+        const dateString = req.params.date;
+        let date = new Date(dateString);
+        const regex = /GMT\s*((-|)\d{2})\d+/;
+        const matches = regex.exec(date.toString());
+        let gmt;
+        if(matches) gmt = matches[1];
+        
+        date = new Date(date.getTime() + (Number(gmt) * 60 * 60 * 1000));
+        date.setHours(0, 0, 0, 0);
+
+        const mockTests = await mockTestDAO.listMockTestsByCreationDateAscendentAndProfileId(date, req.session.profile.id);
+        
         res.json({ mockTests });
     } catch (error: any) {
         res.status(400).json({ message: error.message });

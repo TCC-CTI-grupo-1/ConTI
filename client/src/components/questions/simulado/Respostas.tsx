@@ -1,4 +1,4 @@
-import QuestionDetail from "./QuestionDetail";
+import QstDetailRespostas from "./QstDetailResposas";
 import { useState } from "react";
 import Button from "../../Button";
 import ArrowIcon from "../../../assets/ArrowIcon";
@@ -17,7 +17,7 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
   
-type questionResultsInterface = [questionInterface, (respostaInterface | null)][];
+type questionResultsInterface = [questionInterface, (respostaInterface | null), answers: respostaInterface[]][];
 
 interface Props {
     questionsHashMap: questionResultsInterface;
@@ -54,9 +54,10 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                     key={cont}
                     style={{ display: activeQuestion === index ? "flex" : "none" }}
                 >
-                    <QuestionDetail 
+                    <QstDetailRespostas 
+                        answers={questionMap[2]}
                         question={questionMap[0]} 
-                        isCorrecao={questionMap[1]?.answer}
+                        selectedAnswer={questionMap[1] ? questionMap[1].id : -1}
                     />
                 </div>
             );
@@ -135,7 +136,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
             {
                 questionsHashMap.map((question, index) => {
                     return <h3 key={question[0].id} className={
-                        (question[1]?.answer?.toUpperCase() === question[0].answers.find(answer => answer.is_correct == true) ?
+                        ( pontuacao[index] ?
                         'correct' : 'wrong') + ' ' +
                         (activeQuestion == index ? 'active' : '')
                     }

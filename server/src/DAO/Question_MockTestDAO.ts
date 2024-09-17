@@ -21,6 +21,20 @@ export class Question_MockTestDAO {
         }
     }
 
+    registerQuestions_MockTest = async (question_MockTests: Question_MockTestDTO[]) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            console.log(question_MockTests[0])
+            const createdQuestion_MockTests = await client.question_mockTest.createMany({
+                data: question_MockTests
+            });
+            console.log(createdQuestion_MockTests)
+            return createdQuestion_MockTests;
+        } catch (error: any) {
+            throw error;
+        }
+    }
+
     updateQuestion_MockTest = async (question_MockTest: Question_MockTestDTO) => {
         try {
             const client = await connectionDAO.getConnection();

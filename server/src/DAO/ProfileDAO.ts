@@ -16,7 +16,8 @@ export class ProfileDAO {
                     profile_picture: profile.profile_picture,
                     creation_date: profile.creation_date,
                     total_correct_answers: profile.total_correct_answers,
-                    total_answers: profile.total_answers
+                    total_answers: profile.total_answers,
+                    total_mock_tests: profile.total_mock_tests
                 }
             });
             return createdProfile;
@@ -42,7 +43,8 @@ export class ProfileDAO {
                 profile_picture: profile.profile_picture,
                 creation_date: profile.creation_date,
                 total_correct_answers: profile.total_correct_answers,
-                total_answers: profile.total_answers
+                total_answers: profile.total_answers,
+                total_mock_tests: profile.total_mock_tests
             }
         });
         } catch (error: any) {
@@ -102,7 +104,8 @@ export class ProfileDAO {
                 profile_picture: result.profile_picture,
                 creation_date: result.creation_date,
                 total_correct_answers: result.total_correct_answers,
-                total_answers: result.total_answers
+                total_answers: result.total_answers,
+                total_mock_tests: result.total_mock_tests
             };
             profiles.push(profile);
         });

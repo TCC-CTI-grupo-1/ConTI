@@ -10,7 +10,7 @@ export class MockTestDAO {
             const createdMockTest = await client.mockTest.create({
                 data: {
                     title: mockTest.title,
-                    creation_date: mockTest.creation_date,
+                    creation_date_tz: mockTest.creation_date_tz,
                     profile_id: mockTest.profile_id,
                     total_answers: mockTest.total_answers,
                     total_correct_answers: mockTest.total_correct_answers,
@@ -35,7 +35,7 @@ export class MockTestDAO {
                 },
                 data: {
                     title: mockTest.title,
-                    creation_date: mockTest.creation_date,
+                    creation_date_tz: mockTest.creation_date_tz,
                     profile_id: mockTest.profile_id,
                     total_answers: mockTest.total_answers,
                     total_correct_answers: mockTest.total_correct_answers,
@@ -60,7 +60,7 @@ export class MockTestDAO {
                 const mockTest: MockTestDTO = {
                     id: result.id,
                     title: result.title,
-                    creation_date: result.creation_date,
+                    creation_date_tz: result.creation_date_tz,
                     profile_id: result.profile_id,
                     total_answers: result.total_answers,
                     total_correct_answers: result.total_correct_answers,
@@ -126,7 +126,7 @@ export class MockTestDAO {
             const client = await connectionDAO.getConnection();
             const result = await client.mockTest.findMany({
                 orderBy: {
-                    creation_date: 'desc'
+                    creation_date_tz: 'desc'
                 }
             });
 
@@ -136,7 +136,7 @@ export class MockTestDAO {
                 const mockTest: MockTestDTO = {
                     id: result.id,
                     title: result.title,
-                    creation_date: result.creation_date,
+                    creation_date_tz: result.creation_date_tz,
                     profile_id: result.profile_id,
                     total_answers: result.total_answers,
                     total_correct_answers: result.total_correct_answers,
@@ -162,7 +162,7 @@ export class MockTestDAO {
                 where: {
                     AND: [
                         {
-                            creation_date: {
+                            creation_date_tz: {
                                 gte: creationDay,
                                 lt: new Date(creationDay.getTime() + 24 * 60 * 60 * 1000)
                             }
@@ -173,7 +173,7 @@ export class MockTestDAO {
                     ]
                 },
                 orderBy: {
-                    creation_date: 'asc'
+                    creation_date_tz: 'asc'
                 }
             });
 
@@ -183,7 +183,7 @@ export class MockTestDAO {
                 const mockTest: MockTestDTO = {
                     id: result.id,
                     title: result.title,
-                    creation_date: result.creation_date,
+                    creation_date_tz: result.creation_date_tz,
                     profile_id: result.profile_id,
                     total_answers: result.total_answers,
                     total_correct_answers: result.total_correct_answers,

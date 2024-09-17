@@ -156,7 +156,7 @@ export class QuestionDAO {
                 const area: (AreaDTO | undefined) = await areaDAO.searchAreaByName(areaName);
                 if (area !== undefined) {
                     areasIDs.push(area.id);
-                }
+                } 
             }
 
             for (const areaID of areasIDs) {
@@ -165,19 +165,27 @@ export class QuestionDAO {
                     areasIDs.push(area.id);
                 }
             }
-
+            const where: any = {};
+            if(areasIDs.length>0)
+            {
+                where.area_id = {
+                    in:areasIDs
+                };
+            }
+            if(difficulties.length>0)
+            {
+                where.difficulty = {
+                    in:difficulties
+                };
+            }
+            if(years.length>0)
+            {
+                where.question_year = {
+                    in:years
+                };
+            }
             const result = await client.question.findMany({
-                where: {
-                    area_id: {
-                        in: areasIDs
-                    },
-                    difficulty: {
-                        in: difficulties
-                    },
-                    question_year: {
-                        in: years
-                    }
-                }
+                where: where
             });
 
             const questions: QuestionDTO[] = [];
@@ -200,7 +208,7 @@ export class QuestionDAO {
                 };
                 questions.push(question);
             });
-
+            console.log(questions.length)
             return questions;
 
         } catch (error) {

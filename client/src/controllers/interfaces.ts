@@ -24,13 +24,14 @@ export interface questionInterface{
     question_text: string,
     question_year: number, 
 
-    answers: respostaInterface[];
+    total_answers: number;
+    total_correct_answers: number;
 }
 
 export interface question_MockTestInterface{
     question_id: number,
     mocktest_id: number,
-    answer_id: number,
+    answer_id: number | null
 }
 
 //Usado para mostrar o histórico de simulados
@@ -76,4 +77,16 @@ export interface area_ProfileInterface{
     profile_id: number,
     total_correct_answers: number,
     total_answers: number
+}
+
+export interface profileInterface{
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    profile_picture: (string | null);
+    creation_date: Date;
+    total_correct_answers: number;
+    total_answers: number;
+    total_mock_tests: number;
 }

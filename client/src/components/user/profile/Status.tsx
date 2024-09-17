@@ -4,7 +4,7 @@ import { ProgressBar } from "../../ProgressBar";
 import { handleGetArea_Profile } from "../../../controllers/userController";
 import { area_ProfileInterface } from "../../../controllers/interfaces";
 import { areaInterface } from "../../../controllers/interfaces";
-import { handleGetAreas } from "../../../controllers/userController";
+import { handleGetAreas } from "../../../controllers/areasController";
 
 //import { useNavigate } from "react-router-dom";
 

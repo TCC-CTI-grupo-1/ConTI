@@ -32,10 +32,12 @@ difficultyProportions = {
     [DifficultyLevel.HARD] : buildProportions(1,2,3)
 }
 
+const cond = function(a:number){return a<10}
+
 const difficultyToErrorRatioCondition:{[key:string]:Function} = {
-    "easy" : function(a:number,b:number){return a / b > 0.75},
-    "medium" : function(a:number,b:number){return a / b > 0.5 && a/b <=0.75},
-    "hard" : function(a:number,b:number){return a / b <=0.5}
+    easy : function(a:number,b:number){return (a+1) / (b+1) > 0.75 || cond(b)},
+    medium : function(a:number,b:number){return (a+1) / (b+1) > 0.5 && (a+1)/(b+1) <=0.75 || cond(b)},
+    hard : function(a:number,b:number){return (a+1) / (b+1) <=0.5 || cond(b)}
 }
 
 
@@ -50,12 +52,13 @@ interface ITestBuilder{
     testBlueprint:TestBlueprint[] | undefined
 }
 
-const nameToId = async function(subject:string):Promise<number>
+const nameToId = async function(subject:string|number):Promise<number>
 {
     try {
         const client = await conn.getConnection();
         let parent_id:number|null = 0;
         let subject_id = -1;
+        if(typeof subject === "number") return subject;
         while(parent_id !=null){
         const area = await client.area.findMany({
             where: {
@@ -66,6 +69,7 @@ const nameToId = async function(subject:string):Promise<number>
         subject_id = area[0].id;
     }
     return subject_id;
+
         
     }
     catch(e)
@@ -150,23 +154,29 @@ const shuffle = function(array:any[])
     }
 }
 
+const LINGUA_PORTUGUESA = 2;
+const MATEMATICA = 1;
+const CIENCIAS_HUMANAS = 4;
+const CIENCIAS_DA_NATUREZA = 3;
 
 export class TestBlueprint implements ITestBlueprint{
     totalQuestions: number;
-    questionBySubject: {[key:string]:number};
+    questionBySubject: {[key:number]:number};
     difficultyLevel: DifficultyLevel;
     difficultyType: DifficultyType;
-    constructor(totalQuestions=50,questionBySubject={"lingua_portuguesa":15,"matematica":15,"ciencias_biologicas":15,"ciencias_humanas":5},difficultyRating=DifficultyLevel.MEDIUM,difficultyType=DifficultyType.INDIVIDUAL)
+    constructor(totalQuestions=50,questionBySubject={1:15,2:15,3:15,4:5},difficultyRating=DifficultyLevel.MEDIUM,difficultyType=DifficultyType.INDIVIDUAL)
     {
         this.totalQuestions = totalQuestions;
         this.questionBySubject = questionBySubject;
         let totalSum = 0;
         for (const key in questionBySubject) {
-            const value = this.questionBySubject[key];
+            const value = this.questionBySubject[Number(key)];
             totalSum+=value;
             
         }
-        console.error("Erro na construção da planta da prova: Número de questões por matéria deve ser igual ao número total");
+        if(totalSum != totalQuestions) {
+            console.error("Erro na construção da planta da prova: Número de questões por matéria deve ser igual ao número total");
+        }
         this.difficultyLevel = difficultyRating;
         this.difficultyType = difficultyType;
     }
@@ -194,60 +204,76 @@ export class TestBuilder{
     }
     async buildTest(blueprint:TestBlueprint)
     {
-        let questionList: { [key: string]: QuestionDTO[] } = {};
+        const cacheID: {[key:number]:Boolean} = {};
+        let questionList: { [key: number]: QuestionDTO[] } = {};
         const proportions = difficultyProportions[blueprint.difficultyLevel];
         let maxval = 0;
         for (const val in proportions) maxval+=proportions[val];
-        const difficultyCountInSubject:{[key:string]:{[key:string]:number}} = {};
+        const difficultyCountInSubject:{[key:number]:{[key:string]:number}} = {};
         for (const subject in blueprint.questionBySubject) {
-            const numberOfQuestions = blueprint.questionBySubject[subject];
+            const nsubject = Number(subject);
+            let numberOfQuestions = blueprint.questionBySubject[nsubject];
             if(blueprint.difficultyLevel === DifficultyLevel.RANDOM)
             {
                 const client= await conn.getConnection();
                 const row = await client.question.findMany({
                     where:{
-                        area_id: await nameToId(subject)
+                        area_id: nsubject
                     }
                 });
                 shuffle(row);
-                questionList[subject] = []
+                questionList[nsubject] = []
                 for(let i=0;i<numberOfQuestions;i++)
                 {
-                    questionList[subject].push(row[i]);
+                    if(!cacheID[row[i].id])
+                    {
+                        questionList[nsubject].push(row[i]);
+                        cacheID[row[i].id] = true;
+                    }
+                    else{
+                        numberOfQuestions++;
+                    }
                 }
             }
             if(blueprint.difficultyType === DifficultyType.INDIVIDUAL)
             {
                 //Ou seja, a dificuldade é construída pela dificuldade individual das questões. Uma questão difícil sempre vai ser difícil
-                    const questionCount = blueprint.questionBySubject[subject]
-                    difficultyCountInSubject[subject] = {}
-                    questionList[subject] = []
+                
+                    const questionCount = blueprint.questionBySubject[nsubject]
+                    difficultyCountInSubject[nsubject] = {}
+                    questionList[nsubject] = []
                     for (const proportion in proportions)
                     {
                         if(proportion == "medium")
                         {
-                            difficultyCountInSubject[subject] = {proportion: Math.ceil(questionCount - Math.floor(questionCount * proportions['easy'] /maxval) - Math.floor(questionCount * proportions['hard'] / maxval))}
+                            difficultyCountInSubject[nsubject][proportion] = Math.ceil(questionCount - Math.floor(questionCount * proportions['easy'] /maxval) - Math.floor(questionCount * proportions['hard'] / maxval))
                         }
                         else
-                            difficultyCountInSubject[subject] = {proportion: Math.floor(proportions[proportion] * questionCount / maxval)}
+                            difficultyCountInSubject[nsubject][proportion] = Math.floor(proportions[proportion] * questionCount / maxval)
                     }
-                    for (const difficulty in difficultyCountInSubject[subject])
+                    
+                    for (const difficulty in difficultyCountInSubject[nsubject])
                     {
                         const client = await conn.getConnection();
+                        
                         const rows = await client.question.findMany({
                             where:{    
-                                area_id: await nameToId(subject)
+                                area_id: nsubject
                             }
                         });
-                        const row = rows.filter(r => {
-                            const totalC = r.total_correct_answers;
-                            const totalA = r.total_answers;
-                            difficultyToErrorRatioCondition[subject](totalC,totalA);
-                        })
+                        
+                        const filterQuery = function(r:any){ return difficultyToErrorRatioCondition[difficulty](r.total_correct_answers,r.total_answers)}; 
+                        const row = rows.filter(filterQuery);                        
                         shuffle(row);
-                        for(let i=0;i<difficultyCountInSubject[subject][difficulty];i++)
+                        
+                        for(let i=0;i<difficultyCountInSubject[nsubject][difficulty];i++)
                         {
-                            questionList[subject].push(row[i]);
+                            if(cacheID[row[i].id]) {
+                                difficultyCountInSubject[nsubject][difficulty]++;
+                                continue;
+                            }
+                            questionList[nsubject].push(row[i]);
+                            cacheID[row[i].id] = true;
                         }
                     }
                    
@@ -265,27 +291,16 @@ export class TestBuilder{
                 //o número de áreas.
             }
         }
+
+        let i = 0;
         const questionDTOList: QuestionDTO[] = [];
         for (const subject in questionList) {
-            const questions = questionList[subject];
+            const nsubject = Number(subject);
+            const questions = questionList[nsubject];
             for (const question of questions) {
-                const questionDTO: QuestionDTO = {
-                    id: question.id,
-                    area_id: question.area_id,
-                    question_text: question.question_text,
-                    question_year: question.question_year,
-                    total_answers: question.total_answers,
-                    total_correct_answers: question.total_correct_answers,
-                    difficulty: question.difficulty,
-                    additional_info: question.additional_info,
-                    question_creator: question.question_creator,
-                    official_test_name: question.official_test_name,
-                    question_number: question.question_number,
-                    has_image: question.has_image,
-                    has_latex: question.has_latex
-                };
-                questionDTOList.push(questionDTO);
+                questionDTOList.push(question as QuestionDTO);
             }
+            ++i
         }
         return questionDTOList;
     }

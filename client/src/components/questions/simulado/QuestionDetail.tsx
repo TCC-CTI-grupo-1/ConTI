@@ -1,13 +1,17 @@
 import  LocalButton from '../../Button';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { questionInterface } from '../../../controllers/interfaces';
+import { questionInterface, respostaInterface } from '../../../controllers/interfaces';
 import { showAlert } from '../../../App';
+
+//Esse é tipo, o pior código ja escrito na historia, ele faz 4 coisas quando deveria fazer uma
+//boa sorte
 
 interface Props {
     question: questionInterface;
+    answers: respostaInterface[];
     qNumber?: number; //Numero da questão no simulado
     isSimulado?: boolean;
-    isAwnserSelected?: (value: string | null) => void; //Executado quando o usuario marca/desmarca uma alternativa
+    isAnswersSelected?: (value: string | null) => void; //Executado quando o usuario marca/desmarca uma alternativa
     isCorrecao?: string | null | undefined | true;
     /*
     --> Se for string coloca a alernativa correta na string que o cara marcou
@@ -19,20 +23,20 @@ interface Props {
     type?: "small" | "big";
 }
 
-function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrecao = undefined, qNumber, type = "big" }: Props) {
+function QuestionDetail({ question, answers, isSimulado=false, isAnswersSelected, isCorrecao = undefined, qNumber, type = "big" }: Props) {
 
-    const [selectedAwnser, setSelectedAwnser] = useState<string | null>(null);
+    const [selectedAnswers, setSelectedAnswers] = useState<string | null>(null);
 
     useEffect(() => {
-        isAwnserSelected && isAwnserSelected(selectedAwnser);
-    }, [selectedAwnser]);
+        isAnswersSelected && isAnswersSelected(selectedAnswers);
+    }, [selectedAnswers]);
 
 
     const alternativasRef = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
 
     // Garante que o array de refs tenha o tamanho necessário
     if (alternativasRef.current.length === 0) {
-        let length = question.answers ? question.answers.length : 0;
+        let length = answers.length;
         alternativasRef.current = Array.from({ length }, () => React.createRef());
     }
 
@@ -41,27 +45,27 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
     const [showAnswer, setShowAnswer] = useState(false);
 
     const correctAnswer = isCorrecao !== undefined ? 
-    question.answers &&
-    question.answers.map((answer, index) => answer.is_correct ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0] : null;
+    answers.map((answer, index) => answer.is_correct ? String.fromCharCode(65 + index) : null).filter((answer) => answer !== null)[0] : null;
 
     const addClassToAlternative = useCallback((letter: string) => {
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
 
         const alternatives = questionRef.current.querySelectorAll('.alternatives div');
 
+        console.log(letter);
+
         alternatives.forEach((alternative) => {
             alternative.classList.remove('active');
             const alternativeLetter = alternative.querySelector('p')?.textContent;
             if (alternativeLetter === letter) {
                 alternative.classList.add('active');
-                setSelectedAwnser(letter);
+                setSelectedAnswers(letter);
             }
         });
     }, []);
 
     const handleClick = useCallback((event: Event) => {
         const target = event.currentTarget as HTMLElement;
-
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
 
         const selectedLetter = target.querySelector('p')?.textContent;
@@ -83,10 +87,13 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
     function checkAlternativas(){
         if(alternativasRef.current.length === 0) return showAlert('Ocorreu um erro ao encontrar as alternativas. Tente novamente. [0]');    
         if (!showAnswer) {
-            //console.log('add click event listener');
+            //Eu literalmente não faço ideia do que isso faz
+            console.log('add click event listener');
+            console.log(alternativasRef.current);
             alternativasRef.current.forEach((alternativa) => {
                 if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [1]');
                 
+                console.log(alternativa.current);
                 alternativa.current.addEventListener('click', handleClick);
                 
                 const letra = alternativa.current.querySelector('p')
@@ -98,7 +105,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
                         if (letra.textContent == null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [2]');
                         letra.textContent = letra.textContent?.replace(/\s/g, '');
                         correctAnswer?.replace(/\s/g, '');
-                        //console.log('letra: ' + letra.textContent + " correctAnswer: " + correctAnswer + " letra=correctAnswer: " + (letra.textContent == correctAnswer));
+                        console.log('letra: ' + letra.textContent + " correctAnswer: " + correctAnswer + " letra=correctAnswer: " + (letra.textContent == correctAnswer));
                     }
                 }
                 else{
@@ -108,12 +115,26 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
             });
         } else {
             // remove click event listener
-            //console.log('remove click event listener');
+            
+            //Alternativa que o cara marcou está com 'active'
+
+            alternativasRef.current.forEach((alternativa) => {
+                if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [3]');
+                const letra = alternativa.current.querySelector('p');
+                
+                if(letra){
+                    if(letra.textContent == selectedAnswers){
+                        alternativa.current.classList.add('correct');
+                    }
+                }
+
+            });
+
             cleanupEvenListeners();
         }
 
         return () => {
-            //console.log('cleanup event listeners');
+            console.log('cleanup event listeners');
             cleanupEvenListeners();
         };
     }
@@ -128,7 +149,7 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
 
     useEffect(() => {
         if (isCorrecao !== undefined && isCorrecao !== true) {
-            setSelectedAwnser(isCorrecao);
+            setSelectedAnswers(isCorrecao);
             addClassToAlternative(isCorrecao === null ? '' : isCorrecao);
             setShowAnswer(true);
         }
@@ -161,8 +182,8 @@ function QuestionDetail({ question, isSimulado=false, isAwnserSelected, isCorrec
             </h4>
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 
-                {question.answers && question.answers.map((alternative, index) => (
-                    <div key={index} ref={alternativasRef.current[index]}>
+                {answers.map((alternative, index) => (
+                    <div key={index} ref={alternativasRef.current[index]} className={String(index)}>
                         <span>
                             <p> {alternative.question_letter} </p>
                         </span>

@@ -19,8 +19,11 @@ export async function getAnswersByQuestionIdController(req: Request, res: Respon
 }
 
 export async function getAnswersByQuestionsIdsController(req: Request, res: Response) {
+    console.log("dwadwa")
+
     const questions_ids = JSON.parse(req.params.questions_ids) as number[];
     const answerDAO = new AnswerDAO();
+
     
     try {
         const answers: AnswerDTO[] = await answerDAO.listAnswersByQuestionsIds(questions_ids);

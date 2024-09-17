@@ -2,6 +2,17 @@ import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
 class Middleware{
+
+    private isUserLogged: boolean;
+
+    constructor(){
+        this.isUserLogged = false;
+    }
+
+    public setIsUserLogged(isUserLogged: boolean){
+        this.isUserLogged = isUserLogged;
+    }
+
     routeToDisplay (
         middlewares: string[] = [],
         routeToVisit: JSX.Element,
@@ -35,7 +46,7 @@ class Middleware{
     } 
 
     isLoggedIn(component: JSX.Element){
-        if (false) {
+        if (localStorage.getItem('isLoggedIn') === 'false') {
             return this._getRouteReturn(false, <Navigate to='/login' />);
         }
         return this._getRouteReturn(true, component);

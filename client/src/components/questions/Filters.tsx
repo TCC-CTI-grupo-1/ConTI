@@ -21,18 +21,19 @@ import { showAlert } from "../../App";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { questionInterface, areaInterface } from "../../controllers/interfaces";
+import { questionInterface, areaInterface, respostaInterface } from "../../controllers/interfaces";
 import { questionFilters as options } from "../../controllers/interfaces";
-import { handleGetFilteredQuestions, handleGetAreasMap } from "../../controllers/userController";
+import { handleGetFilteredQuestions} from "../../controllers/questionController";
+import {handleGetAreasMap } from "../../controllers/areasController";
+import { handleGetAnswersByQuestionsIds } from "../../controllers/answerController";
 import QuestionBox from "./QuestionBox";
 
 const Filters = () => {
   const navegate = useNavigate();
-
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const anos = [2024, 2023, 2022];
-  const dificuldade = ["facil", "medio", "dificil"];
+  const anos:number[] = [];
+  const dificuldade:string[] = [];
 
   const [options, setOptions] = useState<options>({
     ano: anos,
@@ -66,7 +67,7 @@ const Filters = () => {
     }
 
     if(option == "ano"){
-      //conver 'e' de ['2024', '2023'] para [2024, 2023]
+      //converter 'e' de ['2024', '2023'] para [2024, 2023]
       newOptions[option] = e.map((element: string) => {
         return parseInt(element);
       });
@@ -77,17 +78,48 @@ const Filters = () => {
     setOptions(newOptions);
   }
 
-  const [filteredQuestions, setFilteredQuestions] = useState<
-    questionInterface[]
-  >([]);
+  const [filteredQuestions, setFilteredQuestions] = useState<{
+    question: questionInterface;
+    answers: respostaInterface[];
+  }[]>([]);
 
-  function handleGetFilteredQuestionsLocal(){
+  async function handleGetFilteredQuestionsLocal(){
     setLoading(true);
     console.log(options);
-    handleGetFilteredQuestions(options).then((questions) => {
-      setFilteredQuestions(questions);
-      setLoading(false);
+    
+    let newFilteredQuestions:{
+      question: questionInterface;
+      answers: respostaInterface[];
+    }[] = []
+
+    let questions = await handleGetFilteredQuestions(options);
+
+    console.log("Questões: ");
+    console.log(questions);
+
+    let questionIds: number[] = [];
+
+    questions.forEach((question) => {
+      questionIds.push(question.id);
     });
+  
+    let answers = await handleGetAnswersByQuestionsIds(questionIds);
+
+    console.log("Respostas: ");
+    console.log(answers);
+
+    if(questions === null || answers === null){
+      showAlert("Erro ao carregar questões");
+      return;
+    }
+
+    questions.forEach((question) => {
+      let respostas = answers.filter((a) => a.question_id === question.id);
+      newFilteredQuestions.push({question, answers: respostas});
+    });
+
+    setFilteredQuestions(newFilteredQuestions);
+    setLoading(false);
   }
   
   const [loading, setLoading] = useState(true);
@@ -134,7 +166,7 @@ const Filters = () => {
                       title="Ano"
                       type="checkbox"
                       onChange={(e) => {
-                        //console.log(e);
+                        console.log(e);
                         handleSelectChange(e, "ano");
                       }}
                     >
@@ -263,14 +295,15 @@ const Filters = () => {
           {loading ? (
             <h2>Carregando...</h2>
           ) : (
-            filteredQuestions.map((question, index) => {
-              return areas[question.area_id] ? (<QuestionBox
+            filteredQuestions.map((object, index) => {
+              return areas[object.question.area_id] ? (<QuestionBox
                 key={index}
-                question={question}
-                area={areas[question.area_id]}
-                />) : <p>Area da questão {question.id} não encontrada</p>;
+                question={object.question}
+                area={areas[object.question.area_id]}
+                answers={object.answers}
+                />) : <p>Area da questão {object.question.id} não encontrada</p>;
             })
-          )}
+          )}  
         </div>
       </div>
     </div>
@@ -306,9 +339,11 @@ const Filters = () => {
                   setOptions(newOptions);
                   }}
                 >
-                  {areas[parseInt(key)].name} + {String(options.disciplina.map((element) => {
+                  {areas[parseInt(key)].name}  
+                  
+                  {false? String(options.disciplina.map((element) => {
                     return element === areas[parseInt(key)].name;
-                  }).includes(true) !== undefined)}
+                  }).includes(true) !== undefined) : "" /*Isso não faz sentido. Adicionando o false? para retirar*/}
                 </Checkbox>
                 );
             } ) : <p>Carregando...</p>}

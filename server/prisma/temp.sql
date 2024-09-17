@@ -20,7 +20,7 @@ CREATE TABLE mockTest (
     total_correct_answers INTEGER NOT NULL DEFAULT 0,
     time_limit INTEGER NOT NULL,
     time_spent INTEGER NOT NULL DEFAULT 0,
-    creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    creation_date_tz TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     test_type MockTestType NOT NULL,
     UUID VARCHAR(255) NOT NULL UNIQUE,
     FOREIGN KEY (profile_id) REFERENCES profile(id) ON DELETE CASCADE

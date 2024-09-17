@@ -10,13 +10,13 @@ import { getAreaController, getTopParentAreaByIdController,
          getAreaByIdController, getAreasIdsByQuestionsIdsController,
          getAreaIdByQuestionIdController
  } from './controllers/getAreaController';
-import { postAreaController } from './controllers/setAreaController';
+import { postAreaController } from './controllers/postAreaController';
 import { getMockTestsController, getMockTestsByDecrescentDateController,
             getMockTestsByDateAndProfileController
  } from './controllers/getMockTestController';
-import { setMockTestController } from './controllers/setMockTestController';
+import { postMockTestController } from './controllers/postMockTestController';
 import { getArea_ProfileController } from './controllers/getArea_ProfileController';
-import { getQuestionWithFiltersController, getQuestionsForNewMockTestByProfileController,
+import { getQuestionsWithFiltersController, getQuestionsForNewMockTestByProfileController,
         getQuestionByIdController, getQuestionController,
         getQuestionsByIdsController
  } from './controllers/getQuestionController';
@@ -27,6 +27,8 @@ import { getAnswersByQuestionIdController, getAnswersByQuestionsIdsController } 
 import { postQuestionController } from './controllers/postQuestionController';
 import { getQuestion_MockTestsController } from './controllers/getQuestion_MockTest';
 import { putAnswerController } from './controllers/putAnswerController';
+import { postQuestions_MockTestController } from './controllers/postQuestions_MockTestController';
+import { putQuestion_MockTestController } from './controllers/putQuestion_MockTestController';
 export async function routes(app: any) {
     app.post('/signup', signupController);
     app.post('/login', loginController);
@@ -44,10 +46,10 @@ export async function routes(app: any) {
 
     // '/questions/'
     app.get('/questions', getQuestionController);
-    app.get('/questionsById/:id', getQuestionByIdController);
-    app.get('/questionsByFil/filter/:filter', getQuestionWithFiltersController);
-    app.get('/questionsByIds/:ids', getQuestionsByIdsController);
-    app.get('/questions/fala', getQuestionsForNewMockTestByProfileController);
+    app.get('/question/:id', getQuestionByIdController);
+    app.get('/questions/filter/:filter', getQuestionsWithFiltersController);
+    app.get('/questions/ids/:ids', getQuestionsByIdsController); //nomeclatura sem "/ids" conflita com "/newMockTest"
+    app.get('/questions/newMockTest', getQuestionsForNewMockTestByProfileController);
 
 
 
@@ -55,7 +57,7 @@ export async function routes(app: any) {
 
     app.post('/questions', postQuestionController);
 
-    app.delete('/questionsById/:id', deleteQuestionByIdController);
+    app.delete('/questions/:id', deleteQuestionByIdController);
 
 
     // '/area/'
@@ -79,7 +81,7 @@ export async function routes(app: any) {
     app.get('/mockTests/date/:date', getMockTestsByDateAndProfileController);
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
 
-    app.post('/mockTests', setMockTestController);
+    app.post('/mockTest', postMockTestController);
 
     // '/profile/'
     app.get('/profile', getProfileController);
@@ -89,5 +91,7 @@ export async function routes(app: any) {
 
     // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
+    app.post('/questions_MockTest', postQuestions_MockTestController);
+    app.put('/question_MockTest/:id', putQuestion_MockTestController);
 
 }

@@ -1,13 +1,15 @@
 import Simulado from "./Respostas"
 import { useState, useEffect } from "react"
 import { questionInterface, respostaInterface } from "../../../controllers/interfaces"
-import { handleGetQuestion } from "../../../controllers/userController"
+/*import { handleGetQuestion } from "../../../controllers/questionController"
+import { handleGetAnswersByQuestionId } from "../../../controllers/answerController"*/
 //import { useNavigate } from "react-router-dom"
-import { handleGetQuestion_MockTestsByMockTestId } from "../../../controllers/userController"
+import { handleGetQuestion_MockTestsByMockTestId } from "../../../controllers/questionMockTestController"
 import { useParams } from "react-router-dom"
+import { handleGetQuestionsByIds } from "../../../controllers/questionController"
+import { handleGetAnswersByQuestionsIds } from "../../../controllers/answerController"
 
-
-  type questionResultsInterface = [questionInterface, (respostaInterface | null)][];
+  type questionResultsInterface = [questionInterface, (respostaInterface | null), answers:respostaInterface[]][];
 
 const SimuladoFrame = () => {
     const { id } = useParams();
@@ -29,18 +31,61 @@ const SimuladoFrame = () => {
             console.log(typeof(simulado));
 
             if(simulado === null){
-                console.log("SUICIDIO")
+                console.log("Simulado não encontrado");
                 return;
             }
 
             let newPontuacao: boolean[] = [];
-            await Promise.all(simulado.map(async (question) => {
-                const questionData = await handleGetQuestion(question.question_id);
+
+            const allQuestions = await handleGetQuestionsByIds(simulado.map((q) => q.question_id));
+            const allAnswers = await handleGetAnswersByQuestionsIds(simulado.map((q) => q.question_id));
+
+            if(allQuestions === null || allAnswers === null){
+                console.error("Erro ao carregar questões");
+                return;
+            }
+
+            allQuestions.forEach((question) => {
+                let respostas = allAnswers.filter((a) => a.question_id === question.id);
+                let correctAnswer = respostas.find((a) => a.is_correct === true);
+                let alternativaMarcadaID = simulado.find((s) => s.question_id === question.id);
+                if(alternativaMarcadaID === undefined){
+                    console.error("Erro ao carregar questão " + question.id);
+                    newPontuacao.push(false);
+                    newQuestionsHashMap.push([question, null, respostas]);
+                    return;
+                }
+
+                let alternativaMarcada = respostas.find((a) => a.id === alternativaMarcadaID.answer_id);
+
+                if(correctAnswer === undefined){
+                    console.error("Erro ao carregar questão " + question.id);
+                }
+                else{
+                    if(alternativaMarcada !== undefined){
+                        if(correctAnswer.id === alternativaMarcadaID.answer_id){
+                            newPontuacao.push(true);
+                        }
+                        else{
+                            newPontuacao.push(false);
+                        }
+                    }
+                    else{
+                        newPontuacao.push(false);
+                    }
+                }
+
+                newQuestionsHashMap.push([question, alternativaMarcada ? alternativaMarcada : null, respostas]);
+            });
+
+            /*await Promise.all(simulado.map(async (question) => {
+                const questionData = await handleGetQuestion(question.question_id); 
+                const answers = await handleGetAnswersByQuestionId(question.question_id);
                 if(questionData !== null)
                     {
-                        let jorge = questionData.answers.find((a) => a.id === question.answer_id)
-                        newQuestionsHashMap.push([questionData, jorge !== undefined ? jorge : null]);
-                        let correctAnswer = questionData.answers.find((a) => a.is_correct === true);
+                        let respostas = answers.find((a) => a.id === question.answer_id)
+                        newQuestionsHashMap.push([questionData, respostas !== undefined ? respostas : null, answers]);
+                        let correctAnswer = answers.find((a) => a.is_correct === true);
                         if(correctAnswer === undefined){
                             console.error("Erro ao carregar questão " + question.question_id);
                         }
@@ -58,11 +103,13 @@ const SimuladoFrame = () => {
                     console.error("Erro ao carregar questão " + question.question_id);
                 }
                 
-            }));
+            })); */
 
             setQuestionsHashMap(newQuestionsHashMap);
             setLoading(false);
             setPontuacao(newPontuacao);
+
+            console.log(newQuestionsHashMap);
         }
 
         console.log(id);

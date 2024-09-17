@@ -2,14 +2,14 @@ import Navbar from "./Navbar"
 import { useState, useEffect } from "react";
 import Button from "././Button"
 import Input from "././Input";
-import { handleGetAreasMap } from "./../controllers/userController";
+import { handleGetAreasMap } from "./../controllers/areasController";
 import { Select } from '@chakra-ui/react'
-import { handlePostArea } from "./../controllers/userController";
+import { handlePostArea } from "./../controllers/areasController";
 import { showAlert } from "./../App";
-import { handleGetQuestions } from "./../controllers/userController";
+import { handleGetQuestions } from "./../controllers/questionController";
 import { areaInterface, questionInterface, respostaInterface } from "../controllers/interfaces";
 import QuestionBox from "./questions/QuestionBox";
-import { handlePutQuestion, handleDeleteQuestion, handlePostQuestion } from "./../controllers/userController";
+import { handlePutQuestion, handleDeleteQuestion, handlePostQuestion } from "./../controllers/questionController";
 
 import {
     Modal,

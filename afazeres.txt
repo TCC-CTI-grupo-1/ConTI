@@ -29,3 +29,6 @@ Mudar o botão finalizar simulado para uma tela que
 - botaõ de HIDE no tempo decorrido
 
 - mostrar numero da questão (sem tanta enfase)
+
+--RISCAR ALTENATIVAS
+--MARCAR QUESTÕES QUE QUERIA VOLTAR (SISTEMA DE FLAG)

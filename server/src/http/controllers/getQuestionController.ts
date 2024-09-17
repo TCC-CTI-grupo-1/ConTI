@@ -42,13 +42,15 @@ export async function getQuestionByIdController(req: Request, res: Response) {
     }
 }
 
-export async function getQuestionWithFiltersController(req: Request, res: Response) {
+export async function getQuestionsWithFiltersController(req: Request, res: Response) {
     const questionDAO = new QuestionDAO();
     try {
         const filter = JSON.parse(req.params.filter) as questionFilters;
         const questions: QuestionDTO[] = await questionDAO.listQuestionByFilters(filter);
+        console.log("Tamanho : ",questions.length);
         res.json({ questions: questions });
     } catch (error: any) {
+        console.log("deu erro")
         res.status(400).json({ message: error.message });
     }
 }
@@ -63,14 +65,13 @@ export async function getQuestionsForNewMockTestByProfileController(req: Request
     if(req.session.profile === undefined) {
         return res.status(404).json({ message: 'Perfil não encontrado' });
     }
-    const questionDAO = new QuestionDAO();
+    
+    console.log("AHAHAHAH")
     try {
         const profileId = req.session.profile.id;
         const test_blueprint = new TestBlueprint();
-        
         const test_builder = new TestBuilder([]);
         const questions = await test_builder.buildTest(test_blueprint);
-        console.log(questions);
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
