@@ -36,19 +36,10 @@ const Admistrator = () => {
 
     const {onOpen, onClose, isOpen} = useDisclosure();
 
-    const respostasVario: respostaInterface[] = [
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0},
-        {id: 0, question_id: 0, answer: '', is_correct: false, question_letter: '', total_answers: 0}
-    ];
-
     let novaQstLimpa = {
         id: 0,
         question_text: '',
-        area_id: 0,
+        area_id: 1,
         additional_info: '',
         has_image: false,
         has_latex: false,
@@ -185,7 +176,13 @@ const Admistrator = () => {
                                         <option value='none'>Nenhuma</option>
                                         {
                                             Object.values(areas).map((area, index) => {
-                                                return <option key={index} value={area.id}>{area.name}</option>
+                                                return <option key={index} value={area.id}
+                                                onClick={(e) => {
+                                                    let newQst = {...novaQst[0]};
+                                                    newQst.area_id = area.id;
+                                                    setNovaQst([newQst, novaQst[1]]);
+
+                                                }}>{area.name}</option>
                                             })
                                         }
                                     </Select>
