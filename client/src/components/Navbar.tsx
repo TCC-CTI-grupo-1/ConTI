@@ -5,6 +5,7 @@ import DatabaseIcon from "../assets/DatabaseIcon";
 import MenuIcon from "../assets/MenuIcon";
 import HistoryIcon from "../assets/HistoryIcon";
 import NewTestIcon from "../assets/NewTestIcon.tsx";
+import AdminIcon from "../assets/AdminIcon.tsx";
 
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -59,11 +60,11 @@ const Navbar = ({screen}:Props) => {
                     <p  className={checkActiveScreen('home')}>Home</p>
                 </div>
 
-                <div className="icon">
+                {/*<div className="icon">
                     <HomeIcon iconColor={checkActiveScreen('aboutUs')}
                     onIconClick={() => {navegate('/aboutUs')}}/>
                     <p  className={checkActiveScreen('aboutUs')}>Sobre Nós</p>
-                </div>
+                </div>*/}
                                         
                 {isLoggedIn &&<div className="icon">
                     <NewTestIcon iconColor={checkActiveScreen('newtest')}
@@ -96,7 +97,7 @@ const Navbar = ({screen}:Props) => {
                 </div>}
 
                 <div className="icon">
-                        <UserIcon iconColor={checkActiveScreen('adm')}
+                        <AdminIcon iconColor={checkActiveScreen('adm')}
                         onIconClick={() => {navegate('/adm')}}/>
                         <p className={checkActiveScreen('adm')}>Histórico</p>
                 </div>
