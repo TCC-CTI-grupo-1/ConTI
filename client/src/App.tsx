@@ -25,6 +25,7 @@ const showAlert = (message: string,
     description?: string) => {
   const alertBoxContainer = document.getElementById('alert-box-container');
   if (alertBoxContainer) {
+    //if(type==='error' || type==='warning') return;
     const alertBox = document.createElement('div');
     alertBoxContainer.appendChild(alertBox);
     createRoot(alertBox).render(<AlertBox message={message} type={type} description={description} />);
