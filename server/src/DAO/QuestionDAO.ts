@@ -184,7 +184,9 @@ export class QuestionDAO {
                     in:years
                 };
             }
-            const result = await client.question.findMany(where);
+            const result = await client.question.findMany({
+                where: where
+            });
 
             const questions: QuestionDTO[] = [];
 
