@@ -43,6 +43,16 @@ const difficultyToErrorRatioCondition:{[key:string]:Function} = {
     hard : function(a:number,b:number){return (a+1) / (b+1) <=0.5 || cond(b)}
 }
 
+const classifyRatio = (a:number,b:number):string
+{
+    if(b<4) return "IRRELEVANT";    
+    if(a/b > 0.75) return "easy";
+    if(a/b > 0.5) return "medium";
+    return "hard";
+}
+const difficultyToProportion = function(difficulty:DifficultyLevel){
+    return difficultyProportions[difficulty];  
+}
 
 interface ITestBlueprint{
     totalQuestions:number,
@@ -163,28 +173,14 @@ export class TestBuilder{
             return listOfQuestionList;
         }        
     }
-    buildSizeMap = (node:number, tree:AreaProfileTree, blueprint:TestBlueprint, size:number,sizeTree:{[key:number]:number}) => {
+    private buildSizeMap = (node:number, tree:AreaProfileTree, blueprint:TestBlueprint, size:number,sizeTree:{[key:number]:number}) => {
         sizeTree[node] = size;
-        let difflist:number[][] = [];
-        let sizemap:{[key:number]:number} = {};
-        for(const area of tree[node])
+        const numberOfNodes_inDifficulty:{[key:string]:number} = {};
+        const totalNodes = tree[node].length;
+        const proportions = difficultyToProportion(blueprint.difficultyLevel);
+        for(const v of tree[node])
         {
-            if(area.total_answers >0)
-                difflist.push([area.total_correct_answers/area.total_correct_answers,area.area_id]); 
-        }
-        difflist.sort((a, b) => b[0] - a[0]);
-        sizemap[difflist[0][1]] = 1;
-        let sum = 1;
-        for(let i = 1; i< difflist.length;i++)
-        {
-            let proportion = difflist[i][0]/difflist[i][0]; 
-            sizemap[difflist[i][1]] = proportion;
-            sum+=proportion;
-        }
-        let n = Math.round(size/sum);
-        for(let i =0;i<difflist.length;i++)
-        {
-            this.buildSizeMap(difflist[i][1],tree,blueprint, Math.round(n*difflist[i][0]),sizeTree);
+            numberOfNodes_inDifficulty[classifyRatio(v.total_correct_answers,v.total_answers)] = sizeTree[v.area_id]++;
         }
         
         return sizeTree;
@@ -195,8 +191,6 @@ export class TestBuilder{
         let questionList: QuestionDTO[] = [];
         const instance = new QuestionDAO();
         const tree = rooted_tree.tree;
-        
-
         const dfs = async (node:Area_ProfileDTO):Promise<{[key:string]:number}> =>
         {
             let filter:questionFilters = {};
