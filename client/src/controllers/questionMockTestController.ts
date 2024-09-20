@@ -24,7 +24,7 @@ export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number
 
 export async function handlePutQuestion_MockTestById(question_mockTest: question_MockTestInterface): Promise<string> {
     try {
-        const response = await fetch('http://localhost:3001/question_MockTests/', {
+        const response = await fetch('http://localhost:3001/question_MockTest/', {
             method: 'PUT',
             credentials: 'include',
             headers: {

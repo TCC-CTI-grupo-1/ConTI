@@ -180,7 +180,7 @@ export async function handleSaveChanges(Profile: Profile): Promise<string | true
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(profile)
+            body: JSON.stringify(Profile)
         });
 
         const responseData = await response.json();
