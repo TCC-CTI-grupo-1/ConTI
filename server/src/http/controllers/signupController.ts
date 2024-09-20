@@ -30,7 +30,8 @@ export async function signupController(req: Request, res: Response) {
         profile_picture: profileDTO.profile_picture,
         total_correct_answers: profileDTO.total_correct_answers,
         total_answers: profileDTO.total_answers,
-        password: ''
+        password: '',
+        total_mock_tests: profileDTO.total_mock_tests
       }
       req.session.profile = sessionProfile;
       
