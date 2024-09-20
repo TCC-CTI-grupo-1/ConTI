@@ -43,7 +43,7 @@ const difficultyToErrorRatioCondition:{[key:string]:Function} = {
     hard : function(a:number,b:number){return (a+1) / (b+1) <=0.5 || cond(b)}
 }
 
-const classifyRatio = (a:number,b:number):string
+const classifyRatio = (a:number,b:number):string =>
 {
     if(b<4) return "IRRELEVANT";    
     if(a/b > 0.75) return "easy";
@@ -173,17 +173,18 @@ export class TestBuilder{
             return listOfQuestionList;
         }        
     }
-    private buildSizeMap = (node:number, tree:AreaProfileTree, blueprint:TestBlueprint, size:number,sizeTree:{[key:number]:number}) => {
-        sizeTree[node] = size;
+    private buildSizeMap = (node:number, tree:AreaProfileTree, blueprint:TestBlueprint, size:number,sizeMap:{[key:number]:number}) => {
+        sizeMap[node] = size;
         const numberOfNodes_inDifficulty:{[key:string]:number} = {};
         const totalNodes = tree[node].length;
         const proportions = difficultyToProportion(blueprint.difficultyLevel);
         for(const v of tree[node])
         {
-            numberOfNodes_inDifficulty[classifyRatio(v.total_correct_answers,v.total_answers)] = sizeTree[v.area_id]++;
+            if(sizeMap[node])
+            numberOfNodes_inDifficulty[classifyRatio(v.total_correct_answers,v.total_answers)] = sizeMap[v.area_id]++;
         }
         
-        return sizeTree;
+        return sizeMap;
     }
     private getQuestionList = async(rooted_tree:Rooted_AreaProfileTree, testMap:{[key:number]:AreaData}):Promise<QuestionDTO[]> => 
     {
