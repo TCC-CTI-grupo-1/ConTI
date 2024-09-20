@@ -1,7 +1,8 @@
 import { ConnectionDAO } from "./ConnectionDAO";
 import { Area_ProfileDTO } from "../DTO/Area_ProfileDTO";
-
+import { AreaDAO, AreaTree } from "./AreaDAO";
 const connectionDAO = new ConnectionDAO();
+export type AreaProfileTree = {[key:number]:Area_ProfileDTO[]}
 
 export class Area_ProfileDAO {
     registerArea_Profile = async (area_profile: Area_ProfileDTO) => {
@@ -23,7 +24,7 @@ export class Area_ProfileDAO {
         }
     }
     
-    listArea_ProfileByProfileId = async (profile_id: number) => {
+    listArea_ProfileByProfileId = async (profile_id: number):Promise<Area_ProfileDTO[]>=> {
         try {
             const client = await connectionDAO.getConnection();
             const result = await client.area_profile.findMany({
@@ -50,4 +51,31 @@ export class Area_ProfileDAO {
             throw error;
         }
     }
+
+    buildAreaProfileTree = async(profile_id:number):Promise<AreaProfileTree> => {
+        const instance = new AreaDAO();
+        const areatree:AreaTree = await instance.buildAreaTree();
+        let areaMap:{[key:number]:Area_ProfileDTO} = {};
+        const areaProfileList = await this.listArea_ProfileByProfileId(profile_id);
+        for(const area of areaProfileList)
+        {
+            areaMap[area.area_id] = area;
+        }
+        let tree:AreaProfileTree = {};
+        for(const key in areatree)
+        {
+            const parent_id:number = Number(key);       
+            for(const area of areatree[parent_id])
+            {
+                if(!tree[parent_id])
+                {
+                    tree[parent_id] = [];
+                }
+                tree[parent_id].push(areaMap[area.id]);
+            }
+        
+        }
+        return tree;
+    }
+
 }

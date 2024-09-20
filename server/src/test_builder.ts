@@ -1,7 +1,8 @@
 import {ConnectionDAO} from "./DAO/ConnectionDAO";
 import { QuestionDTO } from "./DTO/QuestionDTO";
-
-
+import { Area_ProfileDTO } from "./DTO/Area_ProfileDTO";
+import { AreaProfileTree, Area_ProfileDAO } from "./DAO/Area_ProfileDAO";
+import { SourceTextModule } from "vm";
 const conn = new ConnectionDAO();
 
 
@@ -164,7 +165,8 @@ export class TestBlueprint implements ITestBlueprint{
     questionBySubject: {[key:number]:number};
     difficultyLevel: DifficultyLevel;
     difficultyType: DifficultyType;
-    constructor(totalQuestions=50,questionBySubject={1:15,2:15,3:15,4:5},difficultyRating=DifficultyLevel.MEDIUM,difficultyType=DifficultyType.INDIVIDUAL)
+    user_id:number;
+    constructor(totalQuestions=50,questionBySubject={1:15,2:15,3:15,4:5},difficultyRating=DifficultyLevel.MEDIUM,difficultyType=DifficultyType.INDIVIDUAL,user_id:number)
     {
         this.totalQuestions = totalQuestions;
         this.questionBySubject = questionBySubject;
@@ -179,6 +181,7 @@ export class TestBlueprint implements ITestBlueprint{
         }
         this.difficultyLevel = difficultyRating;
         this.difficultyType = difficultyType;
+        this.user_id = user_id;
     }
 }
 
@@ -188,7 +191,7 @@ export class TestBuilder{
     {
         this.testBlueprintList = testBlueprint;
     }
-    buildAll()
+    buildAll = () =>
     {
         if(this.testBlueprintList) {
             let listOfQuestionList = [{}] 
@@ -196,14 +199,37 @@ export class TestBuilder{
                 listOfQuestionList.push(this.buildTest(test));
             }
             return listOfQuestionList;
+        }        
+    }
+    
+    buildAreaProportionTree = (node:number, tree:AreaProfileTree, blueprint:TestBlueprint, size:number,sizeTree:{[key:number]:number}) => {
+        sizeTree[node] = size;
+        let difflist:number[][] = [];
+        let sizemap:{[key:number]:number} = {};
+        for(const area of tree[node])
+        {
+            if(area.total_answers >0)
+                difflist.push([area.total_correct_answers/area.total_correct_answers,area.area_id]); 
         }
-        else {
-            console.error("Erro: TestBlueprintList está vazio");
+        difflist.sort((a, b) => b[0] - a[0]);
+        sizemap[difflist[0][1]] = 1;
+        let sum = 1;
+        for(let i = 1; i< difflist.length;i++)
+        {
+            let proportion = difflist[i][0]/difflist[i][0]; 
+            sizemap[difflist[i][1]] = proportion;
+            sum+=proportion;
+        }
+        let n = Math.round(size/sum);
+        for(let i =0;i<difflist.length;i++)
+        {
+            this.buildAreaProportionTree(difflist[i][1],tree,blueprint, Math.round(n*difflist[i][0]),sizeTree);
         }
         
+        return sizeTree;
     }
-    async buildTest(blueprint:TestBlueprint)
-    {
+
+    buildTest = async(blueprint:TestBlueprint) => {
         const cacheID: {[key:number]:Boolean} = {};
         let questionList: { [key: number]: QuestionDTO[] } = {};
         const proportions = difficultyProportions[blueprint.difficultyLevel];
@@ -235,6 +261,7 @@ export class TestBuilder{
                     }
                 }
             }
+            
             if(blueprint.difficultyType === DifficultyType.INDIVIDUAL)
             {
                 //Ou seja, a dificuldade é construída pela dificuldade individual das questões. Uma questão difícil sempre vai ser difícil
@@ -280,9 +307,10 @@ export class TestBuilder{
             }
             if(blueprint.difficultyType === DifficultyType.AREA)
             {   
-                console.warn("Não implementei ainda!");
-                
-                //TODO: pensar no algoritmo que constrói baseado nos indicadores do usuário
+                const instance = new Area_ProfileDAO();
+                const tree = await instance.buildAreaProfileTree(blueprint.user_id);
+                const areaProportionTree = this.buildAreaProportionTree(1,tree,blueprint,blueprint.totalQuestions,{});
+
             }
             if(blueprint.difficultyLevel === DifficultyLevel.MIMIC)
             {

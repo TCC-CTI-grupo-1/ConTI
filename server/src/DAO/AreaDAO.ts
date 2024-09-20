@@ -3,6 +3,9 @@ import { AreaDTO } from "../DTO/AreaDTO";
 
 const connectionDAO = new ConnectionDAO();
 
+
+export type AreaTree = {[key:number]:AreaDTO[]};
+
 export class AreaDAO {
     registerArea = async (area: AreaDTO) => {
         try {
@@ -226,6 +229,25 @@ export class AreaDAO {
         } catch (error) {
             throw error;
         }
+    }
+
+    buildAreaTree = async() :Promise<AreaTree> => {
+        const instance = new AreaDAO();
+        const areaList:AreaDTO[] = await instance.listAreas();
+        let tree:AreaTree = {0:[]};
+        for(const area of areaList)
+        {
+            if(area.parent_id!=null)
+            if(tree[area.parent_id] !== undefined)
+            {
+                tree[area.parent_id].push(area);
+            }
+            else {
+                tree[area.parent_id] = [];
+                tree[area.parent_id].push(area);
+            }
+        }
+        return tree;
     }
 
     // listAreasWithoutSubAreas = async () => {
