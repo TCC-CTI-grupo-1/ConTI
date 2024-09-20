@@ -2,7 +2,7 @@ import { ConnectionDAO } from "./ConnectionDAO";
 import { AreaDTO } from "../DTO/AreaDTO";
 
 const connectionDAO = new ConnectionDAO();
-
+const CTI_ID:number = 0;
 
 export type AreaTree = {[key:number]:AreaDTO[]};
 
@@ -192,7 +192,7 @@ export class AreaDAO {
                 }
             });
             if (result) {
-                if (result.parent_id) {
+                if (result.parent_id !== CTI_ID && result.parent_id) {
                     return this.searchTopParentAreaById(result.parent_id);
                 } else {
                     return result as AreaDTO;

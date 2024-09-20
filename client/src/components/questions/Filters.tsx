@@ -138,6 +138,7 @@ const Filters = () => {
 
   useEffect(() => {
     handleAreasMap();
+    handleGetFilteredQuestionsLocal();
   }, []);
 
   const [areas, setAreas] = useState<{[id: number]: areaInterface}>({});

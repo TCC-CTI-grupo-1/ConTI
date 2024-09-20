@@ -19,7 +19,8 @@ export async function updateProfileController(req: Request, res: Response) {
         profile_picture: req.body.profile_picture,
         total_correct_answers: req.body.total_correct_answers,
         total_answers: req.body.total_answers,
-        password: req.body.password
+        password: req.body.password,
+        total_mock_tests: req.body.total_mock_tests
       }
       req.session.profile = sessionProfile;
       
