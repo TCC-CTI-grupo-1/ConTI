@@ -30,6 +30,11 @@ import { putAnswerController } from './controllers/putAnswerController';
 import { postQuestions_MockTestController } from './controllers/postQuestions_MockTestController';
 import { putQuestion_MockTestController } from './controllers/putQuestion_MockTestController';
 export async function routes(app: any) {
+    app.get('/', (req: Request, res: Response) => {
+        res.send('Hello World');
+    });
+
+
     app.post('/signup', signupController);
     app.post('/login', loginController);
     app.post('/logout', logoutController);
