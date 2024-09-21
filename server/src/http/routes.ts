@@ -29,6 +29,7 @@ import { getQuestion_MockTestsController } from './controllers/getQuestion_MockT
 import { putAnswerController } from './controllers/putAnswerController';
 import { postQuestions_MockTestController } from './controllers/postQuestions_MockTestController';
 import { putQuestion_MockTestController } from './controllers/putQuestion_MockTestController';
+import { putMockTestController } from './controllers/putMockTestController';
 export async function routes(app: any) {
     app.post('/signup', signupController);
     app.post('/login', loginController);
@@ -80,7 +81,7 @@ export async function routes(app: any) {
     app.get('/mockTests', getMockTestsController);
     app.get('/mockTests/date/:date', getMockTestsByDateAndProfileController);
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
-
+    app.put('/mockTest/:id', putMockTestController);
     app.post('/mockTest', postMockTestController);
 
     // '/profile/'

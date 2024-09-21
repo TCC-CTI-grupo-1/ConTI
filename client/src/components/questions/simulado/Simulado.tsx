@@ -1,5 +1,5 @@
 import QstDetailSimulado from "./QstDetailSimulado";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, act } from "react";
 import { Button } from "@chakra-ui/react";
 import ArrowIcon from "../../../assets/ArrowIcon";
 import { question_MockTestInterface, questionInterface } from "../../../controllers/interfaces";
@@ -95,6 +95,10 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
         };
         handlePutQuestion_MockTestById(question_MockTest);
         setPrevActiveQuestion(activeQuestion);
+
+        if(activeQuestion === -1){
+            handleFinishSimulado(resultsHashMap);
+        }
     }, [activeQuestion]);
 
     const returnQuestionDetail = () => {
@@ -210,7 +214,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                             onClose();
                             if(!isSimuladoFinished)
                             {
-                                handleFinishSimulado(resultsHashMap);
+                                setActiveQuestion(-1);
                             }   
                         }}    
                         >

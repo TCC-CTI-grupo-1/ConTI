@@ -1,8 +1,8 @@
 import Simulado from "./Simulado"
 import { useState, useEffect } from "react"
 import { questionInterface, respostaInterface, simuladoInterface } from "../../../controllers/interfaces"
-import { handleGetQuestion} from "../../../controllers/questionController"
-import { handlePostSimulado, generateNewSimulado} from "../../../controllers/mockTestController"
+import { handleGetQuestion, handlePutQuestion} from "../../../controllers/questionController"
+import { handlePostSimulado, generateNewSimulado, handlePutSimulado} from "../../../controllers/mockTestController"
 import {handleGetAnswersByQuestionId, handleGetAnswersByQuestionsIds } from "../../../controllers/answerController"
 import date from 'date-and-time'
 import { useNavigate } from "react-router-dom"
@@ -57,11 +57,40 @@ const SimuladoFrame = () => {
 
     async function handleFinishSimulado(respostas: questionMapResultInterface){
         setIsSimuladoAwaitActive(true);
+        let totalCorrectAnswers = 0;
+        let totalAnswers = 0;
+        let timeSpent = 0;
+        if(questionsHashMap === null) return;
+        
+        respostas.forEach((value, index) => {
+            ++totalAnswers;
+            const question = questionsHashMap[index];
+            if (question !== undefined && value[1] !== null) {
+                const correctAnswer = question.answers.find((answer) => answer.is_correct === true);
+                if (correctAnswer !== undefined && correctAnswer.id === value[1]) {
+                    ++totalCorrectAnswers;
+                }
+            }
+        });
+        
+        const novoSimulado = {
+            ...simulado,
+            total_correct_answers: totalCorrectAnswers,
+            total_answers: totalAnswers,
+            time_spent: timeSpent
+        }
+        
+        handlePutSimulado(novoSimulado).then((result) => {
+            if (result !== null) {
+                setSimulado(simulado);
+                setIsSimuladoFinished(true);
+                setIsSimuladoAwaitActive(false);
+            }
+            return true;
+        })
 
         navegate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");
-        //const simulado = await handlePostSimulado(respostas, "automatico", 50);
-        //setSimulado(simulado);
         
     }
 

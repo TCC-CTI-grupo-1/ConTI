@@ -120,3 +120,25 @@ export async function generateNewSimulado(amount: number): Promise<questionInter
         return err.message;
     }
 }
+
+export async function handlePutSimulado(simulado: simuladoInterface): Promise<boolean> {//mockTestController.ts
+    try {
+        const response = await fetch('http://localhost:3001/mockTest/' + simulado.id, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(simulado)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        return false;
+    }
+}
