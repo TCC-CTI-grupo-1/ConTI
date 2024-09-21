@@ -96,7 +96,7 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 //Essa função parece muito errada
 
 // não é 'generate', tá mais pra 'get'
-export async function generateNewSimulado(amount: number): Promise<questionInterface[]>{ //mockTestController.ts
+export async function generateNewSimulado(): Promise<questionInterface[]>{ //mockTestController.ts
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
         

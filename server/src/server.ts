@@ -25,9 +25,9 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 12
     }
 }))
-
+const port = process.env.PORT || 3001;
 app.use(cookieParser());
 
 routes(app);
 
-app.listen(3001, () => { console.log("Server is running on port 3001")} );
+app.listen(port, () => { console.log("Server is running on port 3001")} );

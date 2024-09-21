@@ -172,7 +172,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 }*/
 
 
-export async function handleSaveChanges(Profile: Profile): Promise<string | true> {// userController.ts
+export async function handleSaveChanges(profile: Profile): Promise<string | true> {// userController.ts
     try {
         const response = await fetch('http://localhost:3001/user', {
             method: 'POST',
@@ -253,20 +253,6 @@ export async function handleDeleteAccount() { // userController.ts
         return [false, "Erro ao deletar conta"];
     }
 }
-
-
-
-//GET QUESTIONS
-
-
-
-//ID e Alternativa (O index é o número da questão na prova.)
-type questionMapResultInterface = [number, (number | null)][];  
-
-
-
-//Retorna o simulado que foi adicionado (NN FEITO)
-
 
 export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //userController.ts
     try {

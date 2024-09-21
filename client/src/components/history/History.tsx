@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import Navbar from '../Navbar'
 import DaySelector from './DaySelector'
 import { useState } from 'react'
-import date from 'date-and-time'
 import { handleGetAnswersByQuestionsIds } from '../../controllers/answerController';
 import { handleGetQuestion_MockTestsByMockTestId } from '../../controllers/questionMockTestController'
 import { handleGetMockTestsByDateAndProfile } from '../../controllers/mockTestController'
 import { handleGetQuestionsByIds } from '../../controllers/questionController'
 import { handleGetAreasMap } from '../../controllers/areasController'
 
-import { areaInterface, questionInterface, simuladoInterface } from '../../controllers/interfaces'
+import { areaInterface, simuladoInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -23,7 +22,6 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
-    Spinner
   } from '@chakra-ui/react'
 import { showAlert } from '../../App'
 
@@ -44,8 +42,6 @@ const History = () => {
     const navegate = useNavigate();
 
     const [areas, setAreas] = useState<{[key: string]: areaInterface}>({});
-
-    const [questionsGlobal, setQuestionsGlobal] = useState<questionInterface[]>([]);
 
     async function handleSetAreasMap(){
         const areasMap = await handleGetAreasMap();
@@ -230,17 +226,13 @@ const History = () => {
 
     }
 
-    function showDate(){
-        let date = new Date(activeDate);
-    }
-
     return (
         <>{loading ? <h1>Carrregando</h1> :
             <div id="history" className="flex-container full-screen-size">
                     <Navbar screen="history"/>
                     <div className="container">
                         <div className="header">
-                            <h1 onClick={showDate}>Histórico</h1>
+                            <h1>Histórico</h1>
                         </div>
                         <div className="inversed-border"></div>
                         <div className="content">
