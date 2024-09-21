@@ -157,16 +157,20 @@ export class QuestionDAO {
         try {
             const areaDAO: AreaDAO = new AreaDAO();
             const client = await connectionDAO.getConnection();
-            const areaNames: string[] = filters.disciplina ? filters.disciplina : [];
             const difficulties: difficulty[] = filters.dificuldade ? filters.dificuldade : [];
             const years: number[] = filters.ano ? filters.ano.map(Number) : [];
-
             let areasIDs: number[] = [];
-            for (const areaName of areaNames) {
-                const area: (AreaDTO | undefined) = await areaDAO.searchAreaByName(areaName);
-                if (area !== undefined) {
-                    areasIDs.push(area.id);
-                } 
+            if(typeof filters.disciplina === 'string') {
+                const areaNames: string[] = filters.disciplina ? filters.disciplina : [];
+                for (const areaName of areaNames) {
+                    const area: (AreaDTO | undefined) = await areaDAO.searchAreaByName(areaName);
+                    if (area !== undefined) {
+                        areasIDs.push(area.id);
+                    } 
+                }
+            }
+            else {
+                areasIDs = filters.disciplina ? filters.disciplina.map(Number) : [];
             }
 
             for (const areaID of areasIDs) {
