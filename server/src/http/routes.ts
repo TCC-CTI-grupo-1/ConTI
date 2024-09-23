@@ -26,11 +26,16 @@ import { getAnswersByQuestionIdController, getAnswersByQuestionsIdsController } 
 
 import { postQuestionController } from './controllers/postQuestionController';
 import { getQuestion_MockTestsController } from './controllers/getQuestion_MockTest';
-import { putAnswerController } from './controllers/putAnswerController';
+import { putAnswerController, putAnswersController, putAnswersIncrementController } from './controllers/putAnswerController';
 import { postQuestions_MockTestController } from './controllers/postQuestions_MockTestController';
 import { putQuestion_MockTestController } from './controllers/putQuestion_MockTestController';
 import { putMockTestController } from './controllers/putMockTestController';
 export async function routes(app: any) {
+    app.get('/', (req: Request, res: Response) => {
+        res.send('Hello World');
+    });
+
+
     app.post('/signup', signupController);
     app.post('/login', loginController);
     app.post('/logout', logoutController);
@@ -73,8 +78,10 @@ export async function routes(app: any) {
 
     // '/answers/'
     app.get('/answers/question/:question_id', getAnswersByQuestionIdController);
-    app.put('/answers/question/:question_id', putAnswerController);
+    app.put('/answer/:id', putAnswerController);
     app.get('/answers/questions/:questions_ids', getAnswersByQuestionsIdsController);
+    app.put('/answers', putAnswersController);
+    app.put('/answers/increment/:ids', putAnswersIncrementController);
 
 
     // '/mockTest/'

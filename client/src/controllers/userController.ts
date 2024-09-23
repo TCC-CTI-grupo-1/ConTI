@@ -1,6 +1,5 @@
 
 //import { json } from 'react-router-dom';
-import { Profile } from '../../../server/src/types/express-session';
 import { area_ProfileInterface, profileInterface } from './interfaces';
 
 
@@ -172,7 +171,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 }*/
 
 
-export async function handleSaveChanges(Profile: Profile): Promise<string | true> {// userController.ts
+export async function handleSaveChanges(profile: profileInterface): Promise<string | true> {// userController.ts
     try {
         const response = await fetch('http://localhost:3001/user', {
             method: 'POST',
@@ -180,7 +179,7 @@ export async function handleSaveChanges(Profile: Profile): Promise<string | true
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(Profile)
+            body: JSON.stringify(profile)
         });
 
         const responseData = await response.json();
@@ -253,20 +252,6 @@ export async function handleDeleteAccount() { // userController.ts
         return [false, "Erro ao deletar conta"];
     }
 }
-
-
-
-//GET QUESTIONS
-
-
-
-//ID e Alternativa (O index é o número da questão na prova.)
-type questionMapResultInterface = [number, (number | null)][];  
-
-
-
-//Retorna o simulado que foi adicionado (NN FEITO)
-
 
 export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //userController.ts
     try {

@@ -117,7 +117,7 @@ const Admistrator = () => {
         getQuestions().then((questions) => {
             handleGetAnswersByQuestionsIds(questions.map((question) => question.id)).then((answers) => {
                 questions.sort((a, b) => a.id - b.id);
-                const questionsHashMap: questionMapInterface = questions.map((question, index) => {
+                const questionsHashMap: questionMapInterface = questions.map((question, ) => {
                     let newAnswers = answers.filter((answer) => answer.question_id === question.id)
                     let newOrderedAnswers = newAnswers.sort((a, b) => a.question_letter.localeCompare(b.question_letter));
                     return {
@@ -177,7 +177,7 @@ const Admistrator = () => {
                                         {
                                             Object.values(areas).map((area, index) => {
                                                 return <option key={index} value={area.id}
-                                                onClick={(e) => {
+                                                onClick={() => {
                                                     let newQst = {...novaQst[0]};
                                                     newQst.area_id = area.id;
                                                     setNovaQst([newQst, novaQst[1]]);

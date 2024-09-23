@@ -3,16 +3,6 @@ import { Navigate } from 'react-router-dom';
 
 class Middleware{
 
-    private isUserLogged: boolean;
-
-    constructor(){
-        this.isUserLogged = false;
-    }
-
-    public setIsUserLogged(isUserLogged: boolean){
-        this.isUserLogged = isUserLogged;
-    }
-
     routeToDisplay (
         middlewares: string[] = [],
         routeToVisit: JSX.Element,

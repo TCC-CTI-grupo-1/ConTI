@@ -4,7 +4,6 @@ import Navbar from '../Navbar'
 import Filters from './Filters'
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import QuestionDetail from './simulado/QuestionDetail';
 import { useNavigate } from 'react-router-dom';
 import { questionInterface } from '../../controllers/interfaces';
 import { handleGetQuestion } from '../../controllers/questionController';
@@ -53,7 +52,7 @@ const QuestionDatabase = () => {
                     </div>
                     <div className="inversed-border"></div>
                     <div className="content">
-                        {hasQuestion ? <QuestionDetail question={hasQuestion} /> : <Filters />}
+                        <Filters />
                     </div>
                 </div>
             </div>

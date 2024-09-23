@@ -37,7 +37,7 @@ export interface question_MockTestInterface{
 //Usado para mostrar o histórico de simulados
 export interface simuladoInterface{
     UUID: string,
-    creation_date: Date,
+    creation_date_tz: Date,
     id: number,
     profile_id: number,
     test_type: string,

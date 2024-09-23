@@ -1,5 +1,5 @@
 import { Skeleton } from "@chakra-ui/react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Button from "../../Button"
 import Input from "../../Input";
 import PopupBottom from "../../PopupBottom";
@@ -30,7 +30,6 @@ const Config = () => {
         }
     }, [user]);
 
-    const botao = useRef(null);
     /*Aqui ficam todas as configurações, as quais o usuario pode alkterar*/
     const [updatedUser, setUpdatedUser] = useState<Profile>();
     const [creationDate, setCreationDate] = useState<Date>(new Date());
@@ -160,7 +159,7 @@ const Config = () => {
                 
                 <div>
                     <h2>Configurações da conta</h2>
-                    <Button colorScheme='red' width="auto" variant='outline' onClick={handleLogout} ref={botao}>Log-out</Button>
+                    <Button colorScheme='red' width="auto" variant='outline' onClick={handleLogout}>Log-out</Button>
                     <Button colorScheme='red' width="auto" onClick={handleDeleteAccount} >Deletar conta </Button>
                 </div>
 

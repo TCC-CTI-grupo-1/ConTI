@@ -53,7 +53,6 @@ function App() {
         if(user)
         {
             localStorage.setItem('isLoggedIn', 'true');
-            middleware.setIsUserLogged(true);
         }
         setLoading(false);
     }
