@@ -2055,6 +2055,10 @@ COMPONENTES GERAIS DO FERNANDO
   flex-direction: column;
 }
 
+#Admistrator > div{
+  width: 100%;
+}
+
 @media (max-width: 1500px) {
   :root {
     --margin-big: 90px;
