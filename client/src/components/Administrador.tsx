@@ -11,6 +11,7 @@ import { areaInterface, questionInterface, respostaInterface } from "../controll
 import QuestionBox from "./questions/QuestionBox";
 import { handlePutQuestion, handleDeleteQuestion, handlePostQuestion } from "./../controllers/questionController";
 import { handleGetAnswersByQuestionsIds } from "../controllers/answerController";
+import { useRef } from "react";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -142,100 +143,136 @@ const Admistrator = () => {
         handleThings();        
     }, []);
     //tem tanto código aqui que ninguém vai saber que eu sou gay -> bastazini(fernndo)
+
+
+    const [tela, setTela] = useState<number>(0);
+    const options = useRef<HTMLDivElement>(null); // Add type annotation to options ref
+
+    let elements:HTMLAnchorElement[] = [];
+
+    //Talvez mover isso para um componente próprio
+    useEffect(() => {
+        elements = Array.from(options.current?.querySelectorAll('a') ?? []);
+        elements?.forEach((element, index) => {
+            element.addEventListener('click', () => {
+                handleChangeTela(index);
+            });
+        });
+        console.log('useEffect');
+        console.log(elements);
+    }, [options]);
+
+    function handleChangeTela(tela: number) {
+        setTela(tela);
+        elements?.forEach((element, index) => {
+            element.classList.remove('active');
+                if (index === tela) {
+                    element.classList.add('active');
+                }
+        });
+    }
+    
+    
   return (<>
     {loading ? <h1>Carregando</h1> :
-        <>
-            <div id="Admistrator" className="flex-container full-screen-size">
-                <Navbar screen="adm"/>
-                <div className="container">
-                    <div className="header">
-                        <h3>Area de admin</h3>
-                    </div>
-                    <div className="inversed-border"></div>
-                    <div className="content">
-                        <h1>Admistrator</h1>
-                        <div className="box">
-
-                            {!loading && <div id="config">
-                                <div>
-                                    <h2>Adicionar area</h2>
-                                    
-                                </div>
-                                
-                                <div>
-                                    <Input name={"Nova Area"} label={"Nova area"} onChange={(e) => {
-                                        setNomeArea(e.target.value);
-                                    }}></Input>
-                                    <Select placeholder='Selecione a area Pai'
-                                    onChange={(e) => {
-                                        if(e.target.value === 'none'){
-                                            setAreaPai(null);
-                                        }
-                                        setAreaPai(e.target.value);
-                                    }}>
-                                        <option value='none'>Nenhuma</option>
-                                        {
-                                            Object.values(areas).map((area, index) => {
-                                                return <option key={index} value={area.id}
-                                                onClick={() => {
-                                                    let newQst = {...novaQst[0]};
-                                                    newQst.area_id = area.id;
-                                                    setNovaQst([newQst, novaQst[1]]);
-
-                                                }}>{area.name}</option>
-                                            })
-                                        }
-                                    </Select>
-                                    <Button onClick={handlePostNovaArea}>Salvar</Button>
-                                </div>
-                            </div>}
-
-                        </div>
-                        <div className="box admin">
-                            <Button onClick={() => {
-                                setNovaQst([novaQstLimpa, novaAltLimpa]);
-                                onOpen();
-                            }}>Adicionar questão</Button>
-                            <div className="page">
-                                <h3>Pagina: {pagina} / {getLastPageNumber()}</h3>
-                                <Button onClick={() => {
-                                    setPagina(pagina-1);
-                                }} size="xs">Anterior</Button>
-                                <input type="number" value={pagina} onChange={(e) => {
-                                    if(isNaN(Number(e.target.value))) return;
-
-                                    setPagina(parseInt(e.target.value));
-                                }} />
-                                <Button onClick={() => {
-                                    setPagina(pagina+1);
-                                }} size="xs">Proxima</Button>
-                            </div>
-
-                            {!loading && <div className="adm-box">
-                                {questionsMap.map((question, index) => {
-                                    return index >= 6 * (pagina - 1) && index < 6 * pagina &&
-                                    (areas[question.question.area_id] === undefined ?  null :
-                                    <><QuestionBox key={index} question={question.question} area={areas[question.question.area_id]} answers={question.answers}/>
-                                        <div className="btn">
-                                            <Button size={'xs'} onClick={() => {
-                                                let editQst: questionInterface;
-                                                editQst = question.question;
-                                                let editAnswers: respostaInterface[] = question.answers;
-                                                console.log(editQst);
-                                                setNovaQst([editQst, editAnswers]);
-                                                onOpen();
-                                            }}>Editar</Button>
-                                        </div>
-                                    </>)
-                                })}
-                                
-                            </div>}
-                        </div>
+    <>
+        <div id="profile" className="flex-container full-screen-size">
+            <>
+        <Navbar screen="profile"/>
+            <div className="container">
+                <div className="header">
+                    <h1>Area do administrador</h1>
+                    <div className="options" ref={options}>
+                        <a className="active">Adicionar area</a>
+                        <a>CRUD Questões</a>
+                        {/*<div className='selected-line'></div>*/}
                     </div>
                 </div>
-            </div>
+                <div className="inversed-border"></div>
+                <div className="content">
+                    {tela == 0 &&  <div id="Admistrator" className="flex-container">
+                            <div className="box">
 
-            <Modal
+                                {!loading && <div id="config">
+                                    <div>
+                                        <h2>Adicionar area</h2>
+                                        
+                                    </div>
+                                    
+                                    <div>
+                                        <Input name={"Nova Area"} label={"Nova area"} onChange={(e) => {
+                                            setNomeArea(e.target.value);
+                                        }}></Input>
+                                        <Select placeholder='Selecione a area Pai'
+                                        onChange={(e) => {
+                                            if(e.target.value === 'none'){
+                                                setAreaPai(null);
+                                            }
+                                            setAreaPai(e.target.value);
+                                        }}>
+                                            <option value='none'>Nenhuma</option>
+                                            {
+                                                Object.values(areas).map((area, index) => {
+                                                    return <option key={index} value={area.id}
+                                                    onClick={() => {
+                                                        let newQst = {...novaQst[0]};
+                                                        newQst.area_id = area.id;
+                                                        setNovaQst([newQst, novaQst[1]]);
+
+                                                    }}>{area.name}</option>
+                                                })
+                                            }
+                                        </Select>
+                                        <Button onClick={handlePostNovaArea}>Salvar</Button>
+                                    </div>
+                                </div>}
+                    </div>
+                </div>}
+                    {tela == 1 &&                             <div className="box admin">
+                                <Button onClick={() => {
+                                    setNovaQst([novaQstLimpa, novaAltLimpa]);
+                                    onOpen();
+                                }}>Adicionar questão</Button>
+                                <div className="page">
+                                    <h3>Pagina: {pagina} / {getLastPageNumber()}</h3>
+                                    <Button onClick={() => {
+                                        setPagina(pagina-1);
+                                    }} size="xs">Anterior</Button>
+                                    <input type="number" value={pagina} onChange={(e) => {
+                                        if(isNaN(Number(e.target.value))) return;
+
+                                        setPagina(parseInt(e.target.value));
+                                    }} />
+                                    <Button onClick={() => {
+                                        setPagina(pagina+1);
+                                    }} size="xs">Proxima</Button>
+                                </div>
+
+                                {!loading && <div className="adm-box">
+                                    {questionsMap.map((question, index) => {
+                                        return index >= 6 * (pagina - 1) && index < 6 * pagina &&
+                                        (areas[question.question.area_id] === undefined ?  null :
+                                        <><QuestionBox key={index} question={question.question} area={areas[question.question.area_id]} answers={question.answers}/>
+                                            <div className="btn">
+                                                <Button size={'xs'} onClick={() => {
+                                                    let editQst: questionInterface;
+                                                    editQst = question.question;
+                                                    let editAnswers: respostaInterface[] = question.answers;
+                                                    console.log(editQst);
+                                                    setNovaQst([editQst, editAnswers]);
+                                                    onOpen();
+                                                }}>Editar</Button>
+                                            </div>
+                                        </>)
+                                    })}
+                                    
+                                </div>}
+                            </div>}
+                </div>
+            </div>
+        </>
+        </div>
+        <Modal
                 isCentered
                 onClose={onClose}
                 isOpen={isOpen}

@@ -1,6 +1,5 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the ID from the form
     $id = $_POST['id'];
 
     $imageData = $_FILES['image'];
