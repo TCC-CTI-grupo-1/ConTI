@@ -1,6 +1,24 @@
 import { questionInterface, respostaInterface} from './interfaces';
 import { questionFilters } from './interfaces';
 import { showAlert } from '../App';
+
+
+async function handleAddImage(image:FormData, editing:boolean)
+{
+    image.append("editing",editing.toString())
+    const response = await fetch('client\\addImage.php', {
+        method:'POST',
+        body:image
+    })
+    const result = await response.json();
+    if(response.ok)
+    {
+        console.log("Upload feito com sucesso: ",result.filePath)
+    }
+    else {
+        showAlert("Erro ao enviar imagem: " + result.message,"error");
+    }
+}
 export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> { //questionController
     try{
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/' + questionID, {
@@ -126,6 +144,16 @@ export async function handlePutQuestion(question: questionInterface, answers: re
     }
 }
 
+export async function handlePutQuestion_withImage(question:questionInterface,answers:respostaInterface[], image:FormData)
+{
+    try{
+        handleAddImage(image,true);
+        return handlePutQuestion(question,answers);
+    }catch(err:any)
+    {
+        return false;
+    }
+}
 export async function handlePostQuestion(question: questionInterface): Promise<boolean> { //questionController.ts
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -146,6 +174,18 @@ export async function handlePostQuestion(question: questionInterface): Promise<b
         }
 
     } catch (err: any) {
+        showAlert(err.message);
+        return false;
+    }
+}
+
+export async function handlePostQuestion_withImage(question:questionInterface, image:FormData)
+{
+    try{
+        handleAddImage(image,false);
+        return handlePostQuestion(question);
+    } catch(err:any)
+    {
         showAlert(err.message);
         return false;
     }
