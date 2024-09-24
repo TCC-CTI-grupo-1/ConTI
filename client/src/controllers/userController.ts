@@ -68,7 +68,7 @@ export async function handleSignup(name: string, email: string, password: string
             remember: remember
         };
 
-        const response = await fetch('http://localhost:3001/signup', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/signup', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -95,8 +95,10 @@ export async function handleLogin(email: string, password: string, remember: boo
             password: password,
             remember: remember
         };
+        console.log(JSON.stringify(data));
 
-        const response = await fetch('http://localhost:3001/login', {
+
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/login', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -124,7 +126,7 @@ export async function handleLogin(email: string, password: string, remember: boo
 // ^ LoginController
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/user', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -150,7 +152,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
             email: email
         };
 
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/user', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -173,7 +175,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 
 export async function handleSaveChanges(profile: profileInterface): Promise<string | true> {// userController.ts
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/user', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -196,7 +198,7 @@ export async function handleSaveChanges(profile: profileInterface): Promise<stri
 
 export async function handleLogout() {// userController.ts
     try {
-        const response = await fetch('http://localhost:3001/logout', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/logout', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -218,7 +220,7 @@ export async function handleLogout() {// userController.ts
 }
 export async function handleDeleteAccount() { // userController.ts
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/user', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -233,7 +235,7 @@ export async function handleDeleteAccount() { // userController.ts
             // return [true, "Conta deletada com sucesso"];
         }
 
-        const responseLogout = await fetch('http://localhost:3001/logout', {
+        const responseLogout = await fetch(import.meta.env.VITE_ADDRESS + '/logout', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -256,7 +258,7 @@ export async function handleDeleteAccount() { // userController.ts
 export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //userController.ts
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areaProfile', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areaProfile', {
             method: 'GET',
             credentials: 'include',
             headers: {

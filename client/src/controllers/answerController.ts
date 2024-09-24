@@ -12,7 +12,7 @@ function getSortedQuestions(responseData:any):any[]
 
 export async function handleGetAnswersByQuestionId(questionID: number): Promise<respostaInterface[]> { // answerController
     try{
-        const response = await fetch('http://localhost:3001/answers/question/' + questionID, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/answers/question/' + questionID, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -36,7 +36,7 @@ export async function handleGetAnswersByQuestionId(questionID: number): Promise<
 export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): Promise<respostaInterface[]> { // answerController
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/answers/questions/' + JSON.stringify(questions_ids), {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/answers/questions/' + JSON.stringify(questions_ids), {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -59,7 +59,7 @@ export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): P
 
 export async function handlePutAnswers(answers: respostaInterface[]) {
     try {
-        const response = await fetch('http://localhost:3001/answers', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/answers', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -81,7 +81,7 @@ export async function handlePutAnswers(answers: respostaInterface[]) {
 
 export async function handleIncrementAnswers(answers_ids: number[]) {
     try {
-        const response = await fetch('http://localhost:3001/answers/increment/' + JSON.stringify(answers_ids), {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/answers/increment/' + JSON.stringify(answers_ids), {
             method: 'PUT',
             credentials: 'include',
             headers: {
