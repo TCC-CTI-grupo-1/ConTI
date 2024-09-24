@@ -74,7 +74,6 @@ export class AnswerDAO {
                     }
                 });
                 if (existingAnswer) {
-                    console.log('Incrementing answer with id: ' + answer.id);
                     try {
                         const result = await client.answer.update({
                             where: {
@@ -86,7 +85,6 @@ export class AnswerDAO {
                                 }
                             }
                         });
-                        console.log('Answer incremented:', result);
                     } catch (updateError) {
                         console.error('Error during update:', updateError);
                     }

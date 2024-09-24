@@ -81,7 +81,7 @@ const SimuladoFrame = () => {
             return true;
         })
 
-        const respostasIds = respostas.map((value) => value[0]);
+        const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
         handleIncrementAnswers(respostasIds);
 
         navegate('/history');
