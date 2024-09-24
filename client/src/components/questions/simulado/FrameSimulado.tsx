@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom"
 //     Spinner
 //   } from '@chakra-ui/react'
 import { showAlert } from "../../../App"
+import { handleIncrementProfileAnswers, handleIncrementProfileMockTest } from "../../../controllers/userController"
 
 type questionMapInterface = {
     question: questionInterface;
@@ -83,6 +84,8 @@ const SimuladoFrame = () => {
 
         const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
         handleIncrementAnswers(respostasIds);
+        handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
+        handleIncrementProfileMockTest();
 
         navegate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");

@@ -124,7 +124,7 @@ export async function handleLogin(email: string, password: string, remember: boo
 // ^ LoginController
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch('http://localhost:3001/profile', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -150,7 +150,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
             email: email
         };
 
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch('http://localhost:3001/profile', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -173,7 +173,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 
 export async function handleSaveChanges(profile: profileInterface): Promise<string | true> {// userController.ts
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch('http://localhost:3001/profile', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -218,7 +218,7 @@ export async function handleLogout() {// userController.ts
 }
 export async function handleDeleteAccount() { // userController.ts
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch('http://localhost:3001/profile', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -253,7 +253,7 @@ export async function handleDeleteAccount() { // userController.ts
     }
 }
 
-export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //userController.ts
+export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //profileController.ts
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch('http://localhost:3001/areaProfile', {
@@ -276,7 +276,54 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
     }
 }
 
+export async function handleIncrementProfileMockTest() {
+    try {
+        const response = await fetch('http://localhost:3001/profile/incrementMockTest', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
 
+    } catch (err: any) {
+        return false;
+    }
+}
+
+export async function handleIncrementProfileAnswers(totalCorrectAnswers: number, totalAnswers: number) {
+    try {
+        const data = {
+            total_correct_answers: totalCorrectAnswers,
+            total_answers: totalAnswers
+        };
+
+        const response = await fetch('http://localhost:3001/profile/incrementAnswers', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
 
 export {  validateEmail,  validatePassword }

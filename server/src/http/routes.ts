@@ -4,7 +4,7 @@ import { signupController } from './controllers/signupController';
 import { logoutController } from './controllers/logoutController';
 import { deleteProfileController } from './controllers/deleteProfileController';
 import { Request, Response } from "express";
-import { updateProfileController } from './controllers/updateProfileController';
+import { incrementProfile_MockTestController, updateProfileController } from './controllers/putProfileController';
 import { getProfileController } from './controllers/getProfileController';
 import { getAreaController, getTopParentAreaByIdController,
          getAreaByIdController, getAreasIdsByQuestionsIdsController,
@@ -43,11 +43,12 @@ export async function routes(app: any) {
 
     // '/user/'
     //Recebe (sabe qual é) o usuario pela sessão
-    app.get('/user', getProfileSessionController);
-
-    app.post('/user', updateProfileController);
-
-    app.delete('/user', deleteProfileController); 
+    app.get('/profileSession', getProfileSessionController);
+    app.put('/profile', updateProfileController);
+    app.delete('/profile', deleteProfileController); 
+    app.put('/profile/incrementMockTest', incrementProfile_MockTestController);
+    app.get('/profile', getProfileController);
+    app.put('/profile/incrementAnswers', incrementProfile_MockTestController);
 
 
     // '/questions/'
@@ -90,9 +91,6 @@ export async function routes(app: any) {
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
     app.put('/mockTest/:id', putMockTestController);
     app.post('/mockTest', postMockTestController);
-
-    // '/profile/'
-    app.get('/profile', getProfileController);
 
     // '/areaProfile/'
     app.get('/areaProfile', getArea_ProfileController);
