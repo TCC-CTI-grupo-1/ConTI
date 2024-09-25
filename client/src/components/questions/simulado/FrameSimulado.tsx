@@ -1,10 +1,8 @@
 import Simulado from "./Simulado"
 import { useState, useEffect } from "react"
 import { questionInterface, respostaInterface, simuladoInterface } from "../../../controllers/interfaces"
-import { handleGetQuestion, handlePutQuestion} from "../../../controllers/questionController"
 import { handlePostSimulado, generateNewSimulado, handlePutSimulado} from "../../../controllers/mockTestController"
-import {handleGetAnswersByQuestionId, handleGetAnswersByQuestionsIds, handleIncrementAnswers } from "../../../controllers/answerController"
-import date from 'date-and-time'
+import {handleGetAnswersByQuestionsIds, handleIncrementAnswers } from "../../../controllers/answerController"
 import { useNavigate } from "react-router-dom"
 
 // import {
@@ -82,8 +80,8 @@ const SimuladoFrame = () => {
             return true;
         })
 
-        const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
-        handleIncrementAnswers(respostasIds);
+        const respostasIds2: number[] = respostas.map((value) => value[0]);
+        handleIncrementAnswers(respostasIds2);
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();
 

@@ -1,6 +1,7 @@
 import Navbar from "../Navbar"
 
 const Home = () => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
   return (
     <div id="home" className="flex-container full-screen-size">
             <Navbar screen="home"/>
@@ -10,8 +11,19 @@ const Home = () => {
                 </div>
                 <div className="inversed-border"></div>
                 <div className="content">
-                    <h1>Home</h1>
-                    <h3>Atualmente em construção</h3>
+                    
+                    {
+                        isLoggedIn ? (
+                            <div>
+                                <h2>Tela do cara logado</h2>
+                            </div>
+                        ) : (
+                            <div>
+                                <h2>Tela não-logado</h2>
+                            </div>
+                        )
+                    }
+
                 </div>
             </div>
         </div>

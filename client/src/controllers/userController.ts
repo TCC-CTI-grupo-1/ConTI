@@ -126,7 +126,7 @@ export async function handleLogin(email: string, password: string, remember: boo
 // ^ LoginController
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -175,7 +175,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 
 export async function handleSaveChanges(profile: profileInterface): Promise<string | true> {// userController.ts
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -220,7 +220,7 @@ export async function handleLogout() {// userController.ts
 }
 export async function handleDeleteAccount() { // userController.ts
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -280,7 +280,7 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
 
 export async function handleIncrementProfileMockTest() {
     try {
-        const response = await fetch('http://localhost:3001/profile/incrementMockTest', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS +'/profile/incrementMockTest', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -307,7 +307,7 @@ export async function handleIncrementProfileAnswers(totalCorrectAnswers: number,
             total_answers: totalAnswers
         };
 
-        const response = await fetch('http://localhost:3001/profile/incrementAnswers', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/incrementAnswers', {
             method: 'PUT',
             credentials: 'include',
             headers: {

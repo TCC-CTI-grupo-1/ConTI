@@ -1,5 +1,5 @@
 import QstDetailSimulado from "./QstDetailSimulado";
-import { useState, useRef, useEffect, act } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@chakra-ui/react";
 import ArrowIcon from "../../../assets/ArrowIcon";
 import { question_MockTestInterface, questionInterface } from "../../../controllers/interfaces";

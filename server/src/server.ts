@@ -9,9 +9,10 @@ const session = require('express-session');
 const app = express();
 
 dotenv.config();
-
+const urlLocal = 'http://localhost:5173';
+const urlRemoto = 'https://projetoscti.com.br';
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: [urlLocal, urlRemoto],
     credentials: true
 }));
 app.use(express.json());
