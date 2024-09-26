@@ -3,9 +3,11 @@ import cors from 'cors';
 import { routes } from './http/routes';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 const session = require('express-session');
-
+const fs = require('fs');
+const https = require('https');
 const app = express();
 
 dotenv.config();
@@ -28,6 +30,13 @@ app.use(session({
 }))
 const port = process.env.PORT || 3001;
 app.use(cookieParser());
+
+// const options = {
+//     key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+//     cert: fs.readFileSync('cert.pem')
+// };
+
+// https.createServer(options, app).listen(3001);
 
 routes(app);
 

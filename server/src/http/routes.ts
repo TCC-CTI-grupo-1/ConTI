@@ -30,6 +30,7 @@ import { putAnswerController, putAnswersController, putAnswersIncrementControlle
 import { postQuestions_MockTestController } from './controllers/postQuestions_MockTestController';
 import { putQuestion_MockTestController } from './controllers/putQuestion_MockTestController';
 import { putMockTestController } from './controllers/putMockTestController';
+import { postImageController } from './controllers/postImageController';
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World');
@@ -40,6 +41,7 @@ export async function routes(app: any) {
     app.post('/login', loginController);
     app.post('/logout', logoutController);
 
+    app.post('/image', postImageController);
 
     // '/user/'
     //Recebe (sabe qual é) o usuario pela sessão

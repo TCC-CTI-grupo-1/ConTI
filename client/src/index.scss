@@ -2050,6 +2050,24 @@ COMPONENTES GERAIS DO FERNANDO
   }
 }
 
+.qstRevisar{
+  & > .op1{
+    display: flex;
+    gap: var(--padding-6);
+    & input{
+      color: var(--primary-color);
+    }
+    margin: var(--padding-5);
+  }
+
+  & .btns{
+    display: flex;
+    gap: var(--padding-2);
+    margin: var(--padding-3);
+  }
+  margin-bottom: var(--padding-1);
+}
+
 #filtro-ver-areas{
   display: flex;
   flex-direction: column;

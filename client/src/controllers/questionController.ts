@@ -2,7 +2,6 @@ import { questionInterface, respostaInterface} from './interfaces';
 import { questionFilters } from './interfaces';
 import { showAlert } from '../App';
 
-
 async function handleAddImage(image:FormData, editing:boolean)
 {
     image.append("editing",editing.toString())
@@ -108,10 +107,11 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
 }
 
 
-export async function handlePutQuestion(question: questionInterface, answers: respostaInterface[]): Promise<boolean> { //questionController.ts
+export async function handlePutQuestion(question: questionInterface, answers: respostaInterface[], image: File | null): Promise<boolean> { //questionController.ts
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response1 = await fetch(import.meta.env.VITE_ADDRESS + '/questions/'+question.id, {
+
+        console.log("PUT QUESTION");        
+        const response1 = await fetch(import.meta.env.VITE_ADDRESS + '/questions/' + question.id, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -120,7 +120,7 @@ export async function handlePutQuestion(question: questionInterface, answers: re
             body: JSON.stringify(question)
         });
 
-        const response2 = await fetch(import.meta.env.VITE_ADDRESS + '/answers/question/'+question.id, {
+        const response2 = await fetch(import.meta.env.VITE_ADDRESS + '/answers', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -129,12 +129,32 @@ export async function handlePutQuestion(question: questionInterface, answers: re
             body: JSON.stringify(answers)
         });
 
+        let response3: any;
+        console.log("JORGE");
+        if(image !== null){
+            console.log("Com imagem");
+
+            const formData = new FormData();
+            formData.append('image', image);
+            response3 = await fetch(import.meta.env.VITE_ADDRESS + '/image', {
+                method: 'POST',
+                credentials: 'include',
+                body: formData
+            });
+        }
+        else{
+            console.log("Sem imagem");
+            response3 = {"ok":true};
+        }
+
+
         const responseData1 = await response1.json();
         const responseData2 = await response2.json();
+        const responseData3 = await response3.json();
 
-        if (!response1.ok && !response2.ok) {
-            console.log(responseData1.message);
-            throw new Error(responseData1.message + ' ' + responseData2.message); 
+        if (!response1.ok || !response2.ok || !response3.ok) {
+            console.log(responseData1.message, responseData2.message, responseData3.message);
+            throw new Error(responseData1.message + ' ' + responseData2.message + ' ' + responseData3.message); 
         } else {
             return true;
         }
@@ -148,7 +168,7 @@ export async function handlePutQuestion_withImage(question:questionInterface,ans
 {
     try{
         handleAddImage(image,true);
-        return handlePutQuestion(question,answers);
+        return handlePutQuestion(question,answers, image.get('image') as File); //ultimo pedaço antes não existia, remover caso necessario
     }catch(err:any)
     {
         return false;
