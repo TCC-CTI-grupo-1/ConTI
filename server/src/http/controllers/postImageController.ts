@@ -1,13 +1,17 @@
 import { Request, Response } from "express";
 const multer = require('multer');
+
 const storage = multer.diskStorage({
-    destination: function (req :Request, file: any, cb: any) {
-      cb(null, 'uploads/')
+    destination: function (req: Request, file: any, cb: any) {
+        cb(null, 'uploads/');
     },
     filename: function (req: Request, file: any, cb: any) {
-      cb(null, file.originalname);
+        const questionID = req.body.questionID || req.query.questionID || req.params.questionID;
+        const extension = file.originalname.split('.').pop();
+        cb(null, `${questionID}.${extension}`);
     }
-  })
+});
+
 const upload = multer({ storage: storage });
 
 export async function postImageController(req: Request, res: Response) {
@@ -18,5 +22,5 @@ export async function postImageController(req: Request, res: Response) {
         } else {
             res.status(200).json({ message: 'Imagem enviada com sucesso' });
         }
-    }); 
+    });
 }

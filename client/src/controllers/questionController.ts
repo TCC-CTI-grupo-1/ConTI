@@ -136,6 +136,7 @@ export async function handlePutQuestion(question: questionInterface, answers: re
 
             const formData = new FormData();
             formData.append('image', image);
+            formData.append('questionID', question.id.toString());
             response3 = await fetch(import.meta.env.VITE_ADDRESS + '/image', {
                 method: 'POST',
                 credentials: 'include',

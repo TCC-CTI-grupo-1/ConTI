@@ -590,8 +590,7 @@ const Admistrator = () => {
                             }
 
                             showAlert("Editando questão...", "warning");
-                            showAlert("COMETA| SUCICIDODDWQWFE");
-                            showAlert(img !== null ? "existem imagens" : "não existem imagens");
+                            showAlert(img !== null ? "existem imagens" : "não existem imagens", "warning");
                             handlePutQuestion(novaQst[0], novaQst[1], img).then((resp) => {   
                                 if(resp){
                                     showAlert("Questão editada com sucesso, por favor atualize a pagina [f5]", "success");
