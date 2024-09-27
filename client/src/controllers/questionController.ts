@@ -140,7 +140,9 @@ export async function handlePutQuestion(question: questionInterface, answers: re
             console.log("Com imagem");
 
             const formData = new FormData();
-            formData.append('image', image);
+            const newImage = new File([image], `${question.id}.png`, { type: image.type });
+
+            formData.append('image', newImage);
             formData.append('questionID', question.id.toString());
             response3 = await fetch(import.meta.env.VITE_ADDRESS + '/image', {
                 method: 'POST',

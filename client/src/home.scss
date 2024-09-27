@@ -1,0 +1,44 @@
+.daily_c_graphic{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 50px;
+    
+  .dly_question { //caixa da questao diaria
+    background-color: #ffffff;
+    border: 2px solid rgb(0, 81, 118); /*borda azul */
+    border-radius: 15px; /* borda arredondada */
+    padding: 20px;
+    margin-left: 50px;
+    margin-right: 200px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 700px; /* Largura */
+
+    .b_testejana {//botão responder questao diaria
+      background-color: #ffb700;
+      width: 250px;
+      height: 50px;
+      font-size: large;
+      border-radius: 16px;
+    }
+    .taxa_acerto{
+      background-color: #ffb700;
+      border: 2px solid rgb(0, 81, 118);
+      border-radius: 15px;
+      width: 250px;
+      height: 50px;
+      font-size: 35px;
+    }}
+
+    .simuladobanco
+    {
+      display: flex;
+      flex-direction: row;
+
+      .simulado {
+        margin-right: 50px;
+      }
+      .acessar_questoes{
+        margin-left: 200px;
+      }
+    }
+}
