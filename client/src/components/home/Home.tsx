@@ -1,12 +1,9 @@
 
-import { Input } from "@chakra-ui/react";
 import Navbar from "../Navbar"
-import { useState } from 'react';
-import { Button, Spinner } from "@chakra-ui/react"
+import { Button } from "@chakra-ui/react"
 
 //TEM QUE TER A DIVISÃO DO LOGADO E NÃO LOGADO
 const Home = () => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
   return (
     <div id="home" className="flex-container full-screen-size">
             <Navbar screen="home"/>
