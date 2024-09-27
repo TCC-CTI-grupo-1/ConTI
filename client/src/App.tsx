@@ -68,22 +68,22 @@ function App() {
           <p>Demorando muito? tente novamente:</p>
           <button onClick={checkUser}>TENTAR</button>
           </div> :
-            <Routes>
-              <Route path='/' element={ <Home /> } />
-              <Route path='/newtest' element={middleware.routeToDisplay(['isLoggedIn'], <NewTest />)} />
-              <Route path='/login' element={ <User /> } />
+              <Routes>
+                  <Route path='/' element={ <Home /> } />
+                  <Route path='/newtest' element={middleware.routeToDisplay(['isLoggedIn'], <NewTest />)} />
+                  <Route path='/login' element={ <User /> } />
 
-              <Route path='/aboutUs' element={<AboutUs />} />
-              <Route path='/profile' element={middleware.routeToDisplay(['isLoggedIn'], <Profile />)} />
-              <Route path='/history' element={middleware.routeToDisplay(['isLoggedIn'], <History />) } />
+                  <Route path='/aboutUs' element={<AboutUs />} />
+                  <Route path='/profile' element={middleware.routeToDisplay(['isLoggedIn'], <Profile />)} />
+                  <Route path='/history' element={middleware.routeToDisplay(['isLoggedIn'], <History />) } />
 
-              <Route path='/alltests' element={ <AllTests /> } />   
-              <Route path='/questions' element={<QuestionDatabase />} />
-              <Route path='/questions/:id' element={<QuestionDatabase />} />
-              <Route path='/test' element={<SimuladoFrame />} />
-              <Route path='/simulado/:id' element={<SimuladoVer />} />
-              <Route path='/adm' element={<Admnistrador />} />
-            </Routes>
+                  <Route path='/alltests' element={ <AllTests /> } />   
+                  <Route path='/questions' element={<QuestionDatabase />} />
+                  <Route path='/questions/:id' element={<QuestionDatabase />} />
+                  <Route path='/test' element={<SimuladoFrame />} />
+                  <Route path='/simulado/:id' element={<SimuladoVer />} />
+                  <Route path='/adm' element={<Admnistrador />} />
+                </Routes>
           }
         </div>
     );

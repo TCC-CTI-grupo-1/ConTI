@@ -4,7 +4,7 @@ import { signupController } from './controllers/signupController';
 import { logoutController } from './controllers/logoutController';
 import { deleteProfileController } from './controllers/deleteProfileController';
 import { Request, Response } from "express";
-import { updateProfileController } from './controllers/updateProfileController';
+import { incrementProfile_MockTestController, updateProfileController } from './controllers/putProfileController';
 import { getProfileController } from './controllers/getProfileController';
 import { getAreaController, getTopParentAreaByIdController,
          getAreaByIdController, getAreasIdsByQuestionsIdsController,
@@ -26,9 +26,11 @@ import { getAnswersByQuestionIdController, getAnswersByQuestionsIdsController } 
 
 import { postQuestionController } from './controllers/postQuestionController';
 import { getQuestion_MockTestsController } from './controllers/getQuestion_MockTest';
-import { putAnswerController } from './controllers/putAnswerController';
+import { putAnswerController, putAnswersController, putAnswersIncrementController } from './controllers/putAnswerController';
 import { postQuestions_MockTestController } from './controllers/postQuestions_MockTestController';
 import { putQuestion_MockTestController } from './controllers/putQuestion_MockTestController';
+import { putMockTestController } from './controllers/putMockTestController';
+import { postImageController } from './controllers/postImageController';
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World');
@@ -39,14 +41,16 @@ export async function routes(app: any) {
     app.post('/login', loginController);
     app.post('/logout', logoutController);
 
+    app.post('/image', postImageController);
 
     // '/user/'
     //Recebe (sabe qual é) o usuario pela sessão
-    app.get('/user', getProfileSessionController);
-
-    app.post('/user', updateProfileController);
-
-    app.delete('/user', deleteProfileController); 
+    app.get('/profileSession', getProfileSessionController);
+    app.put('/profile', updateProfileController);
+    app.delete('/profile', deleteProfileController); 
+    app.put('/profile/incrementMockTest', incrementProfile_MockTestController);
+    app.get('/profile', getProfileController);
+    app.put('/profile/incrementAnswers', incrementProfile_MockTestController);
 
 
     // '/questions/'
@@ -77,19 +81,18 @@ export async function routes(app: any) {
 
     // '/answers/'
     app.get('/answers/question/:question_id', getAnswersByQuestionIdController);
-    app.put('/answers/question/:question_id', putAnswerController);
+    app.put('/answer/:id', putAnswerController);
     app.get('/answers/questions/:questions_ids', getAnswersByQuestionsIdsController);
+    app.put('/answers', putAnswersController);
+    app.put('/answers/increment/:ids', putAnswersIncrementController);
 
 
     // '/mockTest/'
     app.get('/mockTests', getMockTestsController);
     app.get('/mockTests/date/:date', getMockTestsByDateAndProfileController);
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
-
+    app.put('/mockTest/:id', putMockTestController);
     app.post('/mockTest', postMockTestController);
-
-    // '/profile/'
-    app.get('/profile', getProfileController);
 
     // '/areaProfile/'
     app.get('/areaProfile', getArea_ProfileController);
@@ -97,6 +100,6 @@ export async function routes(app: any) {
     // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
     app.post('/questions_MockTest', postQuestions_MockTestController);
-    app.put('/question_MockTest/:id', putQuestion_MockTestController);
+    app.put('/question_MockTest/', putQuestion_MockTestController);
 
 }

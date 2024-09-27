@@ -4,7 +4,7 @@ export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<si
     try {
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        const response = await fetch('http://localhost:3001/mockTests/date/' + date, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTests/date/' + date, {
             method: 'GET',
             credentials: 'include', 
             headers: {
@@ -42,7 +42,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             title: name
         };
         console.log(dataForMockTest);
-        const response = await fetch('http://localhost:3001/mockTest/', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTest/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -58,7 +58,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             questions: questionsList
         };
 
-        const responseQuestions = await fetch('http://localhost:3001/questions_MockTest/', {
+        const responseQuestions = await fetch(import.meta.env.VITE_ADDRESS + '/questions_MockTest/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -100,7 +100,7 @@ export async function generateNewSimulado(): Promise<questionInterface[]>{ //moc
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
         
-        const response = await fetch('http://localhost:3001/questions/newMockTest/', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/newMockTest/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -118,5 +118,27 @@ export async function generateNewSimulado(): Promise<questionInterface[]>{ //moc
     }
     catch (err: any) {
         return err.message;
+    }
+}
+
+export async function handlePutSimulado(simulado: simuladoInterface): Promise<boolean> {//mockTestController.ts
+    try {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTest/' + simulado.id, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(simulado)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        return false;
     }
 }

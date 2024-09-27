@@ -11,6 +11,8 @@ import { areaInterface, questionInterface, respostaInterface } from "../controll
 import QuestionBox from "./questions/QuestionBox";
 import { handlePutQuestion, handleDeleteQuestion, handlePostQuestion } from "./../controllers/questionController";
 import { handleGetAnswersByQuestionsIds } from "../controllers/answerController";
+import QstDetailRespostas from "./questions/simulado/QstDetailResposas";
+import { useRef } from "react";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -25,6 +27,7 @@ import {
     ModalCloseButton,
     useDisclosure,
   } from '@chakra-ui/react'
+import QuestionDetail from "./questions/simulado/QuestionDetail";
 
 
 const Admistrator = () => {
@@ -65,6 +68,7 @@ const Admistrator = () => {
     }
 
     const [novaQst, setNovaQst] = useState<[questionInterface, respostaInterface[]]>([novaQstLimpa, novaAltLimpa]);
+    const [img, setImg] = useState<File | null>(null);
 
 
 
@@ -140,102 +144,233 @@ const Admistrator = () => {
 
     useEffect(() => {
         handleThings();        
-    }, []);
-    //tem tanto código aqui que ninguém vai saber que eu sou gay -> bastazini(fernndo)
+    }, []);    
+
+
+    const [tela, setTela] = useState<number>(0);
+    const options = useRef<HTMLDivElement>(null); // Add type annotation to options ref
+
+    let elements:HTMLAnchorElement[] = [];
+
+    //Talvez mover isso para um componente próprio
+    useEffect(() => {
+        elements?.forEach((element, index) => {
+            element.addEventListener('click', () => {
+                handleChangeTela(index);
+            });
+        });
+        console.log('useEffect');
+        elements = Array.from(options.current?.querySelectorAll('a') ?? []);
+        console.log(elements);
+    }, [options]);
+
+    function handleChangeTela(tela: number) {
+        setTela(tela);
+        elements?.forEach((element, index) => {
+            element.classList.remove('active');
+                if (index === tela) {
+                    element.classList.add('active');
+                }
+        });
+    }
+
+    //organiza as questões por ano e n° de prova, ex: [2021] => [qst1, qst2], [2022] => [qst3, qst4]
+    //E as questões dentro dos anos são sorteadas pelo n° da questão na prova oficial.
+
+    // const organaziedQuestions = () => {
+    //     let organized: {[year: number]: questionInterface[]} = {};
+    //     questionsMap.forEach((question) => {
+    //         if(organized[question.question.question_year] === undefined){
+    //             organized[question.question.question_year] = [question.question];
+    //         }else{
+    //             organized[question.question.question_year].push(question.question);
+    //         }
+    //     });
+
+    //     for (const year in organized) {
+    //         organized[year].sort((a, b) => a.question_number - b.question_number);
+    //     }
+
+    //     return organized;
+    // }
+
+    const [ano, setAno] = useState<number>(2008);
+    const [questao, setQuestao] = useState<number>(1);
+
   return (<>
     {loading ? <h1>Carregando</h1> :
-        <>
-            <div id="Admistrator" className="flex-container full-screen-size">
-                <Navbar screen="adm"/>
-                <div className="container">
-                    <div className="header">
-                        <h3>Area de admin</h3>
-                    </div>
-                    <div className="inversed-border"></div>
-                    <div className="content">
-                        <h1>Admistrator</h1>
-                        <div className="box">
-
-                            {!loading && <div id="config">
-                                <div>
-                                    <h2>Adicionar area</h2>
-                                    
-                                </div>
-                                
-                                <div>
-                                    <Input name={"Nova Area"} label={"Nova area"} onChange={(e) => {
-                                        setNomeArea(e.target.value);
-                                    }}></Input>
-                                    <Select placeholder='Selecione a area Pai'
-                                    onChange={(e) => {
-                                        if(e.target.value === 'none'){
-                                            setAreaPai(null);
-                                        }
-                                        setAreaPai(e.target.value);
-                                    }}>
-                                        <option value='none'>Nenhuma</option>
-                                        {
-                                            Object.values(areas).map((area, index) => {
-                                                return <option key={index} value={area.id}
-                                                onClick={() => {
-                                                    let newQst = {...novaQst[0]};
-                                                    newQst.area_id = area.id;
-                                                    setNovaQst([newQst, novaQst[1]]);
-
-                                                }}>{area.name}</option>
-                                            })
-                                        }
-                                    </Select>
-                                    <Button onClick={handlePostNovaArea}>Salvar</Button>
-                                </div>
-                            </div>}
-
-                        </div>
-                        <div className="box admin">
-                            <Button onClick={() => {
-                                setNovaQst([novaQstLimpa, novaAltLimpa]);
-                                onOpen();
-                            }}>Adicionar questão</Button>
-                            <div className="page">
-                                <h3>Pagina: {pagina} / {getLastPageNumber()}</h3>
-                                <Button onClick={() => {
-                                    setPagina(pagina-1);
-                                }} size="xs">Anterior</Button>
-                                <input type="number" value={pagina} onChange={(e) => {
-                                    if(isNaN(Number(e.target.value))) return;
-
-                                    setPagina(parseInt(e.target.value));
-                                }} />
-                                <Button onClick={() => {
-                                    setPagina(pagina+1);
-                                }} size="xs">Proxima</Button>
-                            </div>
-
-                            {!loading && <div className="adm-box">
-                                {questionsMap.map((question, index) => {
-                                    return index >= 6 * (pagina - 1) && index < 6 * pagina &&
-                                    (areas[question.question.area_id] === undefined ?  null :
-                                    <><QuestionBox key={index} question={question.question} area={areas[question.question.area_id]} answers={question.answers}/>
-                                        <div className="btn">
-                                            <Button size={'xs'} onClick={() => {
-                                                let editQst: questionInterface;
-                                                editQst = question.question;
-                                                let editAnswers: respostaInterface[] = question.answers;
-                                                console.log(editQst);
-                                                setNovaQst([editQst, editAnswers]);
-                                                onOpen();
-                                            }}>Editar</Button>
-                                        </div>
-                                    </>)
-                                })}
-                                
-                            </div>}
-                        </div>
+    <>
+        <div id="profile" className="flex-container full-screen-size">
+            <>
+        <Navbar screen="profile"/>
+            <div className="container">
+                <div className="header">
+                    <h1>Area do administrador</h1>
+                    <div className="options" ref={options}>
+                        <a  className="active">CRUD Questões</a>
+                        <a>Adicionar area</a>
+                        
+                        {/*<div className='selected-line'></div>*/}
                     </div>
                 </div>
-            </div>
+                <div className="inversed-border"></div>
+                <div className="content">
+                    
+                {tela == 0 &&   <>
+                    <div className="box qstRevisar">
+                        
+                        <h2>Revisador de questões:</h2>
+                        
+                        <div className="op1">
+                            <p>Ano: </p>
+                            <input type="number" value={ano} onChange={(e) => {
+                                if(isNaN(Number(e.target.value))) return;
+                                setAno(parseInt(e.target.value));
+                            }} />
+                        </div>
 
-            <Modal
+                        <div className="op1">
+                            <p>Questão n°</p>
+                            <input type="number" value={questao} onChange={(e) => {
+                                if(isNaN(Number(e.target.value))) return;
+                                setQuestao(parseInt(e.target.value));
+                            }} />
+                        </div>
+                        
+                        <div className="btns">
+                            <Button onClick={() => {
+                                if(questao === 1){
+                                    if(ano === 2008){
+                                        return;
+                                    }
+                                    setAno(ano-1);
+                                    setQuestao(1);
+                                    return;
+                                }
+                                setQuestao(questao-1);
+                            }}>Anterior</Button>
+                            <Button onClick={() => {
+                                setQuestao(questao+1);
+                            }}>Proxima</Button>
+                        </div>
+                        
+
+                        {
+                            (() => {
+                                let localqst: {
+                                    question: questionInterface;
+                                    answers: respostaInterface[];
+                                } | undefined = questionsMap.find((question) => question.question.question_year === ano && question.question.question_number === questao);
+                                if(localqst === undefined){
+                                    return <h2>Questão não encontrada</h2>;
+                                }
+                                return <QstDetailRespostas question={localqst.question} answers={localqst.answers}
+                                selectedAnswer={1}/>
+                            })()
+                        }
+
+                        <Button onClick={() => {
+                            let editQst: questionInterface;
+                            let editAnswers: respostaInterface[];
+                            let localqst: {
+                                question: questionInterface;
+                                answers: respostaInterface[];
+                            } | undefined = questionsMap.find((question) => question.question.question_year === ano && question.question.question_number === questao);
+                            if(localqst === undefined){
+                                return;
+                            }
+                            editQst = localqst.question;
+                            editAnswers = localqst.answers;
+                            setNovaQst([editQst, editAnswers]);
+                            onOpen();
+                        }}>Editar</Button>
+
+
+                    </div>
+                    <div className="box admin">
+                                <Button onClick={() => {
+                                    setNovaQst([novaQstLimpa, novaAltLimpa]);
+                                    onOpen();
+                                }}>Adicionar questão</Button>
+                                <div className="page">
+                                    <h3>Pagina: {pagina} / {getLastPageNumber()}</h3>
+                                    <Button onClick={() => {
+                                        setPagina(pagina-1);
+                                    }} size="xs">Anterior</Button>
+                                    <input type="number" value={pagina} onChange={(e) => {
+                                        if(isNaN(Number(e.target.value))) return;
+
+                                        setPagina(parseInt(e.target.value));
+                                    }} />
+                                    <Button onClick={() => {
+                                        setPagina(pagina+1);
+                                    }} size="xs">Proxima</Button>
+                                </div>
+
+                                {!loading && <div className="adm-box">
+                                    {questionsMap.map((question, index) => {
+                                        return index >= 6 * (pagina - 1) && index < 6 * pagina &&
+                                        (areas[question.question.area_id] === undefined ?  null :
+                                        <><QuestionBox key={index} question={question.question} area={areas[question.question.area_id]} answers={question.answers}/>
+                                            <div className="btn">
+                                                <Button size={'xs'} onClick={() => {
+                                                    let editQst: questionInterface;
+                                                    editQst = question.question;
+                                                    let editAnswers: respostaInterface[] = question.answers;
+                                                    console.log(editQst);
+                                                    setNovaQst([editQst, editAnswers]);
+                                                    onOpen();
+                                                }}>Editar</Button>
+                                            </div>
+                                        </>)
+                                    })}
+                                    
+                                </div>}
+                            </div></>}
+                    {tela == 1 &&  <div id="Admistrator" className="flex-container">
+                            <div className="box">
+
+                                {!loading && <div id="config">
+                                    <div>
+                                        <h2>Adicionar area</h2>
+                                        
+                                    </div>
+                                    
+                                    <div>
+                                        <Input name={"Nova Area"} label={"Nova area"} onChange={(e) => {
+                                            setNomeArea(e.target.value);
+                                        }}></Input>
+                                        <Select placeholder='Selecione a area Pai'
+                                        onChange={(e) => {
+                                            if(e.target.value === 'none'){
+                                                setAreaPai(null);
+                                            }
+                                            setAreaPai(e.target.value);
+                                        }}>
+                                            <option value='none'>Nenhuma</option>
+                                            {
+                                                Object.values(areas).map((area, index) => {
+                                                    return <option key={index} value={area.id}
+                                                    onClick={() => {
+                                                        let newQst = {...novaQst[0]};
+                                                        newQst.area_id = area.id;
+                                                        setNovaQst([newQst, novaQst[1]]);
+
+                                                    }}>{area.name}</option>
+                                                })
+                                            }
+                                        </Select>
+                                        <Button onClick={handlePostNovaArea}>Salvar</Button>
+                                    </div>
+                                </div>}
+                    </div>
+                </div>}
+
+                </div>
+            </div>
+        </>
+        </div>
+        <Modal
                 isCentered
                 onClose={onClose}
                 isOpen={isOpen}
@@ -283,14 +418,14 @@ const Admistrator = () => {
                             console.log(novaQst[1]);
                         }}>Alternativas</p>
                         {novaQst[1].map((answer, index) => {
-                            return (<input type="text" placeholder={`Alternativa ${answer.question_letter}`} key={answer.id} 
+                            return (<><p>{answer.question_letter + ": "}</p><input type="text" placeholder={`Alternativa ${answer.question_letter}`} key={answer.id} 
                             value={answer.answer}
                             onChange={(e) => {
                                 let newAnswers = [...novaQst[1]];
                                 newAnswers[index].answer = e.target.value;
                                 setNovaQst([novaQst[0], newAnswers]);
                             }}
-                            />)
+                            /></>)
                         })
 
                         }
@@ -356,12 +491,16 @@ const Admistrator = () => {
                     <div className="options">
                         <div>
                             <label htmlFor="correta">Alternativa correta: </label>
-                            <select name="correta" id="correta">
+                            <select name="correta" id="correta"
+                            value={
+                                novaQst[1].find((answer) => answer.is_correct)?.question_letter
+                            }
+                            >
                                 <option value="A">A</option>
                                 <option value="B">B</option>
                                 <option value="C">C</option>
                                 <option value="D">D</option>
-                                {novaQst[1][5] && <option value="E">E</option>}
+                                <option value="E">E</option>
                             </select>
                         </div>
                         <div>
@@ -410,6 +549,18 @@ const Admistrator = () => {
                             />
                         </div>
                     </div>
+
+                    <div>
+                        
+                        <input type="file" name="image" onChange={
+                            (e) => {
+                                if(e.target.files){
+                                    setImg(e.target.files[0]);
+                                }
+                            }
+                        }/>
+
+                    </div>
                 </div>
                 
             </ModalBody>
@@ -439,13 +590,13 @@ const Admistrator = () => {
                             }
 
                             showAlert("Editando questão...", "warning");
-                            handlePutQuestion(novaQst[0], novaQst[1]).then((resp) => {   
+                            showAlert(img !== null ? "existem imagens" : "não existem imagens", "warning");
+                            handlePutQuestion(novaQst[0], novaQst[1], img).then((resp) => {   
                                 if(resp){
                                     showAlert("Questão editada com sucesso, por favor atualize a pagina [f5]", "success");
                                 }
                                 else{
                                     showAlert("Erro ao editar questão");
-                                    
                                 }
                             }
                             );

@@ -75,6 +75,45 @@ export class ProfileDAO {
         }
     }
 
+    incrementProfile_MockTest = async (id: number) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            await client.profile.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    total_mock_tests: {
+                        increment: 1
+                    }
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    incrementProfileAnswers = async (id: number, totalCorrectAnswers: number, totalAnswers: number) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            await client.profile.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    total_correct_answers: {
+                        increment: totalCorrectAnswers
+                    },
+                    total_answers: {
+                        increment: totalAnswers
+                    }
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
     deleteProfile = async (profile: ProfileDTO) => {
         try {
             const client = await connectionDAO.getConnection();

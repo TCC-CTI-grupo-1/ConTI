@@ -36,6 +36,7 @@ class Middleware{
     } 
 
     isLoggedIn(component: JSX.Element){
+        //localStorage.getItem('isLoggedIn') === 'false'
         if (localStorage.getItem('isLoggedIn') === 'false') {
             return this._getRouteReturn(false, <Navigate to='/login' />);
         }

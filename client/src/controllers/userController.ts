@@ -1,6 +1,5 @@
 
 //import { json } from 'react-router-dom';
-import { Profile } from '../../../server/src/types/express-session';
 import { area_ProfileInterface, profileInterface } from './interfaces';
 
 
@@ -69,7 +68,7 @@ export async function handleSignup(name: string, email: string, password: string
             remember: remember
         };
 
-        const response = await fetch('http://localhost:3001/signup', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/signup', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -96,8 +95,10 @@ export async function handleLogin(email: string, password: string, remember: boo
             password: password,
             remember: remember
         };
+        console.log(JSON.stringify(data));
 
-        const response = await fetch('http://localhost:3001/login', {
+
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/login', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -125,7 +126,7 @@ export async function handleLogin(email: string, password: string, remember: boo
 // ^ LoginController
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -151,7 +152,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
             email: email
         };
 
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/user', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -172,9 +173,9 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 }*/
 
 
-export async function handleSaveChanges(profile: Profile): Promise<string | true> {// userController.ts
+export async function handleSaveChanges(profile: profileInterface): Promise<string | true> {// userController.ts
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -197,7 +198,7 @@ export async function handleSaveChanges(profile: Profile): Promise<string | true
 
 export async function handleLogout() {// userController.ts
     try {
-        const response = await fetch('http://localhost:3001/logout', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/logout', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -219,7 +220,7 @@ export async function handleLogout() {// userController.ts
 }
 export async function handleDeleteAccount() { // userController.ts
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -234,7 +235,7 @@ export async function handleDeleteAccount() { // userController.ts
             // return [true, "Conta deletada com sucesso"];
         }
 
-        const responseLogout = await fetch('http://localhost:3001/logout', {
+        const responseLogout = await fetch(import.meta.env.VITE_ADDRESS + '/logout', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -254,10 +255,10 @@ export async function handleDeleteAccount() { // userController.ts
     }
 }
 
-export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //userController.ts
+export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //profileController.ts
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areaProfile', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areaProfile', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -277,7 +278,54 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
     }
 }
 
+export async function handleIncrementProfileMockTest() {
+    try {
+        const response = await fetch(import.meta.env.VITE_ADDRESS +'/profile/incrementMockTest', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
 
+    } catch (err: any) {
+        return false;
+    }
+}
+
+export async function handleIncrementProfileAnswers(totalCorrectAnswers: number, totalAnswers: number) {
+    try {
+        const data = {
+            total_correct_answers: totalCorrectAnswers,
+            total_answers: totalAnswers
+        };
+
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/incrementAnswers', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
 
 export {  validateEmail,  validatePassword }

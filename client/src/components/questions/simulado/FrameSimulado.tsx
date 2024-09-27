@@ -1,15 +1,15 @@
 import Simulado from "./Simulado"
 import { useState, useEffect } from "react"
 import { questionInterface, respostaInterface, simuladoInterface } from "../../../controllers/interfaces"
-import { handlePostSimulado, generateNewSimulado} from "../../../controllers/mockTestController"
-import { handleGetAnswersByQuestionsIds } from "../../../controllers/answerController"
-//import date from 'date-and-time'
+import { handlePostSimulado, generateNewSimulado, handlePutSimulado} from "../../../controllers/mockTestController"
+import {handleGetAnswersByQuestionsIds, handleIncrementAnswers } from "../../../controllers/answerController"
 import { useNavigate } from "react-router-dom"
 
 // import {
 //     Spinner
 //   } from '@chakra-ui/react'
 import { showAlert } from "../../../App"
+import { handleIncrementProfileAnswers, handleIncrementProfileMockTest } from "../../../controllers/userController"
 
 type questionMapInterface = {
     question: questionInterface;
@@ -39,18 +39,54 @@ const SimuladoFrame = () => {
             }
         });
 
-        handleFinishSimulado(/*respostas*/);
+        handleFinishSimulado(respostas);
     }
 
     
 
-    async function handleFinishSimulado(/*respostas: questionMapResultInterface*/){
+    async function handleFinishSimulado(respostas: questionMapResultInterface){
         setIsSimuladoAwaitActive(true);
+        let totalCorrectAnswers = 0;
+        let totalAnswers = 0;
+        const date = new Date();
+        const dateSimulado = new Date(simulado.creation_date_tz);
+        const timeSpentInMinutes = Math.floor((date.getTime() - dateSimulado.getTime()) / 60000);
+        
+        if(questionsHashMap === null) return;
+        
+        respostas.forEach((value, index) => {
+            ++totalAnswers;
+            const question = questionsHashMap[index];
+            if (question !== undefined && value[1] !== null) {
+                const correctAnswer = question.answers.find((answer) => answer.is_correct === true);
+                if (correctAnswer !== undefined && correctAnswer.id === value[1]) {
+                    ++totalCorrectAnswers;
+                }
+            }
+        });
+        
+        const novoSimulado = {
+            ...simulado,
+            total_correct_answers: totalCorrectAnswers,
+            total_answers: totalAnswers,
+            time_spent: timeSpentInMinutes
+        }
+        
+        handlePutSimulado(novoSimulado).then((result) => {
+            if (result !== null) {
+                setSimulado(simulado);
+                setIsSimuladoAwaitActive(false);
+            }
+            return true;
+        })
+
+        const respostasIds2: number[] = respostas.map((value) => value[0]);
+        handleIncrementAnswers(respostasIds2);
+        handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
+        handleIncrementProfileMockTest();
 
         navegate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");
-        //const simulado = await handlePostSimulado(respostas, "automatico", 50);
-        //setSimulado(simulado);
         
     }
 
@@ -67,7 +103,6 @@ const SimuladoFrame = () => {
             const simulado = await handlePostSimulado(questions, "automatico", 50);
             if (simulado !== null) {
                 setSimulado(simulado);
-                console.log("JORGEJORGEJORGE");
                 setLoading(false);
             }
         }

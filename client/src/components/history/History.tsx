@@ -121,7 +121,6 @@ const History = () => {
                     subjects[areaName].total_correct_answers++;
                 }
             })
-            console.log("subjects", subjects);
             simulado.subjects = subjects
         });
         return responseSimulados;
@@ -156,7 +155,6 @@ const History = () => {
                     subjects[areaName].total_correct_answers++;
                 }
             })
-            console.log("subjects", subjects);
             simulado.subjects = subjects
         });
         return responseSimulados;

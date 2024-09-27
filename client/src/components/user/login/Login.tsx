@@ -59,7 +59,7 @@ const Login = ({changeLoginPage}:Props) => {
                 localStorage.setItem('isLoggedIn', 'true');
                 navigate("/");
                 //refresh the page
-                window.location.reload();
+                //window.location.reload();
             }
             else{
                 console.log("E");

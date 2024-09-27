@@ -46,6 +46,8 @@ export class Question_MockTestDAO {
                     }
                 },
                 data: {
+                    question_id: question_MockTest.question_id,
+                    mockTest_id: question_MockTest.mockTest_id,
                     answer_id: question_MockTest.answer_id
                 }
             });

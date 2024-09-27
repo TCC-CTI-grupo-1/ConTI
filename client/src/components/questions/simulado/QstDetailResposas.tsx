@@ -18,7 +18,7 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
             <div className={'box question'}>
-                <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>
+                <p>*</p>
                 <h4>
                 {question.question_text}
                 </h4>
