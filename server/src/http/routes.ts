@@ -4,7 +4,7 @@ import { signupController } from './controllers/signupController';
 import { logoutController } from './controllers/logoutController';
 import { deleteProfileController } from './controllers/deleteProfileController';
 import { Request, Response } from "express";
-import { incrementProfile_MockTestController, updateProfileController } from './controllers/putProfileController';
+import { incrementProfile_MockTestController, incrementProfileAnswersController, updateProfileController } from './controllers/putProfileController';
 import { getProfileController } from './controllers/getProfileController';
 import { getAreaController, getTopParentAreaByIdController,
          getAreaByIdController, getAreasIdsByQuestionsIdsController,
@@ -50,7 +50,7 @@ export async function routes(app: any) {
     app.delete('/profile', deleteProfileController); 
     app.put('/profile/incrementMockTest', incrementProfile_MockTestController);
     app.get('/profile', getProfileController);
-    app.put('/profile/incrementAnswers', incrementProfile_MockTestController);
+    app.put('/profile/incrementAnswers', incrementProfileAnswersController);
 
 
     // '/questions/'
