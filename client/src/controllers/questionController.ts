@@ -95,6 +95,11 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
             }
         });
         const responseData = await response.json();
+        responseData.questions.forEach((question: questionInterface) => {
+            question.difficulty = question.difficulty.replace("facil", "Fácil")
+                                  .replace("medio", "Médio")
+                                  .replace("dificil", "Difícil");
+        });
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {

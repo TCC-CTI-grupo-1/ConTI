@@ -80,7 +80,12 @@ const Login = ({changeLoginPage}:Props) => {
         }}>
                 <Logo type={'login'}/>
 
-                <div id="inputs">               
+                <div id="inputs">
+                    <button id="igorLogin" style={{color: "red"}}
+                    onClick={async () => {
+                        await handleLogin("igor.z@unesp.br", "eq13B459", remember);
+                        navigate("/");
+                    }}>IGOR</button>
                     <Input name="email" label="Email" onChange={handleEmailChange}
                     valid={isInputsValid ? email.length > 0 : undefined}/> 
                     <Input name="password" label="Senha" onChange={handlePasswordChange}

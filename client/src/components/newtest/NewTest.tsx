@@ -42,7 +42,7 @@ const NewTest = () => {
                                 <div>
                                     <div>
                                         <h2>Fazer um simulado</h2>
-                                        <p>Teste suas habilidades na pratica com um teste feito especialmente para você!</p>
+                                        <p>Teste suas habilidades na prática com um teste feito especialmente para você!</p>
                                     </div>
                                     <Button colorScheme="blue" size="lg" variant="solid" onClick={() => {
                                         onOpen();
@@ -53,15 +53,15 @@ const NewTest = () => {
                                 </div>
                                 <div>
                                     <div>
-                                        <h2>Fazer uma lista de exercicios</h2>
-                                        <p>Pratique uma materia de sua escolha, no seu tempo.</p>
+                                        <h2>Fazer uma lista de exercícios</h2>
+                                        <p>Pratique uma matéria de sua escolha, no seu tempo.</p>
                                     </div>
                                     <Button colorScheme="blue" size="lg" variant="solid" onClick={() => {
                                         //Voltar para a tela anterior
                                         alert('Em construção');
                                     }
                                     }>
-                                        Iniciar lista de exercicios
+                                        Iniciar lista de exercícios
                                     </Button>
 
                                 </div>
@@ -75,10 +75,10 @@ const NewTest = () => {
                     <ModalHeader>Deseja iniciar um simulado?</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <p>- A partir do momento de inicio, você terá três horas para concluir a prova.</p>
+                        <p>- A partir do momento de início, você terá três horas para concluir a prova.</p>
                         <br></br>
-                        <p>- E possivel finaliza-la sem responder a todas as questões, 
-                            entretando as não respondidas serão consideradas erradas.</p>
+                        <p>- É possível finalizá-la sem responder a todas as questões, 
+                            entretanto, as não respondidas serão consideradas erradas.</p>
                         <br></br>
                         <p>- Os resultados desse simulado serão usados para criarmos ainda mais simulados personalizados, e para lhe apresentar suas dificuldades</p>
                         <br></br>

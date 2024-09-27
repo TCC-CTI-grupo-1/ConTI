@@ -208,7 +208,7 @@ const Admistrator = () => {
                     <h1>Area do administrador</h1>
                     <div className="options" ref={options}>
                         <a  className="active">CRUD Questões</a>
-                        <a>Adicionar area</a>
+                        <a>Adicionar área</a>
                         
                         {/*<div className='selected-line'></div>*/}
                     </div>
@@ -251,7 +251,7 @@ const Admistrator = () => {
                             }}>Anterior</Button>
                             <Button onClick={() => {
                                 setQuestao(questao+1);
-                            }}>Proxima</Button>
+                            }}>Próxima</Button>
                         </div>
                         
 
@@ -304,7 +304,7 @@ const Admistrator = () => {
                                     }} />
                                     <Button onClick={() => {
                                         setPagina(pagina+1);
-                                    }} size="xs">Proxima</Button>
+                                    }} size="xs">Próxima</Button>
                                 </div>
 
                                 {!loading && <div className="adm-box">
@@ -340,7 +340,7 @@ const Admistrator = () => {
                                         <Input name={"Nova Area"} label={"Nova area"} onChange={(e) => {
                                             setNomeArea(e.target.value);
                                         }}></Input>
-                                        <Select placeholder='Selecione a area Pai'
+                                        <Select placeholder='Selecione a área Pai'
                                         onChange={(e) => {
                                             if(e.target.value === 'none'){
                                                 setAreaPai(null);
@@ -463,7 +463,7 @@ const Admistrator = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="info">Criador do orgão criadpr: </label>
+                            <label htmlFor="info">Criador do orgão criador: </label>
                             <input type="text" name="info" id="info" 
                             value={novaQst[0].question_creator}
                             onChange={(e) => {
@@ -474,7 +474,7 @@ const Admistrator = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="info">Numero da questão: </label>
+                            <label htmlFor="info">Número da questão: </label>
                             <input type="number" name="info" id="info" 
                             value={novaQst[0].question_number}
                             onChange={(e) => {
@@ -504,7 +504,7 @@ const Admistrator = () => {
                             </select>
                         </div>
                         <div>
-                            <label htmlFor="area">Area: </label>
+                            <label htmlFor="area">Área: </label>
                             <select name="area" id="area"
                             value={
                                 areas[novaQst[0].area_id] ? areas[novaQst[0].area_id].name : 0
@@ -550,7 +550,7 @@ const Admistrator = () => {
                             
                         </div>
                         <div>
-                            <label htmlFor="info">Tem latex? </label>
+                            <label htmlFor="info">Tem <em>latex?</em> </label>
                             <input type="checkbox" name="info" id="info" 
                             value={novaQst[0].has_latex ? 'checked' : ''}
                             onChange={(e) => {
@@ -584,7 +584,7 @@ const Admistrator = () => {
                         showAlert("Cadastrando questão...", "warning");
                         handlePostQuestion(novaQst[0]).then((resp) => {
                             if(resp){
-                                showAlert("Questão cadastrada com sucesso, por favor atualize a pagina [f5]", "success");
+                                showAlert("Questão cadastrada com sucesso! Por favor, atualize a página [f5]", "success");
                             }
                             else{
                                 showAlert("Erro ao cadastrar questão");
@@ -597,7 +597,7 @@ const Admistrator = () => {
 
                             onClose();
                             if(novaQst[0].id === 0){
-                                showAlert("Nenhuma questão selecionada para edução");
+                                showAlert("Nenhuma questão selecionada para edição");
                                 return;
                             }
 
@@ -605,7 +605,7 @@ const Admistrator = () => {
                             showAlert(img !== null ? "existem imagens" : "não existem imagens", "warning");
                             handlePutQuestion(novaQst[0], novaQst[1], img).then((resp) => {   
                                 if(resp){
-                                    showAlert("Questão editada com sucesso, por favor atualize a pagina [f5]", "success");
+                                    showAlert("Questão editada com sucesso! Por favor, atualize a página [f5]", "success");
                                 }
                                 else{
                                     showAlert("Erro ao editar questão");
@@ -626,7 +626,7 @@ const Admistrator = () => {
                             showAlert("Deletando questão...", "warning");
                             handleDeleteQuestion(novaQst[0].id).then((resp) => {
                                 if(resp){
-                                    showAlert("Questão deletada com sucesso, por favor atualize a pagina [f5]", "success");
+                                    showAlert("Questão deletada com sucesso! Por favor, atualize a página [f5]", "success");
                                 }
                                 else{
                                     showAlert("Erro ao deletar questão");

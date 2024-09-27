@@ -308,7 +308,7 @@ const Filters = () => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Selecione uma ou mais areas para o filtro</ModalHeader>
+          <ModalHeader>Selecione uma ou mais áreas para o filtro</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <div id="filtro-ver-areas">

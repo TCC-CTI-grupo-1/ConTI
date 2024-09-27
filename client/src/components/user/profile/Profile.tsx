@@ -41,7 +41,7 @@ const Profile = () => {
                 <div className="header">
                     <h1>Perfil</h1>
                     <div className="options" ref={options}>
-                        <a className="active">Status do usuario</a>
+                        <a className="active">Status do usuário</a>
                         <a>Configurações da conta</a>
                         {/*<div className='selected-line'></div>*/}
                     </div>

@@ -109,7 +109,7 @@ const Status = () => {
         updateHasPlayedAnimation();
 
         if(!areasNew){
-            console.log("Erro ao renderizar as areas");
+            console.log("Erro ao renderizar as áreas");
             return;
         }
 
@@ -131,7 +131,7 @@ const Status = () => {
         {   
             if(areas[materiaAtiva] === undefined)
             {
-                showAlert("Ocorreu um erro ao carrgar a area: " + materiaAtiva);
+                showAlert("Ocorreu um erro ao carrgar a área: " + materiaAtiva);
                 console.log("Areas:");
                 console.log(areas);
                 return;
@@ -208,7 +208,7 @@ const Status = () => {
         if(profileStatus[materiaAtiva] === undefined ||
             Object.values(profileStatus[materiaAtiva]).length <= 0)
         {
-            showAlert("Você não fez atividade dessa materia!", "warning");
+            showAlert("Você não fez atividade dessa matéria!", "warning");
             return;
         }
 
@@ -383,7 +383,7 @@ const Status = () => {
                     <>
                     <div>
                         <h3>Você não fez nenhuma questão ainda</h3>
-                        <p>Não há dados disponiveis</p>
+                        <p>Não há dados disponíveis</p>
                     </div>
                     </>
                     }   

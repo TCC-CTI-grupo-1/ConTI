@@ -184,7 +184,7 @@ const History = () => {
             return (
                 <div id="historyOverlay">
                     <h2>Simulado #{i === 0 ? simulados[j].id : listas[j].id}</h2>
-                    <p>Tempo consumudo: {i === 0 ? simulados[j].time_spent : listas[j].time_spent} minutos</p>
+                    <p>Tempo consumido: {i === 0 ? simulados[j].time_spent : listas[j].time_spent} minutos</p>
 
                     <h3>{i === 0 ? simulados[j].total_correct_answers : listas[j].total_correct_answers}
                         /
@@ -254,7 +254,7 @@ const History = () => {
                                                                 let number = (index + 1) * 10 + 1;
                                                                 openOverlay(number);
                                                             }}>
-                                                                <h3>[ {simulado.id} ] - {simulado.total_correct_answers}/{simulado.total_answers}</h3>
+                                                                <h3>[ {simulado.title} ] - {simulado.total_correct_answers}/{simulado.total_answers}</h3>
                                                                 <div className="progress">
                                                                     <div style={{width: `${(simulado.total_correct_answers/simulado.total_answers)*100}%`}}></div>
                                                                 </div>
