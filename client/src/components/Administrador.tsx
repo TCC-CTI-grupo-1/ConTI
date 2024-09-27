@@ -508,7 +508,19 @@ const Admistrator = () => {
                             <select name="area" id="area"
                             value={
                                 areas[novaQst[0].area_id] ? areas[novaQst[0].area_id].name : 0
-                            }>
+                            }
+                            onChange={(e) => {
+                                let newQst = {...novaQst[0]};
+                                newQst.area_id = Number(e.target.value);
+                                setNovaQst([newQst, novaQst[1]]);
+                                
+                                setTimeout(() => {
+                                    showAlert("Nova area: " + newQst.area_id);
+                                    showAlert("Areas: " + novaQst[0].area_id);
+                                }, 0); // Executa após o estado ser atualizado
+                            }}
+                            >
+
                                 {Object.values(areas).map((area, index) => {
                                     return <option key={index} value={area.id}>{area.name}</option>
                                 })}
