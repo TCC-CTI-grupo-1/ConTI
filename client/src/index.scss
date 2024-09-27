@@ -132,7 +132,7 @@ H4{
   }
   background-color: gray;
 }
-
+//HOMEEE
 .flex-container {
   display: flex;
   min-height: 100dvh;
@@ -144,14 +144,60 @@ H4{
     &>.header {
       z-index: 2;
       padding: var(--padding-3);
+      margin-left: 30px;
     }
 
+    .daily_c_graphic{
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 50px;
+      
+    .dly_question { //caixa da questao diaria
+      background-color: #ffffff;
+      border: 2px solid rgb(0, 81, 118); /*borda azul */
+      border-radius: 15px; /* borda arredondada */
+      padding: 20px;
+      margin-left: 50px;
+      margin-right: 200px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 700px; /* Largura */
+
+      .b_testejana {//botão responder questao diaria
+        background-color: #ffb700;
+        width: 250px;
+        height: 50px;
+        font-size: large;
+        border-radius: 16px;
+      }
+      .taxa_acerto{
+        background-color: #ffb700;
+        border: 2px solid rgb(0, 81, 118);
+        border-radius: 15px;
+        width: 250px;
+        height: 50px;
+        font-size: 35px;
+      }}
+
+      .simuladobanco
+      {
+        display: flex;
+        flex-direction: row;
+
+        .simulado {
+          margin-right: 50px;
+        }
+        .acessar_questoes{
+          margin-left: 200px;
+        }
+      }
+    
     &>.inversed-border {
       width: 100%;
       background-color: transparent;
       min-height: var(--padding-1);
       border-top-left-radius: var(--padding-1);
-      border-left: 2px solid black;
+      border-left: 2px solid black
+      ;
       border-top: 2px solid black;
       position: relative;
       box-shadow: 0px -10px 0px 10px var(--background-color);
@@ -161,9 +207,7 @@ H4{
       flex: 1;
       border-left: 2px solid black;
       padding: var(--padding-1);
-
       z-index: 2;
-
     }
   }
 }
@@ -2113,4 +2157,4 @@ COMPONENTES GERAIS DO FERNANDO
   #inputArea{
     width: 40%;
   }
-}
+}}
