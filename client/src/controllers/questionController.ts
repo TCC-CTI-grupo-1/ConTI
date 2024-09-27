@@ -29,6 +29,11 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
         });
 
         const responseData = await response.json();
+        responseData.questions.forEach((question: questionInterface) => {
+            question.difficulty = question.difficulty.replace("facil", "Fácil")
+                                  .replace("medio", "Médio")
+                                  .replace("dificil", "Difícil");
+        });
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
@@ -52,6 +57,11 @@ export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<
         });
 
         const responseData = await response.json();
+        responseData.questions.forEach((question: questionInterface) => {
+            question.difficulty = question.difficulty.replace("facil", "Fácil")
+                                  .replace("medio", "Médio")
+                                  .replace("dificil", "Difícil");
+        });
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
@@ -74,6 +84,11 @@ export async function handleGetQuestions(): Promise<questionInterface[]> { //que
         });
 
         const responseData = await response.json();
+        responseData.questions.forEach((question: questionInterface) => {
+            question.difficulty = question.difficulty.replace("facil", "Fácil")
+                                  .replace("medio", "Médio")
+                                  .replace("dificil", "Difícil");
+        });
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {

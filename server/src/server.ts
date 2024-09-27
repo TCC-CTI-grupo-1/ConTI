@@ -30,7 +30,7 @@ app.use(session({
 }))
 const port = process.env.PORT || 3001;
 app.use(cookieParser());
-
+app.use(express.static('uploads'));
 // const options = {
 //     key: fs.readFileSync(path.join(__dirname, 'key.pem')),
 //     cert: fs.readFileSync('cert.pem')

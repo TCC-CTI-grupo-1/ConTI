@@ -22,8 +22,9 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
                 <h4>
                 {question.question_text}
                 </h4>
+                <img src={'http://localhost:3001/' + question.id + '.png'} alt="Imagem da questão" />
+
                 <div className={"alternatives showCorrect"} ref={questionRef}>
-                    
                     {answers.map((alternative, index) => (
                         <div key={index} ref={(element) => alternativasRef.current.push(element)} className={(alternative.id === selectedAnswer ? 'active' : '')
                             + ' ' + (alternative.is_correct ? 'correct' : '')

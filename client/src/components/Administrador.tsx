@@ -27,7 +27,6 @@ import {
     ModalCloseButton,
     useDisclosure,
   } from '@chakra-ui/react'
-import QuestionDetail from "./questions/simulado/QuestionDetail";
 
 
 const Admistrator = () => {
@@ -205,7 +204,7 @@ const Admistrator = () => {
         <Navbar screen="profile"/>
             <div className="container">
                 <div className="header">
-                    <h1>Area do administrador</h1>
+                    <h1>Área do administrador</h1>
                     <div className="options" ref={options}>
                         <a  className="active">CRUD Questões</a>
                         <a>Adicionar área</a>
@@ -402,8 +401,9 @@ const Admistrator = () => {
                         }
                         ></textarea>
                         <div>
-                            <p>Informacoes adicionais:</p>
+                            <p>Informações adicionais:</p>
                             <textarea name="info" id="info"
+                            value={novaQst[0].additional_info}
                             onChange={(e) => {
                                 let newQst = {...novaQst[0]};
                                 newQst.additional_info = e.target.value;
@@ -463,7 +463,7 @@ const Admistrator = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="info">Criador do orgão criador: </label>
+                            <label htmlFor="info">Criador do órgão criador: </label>
                             <input type="text" name="info" id="info" 
                             value={novaQst[0].question_creator}
                             onChange={(e) => {
@@ -495,6 +495,14 @@ const Admistrator = () => {
                             value={
                                 novaQst[1].find((answer) => answer.is_correct)?.question_letter
                             }
+                            onChange={(e) => {
+                                let newQst = {...novaQst[0]};
+                                let newAnswers = [...novaQst[1]];
+                                newAnswers.forEach((answer) => {
+                                    answer.is_correct = answer.question_letter === e.target.value;
+                                });
+                                setNovaQst([newQst, newAnswers]);
+                            }}
                             >
                                 <option value="A">A</option>
                                 <option value="B">B</option>
@@ -507,23 +515,24 @@ const Admistrator = () => {
                             <label htmlFor="area">Área: </label>
                             <select name="area" id="area"
                             value={
-                                areas[novaQst[0].area_id] ? areas[novaQst[0].area_id].name : 0
+                                novaQst[0].area_id
                             }
                             onChange={(e) => {
                                 let newQst = {...novaQst[0]};
+                                let newAnswers = [...novaQst[1]];
                                 newQst.area_id = Number(e.target.value);
-                                setNovaQst([newQst, novaQst[1]]);
-                                
-                                setTimeout(() => {
-                                    showAlert("Nova area: " + newQst.area_id);
-                                    showAlert("Areas: " + novaQst[0].area_id);
-                                }, 0); // Executa após o estado ser atualizado
+                                setNovaQst([newQst, newAnswers]);
                             }}
                             >
 
-                                {Object.values(areas).map((area, index) => {
+                                <option value="A">1</option>
+                                <option value="B">2</option>
+                                <option value="C">3</option>
+                                <option value="D">4</option>
+                                <option value="E">5</option>
+                                {/* {Object.values(areas).map((area, index) => {
                                     return <option key={index} value={area.id}>{area.name}</option>
-                                })}
+                                })} */}
                             </select>
                         </div>
 
@@ -613,7 +622,7 @@ const Admistrator = () => {
                             }
                             );
                         }}>
-                        Salvar alteracoes
+                        Salvar alterações
                         </Button>
                         <Button colorScheme="red" onClick={() => {
                             onClose();
