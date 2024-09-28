@@ -13,8 +13,9 @@ const app = express();
 dotenv.config();
 const urlLocal = 'http://localhost:5173';
 const urlRemoto = 'https://projetoscti.com.br';
+const urlCloud = 'http://cti.4edge.cloud:3000';
 app.use(cors({
-    origin: [urlLocal, urlRemoto],
+    origin: [urlLocal, urlRemoto, urlCloud],
     credentials: true
 }));
 app.use(express.json());
