@@ -25,9 +25,11 @@ app.use(session({
     saveUninitialized: false,
     name: 'sid',
     cookie: {
-        maxAge: 1000 * 60 * 60 * 12
+        maxAge: 1000 * 60 * 60 * 12,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
     }
-}))
+}));
 const port = process.env.PORT || 3001;
 app.use(cookieParser());
 app.use(express.static('uploads'));
