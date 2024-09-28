@@ -9,6 +9,7 @@ import AdminIcon from "../assets/AdminIcon.tsx";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import AboutUsIcon from "../assets/DevsIcon.tsx";
 
 
 interface Props{
@@ -60,11 +61,11 @@ const Navbar = ({screen}:Props) => {
                     <p  className={checkActiveScreen('home')}>Home</p>
                 </div>
 
-                {/*<div className="icon">
-                    <HomeIcon iconColor={checkActiveScreen('aboutUs')}
+                {<div className="icon">
+                    <AboutUsIcon iconColor={checkActiveScreen('aboutUs')}
                     onIconClick={() => {navegate('/aboutUs')}}/>
                     <p  className={checkActiveScreen('aboutUs')}>Sobre Nós</p>
-                </div>*/}
+                </div>}
                                         
                 {isLoggedIn &&<div className="icon">
                     <NewTestIcon iconColor={checkActiveScreen('newtest')}
@@ -102,6 +103,7 @@ const Navbar = ({screen}:Props) => {
                         <p className={checkActiveScreen('adm')}>Adinistrador</p>
                 </div>
 
+                
 
             </nav>
 
