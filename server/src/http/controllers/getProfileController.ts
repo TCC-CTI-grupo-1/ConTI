@@ -6,6 +6,7 @@ import { ProfileDTO } from "../../DTO/ProfileDTO";
 export async function getProfileController(req: Request, res: Response) {
     const profileDAO = new ProfileDAO();
     try {
+        return res.status(200).json({ message: req.session });
         if(req.session === undefined) {
             return res.status(404).json({ message: 'Sessão não inicializada' });
         }
