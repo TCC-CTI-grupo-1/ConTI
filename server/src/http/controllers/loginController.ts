@@ -21,8 +21,6 @@ export async function loginController(req: Request, res: Response) {
         total_mock_tests: profileDTO.total_mock_tests
       }
       req.session.profile = sessionProfile;
-
-      res.status(200).json({ session: req.session });
       
       res.json({ message: 'Login sucesso' });
     } catch (error: any) {
