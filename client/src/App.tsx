@@ -13,6 +13,7 @@ import { handleGetUser } from './controllers/userController';
 import { useEffect, useState } from 'react';
 import AboutUs from './components/aboutUs/AboutUs';
 
+
 //Middlewares
 import Middleware from './middlewares/Middleware';
 
@@ -83,6 +84,7 @@ function App() {
                   <Route path='/test' element={<SimuladoFrame />} />
                   <Route path='/simulado/:id' element={<SimuladoVer />} />
                   <Route path='/adm' element={<Admnistrador />} />
+                  <Route path='/igor' element={<AboutUs />} />
                 </Routes>
           }
         </div>
