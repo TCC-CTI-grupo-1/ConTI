@@ -152,19 +152,10 @@ const Admistrator = () => {
     let elements:HTMLAnchorElement[] = [];
 
     //Talvez mover isso para um componente próprio
-    useEffect(() => {
-        elements?.forEach((element, index) => {
-            element.addEventListener('click', () => {
-                handleChangeTela(index);
-            });
-        });
-        console.log('useEffect');
-        elements = Array.from(options.current?.querySelectorAll('a') ?? []);
-        console.log(elements);
-    }, [options]);
 
     function handleChangeTela(tela: number) {
         setTela(tela);
+        elements = Array.from(options.current?.children as HTMLCollectionOf<HTMLAnchorElement>);
         elements?.forEach((element, index) => {
             element.classList.remove('active');
                 if (index === tela) {
@@ -206,8 +197,14 @@ const Admistrator = () => {
                 <div className="header">
                     <h1>Área do administrador</h1>
                     <div className="options" ref={options}>
-                        <a  className="active">CRUD Questões</a>
-                        <a>Adicionar área</a>
+                        <a
+                        onClick={() => {
+                            handleChangeTela(0);
+                        }} 
+                        className="active">CRUD Questões</a>
+                        <a onClick={() => {
+                            handleChangeTela(1);
+                        }}>Adicionar área</a>
                         
                         {/*<div className='selected-line'></div>*/}
                     </div>

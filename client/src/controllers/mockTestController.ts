@@ -97,9 +97,7 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 
 // não é 'generate', tá mais pra 'get'
 export async function generateNewSimulado(): Promise<questionInterface[]>{ //mockTestController.ts
-    try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        
+    try {        
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/newMockTest/', {
             method: 'GET',
             credentials: 'include',
