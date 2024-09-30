@@ -1,44 +1,75 @@
-.daily_c_graphic{
+.header{
+  margin-left: 50px;
+}
+
+.question_graphic{
     display: flex;
     flex-direction: row;
-    margin-bottom: 50px;
     
   .dly_question { //caixa da questao diaria
     background-color: #ffffff;
     border: 2px solid rgb(0, 81, 118); /*borda azul */
     border-radius: 15px; /* borda arredondada */
-    padding: 20px;
-    margin-left: 50px;
-    margin-right: 200px;
+    padding: 15px;
+    margin-left: 70px;
+    margin-right: 110px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 700px; /* Largura */
+    width: 850px; /* Largura */}
 
-    .b_testejana {//botão responder questao diaria
-      background-color: #ffb700;
-      width: 250px;
-      height: 50px;
-      font-size: large;
-      border-radius: 16px;
-    }
     .taxa_acerto{
-      background-color: #ffb700;
-      border: 2px solid rgb(0, 81, 118);
-      border-radius: 15px;
-      width: 250px;
-      height: 50px;
-      font-size: 35px;
-    }}
-
+      font-size: 22px;
+      .graph{
+        margin-top: 15px;
+        margin-left: 45px;
+      }
+    }
+  }
     .simuladobanco
     {
       display: flex;
       flex-direction: row;
-
+      margin-top: 25px;
+    
       .simulado {
-        margin-right: 50px;
+        margin-left: 240px;
       }
-      .acessar_questoes{
-        margin-left: 200px;
+      .ou{
+        font-size: 22px;
+        margin-top: 25px;
+        margin-left: 150px;
+        margin-right: 150px;
       }
     }
-}
+    .sim_anteriores
+    {
+      font-size: 25px;
+      margin-top: 20px;
+      margin-left: 25px;
+    }
+
+    .caixa_sim{
+        border: 2px solid rgb(0, 81, 118);
+        width: 150px;
+        margin-left: 25px;
+        border-radius: 15px; /* borda arredondada */
+        padding-top: 7px;
+        font: 10px;
+    }
+        .acertos_sim
+        {
+          font-size: 17px;
+          margin-left: 20px;
+        }
+
+        .time
+        {
+          font-size: 13px;
+          margin-left: 22px;
+        }
+
+        .vermais
+        {
+          margin-left: 40px;
+          color: #696670;
+        }
+    
