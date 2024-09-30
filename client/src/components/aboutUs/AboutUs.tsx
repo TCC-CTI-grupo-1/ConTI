@@ -1,10 +1,12 @@
 import Navbar from '../Navbar'
+import Background from '../user/Background'
 
 const AboutUs = () => {
   return (
     <div id="home" className="flex-container full-screen-size">
             <Navbar screen="aboutUs"/>
             <div className="container">
+                <Background variant='white'/>
                 <div className="header">
                     <h1>Sobre nós</h1>
                     <h3>Conheça mais sobre o projeto e seus desenvolvedores</h3>
@@ -18,6 +20,8 @@ const AboutUs = () => {
                               <img src="../public/equipe.jpg" alt="Imagem da equipe" className="rounded-image" />
                               <h3>Somos uma equipe de estudantes apaixonados por tecnologia e educação. Criamos o ConTI com o objetivo de utilizar nossas habilidades para facilitar o acesso ao ensino de qualidade. Acreditamos que, ao unir tecnologia e educação, podemos causar um impacto positivo na vida de muitos jovens. Cada um de nós traz diferentes conhecimentos e experiências, mas todos compartilhamos a mesma visão de tornar a educação acessível e democrática para todos.</h3>
                         </div>
+                        <h4 >&nbsp;&nbsp;&nbsp;&nbsp;Janaína, Aléxia, Mariana, Igor, Mateus, Gabriel e Fernando</h4>
+
                     </div>
 
                     <br></br>
