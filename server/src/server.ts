@@ -2,16 +2,21 @@ import express from 'express';
 import cors from 'cors';
 import { routes } from './http/routes';
 import dotenv from 'dotenv';
-import Redis from 'ioredis';
+import RedisStore from "connect-redis"
+import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import path from 'path';
+import { createClient } from 'redis';
+// import path from 'path';
 
-const session = require('express-session');
-const fs = require('fs');
-const https = require('https');
+// const fs = require('fs');
+// const https = require('https');
 const app = express();
-const RedisStore = require('connect-redis')(session);
-const redis = new Redis();
+const urlRedis = process.env.REDIS_URL;
+let redisClient = createClient({url: urlRedis});
+redisClient.connect().catch(console.error);
+let redisStore = new RedisStore({
+    client: redisClient
+});
 
 dotenv.config();
 const urlLocal = 'http://localhost:5173';
@@ -24,8 +29,13 @@ app.use(cors({
 }));
 app.use(express.json());
 
+if (process.env.SECRET_KEY === undefined) {
+    console.error('SECRET_KEY não definida');
+    process.exit(1);
+}
+
 app.use(session({
-    store: new RedisStore({ client: redis }),
+    store: redisStore,
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
