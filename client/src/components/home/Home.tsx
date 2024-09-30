@@ -63,9 +63,11 @@ const Home = () => {
     <div id="home" className="flex-container full-screen-size">
             <Navbar screen="home"/>
             <div className="container">
+             
                 <div className="header">
                     <h1>Olá, __</h1>
                 </div>
+                <div className="inversed-border"></div>
                 <div className="content">
                     {//daily_c_graphic é a div que inclui questão diaria
                     // e taxa de acertos na mesma linha

@@ -30,9 +30,9 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 
         const responseData = await response.json();
         responseData.questions.forEach((question: questionInterface) => {
-            question.difficulty = question.difficulty.replace("facil", "Fácil")
-                                  .replace("medio", "Médio")
-                                  .replace("dificil", "Difícil");
+            // question.difficulty = question.difficulty.replace("facil", "Fácil")
+            //                       .replace("medio", "Médio")
+            //                       .replace("dificil", "Difícil");
         });
         if (!response.ok) {
             throw new Error(responseData.message);
@@ -58,9 +58,9 @@ export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<
 
         const responseData = await response.json();
         responseData.questions.forEach((question: questionInterface) => {
-            question.difficulty = question.difficulty.replace("facil", "Fácil")
-                                  .replace("medio", "Médio")
-                                  .replace("dificil", "Difícil");
+            // question.difficulty = question.difficulty.replace("facil", "Fácil")
+            //                       .replace("medio", "Médio")
+            //                       .replace("dificil", "Difícil");
         });
         if (!response.ok) {
             throw new Error(responseData.message);
@@ -85,9 +85,9 @@ export async function handleGetQuestions(): Promise<questionInterface[]> { //que
 
         const responseData = await response.json();
         responseData.questions.forEach((question: questionInterface) => {
-            question.difficulty = question.difficulty.replace("facil", "Fácil")
-                                  .replace("medio", "Médio")
-                                  .replace("dificil", "Difícil");
+            // question.difficulty = question.difficulty.replace("facil", "Fácil")
+            //                       .replace("medio", "Médio")
+            //                       .replace("dificil", "Difícil");
         });
         if (!response.ok) {
             throw new Error(responseData.message);
@@ -111,9 +111,9 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
         });
         const responseData = await response.json();
         responseData.questions.forEach((question: questionInterface) => {
-            question.difficulty = question.difficulty.replace("facil", "Fácil")
-                                  .replace("medio", "Médio")
-                                  .replace("dificil", "Difícil");
+            // question.difficulty = question.difficulty.replace("facil", "Fácil")
+            //                       .replace("medio", "Médio")
+            //                       .replace("dificil", "Difícil");
         });
         if (!response.ok) {
             throw new Error(responseData.message);
@@ -126,8 +126,31 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
     }
 }
 
+export async function handlePostQuestionImage(image: File, questionID: number): Promise<boolean> { //questionController.ts
+    try {
+        const formData = new FormData();
+        const newImage = new File([image], `${questionID}.png`, { type: image.type });
+        formData.append('image', newImage);
+        formData.append('questionID', questionID.toString());
 
-export async function handlePutQuestion(question: questionInterface, answers: respostaInterface[], image: File | null): Promise<boolean> { //questionController.ts
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/image', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        showAlert(err.message);
+        return false;
+    }
+}
+export async function handlePutQuestion(question: questionInterface, answers: respostaInterface[]): Promise<boolean> { //questionController.ts
     try {
 
         console.log("PUT QUESTION");        
@@ -149,35 +172,20 @@ export async function handlePutQuestion(question: questionInterface, answers: re
             body: JSON.stringify(answers)
         });
 
-        let response3: any;
-        console.log("JORGE");
-        if(image !== null){
-            console.log("Com imagem");
 
-            const formData = new FormData();
-            const newImage = new File([image], `${question.id}.png`, { type: image.type });
 
-            formData.append('image', newImage);
-            formData.append('questionID', question.id.toString());
-            response3 = await fetch(import.meta.env.VITE_ADDRESS + '/image', {
-                method: 'POST',
-                credentials: 'include',
-                body: formData
-            });
-        }
-        else{
-            console.log("Sem imagem");
-            response3 = {"ok":true};
-        }
+            
+
+            
+           
 
 
         const responseData1 = await response1.json();
         const responseData2 = await response2.json();
-        const responseData3 = await response3.json();
 
-        if (!response1.ok || !response2.ok || !response3.ok) {
-            console.log(responseData1.message, responseData2.message, responseData3.message);
-            throw new Error(responseData1.message + ' ' + responseData2.message + ' ' + responseData3.message); 
+        if (!response1.ok || !response2.ok) {
+            console.log(responseData1.message, responseData2.message);
+            throw new Error(responseData1.message + ' ' + responseData2.message); 
         } else {
             return true;
         }
@@ -191,7 +199,7 @@ export async function handlePutQuestion_withImage(question:questionInterface,ans
 {
     try{
         handleAddImage(image,true);
-        return handlePutQuestion(question,answers, image.get('image') as File); //ultimo pedaço antes não existia, remover caso necessario
+        return handlePutQuestion(question,answers); //ultimo pedaço antes não existia, remover caso necessario
     }catch(err:any)
     {
         return false;
