@@ -84,7 +84,7 @@ function App() {
                   <Route path='/test' element={<SimuladoFrame />} />
                   <Route path='/simulado/:id' element={<SimuladoVer />} />
                   <Route path='/adm' element={<Admnistrador />} />
-                  <Route path='/igor' element={<AboutUs />} />
+                  <Route path='/aboutus' element={<AboutUs />} />
                 </Routes>
           }
         </div>

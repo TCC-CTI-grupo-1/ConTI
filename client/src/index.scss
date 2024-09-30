@@ -421,7 +421,7 @@ H4{
     height: 100%;
   }
 
-  & nav {
+  & nav{
     transition: 0.5s;
     z-index: 12;
 
@@ -438,33 +438,51 @@ H4{
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: var(--padding-3);
-    padding: var(--padding-3);
-
-    &>.icon {
-      &>svg {
-        width: var(--padding-1);
-        aspect-ratio: 1;
-        cursor: pointer;
-      }
-
-      width: fit-content;
-      display: flex;
-      justify-content: flex-start;
-      gap: var(--padding-3);
-      align-items: center;
-
-      &>p {
-        white-space: nowrap;
-        transition: 0.25s;
-        opacity: 0;
-      }
-
-      &>p.white {
-        color: var(--primary-color);
-        transition: 0.25s;
+    justify-content: space-between;
+    & div.options{
+      & h3{
+        font-size: 0.8rem;
+        transition: 0.2s;
+        &:hover{
+          color: var(--primary-color);
+          cursor: pointer;
+        }
       }
     }
+    & > div{
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-3);
+      padding: var(--padding-3);
+
+      & >.icon {
+        &>svg {
+          width: var(--padding-1);
+          aspect-ratio: 1;
+          cursor: pointer;
+        }
+  
+        width: fit-content;
+        display: flex;
+        justify-content: flex-start;
+        gap: var(--padding-3);
+        align-items: center;
+  
+        &>p {
+          white-space: nowrap;
+          transition: 0.25s;
+          opacity: 0;
+        }
+  
+        &>p.white {
+          color: var(--primary-color);
+          transition: 0.25s;
+        }
+      }
+    }
+    
+
+    
 
 
     height: 100vh;
