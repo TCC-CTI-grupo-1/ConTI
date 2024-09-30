@@ -16,7 +16,7 @@ export interface questionInterface{
     area_id: number;
     has_image: boolean;
     has_latex: boolean;
-    difficulty: string,
+    difficulty: 'facil' | 'medio' | 'dificil',
     id: number,
     official_test_name: string;
     question_creator: string;

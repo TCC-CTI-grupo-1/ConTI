@@ -5,6 +5,10 @@ const connectionDAO = new ConnectionDAO();
 const CTI_ID:number = 0;
 
 export type AreaTree = {[key:number]:AreaDTO[]};
+export interface Rooted_AreaTree{
+    tree:AreaTree,
+    root:AreaDTO
+}
 
 export class AreaDAO {
     registerArea = async (area: AreaDTO) => {
@@ -248,6 +252,30 @@ export class AreaDAO {
             }
         }
         return tree;
+    }
+    buildRootedAreaTree = async() : Promise<Rooted_AreaTree> => {
+        const instance = new AreaDAO();
+        const areaList:AreaDTO[] = await instance.listAreas();
+        let tree:AreaTree = {0:[]};
+        let root:AreaDTO = {id:0, name:"root", parent_id:null};
+        for(const area of areaList)
+            {
+                if(area.parent_id!==null && area.parent_id!==undefined)
+                {
+                    if(tree[area.parent_id] !== undefined)
+                    {
+                        tree[area.parent_id].push(area);
+                    }
+                    else {
+                        tree[area.parent_id] = [];
+                        tree[area.parent_id].push(area);
+                    }
+                }
+                else {
+                    root = area;
+                }
+            }
+        return {tree:tree, root:root};
     }
 
     // listAreasWithoutSubAreas = async () => {

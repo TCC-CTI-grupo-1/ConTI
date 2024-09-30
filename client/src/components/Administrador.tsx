@@ -13,6 +13,7 @@ import { handlePutQuestion, handleDeleteQuestion, handlePostQuestion } from "./.
 import { handleGetAnswersByQuestionsIds } from "../controllers/answerController";
 import QstDetailRespostas from "./questions/simulado/QstDetailResposas";
 import { useRef } from "react";
+import { handlePostQuestionImage } from "./../controllers/questionController";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -38,7 +39,7 @@ const Admistrator = () => {
 
     const {onOpen, onClose, isOpen} = useDisclosure();
 
-    let novaQstLimpa = {
+    let novaQstLimpa: questionInterface = {
         id: 0,
         question_text: '',
         area_id: 1,
@@ -522,11 +523,11 @@ const Admistrator = () => {
                             }}
                             >
 
-                                <option value="A">1</option>
-                                <option value="B">2</option>
-                                <option value="C">3</option>
-                                <option value="D">4</option>
-                                <option value="E">5</option>
+                                {
+                                    areas === undefined ? null : Object.values(areas).map((area, index) => {
+                                        return <option key={index} value={area.id}>{area.name}</option>
+                                    })
+                                }
                                 {/* {Object.values(areas).map((area, index) => {
                                     return <option key={index} value={area.id}>{area.name}</option>
                                 })} */}
@@ -536,7 +537,24 @@ const Admistrator = () => {
                         <div>
 
                             <label htmlFor="info">Dificuldade: </label>
-                            <select name="info" id="info">
+                            <select name="info" id="info"
+                            onChange={(e) => {
+                                let newQst = {...novaQst[0]};
+                                let value = Number(e.target.value);
+                                switch(value){
+                                    case 1:
+                                        newQst.difficulty = "facil";
+                                        break;
+                                    case 2:
+                                        newQst.difficulty = "medio";
+                                        break;
+                                    case 3:
+                                        newQst.difficulty = "dificil";
+                                        break;
+                                }
+                                setNovaQst([newQst, novaQst[1]]);
+                            }}
+                            >
                                 <option value="1">Fácil</option>
                                 <option value="2">Médio</option>
                                 <option value="3">Díficil</option>
@@ -609,16 +627,28 @@ const Admistrator = () => {
 
                             showAlert("Editando questão...", "warning");
                             showAlert(img !== null ? "existem imagens" : "não existem imagens", "warning");
-                            handlePutQuestion(novaQst[0], novaQst[1], img).then((resp) => {   
+                            handlePutQuestion(novaQst[0], novaQst[1]).then((resp) => {   
                                 if(resp){
                                     showAlert("Questão editada com sucesso! Por favor, atualize a página [f5]", "success");
+                                    if(img !== null){
+                                        handlePostQuestionImage(img, novaQst[0].id).then((resp) => {
+                                            if(resp){
+                                                showAlert("Imagem adicionada com sucesso!", "success");
+                                            }
+                                            else{
+                                                showAlert("Erro ao adicionar imagem");
+                                            }
+                                        });
+                                    }
                                 }
                                 else{
                                     showAlert("Erro ao editar questão");
                                 }
-                            }
-                            );
-                        }}>
+                            },
+
+                            
+
+                            )}}>
                         Salvar alterações
                         </Button>
                         <Button colorScheme="red" onClick={() => {

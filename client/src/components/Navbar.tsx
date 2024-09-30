@@ -9,7 +9,6 @@ import AdminIcon from "../assets/AdminIcon.tsx";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import AboutUsIcon from "../assets/AboutUsIcon.tsx";
 
 
 interface Props{
@@ -49,6 +48,7 @@ const Navbar = ({screen}:Props) => {
             </div>
             <nav className={active ? 'active' : ''}>
                 <div>
+
                     <div className="icon">
                         <MenuIcon
                         onClick={() => {
@@ -56,6 +56,13 @@ const Navbar = ({screen}:Props) => {
                             }} />
                     </div>
                     
+                                        
+                    {!isLoggedIn &&<div className="icon">
+                        <UserIcon iconColor={checkActiveScreen('profile')}
+                        onIconClick={() => {navegate('/login')}}/>
+                        <p className={checkActiveScreen('profile')}>Login</p>
+                    </div>}
+
                     <div className="icon">
                         <HomeIcon iconColor={checkActiveScreen('home')}
                         onIconClick={() => {navegate('/')}}/>
@@ -74,11 +81,7 @@ const Navbar = ({screen}:Props) => {
                         <p className={checkActiveScreen('database')}>Banco de questões</p>
                     </div>
                     
-                    {isLoggedIn &&<div className="icon">
-                        <UserIcon iconColor={checkActiveScreen('profile')}
-                        onIconClick={() => {navegate('/profile')}}/>
-                        <p className={checkActiveScreen('profile')}>Perfil</p>
-                    </div>}
+                    
                     
                     {isLoggedIn &&<div className="icon">
                             <HistoryIcon iconColor={checkActiveScreen('history')}
@@ -96,10 +99,11 @@ const Navbar = ({screen}:Props) => {
                     }>Sobre nós</h3>
                     <h3>Contato</h3>
 
-                    {!isLoggedIn &&<div className="icon">
+
+                    {isLoggedIn &&<div className="icon">
                         <UserIcon iconColor={checkActiveScreen('profile')}
-                        onIconClick={() => {navegate('/login')}}/>
-                        <p className={checkActiveScreen('profile')}>Login</p>
+                        onIconClick={() => {navegate('/profile')}}/>
+                        <p className={checkActiveScreen('profile')}>Perfil</p>
                     </div>}
 
                     <div className="icon">
