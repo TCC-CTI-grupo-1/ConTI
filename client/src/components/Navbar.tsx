@@ -9,7 +9,7 @@ import AdminIcon from "../assets/AdminIcon.tsx";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import AboutUsIcon from "../assets/DevsIcon.tsx";
+import AboutUsIcon from "../assets/AboutUsIcon.tsx";
 
 
 interface Props{
