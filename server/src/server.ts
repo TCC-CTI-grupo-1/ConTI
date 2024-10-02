@@ -11,8 +11,16 @@ import { createClient } from 'redis';
 // const fs = require('fs');
 // const https = require('https');
 const app = express();
-const urlRedis = process.env.REDIS_URL;
-let redisClient = createClient({url: urlRedis});
+const passRedis = process.env.REDIS_PASS;
+const hostRedis = process.env.REDIS_HOST;
+const portRedis = parseInt(process.env.REDIS_PORT as string);
+let redisClient = createClient({
+    password: passRedis,
+    socket: {
+        host: hostRedis,
+        port: portRedis
+    }
+});
 redisClient.connect().catch(console.error);
 let redisStore = new RedisStore({
     client: redisClient
