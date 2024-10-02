@@ -5,60 +5,82 @@ import { AreaProfileTree, Area_ProfileDAO, Rooted_AreaProfileTree } from "./DAO/
 import { QuestionDAO } from "./DAO/QuestionDAO";
 import { questionFilters } from "./types/client/interfaces";
 import { difficulty as Difficulty , question } from "@prisma/client";
+import internal from "stream";
 const conn = new ConnectionDAO();
 
 
-enum DifficultyLevel{
-    EASY = 1,
-    MEDIUM = 2,
-    HARD = 3 ,
-    MIMIC = 4,
-    RANDOM = 5
+export enum DifficultyLevel{
+    EASY = "easy",
+    MEDIUM = "medium",
+    HARD = "hard",
+    MIMIC = "mimic",
+    IRRELEVANT = "irrelevant"
 };
 
-enum DifficultyType{
-    AREA,INDIVIDUAL,SPECIAL
+export enum DifficultyType{
+    AREA = 1,
+    INDIVIDUAL = 2
 }
-const buildProportions = function(...args:number[])
-{
-    return {
-        easy: args[0],
-        medium: args[1],
-        hard: args[2]
+
+
+
+
+class ProportionHandler {
+    private buildProportions = function(...args:number[]){
+        const retobj:{[key:string]:number} = {};
+        retobj[DifficultyLevel.EASY] = args[0];
+        retobj[DifficultyLevel.MEDIUM] = args[1];
+        retobj[DifficultyLevel.HARD] = args[2];
+        return retobj;
     }
-}
-let difficultyProportions:{[key:number]:{[key:string]:number}};
+    difficultyToProportions = (difficulty:string):{[key:string]:number} => {
+        if(difficulty === DifficultyLevel.EASY) return this.buildProportions(3,2,1);
+        if(difficulty === DifficultyLevel.HARD) return this.buildProportions(1,2,3);
+        return this.buildProportions(1,1,1);
+    }
 
-difficultyProportions = {
-    [DifficultyLevel.EASY] : buildProportions(3,2,1),
-    [DifficultyLevel.MEDIUM] : buildProportions(1,1,1),
-    [DifficultyLevel.HARD] : buildProportions(1,2,3)
-}
-
-const cond = function(a:number){return a<10}
-
-const difficultyToErrorRatioCondition:{[key:string]:Function} = {
-    easy : function(a:number,b:number){return (a+1) / (b+1) > 0.75 || cond(b)},
-    medium : function(a:number,b:number){return (a+1) / (b+1) > 0.5 && (a+1)/(b+1) <=0.75 || cond(b)},
-    hard : function(a:number,b:number){return (a+1) / (b+1) <=0.5 || cond(b)}
-}
-
-const classifyRatio = (a:number,b:number):string =>
-{
-    if(b<4) return "IRRELEVANT";    
-    if(a/b > 0.75) return "easy";
-    if(a/b > 0.5) return "medium";
-    return "hard";
-}
-const difficultyToProportion = function(difficulty:DifficultyLevel){
-    return difficultyProportions[difficulty];  
+    classifyRatio = (a:number,b:number):string =>
+    {
+        if(b<4) return DifficultyLevel.IRRELEVANT    
+        if(a/b > 0.75) return DifficultyLevel.EASY;
+        if(a/b > 0.5) return DifficultyLevel.MEDIUM;
+        return DifficultyLevel.HARD;
+    }
+    private difficultyToAreaDifficulty = (difficulty:string):string => {
+        if(difficulty === DifficultyLevel.EASY) return DifficultyLevel.HARD;
+        if(difficulty === DifficultyLevel.HARD) return DifficultyLevel.EASY;
+        return difficulty;
+    }
+    classifyAreaRatio = (a:number,b:number):string =>{
+        return this.difficultyToAreaDifficulty(this.classifyRatio(a,b));
+    }
+    proportionToFraction = (proportion:{[key:string]:number}) =>{
+    const fractions:{[key:string]:number} = {};
+    let total = 0;
+    for(const key in proportion)
+    {
+        total+=proportion[key];
+    }
+    for(const key in proportion)
+    {
+        fractions[key] = proportion[key]/total;
+    }
+    return fractions;
+    }
+    difficultyToRatioCondition = (difficulty:string) => {
+        const innerFunc = function(val:number) {return val<=3;}
+        const trueFunc = function(a:number,b:number){return true;}
+        if(difficulty === DifficultyLevel.EASY) return function(a:number,b:number){return innerFunc(b)? true : a/b > 0.75};
+        if(difficulty === DifficultyLevel.HARD) return function(a:number,b:number){return innerFunc(b)? true : a/b <= 0.5};
+        if(difficulty === DifficultyLevel.MEDIUM) return function(a:number,b:number){return innerFunc(b)? true : a/b > 0.5 && a/b <= 0.75};
+        return trueFunc;
+    }
 }
 
 interface ITestBlueprint{
     totalQuestions:number,
-    questionBySubject:{[key:string]:number},
-    difficultyLevel:DifficultyLevel,
-    difficultyType:DifficultyType
+    questionsInArea:{[key:string]:number},
+    difficulty:{[difficulty_type:number]:DifficultyLevel}
 }
 
 interface ITestBuilder{
@@ -134,34 +156,35 @@ interface AreaData
 }
 
 
+
 export class TestBlueprint implements ITestBlueprint{
     totalQuestions: number;
-    questionBySubject: {[key:number]:number};
-    difficultyLevel: DifficultyLevel;
-    difficultyType: DifficultyType;
+    questionsInArea: {[key:number]:number};
+    difficulty:{[difficulty_type:number]:DifficultyLevel}
     user_id:number;
-    constructor(totalQuestions=50,questionBySubject={1:15,2:15,3:15,4:5},difficultyRating=DifficultyLevel.MEDIUM,difficultyType=DifficultyType.INDIVIDUAL,user_id:number)
+    constructor(totalQuestions=50,questionsInArea={1:15,2:15,3:15,4:5},difficulty:{1:DifficultyLevel.MEDIUM,2:DifficultyLevel.MEDIUM},user_id:number)
     {
         this.totalQuestions = totalQuestions;
-        this.questionBySubject = questionBySubject;
+        this.questionsInArea = questionsInArea;
+        this.difficulty = difficulty;
         let totalSum = 0;
-        for (const key in questionBySubject) {
-            const value = this.questionBySubject[Number(key)];
+        for (const key in questionsInArea) {
+            const value = this.questionsInArea[Number(key)];
             totalSum+=value;
         }
         if(totalSum != totalQuestions) {
             console.error("Erro na construção da planta da prova: Número de questões por matéria deve ser igual ao número total");
         }
-        this.difficultyLevel = difficultyRating;
-        this.difficultyType = difficultyType;
         this.user_id = user_id;
     }
 }
 export class TestBuilder{
     testBlueprintList:TestBlueprint[] | undefined
+    helper:ProportionHandler = new ProportionHandler();
     constructor(testBlueprint:TestBlueprint[] | undefined)
     {
         this.testBlueprintList = testBlueprint;
+        this.helper = new ProportionHandler();
     }
     buildAll = () =>
     {
@@ -173,17 +196,88 @@ export class TestBuilder{
             return listOfQuestionList;
         }        
     }
-    private buildSizeMap = (node:number, tree:AreaProfileTree, blueprint:TestBlueprint, size:number,sizeMap:{[key:number]:number}) => {
-        sizeMap[node] = size;
-        const numberOfNodes_inDifficulty:{[key:string]:number} = {};
-        const totalNodes = tree[node].length;
-        const proportions = difficultyToProportion(blueprint.difficultyLevel);
-        for(const v of tree[node])
+    private buildSizeMap = async(rooted_tree:Rooted_AreaProfileTree, blueprint:TestBlueprint):Promise<{[key:number]:AreaData}>=>{
+        let sizeMap:{[key:number]:AreaData} = {};
+        let questionsInArea = blueprint.questionsInArea;
+        let marked:{[key:string]:boolean} = {};
+        for(const key in questionsInArea)
         {
-            if(sizeMap[node])
-            numberOfNodes_inDifficulty[classifyRatio(v.total_correct_answers,v.total_answers)] = sizeMap[v.area_id]++;
+            marked[key] = true;
         }
-        
+        const tree = rooted_tree.tree;
+        const root = rooted_tree.root;
+        const instance = new Area_ProfileDAO();
+        const inverted_tree = await instance.buildInverted_AreaProfileTree(root.area_id);
+        const fractionInType:{[key:number]:{[key:string]:number}} = {};
+        for(const type in blueprint.difficulty)
+        {
+            fractionInType[type] = this.helper.proportionToFraction(this.helper.difficultyToProportions(blueprint.difficulty[type]));
+        }
+        const normalizeValues = (node:number,sender:number) => {
+            if(marked[node] && node != sender) return;
+            questionsInArea[node] +=questionsInArea[sender];
+            normalizeValues(inverted_tree[node].area_id,sender);
+        }
+        for(const value in questionsInArea)
+        {
+            const key = Number(value);
+            normalizeValues(key,key);
+        }
+        const produtoria = (lista:number[]) => {
+            let ret = 1;
+            for(const v of lista)
+            {
+                ret*=v;
+            }
+            return ret;
+        }
+        const produt_sum = (lista:number[]) => {
+            let produt = produtoria(lista);
+            let sum = 0;
+            for(const v of lista)
+            {
+                sum+=produt/v;
+            }
+            return sum;
+        }
+        const normalizeList = (lista: number[]): number[] => {
+            return lista.map(num => num === 0 ? 0.001 : num);
+        }
+        const queue:Area_ProfileDTO[] = [];
+        queue.push(root);
+        while(queue.length!==0)
+        {
+            const parent = queue.shift();
+            if(!parent) break;
+            for(const child of tree[parent.area_id])
+            {
+                queue.push(child);
+            }
+            const difflist:{[key:string]:number[]} = {};
+            const idlist:{[key:string]:number[]} = {};
+            let questionsInChildren = 0;
+            for(const child of queue)
+            {
+                const difficulty = this.helper.classifyAreaRatio(child.total_correct_answers,child.total_answers);
+                difflist[difficulty].push(child.total_answers===0? 0.001 : child.total_correct_answers/child.total_answers);
+                idlist[difficulty].push(child.area_id);
+                questionsInChildren += questionsInArea[child.area_id];
+            }
+            for(const diff in difflist)
+            {
+                const list = normalizeList(difflist[diff]);
+                const k = produt_sum(list)/produtoria(list);
+                let sumSoFar = 0;
+                const n = fractionInType[DifficultyType.AREA][diff] * (questionsInArea[parent.area_id] - questionsInChildren);
+                for(let i=0;i<list.length;i++)
+                {
+                    const val = Math.floor(n/(k*list[i]));
+                    sizeMap[idlist[diff][i]].questionCount_inDifficulty[diff] = Math.floor(val);
+                    sumSoFar += val;
+                }
+                sizeMap[idlist[diff][0]].questionCount_inDifficulty[diff]+= n-sumSoFar;
+            }
+        }
         return sizeMap;
     }
     private getQuestionList = async(rooted_tree:Rooted_AreaProfileTree, testMap:{[key:number]:AreaData}):Promise<QuestionDTO[]> => 
@@ -192,6 +286,7 @@ export class TestBuilder{
         let questionList: QuestionDTO[] = [];
         const instance = new QuestionDAO();
         const tree = rooted_tree.tree;
+        const helper = this.helper;
         const dfs = async (node:Area_ProfileDTO):Promise<{[key:string]:number}> =>
         {
             let filter:questionFilters = {};
@@ -209,17 +304,17 @@ export class TestBuilder{
                 }
             }
             const difficulties = Object.keys(testMap[node.area_id].questionCount_inDifficulty);
-            const difficultyList = difficulties.filter(d => d !== "IRRELEVANT");
-            if(!testMap[node.area_id].questionCount_inDifficulty["IRRELEVANT"]) testMap[node.area_id].questionCount_inDifficulty["IRRELEVANT"] = 0;
-            difficultyList.push("IRRELEVANT");
+            const difficultyList = difficulties.filter(d => d !== DifficultyLevel.IRRELEVANT);
+            if(!testMap[node.area_id].questionCount_inDifficulty[DifficultyLevel.IRRELEVANT]) testMap[node.area_id].questionCount_inDifficulty[DifficultyLevel.IRRELEVANT] = 0;
+            difficultyList.push(DifficultyLevel.IRRELEVANT);
             for(const difficulty of difficultyList)
             {
                 const amount = testMap[node.area_id].questionCount_inDifficulty[difficulty] - children_success[difficulty];
                 filter.disciplina = [node.area_id];
                 let questions = await instance.listQuestionByFilters(filter);
-                if(difficulty!=="IRRELEVANT")
+                if(difficulty!==DifficultyLevel.IRRELEVANT)
                 {
-                    const filterQuery = function(r:QuestionDTO){return difficultyToErrorRatioCondition[difficulty](r.total_correct_answers,r.total_answers)};
+                    const filterQuery = function(r:QuestionDTO){return helper.difficultyToRatioCondition(difficulty)(r.total_correct_answers,r.total_answers)};
                     questions = questions.filter(filterQuery);
                 }
                 shuffle(questions)
@@ -227,14 +322,14 @@ export class TestBuilder{
                 if(questions.length < amount)
                 {
                     upperBound = questions.length;
-                    if(difficulty!=="IRRELEVANT")
+                    if(difficulty!==DifficultyLevel.IRRELEVANT)
                     {
-                        if(!testMap[node.area_id].questionCount_inDifficulty["IRRELEVANT"])
+                        if(!testMap[node.area_id].questionCount_inDifficulty[DifficultyLevel.IRRELEVANT])
                         {
-                            testMap[node.area_id].questionCount_inDifficulty["IRRELEVANT"] = amount-questions.length;
+                            testMap[node.area_id].questionCount_inDifficulty[DifficultyLevel.IRRELEVANT] = amount-questions.length;
                         }
                         else
-                            testMap[node.area_id].questionCount_inDifficulty["IRRELEVANT"] += amount-questions.length;
+                            testMap[node.area_id].questionCount_inDifficulty[DifficultyLevel.IRRELEVANT] += amount-questions.length;
                     }
                 }
                 success[difficulty] = 0;
@@ -258,108 +353,11 @@ export class TestBuilder{
         return questionList;
     } 
 
-    buildTest = async(blueprint:TestBlueprint) => {
-        const cacheID: {[key:number]:Boolean} = {};
-        let questionList: { [key: number]: QuestionDTO[] } = {};
-        const proportions = difficultyProportions[blueprint.difficultyLevel];
-        let maxval = 0;
-        for (const val in proportions) maxval+=proportions[val];
-        const difficultyCountInSubject:{[key:number]:{[key:string]:number}} = {};
-        for (const subject in blueprint.questionBySubject) {
-            const nsubject = Number(subject);
-            let numberOfQuestions = blueprint.questionBySubject[nsubject];
-            if(blueprint.difficultyLevel === DifficultyLevel.RANDOM)
-            {
-                const client= await conn.getConnection();
-                const row = await client.question.findMany({
-                    where:{
-                        area_id: nsubject
-                    }
-                });
-                shuffle(row);
-                questionList[nsubject] = []
-                for(let i=0;i<numberOfQuestions;i++)
-                {
-                    if(!cacheID[row[i].id])
-                    {
-                        questionList[nsubject].push(row[i]);
-                        cacheID[row[i].id] = true;
-                    }
-                    else{
-                        numberOfQuestions++;
-                    }
-                }
-            }
-            
-            if(blueprint.difficultyType === DifficultyType.INDIVIDUAL)
-            {
-                //Ou seja, a dificuldade é construída pela dificuldade individual das questões. Uma questão difícil sempre vai ser difícil
-                
-                    const questionCount = blueprint.questionBySubject[nsubject]
-                    difficultyCountInSubject[nsubject] = {}
-                    questionList[nsubject] = []
-                    for (const proportion in proportions)
-                    {
-                        if(proportion == "medium")
-                        {
-                            difficultyCountInSubject[nsubject][proportion] = Math.ceil(questionCount - Math.floor(questionCount * proportions['easy'] /maxval) - Math.floor(questionCount * proportions['hard'] / maxval))
-                        }
-                        else
-                            difficultyCountInSubject[nsubject][proportion] = Math.floor(proportions[proportion] * questionCount / maxval)
-                    }
-                    
-                    for (const difficulty in difficultyCountInSubject[nsubject])
-                    {
-                        const client = await conn.getConnection();
-                        
-                        const rows = await client.question.findMany({
-                            where:{    
-                                area_id: nsubject
-                            }
-                        });
-                        
-                        const filterQuery = function(r:any){ return difficultyToErrorRatioCondition[difficulty](r.total_correct_answers,r.total_answers)}; 
-                        const row = rows.filter(filterQuery);                        
-                        shuffle(row);
-                        
-                        for(let i=0;i<difficultyCountInSubject[nsubject][difficulty];i++)
-                        {
-                            if(cacheID[row[i].id]) {
-                                difficultyCountInSubject[nsubject][difficulty]++;
-                                continue;
-                            }
-                            questionList[nsubject].push(row[i]);
-                            cacheID[row[i].id] = true;
-                        }
-                    }
-                   
-            }
-            if(blueprint.difficultyType === DifficultyType.AREA)
-            {   
-                const instance = new Area_ProfileDAO();
-                const tree = await instance.buildRootedAreaProfileTree(blueprint.user_id);
-                const sizeMap = this.buildSizeMap(1,tree.tree,blueprint,blueprint.totalQuestions,{});
-
-            }
-            if(blueprint.difficultyLevel === DifficultyLevel.MIMIC)
-            {
-                console.warn("Não implementado")
-                //A ideia disso é imitar a forma das provas do CTI: a proporção de questões fáceis/médias/difíceis e 
-                //o número de áreas.
-            }
-        }
-
-        let i = 0;
-        const questionDTOList: QuestionDTO[] = [];
-        for (const subject in questionList) {
-            const nsubject = Number(subject);
-            const questions = questionList[nsubject];
-            for (const question of questions) {
-                questionDTOList.push(question as QuestionDTO);
-            }
-            ++i
-        }
-        return questionDTOList;
+    buildTest = async(blueprint:TestBlueprint):Promise<QuestionDTO[]> => {
+        const instance = new Area_ProfileDAO();
+        const rooted_tree = await instance.buildRootedAreaProfileTree(blueprint.user_id);
+        const sizeMap = await this.buildSizeMap(rooted_tree,blueprint);
+        const questionList = await this.getQuestionList(rooted_tree,sizeMap);
+        return questionList;
     }
 }
-

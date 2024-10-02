@@ -7,7 +7,7 @@ export interface Rooted_AreaProfileTree{
     root:Area_ProfileDTO
 }
 export type AreaProfileTree = {[key:number]:Area_ProfileDTO[]};
-
+export type Inverted_AreaProfileTree = {[key:number]:Area_ProfileDTO};
 
 export class Area_ProfileDAO {
     registerArea_Profile = async (area_profile: Area_ProfileDTO) => {
@@ -118,6 +118,17 @@ export class Area_ProfileDAO {
         }
         return {tree:tree, root:areaMap[root]};
     }
-
-
+    buildInverted_AreaProfileTree = async(profile_id:number):Promise<Inverted_AreaProfileTree> => {
+        const instance = new Area_ProfileDAO();
+        const areaInstance = new AreaDAO();
+        const areaList = await areaInstance.listAreas();
+        const areaMap = await instance.listArea_ProfileByProfileId(profile_id);
+        let tree:Inverted_AreaProfileTree = {};
+        for(const area of areaList)
+        {
+            if(area.parent_id)
+                tree[area.id] = areaMap[area.parent_id];
+        }
+        return tree;
+    }   
 }
