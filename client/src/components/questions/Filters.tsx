@@ -85,6 +85,7 @@ const Filters = () => {
 
   async function handleGetFilteredQuestionsLocal(){
     setLoading(true);
+    console.log(options);
     
     let newFilteredQuestions:{
       question: questionInterface;
@@ -93,6 +94,9 @@ const Filters = () => {
 
     let questions = await handleGetFilteredQuestions(options);
 
+    console.log("Questões: ");
+    console.log(questions);
+
     let questionIds: number[] = [];
 
     questions.forEach((question) => {
@@ -100,6 +104,9 @@ const Filters = () => {
     });
   
     let answers = await handleGetAnswersByQuestionsIds(questionIds);
+
+    console.log("Respostas: ");
+    console.log(answers);
 
     if(questions === null || answers === null){
       showAlert("Erro ao carregar questões");
@@ -141,6 +148,7 @@ const Filters = () => {
     <div id="questions">
       <div className="filters box">
         <h3 onClick={() => {
+          console.log(areas);
         }}>Filtros</h3>
         <div className="options">
           <div>
@@ -159,6 +167,7 @@ const Filters = () => {
                       title="Ano"
                       type="checkbox"
                       onChange={(e) => {
+                        console.log(e);
                         handleSelectChange(e, "ano");
                       }}
                     >
@@ -308,7 +317,7 @@ const Filters = () => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Selecione uma ou mais áreas para o filtro</ModalHeader>
+          <ModalHeader>Selecione uma ou mais areas para o filtro</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <div id="filtro-ver-areas">
