@@ -18,6 +18,7 @@ const NewTest = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
+    const { isOpen: isOpen3, onOpen: onOpen3, onClose: onClose3 } = useDisclosure();
     const navigate = useNavigate();    
     const [loading, setLoading] = useState(false);
 
@@ -58,7 +59,7 @@ const NewTest = () => {
                                     </div>
                                     <Button colorScheme="blue" size="lg" variant="solid" onClick={() => {
                                         //Voltar para a tela anterior
-                                        alert('Em construção');
+                                        onOpen3();
                                     }
                                     }>
                                         Iniciar lista de exercícios
@@ -114,6 +115,26 @@ const NewTest = () => {
                     </ModalBody>
                     <ModalFooter>
                         
+                    </ModalFooter>
+                    </ModalContent>
+                    </Modal>
+
+                    <Modal onClose={onClose3} isOpen={isOpen3} isCentered>
+                    <ModalOverlay />
+                    <ModalContent>
+                    <ModalHeader>Deseja iniciar uma lista de exercicios?</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <p>Listas de exercicios são personalizadas conforme você deseja, por favor selecione as opções da sua lista de esercicios abaixo:</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} onClick={() => {
+                            handlegenerateNewSimulado();
+                            onClose();
+                            onOpen2();
+                            
+                        }}>Iniciar lista de exercicios</Button>
+                        <Button onClick={onClose3}>Ainda não</Button>
                     </ModalFooter>
                     </ModalContent>
                     </Modal>
