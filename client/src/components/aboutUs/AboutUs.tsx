@@ -1,5 +1,6 @@
 import Navbar from '../Navbar'
 import Background from '../user/Background'
+import '../../about.scss';
 
 const AboutUs = () => {
   return (

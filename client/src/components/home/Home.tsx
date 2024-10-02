@@ -5,10 +5,14 @@ import QstDetail from "../questions/simulado/QstDetail"
 import { ProgressBar } from "../ProgressBar"
 import DatabaseIcon from "../../assets/DatabaseIcon";
 import NewTestIcon from "../../assets/NewTestIcon.tsx";
+import Background from "../user/Background.tsx";
+import '../../home.scss'
+import { questionInterface } from "../../controllers/interfaces.ts";
+
 //TEM QUE TER A DIVISÃO DO LOGADO E NÃO LOGADO
 const Home = () => {
 
-    const question =  {
+    const question: questionInterface =  {
         "id": 981,
         "question_text": "Colabora com o efeito de humor da tira a ideia de que Calvin, o menino,",
         "question_year": 2022,
@@ -63,9 +67,10 @@ const Home = () => {
     <div id="home" className="flex-container full-screen-size">
             <Navbar screen="home"/>
             <div className="container">
-             
+                <Background variant="white" />
                 <div className="header">
-                    <h1>Olá, __</h1>
+                    <h1>Olá, </h1>
+                    <h3>O que deseja fazer hoje?</h3>
                 </div>
                 <div className="inversed-border"></div>
                 <div className="content">

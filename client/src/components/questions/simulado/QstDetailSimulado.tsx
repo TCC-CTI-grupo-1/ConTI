@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { questionInterface, respostaInterface } from '../../../controllers/interfaces';
 import { showAlert } from '../../../App';
-
+import scissors from '../../../assets/scissors.png';
 interface Props {
     question: questionInterface;
     answers: respostaInterface[];
@@ -56,6 +56,13 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
         }
     }, [addClassToAlternative]);
 
+    const handleScissorsClick = useCallback((event: any) => {
+        const target = event.currentTarget as HTMLElement;
+        const parent = target.parentElement as HTMLElement;
+        const div = parent.querySelector('div') as HTMLElement;
+        div.classList.toggle('cut');
+    }, [addClassToAlternative]);
+
     return (
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
@@ -67,16 +74,25 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
         <div className={"alternatives"} ref={questionRef}>
             {alternativasRef.current = []} 
             {answers.map((alternative, index) => (
-                <div key={index} onClick={(e)=> {
-                    handleClick(e);
-                }} className={String(index)} id={String(alternative.id)}>
-                    <span> 
-                        <p> {alternative.question_letter} </p>
-                    </span>
-                    <p> {alternative.answer} </p>
+                <div className='item'>
+                    <div key={index} onClick={(e)=> {
+                        handleClick(e);
+                    }} className={String(index)} id={String(alternative.id)}>
+                        <span> 
+                            <p> {alternative.question_letter} </p>
+                        </span>
+                        <p> {alternative.answer} </p>
+                        
+                    </div>
+                    <img src={scissors} onClick={(e) => {
+                        handleScissorsClick(e);
+                    }}> 
+                    </img>
                 </div>
             ))}
         </div>
+        <a>Marcar questão</a>
+
         <div className="options">               
         </div>
     </div>
