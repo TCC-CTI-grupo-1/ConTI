@@ -2,7 +2,6 @@ import { ConnectionDAO } from "./ConnectionDAO";
 import { AnswerDTO } from "../DTO/AnswerDTO";
 
 const connectionDAO = new ConnectionDAO();
-
 export class AnswerDAO {
     registerAnswer = async (answer: AnswerDTO) => {
         try {

@@ -14,6 +14,7 @@ import { handleGetAnswersByQuestionId } from "../../controllers/answerController
 //TEM QUE TER A DIVISÃO DO LOGADO E NÃO LOGADO
 const Home = () => {
 
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const [question, setQuestion] = useState<questionInterface | null>(null);
   const [answer, setAnswer] = useState<respostaInterface[] | null>(null);
   async function getQuestion(){
@@ -43,71 +44,75 @@ const Home = () => {
                 </div>
                 <div className="inversed-border"></div>
                 <div className="content">
-                    {//daily_c_graphic é a div que inclui questão diaria
-                    // e taxa de acertos na mesma linha
-                    }
+                  {isLoggedIn ? <>
+
+
+                  
                     <div className="question_graphic">
-                <div className="dly_question">
-                    <h3>Deseja fazer uma questão diária? </h3>
-                    {question !== null && answer !== null &&
-                      <QstDetail question={question} answers={answer} 
-                      type="small" 
-                      />
-                    }
-                    
-                </div> 
-                 <div className="taxa_acerto">
-                 <p> Taxa de acerto nos simulados</p>
+                            <div className="dly_question">
+                                <h3>Deseja fazer uma questão diária? </h3>
+                                {question !== null && answer !== null &&
+                                  <QstDetail question={question} answers={answer} 
+                                  type="small" 
+                                  />
+                                }
+                                
+                            </div> 
+                            <div className="taxa_acerto">
+                              <p> Taxa de acerto nos simulados</p>
 
-                 <div className="graph">
-                    <ProgressBar color="blue" radius={90} filledPercentage={52} animation></ProgressBar>
-                    </div> 
-                    </div>
-                    </div>
+                              <div className="graph">
+                                  <ProgressBar color="blue" radius={90} filledPercentage={52} animation></ProgressBar>
+                              </div> 
+                            </div>
 
-                    <div className="simuladobanco">
-                        <div className="simulado">
-                        <p>Teste suas habilidades com um simulado</p>
-                        <Button colorScheme="blue" width={315} height={50} variant="solid" onClick={() =>
-                            {
-                            //Voltar para a tela anterior
-                                  alert('Em construção');
-                            }
-                            }>Iniciar simulado <NewTestIcon iconColor="white" onIconClick={() => {}}/>
-                        </Button>    
-                        </div>
-
-                        <div className="ou">
-                            <p> ou </p>
-                        </div>
-
-                        <div className="acessar_questoes"> 
-                            <p> Veja nosso banco de questões completo</p>
-                            <Button name="btn_banco" colorScheme="gray" width={315} height={50} variant="solid" onClick={() =>
-                            {
-                                  alert('Em construção');
-                            }
-                            }>Acessar Banco <DatabaseIcon onIconClick={() => {}}/>
-                            </Button>
-                        </div>   
-                    </div>
-
-                    <div className="simulado_anterior">
-                            <div className="sim_anteriores"><p>Simulados anteriores</p> </div>
-
-                            <div className="caixa_sim"> 
-                                <div className="acertos_sim">
-                                37/50 <NewTestIcon onIconClick={() => {}}/>
+                            <div className="simuladobanco">
+                                <div className="simulado">
+                                <p>Teste suas habilidades com um simulado</p>
+                                <Button colorScheme="blue" width={315} height={50} variant="solid" onClick={() =>
+                                    {
+                                    //Voltar para a tela anterior
+                                          alert('Em construção');
+                                    }
+                                    }>Iniciar simulado <NewTestIcon iconColor="white" onIconClick={() => {}}/>
+                                </Button>    
                                 </div>
 
-                            <div className="time">
-                                tempo: 1h 27min
+                                <div className="ou">
+                                    <p> ou </p>
+                                </div>
+
+                                <div className="acessar_questoes"> 
+                                    <p> Veja nosso banco de questões completo</p>
+                                    <Button name="btn_banco" colorScheme="gray" width={315} height={50} variant="solid" onClick={() =>
+                                    {
+                                          alert('Em construção');
+                                    }
+                                    }>Acessar Banco <DatabaseIcon onIconClick={() => {}}/>
+                                    </Button>
+                                </div>   
                             </div>
-                            <div className="vermais"> ver mais</div>
-                            
+
+                            <div className="simulado_anterior">
+                                    <div className="sim_anteriores"><p>Simulados anteriores</p> </div>
+
+                                    <div className="caixa_sim"> 
+                                        <div className="acertos_sim">
+                                        37/50 <NewTestIcon onIconClick={() => {}}/>
+                                        </div>
+
+                                    <div className="time">
+                                        tempo: 1h 27min
+                                    </div>
+                                    <div className="vermais"> ver mais</div>
+                                    
+                                    </div>
                             </div>
-                    </div>
-                 
+                          </div>
+                  </> : <>
+                  <h1>Não ESTAS LOGADO</h1>
+                  
+                  </>}
                 </div>
             </div>
         </div>
