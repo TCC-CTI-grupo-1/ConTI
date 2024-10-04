@@ -1660,8 +1660,8 @@ COMPONENTES GERAIS DO FERNANDO
   }
   max-width: 75%;
   border: none;
-  &>.alternatives div.item {
-    &.showCorrect {
+  & > .alternatives{   
+    &.showCorrect div.item{
       &>div {
         cursor: default;
         &:hover{
@@ -1692,7 +1692,11 @@ COMPONENTES GERAIS DO FERNANDO
           }
         }
       }
-    }
+  }
+
+  }
+  &>.alternatives div.item {
+ 
     margin: var(--padding-2) 0;
     display: flex;
     justify-content: center;

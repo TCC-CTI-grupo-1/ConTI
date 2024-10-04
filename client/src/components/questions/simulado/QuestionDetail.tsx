@@ -31,15 +31,6 @@ function QuestionDetail({ question, answers, isSimulado=false, isAnswersSelected
         isAnswersSelected && isAnswersSelected(selectedAnswers);
     }, [selectedAnswers]);
 
-
-    const alternativasRef = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
-
-    // Garante que o array de refs tenha o tamanho necessário
-    if (alternativasRef.current.length === 0) {
-        let length = answers.length;
-        alternativasRef.current = Array.from({ length }, () => React.createRef());
-    }
-
     const questionRef = useRef<HTMLDivElement>(null);
 
     const [showAnswer, setShowAnswer] = useState(false);
@@ -64,7 +55,7 @@ function QuestionDetail({ question, answers, isSimulado=false, isAnswersSelected
         });
     }, []);
 
-    const handleClick = useCallback((event: Event) => {
+    const handleClick = useCallback((event: any) => {
         const target = event.currentTarget as HTMLElement;
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
 
@@ -75,77 +66,6 @@ function QuestionDetail({ question, answers, isSimulado=false, isAnswersSelected
             showAlert('Ocorreu um erro ao computar a alternativa. Tente novamente.');
         }
     }, [addClassToAlternative]);
-
-
-    function cleanupEvenListeners(){
-        alternativasRef.current.forEach((alternativa) => {
-            if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
-            alternativa.current.removeEventListener('click', handleClick);
-        });
-    }
-
-    function checkAlternativas(){
-        if(alternativasRef.current.length === 0) return showAlert('Ocorreu um erro ao encontrar as alternativas. Tente novamente. [0]');    
-        if (!showAnswer) {
-            //Eu literalmente não faço ideia do que isso faz
-            console.log('add click event listener');
-            console.log(alternativasRef.current);
-            alternativasRef.current.forEach((alternativa) => {
-                if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [1]');
-                
-                console.log(alternativa.current);
-                alternativa.current.addEventListener('click', handleClick);
-                
-                const letra = alternativa.current.querySelector('p')
-                if(letra){
-                    if (letra.textContent == correctAnswer) {
-                        alternativa.current.classList.add('correct');
-                    }
-                    else{
-                        if (letra.textContent == null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [2]');
-                        letra.textContent = letra.textContent?.replace(/\s/g, '');
-                        correctAnswer?.replace(/\s/g, '');
-                        console.log('letra: ' + letra.textContent + " correctAnswer: " + correctAnswer + " letra=correctAnswer: " + (letra.textContent == correctAnswer));
-                    }
-                }
-                else{
-                    showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [2]');
-                }
-                
-            });
-        } else {
-            // remove click event listener
-            
-            //Alternativa que o cara marcou está com 'active'
-
-            alternativasRef.current.forEach((alternativa) => {
-                if(alternativa.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente. [3]');
-                const letra = alternativa.current.querySelector('p');
-                
-                if(letra){
-                    if(letra.textContent == selectedAnswers){
-                        alternativa.current.classList.add('correct');
-                    }
-                }
-
-            });
-
-            cleanupEvenListeners();
-        }
-
-        return () => {
-            console.log('cleanup event listeners');
-            cleanupEvenListeners();
-        };
-    }
-
-    useEffect(() => {
-        
-        checkAlternativas();
-
-        // Cleanup function to remove event listeners when the component unmounts or when showAnswer changes
-        
-    }, [showAnswer, handleClick]);
 
     useEffect(() => {
         if (isCorrecao !== undefined && isCorrecao !== true) {
@@ -183,11 +103,17 @@ function QuestionDetail({ question, answers, isSimulado=false, isAnswersSelected
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 
                 {answers.map((alternative, index) => (
-                    <div key={index} ref={alternativasRef.current[index]} className={String(index)}>
-                        <span>
-                            <p> {alternative.question_letter} </p>
-                        </span>
-                        <p> {alternative.answer} </p>
+                    <div className='item'>
+                        <div key={index} className={String(index) + ' ' + (alternative.is_correct ? 'correct' : '')}
+                        onClick={(e) => {
+                            handleClick(e);
+                        }}
+                        >
+                            <span>
+                                <p> {alternative.question_letter} </p>
+                            </span>
+                            <p> {alternative.answer} </p>
+                        </div>
                     </div>
                 ))}
 

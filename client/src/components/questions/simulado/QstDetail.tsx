@@ -116,11 +116,15 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
                 <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                     
                     {answers.map((alternative, index) => (
-                        <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)}>
-                            <span>
-                                <p> {alternative.question_letter} </p>
-                            </span>
-                            <p> {alternative.answer} </p>
+                        <div className="item">
+                            <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)
+                                + ' ' + (alternative.is_correct ? 'correct' : '')
+                            }>
+                                <span>
+                                    <p> {alternative.question_letter} </p>
+                                </span>
+                                <p> {alternative.answer} </p>           
+                            </div>
                         </div>
                     ))}
     
