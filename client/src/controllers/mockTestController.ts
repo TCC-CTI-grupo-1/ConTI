@@ -25,6 +25,7 @@ export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<si
 
 }
 
+
 export async function handlePostSimulado(questionsList: questionInterface[], tipo: string, time_limit: number): Promise<simuladoInterface | null> { //mockTestController.ts
     //Código PLACEHOLDER.
     try {
