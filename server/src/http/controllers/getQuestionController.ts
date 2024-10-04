@@ -35,7 +35,7 @@ export async function getQuestionByIdController(req: Request, res: Response) {
     }
     
     try {
-        const question: QuestionDTO = await questionDAO.searchQuestionById(Number(req.params.id));
+        const question: QuestionDTO = await questionDAO.searchQuestionById(Number(id));
         res.json({ question: question });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
