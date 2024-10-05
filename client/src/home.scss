@@ -8,20 +8,22 @@
         }
         
         .bolhas {
-          margin-bottom: 40px;
+          margin-bottom: 200px;
         }
         
-        .b1 {
+        .porque{
           background-color: #6da6ff;
-          border-radius: 50%;
-          width: 100px;
-          height: 100px;
+          border-radius: 50px;
+          width: 800px;
+          height: 60px;
           display: flex;
           justify-content: center;
           align-items: center;
-          color: white;
+          color: rgb(255, 255, 255);
           font-size: 1.5rem;
+          margin-top: 50px;
           margin: 0 auto;
+          
         }
         
         .motivos {
@@ -31,7 +33,7 @@
           gap: 20px;
         }
         
-        .mot_simulados, .mot_banco, .mot_acompanhamento, .mot_resultados {
+        .mot_simulados, .mot_banco, .mot_acompanhamento, .mot_resultados { //caxinha padrao com a sombra 
           background-color: #fff;
           border: 2px solid #b0d6ff;
           border-radius: 10px;
@@ -54,13 +56,74 @@
         .equipe {
           margin-top: 40px;
         }
-        
-        /* Para telas menores (responsivo) */
-        @media (max-width: 768px) {
-          .mot_simulados, .mot_banco, .mot_acompanhamento, .mot_resultados {
+      
+
+          //Bolinhas lindas -  sim cada uma tem que ter seu css :(//
+          .bolhas-container {
+            position: relative;
             width: 100%;
+            height: 400px; 
           }
-        }
+          
+          .bolha {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(109, 166, 255, 0.7);
+            
+            
+            .bolha:hover {
+              transform: scale(0);
+              opacity: 0;
+            }
+            
+        
+          }
+          
+          .bolha1 {
+            width: 100px;
+            height: 100px;
+            top: 200px;
+            left: 100px;
+            margin: 10px;
+            display: inline-block;
+            transition: transform 0.5s, opacity 0.5s;
+          }
+          
+          .bolha2 {
+            width: 200px;
+            height: 200px;
+            top: 200px;
+            left: 150px;
+          }
+          
+          .bolha3 {
+            width: 80px;
+            height: 80px;
+            top: 100px;
+            right: 100px;
+            background-color: rgba(100, 150, 255, 0.7); /* Bolha com cor um pouco diferente */
+          }
+          
+          .bolha4 {
+            width: 120px;
+            height: 120px;
+            top: 50px;
+            right: 50px;
+          }
+          
+          .bolha5 {
+            width: 60px;
+            height: 60px;
+            top: 300px;
+            left: 300px;
+          }
+          
+          .bolha6 {
+            width: 90px;
+            height: 90px;
+            top: 250px;
+            right: 200px;
+          }
         
         
 //AQUI É A TELA COM USUARIO LOGADO

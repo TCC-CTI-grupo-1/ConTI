@@ -5,7 +5,7 @@ import QstDetail from "../questions/simulado/QstDetail"
 import { ProgressBar } from "../ProgressBar"
 import DatabaseIcon from "../../assets/DatabaseIcon";
 import NewTestIcon from "../../assets/NewTestIcon.tsx";
-import Background from "../user/Background.tsx";
+//import Background from "../user/Background.tsx";
 import { useState, useEffect } from "react";
 import { questionInterface, respostaInterface } from "../../controllers/interfaces.ts";
 import { handleGetQuestions } from "../../controllers/questionController.ts";
@@ -39,8 +39,7 @@ const Home = () => {
       <div className="container">
 
         <div className="header">
-          <h1>Olá, </h1>
-          <h3>O que deseja fazer hoje?</h3>
+         
         </div>
         <div className="inversed-border"></div>
         <div className="content">
@@ -122,11 +121,21 @@ const Home = () => {
 
 
             <p>Não ESTAS LOGADO</p>
+            <div className="inicio"> <h1> Conheça o ConTI </h1></div>
+
             <div className="bolhas">
-              <div className="b1"> <h1> b1 </h1></div>
+              
+            <div className="bolha bolha1"></div>
+            <div className="bolha bolha2"></div>
+            <div className="bolha bolha3"></div>
+            <div className="bolha bolha4"></div>
+            <div className="bolha bolha5"></div>
+      
             </div>
 
-
+            <div className="porque"> <h1> Por que estudar com o ConTI? </h1>
+            </div>
+            
 
             <div className="motivos">
               <div className="mot_simulados">
