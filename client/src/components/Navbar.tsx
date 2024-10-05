@@ -96,7 +96,7 @@ const Navbar = ({screen}:Props) => {
                         () => {
                             navegate('/aboutus');
                         }
-                    }>Sobre nós</h3>
+                    }>Sobre</h3>
                     <h3>Contato</h3>
 
 

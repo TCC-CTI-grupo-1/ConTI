@@ -12,7 +12,7 @@
     .rounded-image {
       width: 700px;
       height: auto;
-      border-radius: 50px; 
+      border-radius: 30px; 
       object-fit: cover; 
     }
   }
@@ -22,4 +22,11 @@
     text-align: justify;
     flex: 1;
     line-height: 1.6;
+  }
+
+  .dev_img{
+    padding-left: 5px;
+  }
+  .desenvolvedores{
+    margin-left: 1px;
   }
