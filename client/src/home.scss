@@ -1,33 +1,67 @@
 
         //AQUI É A TELA NÃO LOGADA
-        .bolhas{
+        .home-container {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+          background-color: #f0f0f0;
+          text-align: center;
+        }
+        
+        .bolhas {
+          margin-bottom: 40px;
+        }
+        
+        .b1 {
+          background-color: #6da6ff;
+          border-radius: 50%;
+          width: 100px;
+          height: 100px;
           display: flex;
-          flex-direction: row;
-
-          .b1{
-                background-color: #1258d2;
-                border: 2px solid rgb(0, 81, 118); /*borda azul */
-                border-radius: 80px; /* borda arredondada */
-                padding: 15px;
-                margin-left: 70px;
-                margin-right: 110px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                width: 850px; /* Largura */
+          justify-content: center;
+          align-items: center;
+          color: white;
+          font-size: 1.5rem;
+          margin: 0 auto;
+        }
+        
+        .motivos {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          gap: 20px;
+        }
+        
+        .mot_simulados, .mot_banco, .mot_acompanhamento, .mot_resultados {
+          background-color: #fff;
+          border: 2px solid #b0d6ff;
+          border-radius: 10px;
+          width: 45%;
+          padding: 20px;
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mot_simulados h3, .mot_banco h3, .mot_acompanhamento h3, .mot_resultados h3 {
+          font-size: 1.5rem;
+          color: #3f3d56;
+          margin-bottom: 10px;
+        }
+        
+        .mot_simulados p, .mot_banco p, .mot_acompanhamento p, .mot_resultados p {
+          font-size: 1rem;
+          color: #4a4a4a;
+        }
+        
+        .equipe {
+          margin-top: 40px;
+        }
+        
+        /* Para telas menores (responsivo) */
+        @media (max-width: 768px) {
+          .mot_simulados, .mot_banco, .mot_acompanhamento, .mot_resultados {
+            width: 100%;
           }
         }
-
-        .motivos{
-          .mot_simulados{                        
-                  background-color: #ffffff;
-                  border: 2px solid rgb(0, 81, 118); /*borda azul */
-                  border-radius: 15px; /* borda arredondada */
-                  padding: 15px;
-                  margin-left: 70px;
-                  margin-right: 110px;
-                  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                  width: 850px; /* Largura */
-                }
-          }
+        
         
 //AQUI É A TELA COM USUARIO LOGADO
 .question_graphic{
