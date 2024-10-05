@@ -100,6 +100,8 @@ function QuestionDetail({ question, answers, isSimulado=false, isAnswersSelected
             <h4>
             {question.question_text}
             </h4>
+            {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
+
             <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                 
                 {answers.map((alternative, index) => (

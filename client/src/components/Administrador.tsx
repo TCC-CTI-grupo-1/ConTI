@@ -6,7 +6,7 @@ import { handleGetAreasMap } from "./../controllers/areasController";
 import { Select } from '@chakra-ui/react'
 import { handlePostArea } from "./../controllers/areasController";
 import { showAlert } from "./../App";
-import { handleGetQuestions } from "./../controllers/questionController";
+import { handleGetQuestions, handleGetQuestion } from "./../controllers/questionController";
 import { areaInterface, questionInterface, respostaInterface } from "../controllers/interfaces";
 import QuestionBox from "./questions/QuestionBox";
 import { handlePutQuestion, handleDeleteQuestion, handlePostQuestion } from "./../controllers/questionController";
@@ -645,6 +645,9 @@ const Admistrator = () => {
                                 else{
                                     showAlert("Erro ao editar questão");
                                 }
+                                //Pega a nova questão atualizada do banco de dados
+                                const newQuestionDB = handleGetQuestion(novaQst[0].id);
+
                             },
 
                             
