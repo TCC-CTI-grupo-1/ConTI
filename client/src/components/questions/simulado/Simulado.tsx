@@ -26,6 +26,7 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
 import { handlePutQuestion_MockTestById } from "../../../controllers/questionMockTestController";
+import { showAlert } from "../../../App";
   
 type questionMapInterface = {
     question: questionInterface;
@@ -93,6 +94,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             mockTest_id: mockTestId,
             answer_id: AlternativaDaQuestao
         };
+        showAlert(mockTestId, "success");
         handlePutQuestion_MockTestById(question_MockTest);
         setPrevActiveQuestion(activeQuestion);
 

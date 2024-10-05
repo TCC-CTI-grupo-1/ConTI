@@ -24,6 +24,8 @@ export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number
 
 export async function handlePutQuestion_MockTestById(question_mockTest: question_MockTestInterface): Promise<string> {
     try {
+        console.log("PUT QUESTION_MOCKTEST");
+        console.log(question_mockTest);
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/question_MockTest/', {
             method: 'PUT',
             credentials: 'include',
@@ -41,6 +43,8 @@ export async function handlePutQuestion_MockTestById(question_mockTest: question
         }
 
     } catch (err: any) {
+        console.log(err.message);
         return err.message;
+        
     }
 }
