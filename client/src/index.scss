@@ -1505,7 +1505,10 @@ COMPONENTES GERAIS DO FERNANDO
       gap: var(--padding-0);
       padding: 0 var(--padding-2);
       width: 100%;
-
+      & .chakra-menu__menu-list{
+        max-height: 20vh;
+        overflow: auto;
+      }
       &>div {
         flex: 1;
         display: flex;
