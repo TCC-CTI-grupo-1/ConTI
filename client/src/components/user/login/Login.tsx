@@ -49,7 +49,7 @@ const Login = ({changeLoginPage}:Props) => {
         }
         else{
             setLoading(true);
-            const [loginSuccess, loginMessage] = await handleLogin(email, password, remember);
+            const [loginSuccess, loginData] = await handleLogin(email, password, remember);
             setLoading(false);
 
             console.log(loginSuccess);
@@ -57,13 +57,14 @@ const Login = ({changeLoginPage}:Props) => {
                 showAlert("Login bem sucedido!", "success");
                 console.log("L");
                 localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username',  loginData.name);
                 navigate("/");
                 //refresh the page
                 //window.location.reload();
             }
             else{
                 console.log("E");
-                showAlert(loginMessage, "error");
+                showAlert(loginData, "error");
             }
         }
     }

@@ -82,6 +82,8 @@ export class Area_ProfileDAO {
         }
         return tree;
     }
+
+    
     buildRootedAreaProfileTree = async(profile_id:number):Promise<Rooted_AreaProfileTree> => {
         const instance = new AreaDAO();
         const areatree:AreaTree = await instance.buildAreaTree();

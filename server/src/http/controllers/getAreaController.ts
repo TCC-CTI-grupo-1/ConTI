@@ -78,3 +78,13 @@ export async function getAreasIdsByQuestionsIdsController(req: Request, res: Res
         res.status(500).json({ message: error.message });
     }
 }
+
+export async function getAreaTreeController(req: Request, res: Response) {
+    const areaDAO = new AreaDAO();
+    try {
+        const areaTree = await areaDAO.buildRootedAreaTree();
+        res.json({ areaTree: areaTree });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}

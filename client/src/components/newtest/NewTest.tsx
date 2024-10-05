@@ -13,6 +13,7 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
 import { useState } from "react"
+import LoadingScreen from "../LoadingScreen"
 
 const NewTest = () => {
 
@@ -30,7 +31,7 @@ const NewTest = () => {
     return (
         <>
         {
-            loading ? <h1>Loading</h1> : <>
+            loading ? <LoadingScreen /> : <>
                 <div id="newtest" className="flex-container full-screen-size">
                         <Navbar screen="newtest"/>
                         <Background variant='white'/>

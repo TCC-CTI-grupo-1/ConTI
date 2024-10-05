@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { questionInterface } from '../../controllers/interfaces';
 import { handleGetQuestion } from '../../controllers/questionController';
+import LoadingScreen from '../LoadingScreen';
 
 const QuestionDatabase = () => {
     const { id } = useParams(); // Acessando o ID da pergunta da rota
@@ -31,7 +32,7 @@ const QuestionDatabase = () => {
         chechQuestion();
     }, [id]);
 
-    return (<> {loading ? <h1>Carregando...</h1> :
+    return (<> {loading ? <LoadingScreen /> :
         <div id="database" className="flex-container full-screen-size">
                 <Background variant='white'/>
                 <Navbar screen="database"/>
