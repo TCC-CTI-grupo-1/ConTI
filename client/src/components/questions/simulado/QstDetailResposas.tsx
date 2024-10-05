@@ -22,7 +22,7 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
                 <h4>
                 {question.question_text}
                 </h4>
-                <img src={'http://localhost:3001/' + question.id + '.png'} alt="Imagem da questão" />
+                <img src={'http://cti.4edge.cloud:3000/' + question.id + '.png'} alt="Imagem da questão" />
 
                 <div className={"alternatives showCorrect"} ref={questionRef}>
                     {answers.map((alternative, index) => (

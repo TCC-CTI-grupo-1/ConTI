@@ -88,7 +88,7 @@ export async function handleSignup(name: string, email: string, password: string
     }
 }
 
-export async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, string]> {
+export async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, any]> {
     try {
         const data = {
             email: email,
@@ -114,7 +114,7 @@ export async function handleLogin(email: string, password: string, remember: boo
         } else {
             //window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
             //NÃO, NÃO SOFRE
-            return [true, "Login bem sucedido"];
+            return [true, response];
         }
     } catch (err: any) {
         return [false, err.message];
@@ -210,6 +210,8 @@ export async function handleLogout() {// userController.ts
             throw new Error(responseData.message);
         } else {
             localStorage.setItem('isLoggedIn', 'false');
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
             window.location.href = 'http://localhost:5173/';
             // return [true, "Logout bem sucedido"];
         }
