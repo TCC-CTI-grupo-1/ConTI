@@ -19,3 +19,11 @@ export enum DifficultyLevel{
 export enum DifficultyType{
     AREA,INDIVIDUAL,SPECIAL
 }
+
+export interface Tree<T>{
+    [key:number]:T[]
+}
+export interface RootedTree<T>{
+    tree:Tree<T>,
+    root:T
+}
