@@ -20,7 +20,7 @@ async function handleAddImage(image:FormData, editing:boolean)
 }
 export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> { //questionController
     try{
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/' + questionID, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/question/' + questionID, {
             method: 'GET',
             credentials: 'include',
             headers: {

@@ -1,5 +1,5 @@
 import {areaInterface} from './interfaces';
-import { areaTreeInterface } from './interfaces';
+
 export async function handleGetAreas(): Promise<areaInterface[]> { //areasController.ts
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -90,7 +90,7 @@ export async function handleGetAreasMap(): Promise<{[id: number]: areaInterface}
     }
 }
 
-export async function handleGetAreasTree(): Promise<areaTreeInterface | null> { //areasController.ts
+export async function handleGetAreasTree(): Promise<null> { //areasController.ts
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas/tree', {
@@ -105,7 +105,7 @@ export async function handleGetAreasTree(): Promise<areaTreeInterface | null> { 
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return responseData.tree;
+            return responseData;
         }
 
     } catch (err: any) {
