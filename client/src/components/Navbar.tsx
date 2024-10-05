@@ -12,7 +12,7 @@ import { useState } from "react";
 
 
 interface Props{
-    screen: 'home' | 'profile' | 'database' | 'history' | 'newtest' | 'adm' | 'aboutUs';
+    screen: 'home' | 'profile' | 'database' | 'history' | 'newtest' | 'adm' | 'aboutUs' | 'notFound';
 }
 
 const Navbar = ({screen}:Props) => {

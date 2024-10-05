@@ -440,8 +440,11 @@ H4{
     flex-direction: column;
     justify-content: space-between;
     & div.options{
+      overflow: hidden;
       & h3{
+        overflow: hidden;
         font-size: 0.8rem;
+        white-space: nowrap;  
         transition: 0.2s;
         &:hover{
           color: var(--primary-color);
@@ -492,7 +495,16 @@ H4{
     background-color: var(--background-color);
   }
 }
-
+section.loading{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  & h1{
+    margin: var(--padding-5);
+  }
+  width: 100vw;
+}
 /*button.secondary{
   background-color: transparent;
   border: 1px solid var(--primary-color);

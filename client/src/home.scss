@@ -29,12 +29,20 @@
                 }
           }
         
+section.home{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 //AQUI É A TELA COM USUARIO LOGADO
 .question_graphic{
     display: flex;
     flex-direction: row;
     
   .dly_question { //caixa da questao diaria
+    max-height: 400px;
+    overflow: auto;
     background-color: #ffffff;
     border: 2px solid rgb(0, 81, 118); /*borda azul */
     border-radius: 15px; /* borda arredondada */

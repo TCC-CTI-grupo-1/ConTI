@@ -11,6 +11,7 @@ import { handleGetAreasMap } from '../../controllers/areasController'
 import { areaInterface, simuladoInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
+import LoadingScreen from '../LoadingScreen';
 
 import {
     Modal,
@@ -225,7 +226,7 @@ const History = () => {
     }
 
     return (
-        <>{loading ? <h1>Carrregando</h1> :
+        <>{loading ? <LoadingScreen /> :
             <div id="history" className="flex-container full-screen-size">
                     <Navbar screen="history"/>
                     <div className="container">

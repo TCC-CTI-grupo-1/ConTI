@@ -14,6 +14,7 @@ import { handleGetAnswersByQuestionsIds } from "../controllers/answerController"
 import QstDetailRespostas from "./questions/simulado/QstDetailResposas";
 import { useRef } from "react";
 import { handlePostQuestionImage } from "./../controllers/questionController";
+import LoadingScreen from "./LoadingScreen";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -189,11 +190,11 @@ const Admistrator = () => {
     const [questao, setQuestao] = useState<number>(1);
 
   return (<>
-    {loading ? <h1>Carregando</h1> :
+    {loading ? <LoadingScreen /> :
     <>
         <div id="profile" className="flex-container full-screen-size">
             <>
-        <Navbar screen="profile"/>
+        <Navbar screen="adm"/>
             <div className="container">
                 <div className="header">
                     <h1>Área do administrador</h1>
