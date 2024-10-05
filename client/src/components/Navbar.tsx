@@ -109,7 +109,7 @@ const Navbar = ({screen}:Props) => {
                     <div className="icon">
                             <AdminIcon iconColor={checkActiveScreen('adm')}
                             onIconClick={() => {navegate('/adm')}}/>
-                            <p className={checkActiveScreen('adm')}>Adinistrador</p>
+                            <p className={checkActiveScreen('adm')}>Admnistrador</p>
                     </div>
                 </div>
                 

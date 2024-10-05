@@ -1,4 +1,35 @@
 
+        //AQUI É A TELA NÃO LOGADA
+        .bolhas{
+          display: flex;
+          flex-direction: row;
+
+          .b1{
+                background-color: #1258d2;
+                border: 2px solid rgb(0, 81, 118); /*borda azul */
+                border-radius: 80px; /* borda arredondada */
+                padding: 15px;
+                margin-left: 70px;
+                margin-right: 110px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                width: 850px; /* Largura */
+          }
+        }
+
+        .motivos{
+          .mot_simulados{                        
+                  background-color: #ffffff;
+                  border: 2px solid rgb(0, 81, 118); /*borda azul */
+                  border-radius: 15px; /* borda arredondada */
+                  padding: 15px;
+                  margin-left: 70px;
+                  margin-right: 110px;
+                  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                  width: 850px; /* Largura */
+                }
+          }
+        
+//AQUI É A TELA COM USUARIO LOGADO
 .question_graphic{
     display: flex;
     flex-direction: row;
