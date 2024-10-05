@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import { QuestionDAO } from "../../DAO/QuestionDAO";
 import { QuestionDTO } from "../../DTO/QuestionDTO";
-import { questionFilters, DifficultyLevel, DifficultyType } from "../../types/client/interfaces";
+import { questionFilters, DifficultyType } from "../../types/client/interfaces";
+import { DifficultyLevel } from "../../test_builder";
 import { TestBuilder, TestBlueprint } from "../../test_builder";
 import test from "node:test";
+import { difficulty } from "@prisma/client";
 
 export async function getQuestionController(req: Request, res: Response) {
     const questionDAO = new QuestionDAO();
@@ -66,7 +68,7 @@ export async function getQuestionsForNewMockTestByProfileController(req: Request
     
     try {
         const profileId = req.session.profile.id;
-        const test_blueprint = new TestBlueprint(50, {1:15,2:15,3:15,4:5}, DifficultyLevel.MEDIUM, DifficultyType.INDIVIDUAL, profileId);
+        const test_blueprint = new TestBlueprint(50, {1:15,2:15,3:15,4:5}, {1:DifficultyLevel.MEDIUM,2:DifficultyLevel.MEDIUM}, profileId);
         const test_builder = new TestBuilder([]);
         const questions = await test_builder.buildTest(test_blueprint);
         res.json({ questions: questions });

@@ -47,7 +47,7 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 
 export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<questionInterface[]> {
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        //await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/ids/' + JSON.stringify(questions_ids), {
             method: 'GET',
             credentials: 'include',
@@ -207,7 +207,7 @@ export async function handlePutQuestion_withImage(question:questionInterface,ans
 }
 export async function handlePostQuestion(question: questionInterface): Promise<boolean> { //questionController.ts
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        //await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions', {
             method: 'POST',
             credentials: 'include',
@@ -244,7 +244,7 @@ export async function handlePostQuestion_withImage(question:questionInterface, i
 
 export async function handleDeleteQuestion(id: number): Promise<boolean> { //questionController.ts
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        //await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/questionsById/'+id, {
             method: 'DELETE',
             credentials: 'include',
