@@ -42,12 +42,12 @@ const Home = () => {
                 <Background variant="white" />
                 <div className="header">
                     <h1>Home</h1>
-                    <h3>O que deseja fazer hoje?</h3>
                 </div>
                 <div className="inversed-border"></div>
                 <div className="content">
                   {isLoggedIn ? <>
                     <section className="home">
+                    <h3>O que deseja fazer hoje?</h3>
                         <div className="question_graphic">
                             <div className="dly_question">
                                 <h3>Deseja fazer uma questão diária? </h3>
@@ -111,38 +111,56 @@ const Home = () => {
                     </section>
                     
                   </> : <>
-                  <p>Não ESTAS LOGADO</p>
-                    <div className="bolhas">
-                          <div className="b1"> <h1> b1 </h1></div>
-                    </div>
+                      <div className="bolhas">
+                          <div className="bolha1"> <h1>  </h1></div>
+                          <div className="bolha2"> <h1>  </h1></div>
+                          <div className="bolha3"> <h1>  </h1></div>
+                          <div className="bolha4"> <h1>  </h1></div>
+                          <div className="bolha5"> <h1>  </h1></div>
+                          <div className="bolha6"> <h1>  </h1></div>
+                        </div>
+
+                    <div className="porque"><p>Por que estudar com o conti?</p></div>
 
                     <div className="motivos">
                         <div className="mot_simulados">
                             <h3> Simulados personalizados</h3>
-                            <p>Nosso sistema oferece simulados adaptados á cada dificuldade, proporcionando 
+                            <div className="mot_p01">
+                              <p>Nosso sistema oferece simulados adaptados á cada dificuldade, proporcionando 
                               uma experiência de estudo progressivo e promovendo uma preparação eficaz.</p>
+                            </div>
+                            <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" />                            
                         </div>
 
                         <div className="mot_banco">
                           <h3> Banco de questões gratuito</h3>
+                          <div className="mot_p02">
                             <p> Com um banco de questões que inclui perguntas pertencentes a vestibulinhos de 
                               anos anteriores, os alunos têm acesso a um material de qualidade para praticar 
                               e se familiarizar com o formato das provas.</p>
+
+                              <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" />
                           </div>
+                        </div>
 
                         <div className="mot_acompanhamento">
                           <h3> Seja acompanhado por seus professores</h3>
+                          <div className="mot_p01">
                             <p> Professores podem criar simulados, listas de exercícios e adicionar perguntas 
                             ao banco, proporcionando acompanhamento personalizado e enriquecendo a experiência 
                             de aprendizagem.</p>
+                            <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" /> 
+                          </div>
                         </div>
 
-                        
                         <div className="mot_resultados">
                           <h3> Acompanhamento de resultados</h3>
+                            <div className="mot_p02">
                             <p> Nosso sistema disponibiliza gráficos detalhados de perfil, permitindo visualização 
                               de desempenhos em cada matéria e prova, facilitando a identificação de áreas que 
                               precisam de mais atenção.</p>
+                              <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" /> 
+                            </div>
                         </div>
                     </div>
 
