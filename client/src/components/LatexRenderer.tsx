@@ -29,7 +29,7 @@ const LatexRenderer: React.FC<Props> = ({ text }) => {
             {parts.map((part, index) => {
                 if (part.startsWith('<tex>') && part.endsWith('</tex>')) {
                     const latexContent = part.slice(5, -6);
-                    return <Latex key={index}>{latexContent}</Latex>;
+                    return <Latex key={index}>${latexContent}$</Latex>;
                 }
                 return <span key={index}>{part}</span>;
             })}
