@@ -59,7 +59,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             questions: questionsList
         };
 
-        const responseQuestions = await fetch(import.meta.env.VITE_ADDRESS + '/questions_MockTest/', {
+        const responseQuestions = await fetch(import.meta.env.VITE_ADDRESS + '/questions_MockTest', {
             method: 'POST',
             credentials: 'include',
             headers: {

@@ -46,9 +46,6 @@ interface Props {
 
 const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=false, mockTestId }: Props) => {
 
-    console.log("SIMULADO!!!");
-    console.log(questionsHashMap);
-
 
     const [activeQuestion, setActiveQuestion] = useState(0);
     const [prevActiveQuestion, setPrevActiveQuestion] = useState(-1);

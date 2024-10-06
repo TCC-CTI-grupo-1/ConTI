@@ -52,11 +52,20 @@ const SimuladoFrame = () => {
 
                 }); 
                 setQuestionsHashMap(newQuestionMapInterface);
+                console.log("newQuestionMapInterface: ");
+                console.log(newQuestionMapInterface);
         }
-        getQuestions();
         
+        getQuestions();
+    }, []);
+
+    useEffect(() => {
         const postSimulado = async () => {
             let questionsarray: questionInterface[] = questionsHashMap.map(q => q.question);
+            console.log("questionsarray: ");
+            console.log(questionsarray);
+            console.log("questionsHashMap: ");
+            console.log(questionsHashMap);
             const simulado = await handlePostSimulado(questionsarray, "automatico", 50);
             if (simulado !== null) {
                 setSimulado(simulado);
@@ -67,8 +76,9 @@ const SimuladoFrame = () => {
                 showAlert("Por favor, tente novamente", "error");
             }
         }
+
         postSimulado();
-    }, []);
+    }, [questionsHashMap]);
 
     const finishSimulado = () => {
         navegate('/');

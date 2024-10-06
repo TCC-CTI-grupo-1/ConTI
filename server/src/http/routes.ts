@@ -102,6 +102,6 @@ export async function routes(app: any) {
     // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
     app.post('/questions_MockTest', postQuestions_MockTestController);
-    app.put('/question_MockTest/', putQuestion_MockTestController);
+    app.put('/question_MockTest', putQuestion_MockTestController);
 
 }
