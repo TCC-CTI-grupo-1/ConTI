@@ -1,109 +1,120 @@
-import { useState } from 'react';
-import Input from '../../Input';
+import { useState } from "react";
+import Input from "../../Input";
 import Options from "./Options";
-import Logo from './Logo';
+import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 
+import { handleLogin } from "../../../controllers/userController";
+import { showAlert } from "../../../App";
 
-import { handleLogin } from '../../../controllers/userController';
-import { showAlert } from '../../../App';
-
-
-interface Props{
-    changeLoginPage: () => void
-
+interface Props {
+  changeLoginPage: () => void;
 }
 
-const Login = ({changeLoginPage}:Props) => {
+const Login = ({ changeLoginPage }: Props) => {
+  //Change URL
+  const navigate = useNavigate();
 
-    //Change URL
-    const navigate = useNavigate();
+  //Fetch options
+  const [loading, setLoading] = useState(false);
 
-    //Fetch options
-    const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [remember, setRemember] = useState(false);
+  //A ideia e que, se for true, todos os inputs recebem as "caixinhas vermelhas" em volta,
+  //E não só de e-mail e senha, pedindo para que o usuario preencha os outros valores
+  const [isInputsValid, setIsInputsValid] = useState(false);
 
-    
-    //A ideia e que, se for true, todos os inputs recebem as "caixinhas vermelhas" em volta,
-    //E não só de e-mail e senha, pedindo para que o usuario preencha os outros valores
-    const[isInputsValid, setIsInputsValid] = useState(false);
+  function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setEmail(e.target.value);
+  }
 
-    function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>){
-        setEmail(e.target.value);      
+  function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setPassword(e.target.value);
+  }
+
+  async function handleLoginButtonClick() {
+    //showAlert("Clicou", "success");
+    if (email.length == 0 || password.length == 0) {
+      setIsInputsValid(true);
+      showAlert("Preencha todos os campos", "warning");
+      return;
+    } else {
+      setLoading(true);
+      const [loginSuccess, loginData] = await handleLogin(
+        email,
+        password,
+        remember
+      );
+      setLoading(false);
+
+      console.log(loginSuccess);
+      if (loginSuccess) {
+        showAlert("Login bem sucedido!", "success");
+        console.log("L");
+        localStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("sessionUUID", "teste");
+        localStorage.setItem("username", loginData.name);
+        navigate("/");
+        //refresh the page
+        //window.location.reload();
+      } else {
+        console.log("E");
+        showAlert(loginData, "error");
+      }
     }
+  }
 
-    function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>){
-        setPassword(e.target.value);     
-    }
+  //Ver se pode ficar na window
 
-
-    async function handleLoginButtonClick(){
-        //showAlert("Clicou", "success");
-        if (email.length == 0 || password.length == 0) {
-            setIsInputsValid(true);
-            showAlert('Preencha todos os campos', 'warning');
-            return;
+  return (
+    <div
+      id="inputArea"
+      onKeyUp={(e) => {
+        if (e.key === "Enter") {
+          handleLoginButtonClick();
         }
-        else{
-            setLoading(true);
-            const [loginSuccess, loginData] = await handleLogin(email, password, remember);
-            setLoading(false);
+      }}
+    >
+      <Logo type={"login"} />
 
-            console.log(loginSuccess);
-            if (loginSuccess) {
-                showAlert("Login bem sucedido!", "success");
-                console.log("L");
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username',  loginData.name);
-                navigate("/");
-                //refresh the page
-                //window.location.reload();
-            }
-            else{
-                console.log("E");
-                showAlert(loginData, "error");
-            }
-        }
-    }
+      <div id="inputs">
+        <button
+          id="igorLogin"
+          style={{ color: "red" }}
+          onClick={async () => {
+            await handleLogin("igor.z@unesp.br", "eq13B459", remember);
+            navigate("/");
+          }}
+        >
+          IGOR
+        </button>
+        <Input
+          name="email"
+          label="Email"
+          onChange={handleEmailChange}
+          valid={isInputsValid ? email.length > 0 : undefined}
+        />
+        <Input
+          name="password"
+          label="Senha"
+          onChange={handlePasswordChange}
+          type="password"
+          valid={isInputsValid ? password.length > 0 : undefined}
+        />
+      </div>
 
-    //Ver se pode ficar na window
-
-    return (
-        <div id="inputArea"
-        onKeyUp={(e) =>{
-            if(e.key ==="Enter")
-                {
-                    handleLoginButtonClick();
-                }
-        }}>
-                <Logo type={'login'}/>
-
-                <div id="inputs">
-                    <button id="igorLogin" style={{color: "red"}}
-                    onClick={async () => {
-                        await handleLogin("igor.z@unesp.br", "eq13B459", remember);
-                        navigate("/");
-                    }}>IGOR</button>
-                    <Input name="email" label="Email" onChange={handleEmailChange}
-                    valid={isInputsValid ? email.length > 0 : undefined}/> 
-                    <Input name="password" label="Senha" onChange={handlePasswordChange}
-                    type='password'
-                    valid={isInputsValid ? password.length > 0 : undefined}/>
-                </div>
-
-                <Options type={'login'} 
-                onClick={handleLoginButtonClick}
-                changeScreen={changeLoginPage}
-                loading={loading}
-                onRemember={setRemember}
-                />         
-            </div>
-        
-    )
-}
+      <Options
+        type={"login"}
+        onClick={handleLoginButtonClick}
+        changeScreen={changeLoginPage}
+        loading={loading}
+        onRemember={setRemember}
+      />
+    </div>
+  );
+};
 
 /*<div className="center full-screen-size">
             <Background signin={!isLogin}/>

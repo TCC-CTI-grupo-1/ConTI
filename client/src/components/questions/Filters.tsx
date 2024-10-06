@@ -27,6 +27,7 @@ import { handleGetFilteredQuestions} from "../../controllers/questionController"
 import {handleGetAreasMap } from "../../controllers/areasController";
 import { handleGetAnswersByQuestionsIds } from "../../controllers/answerController";
 import QuestionBox from "./QuestionBox";
+import AreaTree from "../AreaTree";
 
 const Filters = () => {
   const navegate = useNavigate();
@@ -217,10 +218,10 @@ const Filters = () => {
             </Menu>
             </div>
 
-          {/*<div>
+          <div>
             <Button
             onClick={onOpen}><span>Selecionar disciplina</span></Button>
-          </div>*/}
+          </div>
         </div>
         <div className="more-options">
 
@@ -331,35 +332,10 @@ const Filters = () => {
           <ModalHeader>Selecione uma ou mais areas para o filtro</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <div id="filtro-ver-areas">
-            {areas ? Object.keys(areas).map((key) => {
-                return (
-                <Checkbox
-                  key={key}
-                  onChange={(e) => {
-                  let newOptions = { ...options };
-                  if (e.target.checked) {
-                    newOptions.disciplina.push(areas[parseInt(key)].name);
-                  } else {
-                    newOptions.disciplina = newOptions.disciplina.filter(
-                    (element) => {
-                      return element !== areas[parseInt(key)].name;
-                    }
-                    );
-                  }
-                  console.log(newOptions);
-                  setOptions(newOptions);
-                  }}
-                >
-                  {areas[parseInt(key)].name}  
-                  
-                  {false? String(options.disciplina.map((element) => {
-                    return element === areas[parseInt(key)].name;
-                  }).includes(true) !== undefined) : "" /*Isso não faz sentido. Adicionando o false? para retirar*/}
-                </Checkbox>
-                );
-            } ) : <p>Carregando...</p>}
-            </div>
+           <AreaTree onActiveAreasChange={(areas) => {
+             console.log(areas);
+             setOptions({...options, disciplina: areas});
+            }}/>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme='blue' mr={3} onClick={onClose}>

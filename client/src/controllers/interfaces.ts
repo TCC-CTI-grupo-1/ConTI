@@ -7,7 +7,7 @@ export interface SubjectCategory {
 export interface questionFilters{
     ano: number[];
     dificuldade: string[];
-    disciplina: string[];
+    disciplina: number[];
     alreadyAnswered?: boolean;
     myMockTests: boolean;
 }

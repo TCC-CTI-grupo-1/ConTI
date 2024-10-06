@@ -15,7 +15,8 @@ import QstDetailRespostas from "./questions/simulado/QstDetailResposas";
 import { useRef } from "react";
 import { handlePostQuestionImage } from "./../controllers/questionController";
 import LoadingScreen from "./LoadingScreen";
-import AreasTree from "./AreasTree";
+import AreaTree from "./AreaTree";
+import LatexRenderer from "./LatexRenderer";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -30,6 +31,7 @@ import {
     ModalCloseButton,
     useDisclosure,
   } from '@chakra-ui/react'
+import Latex from "react-latex-next";
 
 
 const Admistrator = () => {
@@ -362,8 +364,10 @@ const Admistrator = () => {
                                         </Select>
                                         <Button onClick={handlePostNovaArea}>Salvar</Button>
                                     </div>
+                                    
+                                    <LatexRenderer text='Eu chupei <tex>$2^{32}$</tex> paus' />       
 
-                                    <AreasTree />
+                                    <AreaTree onActiveAreasChange={() => {}}/>
                                 </div>}
                     </div>
                 </div>}

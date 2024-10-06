@@ -87,7 +87,7 @@ export async function handleGetAreasMap(): Promise<{[id: number]: areaInterface}
     }
 }
 
-export async function handleGetAreasTree(): Promise<null> { //areasController.ts
+export async function handleGetAreasTree(): Promise<any> { //areasController.ts
     try {
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas/tree', {
             method: 'GET',

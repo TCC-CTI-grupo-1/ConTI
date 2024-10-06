@@ -1,6 +1,6 @@
-import {Tree} from "../../../server/src/types/client/interfaces";
-import {AreaDTO} from "../../../server/src/DTO/AreaDTO";
-import {Area_ProfileDTO} from "../../../server/src/DTO/Area_ProfileDTO";
+import {Tree} from "../../../../server/src/types/client/interfaces";
+import {AreaDTO} from "../../../../server/src/DTO/AreaDTO";
+import {Area_ProfileDTO} from "../../../../server/src/DTO/Area_ProfileDTO";
 import React from "react";
 interface Props<T> {
     tree: Tree<T>
