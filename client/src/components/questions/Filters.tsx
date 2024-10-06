@@ -151,69 +151,76 @@ const Filters = () => {
           console.log(areas);
         }}>Filtros</h3>
         <div className="options">
-          <div>
+            <div>
             <Menu closeOnSelect={false}>
               {({ isOpen }) => (
-                <>
-                  <MenuButton
-                    as={Button}
-                    colorScheme={isOpen ? "blue" : "gray"}
-                    rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                  >
-                    Ano
-                  </MenuButton>
-                  <MenuList minWidth="240px">
-                    <MenuOptionGroup
-                      title="Ano"
-                      type="checkbox"
-                      onChange={(e) => {
-                        console.log(e);
-                        handleSelectChange(e, "ano");
-                      }}
-                    >
-                      <MenuItemOption value="2024">2024</MenuItemOption>
-                      <MenuItemOption value="2023">2023</MenuItemOption>
-                      <MenuItemOption value="2022">2022</MenuItemOption>
-                    </MenuOptionGroup>
-                  </MenuList>
-                </>
+              <>
+              <MenuButton
+              as={Button}
+              colorScheme={isOpen ? "blue" : "gray"}
+              rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+              >
+              Ano
+              </MenuButton>
+              <MenuList minWidth="240px">
+              <MenuOptionGroup
+                title="Ano"
+                type="checkbox"
+                onChange={(e) => {
+                console.log(e);
+                handleSelectChange(e, "ano");
+                }}
+                value={options.ano.map(String)} // Ensure the selected values are reflected
+              >
+                {
+                //map from 2008 - 2024
+                Array.from({length: 17}, (_, i) => 2008 + i).map((element) => {
+                return (
+                <MenuItemOption key={element} value={element.toString()}>{element}</MenuItemOption>
+                );
+                })
+                }
+              </MenuOptionGroup>
+              </MenuList>
+              </>
               )}
             </Menu>
-          </div>
+            </div>
 
-          <div>
+            <div>
             <Menu closeOnSelect={false}>
               {({ isOpen }) => (
-                <>
-                  <MenuButton
-                    as={Button}
-                    colorScheme={isOpen ? "blue" : "gray"}
-                    rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                  >
-                    Dificuldade
-                  </MenuButton>
-                  <MenuList minWidth="240px">
-                    <MenuOptionGroup
-                      title="Dificuldade"
-                      type="checkbox"
-                      onChange={(e) => {
-                        handleSelectChange(e, "dificuldade");
-                      }}
-                    >
-                      <MenuItemOption value="facil">Fácil</MenuItemOption>
-                      <MenuItemOption value="medio">Médio</MenuItemOption>
-                      <MenuItemOption value="dificil">Difícil</MenuItemOption>
-                    </MenuOptionGroup>
-                  </MenuList>
-                </>
+              <>
+                <MenuButton
+                as={Button}
+                colorScheme={isOpen ? "blue" : "gray"}
+                rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                >
+                Dificuldade
+                </MenuButton>
+                <MenuList minWidth="240px">
+                <MenuOptionGroup
+                  title="Dificuldade"
+                  type="checkbox"
+                  onChange={(e) => {
+                  handleSelectChange(e, "dificuldade");
+                  }}
+                  value={options.dificuldade} // Ensure the selected values are reflected
+                >
+                  <MenuItemOption value="facil">Fácil</MenuItemOption>
+                  <MenuItemOption value="medio">Médio</MenuItemOption>
+                  <MenuItemOption value="dificil">Difícil</MenuItemOption>
+                </MenuOptionGroup>
+                </MenuList>
+              </>
               )}
             </Menu>
-          </div>
+            </div>
 
-          <div>
+          {/*<div>
             <Button
             onClick={onOpen}><span>Selecionar disciplina</span></Button>
-          </div>
+          </div>*/}
         </div>
         <div className="more-options">
 
@@ -240,11 +247,15 @@ const Filters = () => {
             colorScheme="red"
             variant={"outline"}
             onClick={() => {
-              showAlert("Faz o L");
-              showAlert(
-                "Isso aqui eventualmente vai limpar os filtros",
-                "warning"
-              );
+              setOptions({
+                ano: anos,
+                dificuldade: dificuldade,
+                disciplina: [],
+                alreadyAnswered: false,
+                myMockTests: false,
+                //mySimulations: false,
+              });
+              showAlert("Filtros limpos", "success");
             }}
           >
             Limpar filtros

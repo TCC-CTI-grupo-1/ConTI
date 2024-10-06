@@ -35,7 +35,6 @@ export async function handleGetAnswersByQuestionId(questionID: number): Promise<
 
 export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): Promise<respostaInterface[]> { // answerController
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/answers/questions/' + JSON.stringify(questions_ids), {
             method: 'GET',
             credentials: 'include',

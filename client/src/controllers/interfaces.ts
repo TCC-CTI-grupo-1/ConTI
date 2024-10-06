@@ -54,23 +54,6 @@ export interface simuladoInterface{
         }
     },
 }
-
-export interface areaTreeInterface{
-    "areaTree": {
-        "tree": {
-            [key: string]: {
-                "id": number,
-                "name": string,
-                "parent_id": number,
-            }[]
-        },
-        "root": {
-            "id": number,
-            "name": string,
-        }
-    }
-}
-
 // NÃO DÁ PRA SÓ PEGAR DO DTO? EM SERVER... MELHOR, NÃO?...
 
 export interface areaInterface{

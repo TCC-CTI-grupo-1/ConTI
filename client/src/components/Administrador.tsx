@@ -15,6 +15,7 @@ import QstDetailRespostas from "./questions/simulado/QstDetailResposas";
 import { useRef } from "react";
 import { handlePostQuestionImage } from "./../controllers/questionController";
 import LoadingScreen from "./LoadingScreen";
+import AreasTree from "./AreasTree";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -210,6 +211,7 @@ const Admistrator = () => {
                         
                         {/*<div className='selected-line'></div>*/}
                     </div>
+                    
                 </div>
                 <div className="inversed-border"></div>
                 <div className="content">
@@ -309,8 +311,8 @@ const Admistrator = () => {
                                     {questionsMap.map((question, index) => {
                                         return index >= 6 * (pagina - 1) && index < 6 * pagina &&
                                         (areas[question.question.area_id] === undefined ?  null :
-                                        <><QuestionBox key={index} question={question.question} area={areas[question.question.area_id]} answers={question.answers}/>
-                                            <div className="btn">
+                                        <><QuestionBox key={question.question.id} question={question.question} area={areas[question.question.area_id]} answers={question.answers}/>
+                                            <div className="btn" key={index}>
                                                 <Button size={'xs'} onClick={() => {
                                                     let editQst: questionInterface;
                                                     editQst = question.question;
@@ -360,6 +362,8 @@ const Admistrator = () => {
                                         </Select>
                                         <Button onClick={handlePostNovaArea}>Salvar</Button>
                                     </div>
+
+                                    <AreasTree />
                                 </div>}
                     </div>
                 </div>}
@@ -630,7 +634,7 @@ const Admistrator = () => {
                             showAlert(img !== null ? "existem imagens" : "não existem imagens", "warning");
                             handlePutQuestion(novaQst[0], novaQst[1]).then((resp) => {   
                                 if(resp){
-                                    showAlert("Questão editada com sucesso! Por favor, atualize a página [f5]", "success");
+                                    showAlert("Questão editada com sucesso!", "success");
                                     if(img !== null){
                                         handlePostQuestionImage(img, novaQst[0].id).then((resp) => {
                                             if(resp){
@@ -646,7 +650,17 @@ const Admistrator = () => {
                                     showAlert("Erro ao editar questão");
                                 }
                                 //Pega a nova questão atualizada do banco de dados
-                                const newQuestionDB = handleGetQuestion(novaQst[0].id);
+                                handleGetQuestion(novaQst[0].id).then((resp) => {
+                                    if(resp){
+                                        let newQuestionsMap = [...questionsMap];
+                                        let index = newQuestionsMap.findIndex((question) => question.question.id === novaQst[0].id);
+                                        newQuestionsMap[index].question = resp;
+                                        setQuestionsMap(newQuestionsMap);
+                                    }
+                                    else{
+                                        showAlert("Erro ao pegar questão atualizada");
+                                    }
+                                });
 
                             },
 

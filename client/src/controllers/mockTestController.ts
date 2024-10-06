@@ -2,7 +2,7 @@ import { questionInterface, simuladoInterface} from './interfaces';
 import { handleGetUser } from './userController';
 export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<simuladoInterface[]> { //mockTestController.ts
     try {
-        await new Promise(resolve => setTimeout(resolve, 500));
+       // await new Promise(resolve => setTimeout(resolve, 500));
         
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTests/date/' + date, {
             method: 'GET',
@@ -59,7 +59,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             questions: questionsList
         };
 
-        const responseQuestions = await fetch(import.meta.env.VITE_ADDRESS + '/questions_MockTest/', {
+        const responseQuestions = await fetch(import.meta.env.VITE_ADDRESS + '/questions_MockTest', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -85,7 +85,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
 export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {//mockTestController.ts
     //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000 * id/100));
+        //await new Promise(resolve => setTimeout(resolve, 1000 * id/100));
         return null;
     } catch (err: any) {
         return null;

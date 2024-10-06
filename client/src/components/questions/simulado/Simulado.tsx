@@ -26,6 +26,7 @@ import {
     useDisclosure,
   } from '@chakra-ui/react'
 import { handlePutQuestion_MockTestById } from "../../../controllers/questionMockTestController";
+import { showAlert } from "../../../App";
   
 type questionMapInterface = {
     question: questionInterface;
@@ -44,9 +45,6 @@ interface Props {
 //Tudo aqui dentro é baseado no número da questão, e não no ID.
 
 const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=false, mockTestId }: Props) => {
-
-    console.log("SIMULADO!!!");
-    console.log(questionsHashMap);
 
 
     const [activeQuestion, setActiveQuestion] = useState(0);
@@ -93,6 +91,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             mockTest_id: mockTestId,
             answer_id: AlternativaDaQuestao
         };
+        showAlert(mockTestId, "success");
         handlePutQuestion_MockTestById(question_MockTest);
         setPrevActiveQuestion(activeQuestion);
 

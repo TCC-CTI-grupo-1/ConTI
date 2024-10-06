@@ -18,12 +18,13 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
             <div className={'box question'}>
+                
                 <p>*</p>
                 <h4>
                 {question.question_text}
                 </h4>
                 {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
-
+                
                 <div className={"alternatives showCorrect"} ref={questionRef}>
                     {answers.map((alternative, index) => (
                         <div className='item'>
@@ -37,6 +38,7 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
                             </div>
                         </div>
                     ))}
+                    {selectedAnswer === -1 && <p>Questão não respondida.</p>}
     
                 </div>
                 <div className="options">

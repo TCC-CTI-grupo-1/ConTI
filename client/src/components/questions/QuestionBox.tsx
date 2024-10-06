@@ -27,6 +27,19 @@ interface Props {
 
 const QuestionBox = ({ question, answers, area }: Props) => {
 
+  const getDifficultyLabel = (difficulty: string): string => {
+    switch(difficulty) {
+      case 'facil':
+        return 'Fácil';
+      case 'medio':
+        return 'Médio';
+      case 'dificil':
+        return 'Difícil';
+      default:
+        return 'Unknown';
+    }
+  };
+
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -47,7 +60,7 @@ const QuestionBox = ({ question, answers, area }: Props) => {
             <p>Ano: {question.question_year}</p>
           </div>
           <div className={"difficulty " + question.difficulty}><p>
-            {question.difficulty}
+            {getDifficultyLabel(question.difficulty)}
             </p>
           </div>
         </div>

@@ -259,7 +259,6 @@ export async function handleDeleteAccount() { // userController.ts
 
 export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //profileController.ts
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/areaProfile', {
             method: 'GET',
             credentials: 'include',
