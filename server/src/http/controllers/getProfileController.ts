@@ -1,10 +1,24 @@
 import { ProfileDAO } from "../../DAO/ProfileDAO";
 import { Request, Response } from "express";
 import { ProfileDTO } from "../../DTO/ProfileDTO";
+import RedisStore from "connect-redis";
+import { createClient } from 'redis';
 
+const passRedis = process.env.REDIS_PASS;
+const hostRedis = process.env.REDIS_HOST;
+const portRedis = parseInt(process.env.REDIS_PORT as string);
+let redisClient = createClient({
+    password: passRedis,
+    socket: {
+        host: hostRedis,
+        port: portRedis
+    }
+});
+redisClient.connect();
 
 export async function getProfileController(req: Request, res: Response) {
     const profileDAO = new ProfileDAO();
+	console.log(req.session);
     try {
         if(req.session === undefined) {
             return res.status(404).json({ message: 'Sessão não inicializada' });

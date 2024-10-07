@@ -31,6 +31,8 @@ import { postQuestions_MockTestController } from './controllers/postQuestions_Mo
 import { putQuestion_MockTestController } from './controllers/putQuestion_MockTestController';
 import { putMockTestController } from './controllers/putMockTestController';
 import { postImageController } from './controllers/postImageController';
+import { convertStringToAreaDTOs } from './controllers/addAllAreas';
+
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World');
@@ -40,6 +42,7 @@ export async function routes(app: any) {
     app.post('/signup', signupController);
     app.post('/login', loginController);
     app.post('/logout', logoutController);
+    app.get('/fernando', convertStringToAreaDTOs);
 
     app.post('/image', postImageController);
 
