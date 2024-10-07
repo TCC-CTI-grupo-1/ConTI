@@ -3,8 +3,8 @@ import { handleGetUser } from './userController';
 export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<simuladoInterface[]> { //mockTestController.ts
     try {
        // await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTests/date/' + date, {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTests/date/' + date + '/' + userId, {
             method: 'GET',
             credentials: 'include', 
             headers: {
@@ -43,7 +43,8 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             title: name
         };
         console.log(dataForMockTest);
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTest/', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTest/' + userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -99,7 +100,8 @@ export async function handleGetSimulado(): Promise<simuladoInterface | null> {//
 // não é 'generate', tá mais pra 'get'
 export async function generateNewSimulado(): Promise<questionInterface[]>{ //mockTestController.ts
     try {        
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/newMockTest/', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/newMockTest/' + userId, {
             method: 'GET',
             credentials: 'include',
             headers: {

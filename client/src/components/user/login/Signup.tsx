@@ -97,13 +97,14 @@ const Signup = ({changeLoginPage}:Props) => {
         }
         else{
             setLoading(true);
-            const signupSuccess = await handleSignup(name, email, password, remember);
+            const [signupSuccess, signupData] = await handleSignup(name, email, password, remember);
             setLoading(false);
 
             if(signupSuccess == null){
                 showAlert("Cadastro bem sucedido!", "success");
                 console.log("L");
                 localStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('userId', signupData.user.id.toString());
                 navigate("/");
                 //refresh the page
                 window.location.reload();

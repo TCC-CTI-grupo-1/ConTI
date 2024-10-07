@@ -54,8 +54,7 @@ const Login = ({ changeLoginPage }: Props) => {
         showAlert("Login bem sucedido!", "success");
         console.log("L");
         localStorage.setItem("isLoggedIn", "true");
-        sessionStorage.setItem("sessionUUID", "teste");
-        localStorage.setItem("username", loginData.name);
+        sessionStorage.setItem('userId', loginData.user.id.toString());
         navigate("/");
         //refresh the page
         //window.location.reload();
