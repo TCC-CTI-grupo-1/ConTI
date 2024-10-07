@@ -41,7 +41,7 @@ export async function routes(app: any) {
 
     app.post('/signup', signupController);
     app.post('/login', loginController);
-    app.post('/logout', logoutController);
+    app.post('/logout/:uuid', logoutController);
     app.get('/fernando', convertStringToAreaDTOs);
 
     app.post('/image', postImageController);
@@ -50,7 +50,7 @@ export async function routes(app: any) {
     //Recebe (sabe qual é) o usuario pela sessão
     app.get('/profileSession', getProfileSessionController);
     app.put('/profile', updateProfileController);
-    app.delete('/profile', deleteProfileController); 
+    app.delete('/profile/:uuid', deleteProfileController); 
     app.put('/profile/incrementMockTest', incrementProfile_MockTestController);
     app.get('/profile/:uuid', getProfileController);
     app.put('/profile/incrementAnswers', incrementProfileAnswersController);
@@ -61,7 +61,7 @@ export async function routes(app: any) {
     app.get('/question/:id', getQuestionByIdController);
     app.get('/questions/filter/:filter', getQuestionsWithFiltersController);
     app.get('/questions/ids/:ids', getQuestionsByIdsController); //nomeclatura sem "/ids" conflita com "/newMockTest"
-    app.get('/questions/newMockTest', getQuestionsForNewMockTestByProfileController);
+    app.get('/questions/newMockTest/:uuid', getQuestionsForNewMockTestByProfileController);
 
 
 
@@ -92,13 +92,13 @@ export async function routes(app: any) {
 
     // '/mockTest/'
     app.get('/mockTests', getMockTestsController);
-    app.get('/mockTests/date/:date', getMockTestsByDateAndProfileController);
+    app.get('/mockTests/date/:date/:uuid', getMockTestsByDateAndProfileController);
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
     app.put('/mockTest/:id', putMockTestController);
     app.post('/mockTest', postMockTestController);
 
     // '/areaProfile/'
-    app.get('/areaProfile', getArea_ProfileController);
+    app.get('/areaProfile/:uuid', getArea_ProfileController);
 
     // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);

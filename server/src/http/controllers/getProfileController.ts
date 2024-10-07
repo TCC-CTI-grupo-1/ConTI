@@ -18,20 +18,14 @@ redisClient.connect();
 
 export async function getProfileController(req: Request, res: Response) {
     const profileDAO = new ProfileDAO();
+    
     const userId = req.params.uuid;
-    console.log('Req.query:');
-    console.log(userId);
-	console.log(req.session);
     
 	const profileString = await redisClient.get(`profile:${userId}`);
-	console.log('Profile:', profileString);
+
 	let profile = null;
 	if (profileString) {
 	  profile = JSON.parse(profileString); // Parse the string into an object
-	  console.log('Profile after parsing:', profile);
-	  console.log('Profile email:', profile.email);  // Now you can access the email property
-	} else {
-	  console.log('Profile not found');
 	}
 	
     try {

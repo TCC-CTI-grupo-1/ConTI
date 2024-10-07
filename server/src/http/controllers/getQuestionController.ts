@@ -4,6 +4,19 @@ import { QuestionDTO } from "../../DTO/QuestionDTO";
 import { questionFilters, DifficultyLevel, DifficultyType } from "../../types/client/interfaces";
 import { TestBuilder, TestBlueprint } from "../../test_builder";
 import test from "node:test";
+import { createClient } from 'redis';
+
+const passRedis = process.env.REDIS_PASS;
+const hostRedis = process.env.REDIS_HOST;
+const portRedis = parseInt(process.env.REDIS_PORT as string);
+let redisClient = createClient({
+    password: passRedis,
+    socket: {
+        host: hostRedis,
+        port: portRedis
+    }
+});
+redisClient.connect();
 
 export async function getQuestionController(req: Request, res: Response) {
     const questionDAO = new QuestionDAO();
@@ -54,18 +67,22 @@ export async function getQuestionsWithFiltersController(req: Request, res: Respo
 }
 
 export async function getQuestionsForNewMockTestByProfileController(req: Request, res: Response) {
-    if(req.session === undefined) {
-        return res.status(404).json({ message: 'Sessão não inicializada' });
-    }
-    if (!req.session.isLoggedIn) {
-        return res.status(401).json({ message: 'Usuário não logado' });
-    }
-    if(req.session.profile === undefined) {
-        return res.status(404).json({ message: 'Perfil não encontrado' });
-    }
-    
+
     try {
-        const profileId = req.session.profile.id;
+        const userId = req.params.uuid;
+    
+        const profileString = await redisClient.get(`profile:${userId}`);
+
+        let profile = null;
+        if (profileString) {
+        profile = JSON.parse(profileString); // Parse the string into an object
+        }
+
+        if(profile === null) {
+            return res.status(404).json({ message: 'Sessão não inicializada' });
+        }
+
+        const profileId = profile.id;
         const test_blueprint = new TestBlueprint(50, {1:15,2:15,3:15,4:5}, DifficultyLevel.MEDIUM, DifficultyType.INDIVIDUAL, profileId);
         const test_builder = new TestBuilder([]);
         const questions = await test_builder.buildTest(test_blueprint);

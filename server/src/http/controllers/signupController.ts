@@ -1,6 +1,19 @@
 import { ProfileDAO } from "../../DAO/ProfileDAO";
 import { Request, Response } from "express";
 import { ProfileDTO } from "../../DTO/ProfileDTO";
+import { createClient } from "redis";
+
+const passRedis = process.env.REDIS_PASS;
+const hostRedis = process.env.REDIS_HOST;
+const portRedis = parseInt(process.env.REDIS_PORT as string);
+let redisClient = createClient({
+    password: passRedis,
+    socket: {
+        host: hostRedis,
+        port: portRedis
+    }
+});
+redisClient.connect().catch(console.error);
 
 export async function signupController(req: Request, res: Response) {
     const profileDAO = new ProfileDAO();
@@ -35,8 +48,18 @@ export async function signupController(req: Request, res: Response) {
       }
       req.session.profile = sessionProfile;
       
+      await redisClient.set(`profile:${profileDTO.id}`, JSON.stringify(sessionProfile), { EX: 1000 * 60 * 60 * 12 });
+      const profile = await redisClient.get(`profile:${profileDTO.id}`);
+      console.log(await profile);
       
-      res.status(201).json({ message: 'Perfil cadastrado com sucesso' });
+      req.session.save((err) => {
+        if (err) {
+            console.error('Session save error:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        res.json({ user: sessionProfile });
+      });
+      //res.status(201).json({ message: 'Perfil cadastrado com sucesso' });
     } catch (error: any) {
       res.status(409).json({ message: error.message });
     }
