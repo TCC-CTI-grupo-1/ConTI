@@ -113,13 +113,17 @@ const Home = () => {
                   </> : <>
                       <div className="bolhas">
                           <div className="bolha1"> <h1>  </h1></div>
-                          <div className="bolha2"> <h1>  </h1></div>
+                          <div className="bolha2"> <h1> </h1></div>
+                          
+                      
+                     
                           <div className="bolha3"> <h1>  </h1></div>
-                          <div className="bolha4"> <h1>  </h1></div>
+                          <div className="bolha4"> <h1>  </h1></div> 
+                          <div className="conheca"><h1> Conheça o ConTI! </h1> </div>
                           <div className="bolha5"> <h1>  </h1></div>
                           <div className="bolha6"> <h1>  </h1></div>
                         </div>
-
+                     
                     <div className="porque"><p>Por que estudar com o conti?</p></div>
 
                     <div className="motivos">

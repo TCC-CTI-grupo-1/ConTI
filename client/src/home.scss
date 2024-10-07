@@ -14,6 +14,21 @@
             height: 400px; 
           }*/         
           
+          .conheca{
+            font-size: larger;
+            position: absolute;
+            width: 600px;
+            height: 200px;
+            
+
+            top: 450px;
+            left: 450px;
+            margin: 10px;
+            display: inline-block;
+          
+          }
+
+
           .bolhas {
             //position: absolute;
             //width: 100%;
@@ -22,18 +37,18 @@
             
           }
             .bolhas:hover {
-              transform: scale(0);
-              opacity: 0;
+              //transform: scale(0);
+              //opacity: 0;
             }
           
           .bolha1 {
             position: absolute;
             width: 400px;
             height: 400px;
-            background-color: #3A87FA;
+            background-color: rgba(0, 81, 255, 0.831);
             border-radius: 100%;
 
-            top: 250px;
+            top: 300px;
             left: 300px;
             margin: 10px;
             display: inline-block;
@@ -47,52 +62,52 @@
             background-color: rgba(109, 166, 255, 0.7);
             border-radius: 100%;
 
-            top: 280px;
+            top: 250px;
             left: 280px;
           }
           
           .bolha3 {
             position: absolute;
-            width: 80px;
-            height: 80px;
+            width: 200px;
+            height: 200px;
             background-color: rgba(100, 150, 255, 0.7); /* Bolha com cor um pouco diferente */
             border-radius: 100%;
          
-            top: 100px;
-            right: 250px;
+            top: 530px;
+            right: 890px;
             }
           
           .bolha4 {
             position: absolute;
-            width: 120px;
-            height: 120px; 
-            background-color: rgba(100, 150, 255, 0.7); 
+            width: 50px;
+            height: 50px; 
+            background-color: rgba(57, 120, 255, 0.949); 
             border-radius: 100%;
 
-            top: 50px;
-            right: 50px;
+            top: 290px;
+            right: 1200px;
           }
           
           .bolha5 {
             position: absolute;
             width: 60px;
             height: 60px; 
-            background-color: rgba(100, 150, 255, 0.7);
+            background-color: rgba(0, 76, 255, 0.826);
             border-radius: 100%;
          
-            top: 300px;
-            left: 300px;
+            top: 350px;
+            left: 250px;
           }
           
           .bolha6 {
             position: absolute;
             width: 90px;
             height: 90px; 
-            background-color: rgba(100, 150, 255, 0.7);
+            background-color: rgba(0, 81, 255, 0.7);
             border-radius: 100%;
          
-            top: 250px;
-            right: 200px;
+            top: 600px;
+            right: 1000px;
           }
 
         .home-container {
