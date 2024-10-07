@@ -57,7 +57,7 @@ const Login = ({ changeLoginPage }: Props) => {
         sessionStorage.setItem('userId', loginData.user.id.toString());
         navigate("/");
         //refresh the page
-        //window.location.reload();
+        window.location.reload();
       } else {
         console.log("E");
         showAlert(loginData, "error");
@@ -78,8 +78,12 @@ const Login = ({ changeLoginPage }: Props) => {
     >
       <Logo type={"login"} />
 
+      <a
+      onClick={() => {navigate("/")}}
+      >Voltar ao home</a>
+
       <div id="inputs">
-        <button
+        {/*<button
           id="igorLogin"
           style={{ color: "red" }}
           onClick={async () => {
@@ -88,7 +92,7 @@ const Login = ({ changeLoginPage }: Props) => {
           }}
         >
           IGOR
-        </button>
+        </button>*/}
         <Input
           name="email"
           label="Email"

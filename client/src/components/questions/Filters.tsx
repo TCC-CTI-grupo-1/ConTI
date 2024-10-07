@@ -339,7 +339,7 @@ const Filters = () => {
           </ModalBody>
           <ModalFooter>
             <Button colorScheme='blue' mr={3} onClick={onClose}>
-              Close
+              Fechar
             </Button>
           </ModalFooter>
         </ModalContent>

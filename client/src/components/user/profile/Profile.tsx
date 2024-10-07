@@ -12,19 +12,11 @@ const Profile = () => {
     let elements:HTMLAnchorElement[] = [];
 
     //Talvez mover isso para um componente próprio
-    useEffect(() => {
-        elements?.forEach((element, index) => {
-            element.addEventListener('click', () => {
-                handleChangeTela(index);
-            });
-        });
-        console.log('useEffect');
-        elements = Array.from(options.current?.querySelectorAll('a') ?? []);
-        console.log(elements);
-    }, [options]);
+
 
     function handleChangeTela(tela: number) {
         setTela(tela);
+        elements = Array.from(options.current?.children as HTMLCollectionOf<HTMLAnchorElement>);
         elements?.forEach((element, index) => {
             element.classList.remove('active');
                 if (index === tela) {
@@ -41,8 +33,18 @@ const Profile = () => {
                 <div className="header">
                     <h1>Perfil</h1>
                     <div className="options" ref={options}>
-                        <a className="active">Status do usuário</a>
-                        <a>Configurações da conta</a>
+                        <a className="active"
+                        onClick={(e) => {
+                            handleChangeTela(0);
+                            //e.currentTarget.classList.add('active');
+
+                        }}>Status do usuário</a>
+                        <a onClick={(e) => {
+                            handleChangeTela(1);
+                            //e.currentTarget.classList.add('active');
+                        }}
+                        
+                        >Configurações da conta</a>
                         {/*<div className='selected-line'></div>*/}
                     </div>
                 </div>

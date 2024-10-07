@@ -25,6 +25,11 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
                 </h4>
                 {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
                 
+                <div className="additional_info">
+                    {question.additional_info !== '' && <h3>Texto de apoio:</h3>}
+                    <p>{question.additional_info}</p>
+                </div>
+
                 <div className={"alternatives showCorrect"} ref={questionRef}>
                     {answers.map((alternative, index) => (
                         <div className='item'>

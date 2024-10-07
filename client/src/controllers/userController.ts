@@ -214,6 +214,7 @@ export async function handleLogout() {// userController.ts
             localStorage.setItem('isLoggedIn', 'false');
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('username');
+            sessionStorage.removeItem('userId');
             window.location.href = 'http://localhost:5173/';
             // return [true, "Logout bem sucedido"];
         }

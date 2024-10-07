@@ -178,6 +178,8 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                         onClick={() => {
                             if (activeQuestion < questionsHashMap.length - 1) {
                                 handleQuestionNumberClick(activeQuestion + 1, setActiveQuestion);
+                            }else{
+                                onOpen();
                             }
                         }}
                     >

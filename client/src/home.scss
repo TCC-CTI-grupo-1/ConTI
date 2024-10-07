@@ -118,84 +118,35 @@
         }
         
         .motivos {
-          display: grid;
-          width: 1500px;
-          height: 3000px;
-          margin-left: 45px;
-          //flex-wrap: wrap;
-          //justify-content: space-around;
-          //gap: 20px;
-        }
-        .mot_img{ //imagens das telas
-          position: absolute;
-          width: 600px;
-          height: 400px;
-          border-radius: 50px;
+          display: flex;  
+          flex-direction: column;
+          gap: 30px;
+
+          & > div{
+            display: flex;
+            border: 1px solid black;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 0px 100px;
+            background-color: white;
+            gap: 15px;
+            & > div p{
+              font-size: 1.2rem;
+            }
+            & > div h3{
+              font-size: 2rem;
+            }
+            & > img{
+              border-radius: 15px;
+            }
+
+            &.pop{
+              flex-direction: row-reverse;
+            }
+          }
+          
         }
         
-        .mot_simulados, .mot_acompanhamento { //caxinha branca
-          background-color: #fff;
-          border: 2px solid #b0d6ff;
-          border-radius: 50px;
-          color: #3f3d56;
-          padding: 20px;
-          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-          margin-bottom: 30px;
-        }
-        .mot_simulados h3, .mot_acompanhamento h3 { //titulo caixa branca
-          font-size: 40px;
-          margin-top: 220px;
-          margin-left: 30px;   
-          margin-bottom: 10px;
-        }
-        .mot_p01{ //texto caixa branca
-          font-size: 25px;
-          margin-left: 30px;
-          margin-right: 720px;
-          margin-bottom: 30px;
-        }
-        .mot_simulados img{
-          top: 1025px;
-          margin-left: 815px;
-        }
-        .mot_acompanhamento img{
-          top:2524px;
-          margin-left: 815px;
-        }
-
-        .mot_banco, .mot_resultados { //caxinha azul
-          background-color: #0c53b0;
-          border: 2px solid #b0d6ff;
-          border-radius: 50px;
-          color: #ffffff;
-          padding: 20px;
-          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-          margin-bottom: 30px;
-        }
-        .mot_banco h3, .mot_resultados h3 { //titulo caixa branca
-          font-size: 40px;
-          margin-top: 240px;
-          margin-left: 760px;
-          margin-bottom: 10px;      
-        }
-
-        .mot_p02{  //texto caixa azul
-          font-size: 25px;
-          margin-left: 760px;
-          margin-right: 50px;
-        }
-        
-        .mot_banco img{
-          top:1780px;
-          left: 250px;
-        }
-        
-        .mot_resultados img{
-          top:3300px;
-          left: 250px;
-        }
-
-
         .equipe {
           margin-top: 40px;
         }    

@@ -100,7 +100,7 @@ const Signup = ({changeLoginPage}:Props) => {
             const [signupSuccess, signupData] = await handleSignup(name, email, password, remember);
             setLoading(false);
 
-            if(signupSuccess == null){
+            if(signupSuccess == true){
                 showAlert("Cadastro bem sucedido!", "success");
                 console.log("L");
                 localStorage.setItem('isLoggedIn', 'true');
