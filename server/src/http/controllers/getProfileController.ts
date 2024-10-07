@@ -22,20 +22,25 @@ export async function getProfileController(req: Request, res: Response) {
     console.log('Req.query:');
     console.log(userId);
 	console.log(req.session);
-    const profile = await redisClient.get(`profile:${userId}`);
-    console.log('Profile:');
-    console.log(profile);
+    
+	const profileString = await redisClient.get(`profile:${userId}`);
+	console.log('Profile:', profileString);
+	let profile = null;
+	if (profileString) {
+	  profile = JSON.parse(profileString); // Parse the string into an object
+	  console.log('Profile after parsing:', profile);
+	  console.log('Profile email:', profile.email);  // Now you can access the email property
+	} else {
+	  console.log('Profile not found');
+	}
+	
     try {
-        if(req.session === undefined) {
+        if(profile === null) {
             return res.status(404).json({ message: 'Sessão não inicializada' });
         }
-        if (!req.session.isLoggedIn) {
-            return res.status(401).json({ message: 'Usuário não logado' });
-        }
-        if(req.session.profile === undefined) {
-            return res.status(404).json({ message: 'Perfil não encontrado' });
-        }
-        const profileDTO: ProfileDTO = await profileDAO.searchprofileByEmail(req.session.profile?.email || 'email');
+        const profileDTO: ProfileDTO = await profileDAO.searchprofileByEmail(profile.email || 'email');
+		console.log("Profile DTO:");
+		console.log(profileDTO);
         res.json({ profile: profileDTO });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
