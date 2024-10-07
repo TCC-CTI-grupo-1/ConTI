@@ -95,7 +95,7 @@ export async function routes(app: any) {
     app.get('/mockTests/date/:date/:uuid', getMockTestsByDateAndProfileController);
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
     app.put('/mockTest/:id', putMockTestController);
-    app.post('/mockTest', postMockTestController);
+    app.post('/mockTest/:uuid', postMockTestController);
 
     // '/areaProfile/'
     app.get('/areaProfile/:uuid', getArea_ProfileController);

@@ -26,7 +26,7 @@ let redisStore = new RedisStore({
 });
 
 const urlLocal = 'http://localhost:5173';
-const urlRemoto = 'https://projetoscti.com.br';
+const urlRemoto = 'http://cti.4edge.cloud';
 const urlCloud = 'http://cti.4edge.cloud:3000';
 
 app.use(cors({
