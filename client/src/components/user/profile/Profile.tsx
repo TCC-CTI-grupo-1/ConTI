@@ -1,7 +1,6 @@
 import Navbar from "../../Navbar";
 import { useState } from "react";
 import { useRef } from "react";
-import { useEffect } from "react";
 import Status from "./Status";
 import Config from "./Config";
 const Profile = () => {
@@ -34,12 +33,12 @@ const Profile = () => {
                     <h1>Perfil</h1>
                     <div className="options" ref={options}>
                         <a className="active"
-                        onClick={(e) => {
+                        onClick={() => {
                             handleChangeTela(0);
                             //e.currentTarget.classList.add('active');
 
                         }}>Status do usuário</a>
-                        <a onClick={(e) => {
+                        <a onClick={() => {
                             handleChangeTela(1);
                             //e.currentTarget.classList.add('active');
                         }}
