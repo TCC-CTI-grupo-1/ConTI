@@ -21,6 +21,7 @@ export class Area_ProfileDAO {
                     total_answers: area_profile.total_answers
                 }
             });
+            
             return createdAreaProfile;
         } catch (error: any) {
             if (error.code === 'P2002') {
