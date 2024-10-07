@@ -31,7 +31,6 @@ import {
     ModalCloseButton,
     useDisclosure,
   } from '@chakra-ui/react'
-import Latex from "react-latex-next";
 
 
 const Admistrator = () => {

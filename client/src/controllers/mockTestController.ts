@@ -82,7 +82,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
 }
 
 //NN FEITO
-export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {//mockTestController.ts
+export async function handleGetSimulado(): Promise<simuladoInterface | null> {//mockTestController.ts
     //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
     try {
         //await new Promise(resolve => setTimeout(resolve, 1000 * id/100));
