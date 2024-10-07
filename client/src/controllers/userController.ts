@@ -88,7 +88,7 @@ export async function handleSignup(name: string, email: string, password: string
     }
 }
 
-export async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, string]> {
+export async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, any]> {
     try {
         const data = {
             email: email,
@@ -114,7 +114,7 @@ export async function handleLogin(email: string, password: string, remember: boo
         } else {
             //window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
             //NÃO, NÃO SOFRE
-            return [true, "Login bem sucedido"];
+            return [true, responseData];
         }
     } catch (err: any) {
         return [false, err.message];
@@ -126,12 +126,17 @@ export async function handleLogin(email: string, password: string, remember: boo
 // ^ LoginController
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId , {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             }
+            //send data by GET method
+
+
+
         });
         const responseData = await response.json();
         if (!response.ok) {

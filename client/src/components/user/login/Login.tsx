@@ -57,7 +57,10 @@ const Login = ({changeLoginPage}:Props) => {
                 showAlert("Login bem sucedido!", "success");
                 console.log("L");
                 localStorage.setItem('isLoggedIn', 'true');
-                navigate("/");
+                console.log("Pós login: ");
+                console.log(loginMessage);
+                console.log(loginMessage.user.id);
+                sessionStorage.setItem('userId', loginMessage.user.id.toString());
                 //refresh the page
                 //window.location.reload();
             }

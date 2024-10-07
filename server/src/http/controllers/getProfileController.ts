@@ -18,7 +18,13 @@ redisClient.connect();
 
 export async function getProfileController(req: Request, res: Response) {
     const profileDAO = new ProfileDAO();
+    const userId = req.params.uuid;
+    console.log('Req.query:');
+    console.log(userId);
 	console.log(req.session);
+    const profile = await redisClient.get(`profile:${userId}`);
+    console.log('Profile:');
+    console.log(profile);
     try {
         if(req.session === undefined) {
             return res.status(404).json({ message: 'Sessão não inicializada' });

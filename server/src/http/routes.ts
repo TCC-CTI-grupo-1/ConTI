@@ -52,7 +52,7 @@ export async function routes(app: any) {
     app.put('/profile', updateProfileController);
     app.delete('/profile', deleteProfileController); 
     app.put('/profile/incrementMockTest', incrementProfile_MockTestController);
-    app.get('/profile', getProfileController);
+    app.get('/profile/:uuid', getProfileController);
     app.put('/profile/incrementAnswers', incrementProfileAnswersController);
 
 

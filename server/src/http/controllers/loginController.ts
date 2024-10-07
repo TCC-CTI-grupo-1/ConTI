@@ -43,7 +43,7 @@ export async function loginController(req: Request, res: Response) {
                 console.error('Session save error:', err);
                 return res.status(500).json({ message: 'Internal server error' });
             }
-            res.json({ message: 'Login successful' });
+            res.json({ user: sessionProfile });
         });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
