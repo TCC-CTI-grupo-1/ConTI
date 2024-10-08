@@ -1,5 +1,6 @@
 
 import Navbar from "../Navbar"
+import Logo from "../user/login/Logo.tsx"
 import { Button } from "@chakra-ui/react"
 import QstDetail from "../questions/simulado/QstDetail"
 import { ProgressBar } from "../ProgressBar"
@@ -13,7 +14,6 @@ import { handleGetAnswersByQuestionId } from "../../controllers/answerController
 import { useNavigate } from "react-router-dom";
 import '../../home.scss';
 
-//TEM QUE TER A DIVISÃO DO LOGADO E NÃO LOGADO
 const Home = () => {
 
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -119,6 +119,7 @@ const Home = () => {
                      
                           <div className="bolha3"> <h1>  </h1></div>
                           <div className="bolha4"> <h1>  </h1></div> 
+                          <div className="quer"><h2>Quer estudar no CTI mas não sabe como se preparar?</h2></div>
                           <div className="conheca"><h1> Conheça o ConTI! </h1> </div>
                           <div className="bolha5"> <h1>  </h1></div>
                           <div className="bolha6"> <h1>  </h1></div>
@@ -147,7 +148,7 @@ const Home = () => {
                           </div>
                         </div>
 
-                        <div className="mot_acompanhamento">
+                        {/*<div className="mot_acompanhamento">
                           <h3> Seja acompanhado por seus professores</h3>
                           <div className="mot_p01">
                             <p> Professores podem criar simulados, listas de exercícios e adicionar perguntas 
@@ -155,21 +156,77 @@ const Home = () => {
                             de aprendizagem.</p>
                             <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" /> 
                           </div>
-                        </div>
+                        </div>*/}
 
                         <div className="mot_resultados">
                           <h3> Acompanhamento de resultados</h3>
-                            <div className="mot_p02">
+                            <div className="mot_p01">
                             <p> Nosso sistema disponibiliza gráficos detalhados de perfil, permitindo visualização 
                               de desempenhos em cada matéria e prova, facilitando a identificação de áreas que 
                               precisam de mais atenção.</p>
                               <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" /> 
                             </div>
                         </div>
-                    </div>
+                    {/*
+                    <div className="rodape">
+                      <div className="rdp_logoempresa">
+                       </div>
 
-                    <div className="equipe">
+                      <div className="rdp_logoconti"> </div>
 
+                      <div className="menu">
+                        <h2>Menu</h2>
+                        </div>
+                         <div className="rdp_btnbanco">           
+                        {/*Botao Banco de questoes*/}
+                      {/*  <Button width={315} height={50} fontSize={20} variant="" onClick={() =>
+                                {navegate('/questions');}
+                                }><p>Banco de questões</p>
+                        </Button></div>
+                        
+                        <div className="rdp_btnsimulado"> 
+                        {/*Botao Simulados*/}
+                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
+                                {navegate('/newtest');}
+                                }><p>Simulados</p>
+                        </Button>
+                        </div>
+                        
+                        <div className="rdp_btnperfil"> 
+                        {/*Botao Simulados*/}
+                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
+                                {navegate('/login');}
+                                }><p>Meu perfil</p>
+                        </Button>
+                        </div>
+                                
+                      <div className="conti">
+                        <h2>ConTI</h2>
+                        </div>
+                         <div className="rdp_btnsobre">           
+                        {/*Botao Banco de questoes*/}
+                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
+                                {navegate('/aboutus');}
+                                }><p>Sobre nós</p>
+                        </Button></div>
+                        
+                        <div className="rdp_btncontato"> 
+                        {/*Botao Simulados*/}
+                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
+                                {navegate('/newtest');}
+                                }><p>Contato</p>
+                        </Button>
+                        </div>
+                        
+                        <div className="rdp_btninsta"> 
+                        {/*Botao Simulados*/}
+                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
+                                {navegate('/login');}
+                                }><p>Instagram</p>
+                        </Button>
+                        </div>
+                    </div></div>
+                    */}
                     </div>
                   </>}
                   

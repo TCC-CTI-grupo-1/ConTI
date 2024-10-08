@@ -14,43 +14,63 @@
             height: 400px; 
           }*/         
           
+          .quer{
+            font-size:13px;
+            position: absolute;
+            width: 495px;
+            height: 100px;
+            border: 2px solid #ffffffd4;
+            background-color:  #0051ffd4;
+            opacity: 95%;
+            color: #ededed;
+            border-radius: 40px;
+            padding-top: 10px;
+            padding-left: 25px;
+            padding-right: 10px;
+            
+            top: 340px;
+            left: 850px;
+            display: inline-block; 
+          }
           .conheca{
             font-size: larger;
             position: absolute;
             width: 600px;
-            height: 200px;
+            height: 90px;
+            border: 2px solid #b0d6ff;
+            background-color: #ffffff;
+            border-radius: 60px;
+            padding-top: 5px;
+            padding-left: 30px;
+            padding-right: 10px;
             
-
             top: 450px;
-            left: 450px;
+            left: 950px;
             margin: 10px;
             display: inline-block;
-          
           }
-
 
           .bolhas {
             //position: absolute;
             //width: 100%;
             height: 400px;
-            margin-bottom: 200px; 
+            margin-bottom: 255px; 
             
           }
-            .bolhas:hover {
+            //.bolhas:hover {
               //transform: scale(0);
               //opacity: 0;
-            }
+            //}
           
           .bolha1 {
             position: absolute;
             width: 400px;
             height: 400px;
-            background-color: rgba(0, 81, 255, 0.831);
+            background-color: #0051ffd4;
             border-radius: 100%;
 
-            top: 300px;
-            left: 300px;
-            margin: 10px;
+            top: 280px;
+            left: 340px;
             display: inline-block;
             transition: transform 0.5s, opacity 0.5s;
           }
@@ -59,10 +79,10 @@
             position: absolute;
             width: 200px;
             height: 200px;
-            background-color: rgba(109, 166, 255, 0.7);
+            background-color: #6da6ffb3;
             border-radius: 100%;
 
-            top: 250px;
+            top: 220px;
             left: 280px;
           }
           
@@ -70,32 +90,32 @@
             position: absolute;
             width: 200px;
             height: 200px;
-            background-color: rgba(100, 150, 255, 0.7); /* Bolha com cor um pouco diferente */
+            background-color: #6496ffb3; /* Bolha com cor um pouco diferente */
             border-radius: 100%;
          
-            top: 530px;
+            top: 490px;
             right: 890px;
             }
           
           .bolha4 {
             position: absolute;
-            width: 50px;
-            height: 50px; 
-            background-color: rgba(57, 120, 255, 0.949); 
+            width: 70px;
+            height: 70px; 
+            background-color: #6496ffb3; 
             border-radius: 100%;
 
-            top: 290px;
-            right: 1200px;
+            top: 545px;
+            right: 1390px;
           }
           
           .bolha5 {
             position: absolute;
             width: 60px;
             height: 60px; 
-            background-color: rgba(0, 76, 255, 0.826);
+            background-color: #004cffd3;
             border-radius: 100%;
          
-            top: 350px;
+            top: 330px;
             left: 250px;
           }
           
@@ -103,11 +123,11 @@
             position: absolute;
             width: 90px;
             height: 90px; 
-            background-color: rgba(0, 81, 255, 0.7);
+            background-color: #0051ffb3;
             border-radius: 100%;
          
-            top: 600px;
-            right: 1000px;
+            top:450px;
+            right: 890px;
           }
 
         .home-container {
@@ -126,21 +146,22 @@
           justify-content: center;
           align-items: center;
           color: rgb(255, 255, 255);
-          font-size: 30px;
+          
+          font-size: 32px;
           margin: 0 auto;
           margin-bottom: 30px;
-          
         }
         
         .motivos {
           display: grid;
           width: 1500px;
-          height: 3000px;
+          height: 2200px;
           margin-left: 45px;
           //flex-wrap: wrap;
           //justify-content: space-around;
           //gap: 20px;
         }
+
         .mot_img{ //imagens das telas
           position: absolute;
           width: 600px;
@@ -148,21 +169,24 @@
           border-radius: 50px;
         }
         
-        .mot_simulados, .mot_acompanhamento { //caxinha branca
+        .mot_simulados, .mot_resultados//.mot_acompanhamento 
+        { //caxinha branca
           background-color: #fff;
           border: 2px solid #b0d6ff;
           border-radius: 50px;
           color: #3f3d56;
           padding: 20px;
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-          margin-bottom: 30px;
+          margin-bottom: 35px;
         }
-        .mot_simulados h3, .mot_acompanhamento h3 { //titulo caixa branca
+        .mot_simulados h3, .mot_resultados h3//.mot_acompanhamento h3 
+        { //titulo caixa branca
           font-size: 40px;
           margin-top: 220px;
           margin-left: 30px;   
           margin-bottom: 10px;
         }
+
         .mot_p01{ //texto caixa branca
           font-size: 25px;
           margin-left: 30px;
@@ -170,51 +194,128 @@
           margin-bottom: 30px;
         }
         .mot_simulados img{
-          top: 1025px;
+          top: 1070px;
           margin-left: 815px;
         }
-        .mot_acompanhamento img{
-          top:2524px;
-          margin-left: 815px;
-        }
+        //.mot_acompanhamento img{
+        //  top:2570px;
+        //  margin-left: 815px;
+        //}
 
-        .mot_banco, .mot_resultados { //caxinha azul
+        .mot_banco //, .mot_resultados
+         { //caxinha azul
           background-color: #0c53b0;
           border: 2px solid #b0d6ff;
           border-radius: 50px;
           color: #ffffff;
           padding: 20px;
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-          margin-bottom: 30px;
+          margin-bottom: 40px;
         }
-        .mot_banco h3, .mot_resultados h3 { //titulo caixa branca
-          font-size: 40px;
+        .mot_banco h3//,.mot_resultados h3 { //titulo caixa branca
+          {
+        font-size: 40px;
           margin-top: 240px;
           margin-left: 760px;
           margin-bottom: 10px;      
         }
-
         .mot_p02{  //texto caixa azul
           font-size: 25px;
           margin-left: 760px;
           margin-right: 50px;
         }
-        
         .mot_banco img{
-          top:1780px;
+          top:1795px;
           left: 250px;
+        }
+        .mot_resultados img{
+          top:2540px;
+          margin-left: 815px;
+        }
+
+        .rodape{
+          background-color: #0460D5;
+          color: #ffff;
+          width: 1600px;
+          height: 210px;
+        }
+
+        .rdp_logoempresa{
+          background-color: #ffffff;
+          border-radius: 40px;
+          border-bottom-left-radius: 0px;
+          border-bottom-right-radius: 0px;
+          width: 165px;
+          height: 168px;
+          
+          position: absolute;
+          top:3180px;
+          left: 200px;
         }
         
-        .mot_resultados img{
-          top:3300px;
-          left: 250px;
+        .rdp_logoconti{
+          background-color: #ffffff;
+          border-radius: 40px;
+          border-bottom-left-radius: 0px;
+          border-bottom-right-radius: 0px;
+          width: 165px;
+          height: 168px;
+          
+          position: absolute;
+          top:3180px;
+          left: 450px;
         }
 
+        .menu{
+          position: absolute;
+            left: 1000px;
+            margin-top: 30px;
+        }
 
-        .equipe {
-          margin-top: 40px;
-        }    
-                
+        .rdp_btnbanco{
+          position: absolute;
+            left: 940px;
+            top: 3210px;
+            font-size: 15px;
+        }
+        .rdp_btnsimulado{
+          position: absolute;
+          left: 898px;
+          top: 3245px;
+          font-size: 15px;
+        }
+        .rdp_btnperfil{
+          position: absolute;
+          left: 896px;
+          top: 3280px;
+          font-size: 15px;
+        }
+
+        .conti{
+          position: absolute;
+          left: 1400px;
+          margin-top: 30px;
+        }
+
+        .rdp_btnsobre{
+          position: absolute;
+          left: 1295px;
+          top: 3210px;
+          font-size: 15px;
+        }
+        .rdp_btncontato{
+          position: absolute;
+          left: 1285px;
+          top: 3245px;
+          font-size: 15px;
+        }
+        .rdp_btninsta{
+          position: absolute;
+          left: 1300px;
+          top: 3280px;
+          font-size: 15px;
+        }
+
 
 //AQUI É A TELA COM USUARIO LOGADO
 .question_graphic{
