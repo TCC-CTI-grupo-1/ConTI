@@ -147,7 +147,6 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             <div id="allQuestionsMargin"></div>
             <div className="content">
                 <div className="infoTop">
-                    <h3>43:22</h3>
                     {isSimuladoFinished &&
                     <Button colorScheme="blue" size="lg" variant="solid" onClick={() => {
                         navegate('/');
