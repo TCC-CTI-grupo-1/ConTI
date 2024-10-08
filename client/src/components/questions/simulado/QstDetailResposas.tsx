@@ -2,6 +2,8 @@ import { useRef } from 'react';
 import { questionInterface, respostaInterface } from '../../../controllers/interfaces';
 import LocalButton from '../../Button';
 import { showAlert } from '../../../App';
+import LatexRenderer from '../../LatexRenderer';
+import Latex from 'react-latex-next';
 
 interface Props {
     question: questionInterface;
@@ -21,10 +23,15 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
                 
                 <p>*</p>
                 <h4>
-                {question.question_text}
+                <LatexRenderer text={question.question_text}></LatexRenderer>
                 </h4>
                 {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
                 
+                <div className="additional_info">
+                    {question.additional_info !== '' && <h3>Texto de apoio:</h3>}
+                    <p>{question.additional_info}</p>
+                </div>
+
                 <div className={"alternatives showCorrect"} ref={questionRef}>
                     {answers.map((alternative, index) => (
                         <div className='item'>
@@ -34,7 +41,7 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
                                 <span>
                                     <p> {alternative.question_letter} </p>
                                 </span>
-                                <p> {alternative.answer} </p>
+                                <p> <LatexRenderer text={alternative.answer}></LatexRenderer></p>
                             </div>
                         </div>
                     ))}

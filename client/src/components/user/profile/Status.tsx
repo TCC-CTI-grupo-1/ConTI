@@ -26,6 +26,8 @@ const Status = () => {
 
     const logos = [mat, port, naturais, humanas]
     
+    const [materiaAtiva, setMateriaAtiva] = useState<number>(1019); //id da materia ativa
+
     function getPercentage(id: number):number
     {
         if(profileStatus[id] === undefined)
@@ -167,7 +169,7 @@ const Status = () => {
         }
     }, [areasPai])
 
-    const [materiaAtiva, setMateriaAtiva] = useState<number>(1); //id da materia ativa
+    
     
     interface hasPlayedAnimationI {
         [name: string]: boolean,

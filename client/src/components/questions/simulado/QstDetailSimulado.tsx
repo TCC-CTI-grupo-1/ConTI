@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { questionInterface, respostaInterface } from '../../../controllers/interfaces';
 import { showAlert } from '../../../App';
+
 import scissors from '../../../assets/scissors.png';
+import LatexRenderer from '../../LatexRenderer';
 interface Props {
     question: questionInterface;
     answers: respostaInterface[];
@@ -69,10 +71,14 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
     <div className={'box question'}>
         <p id='question-number-container'>{qNumber}</p>
         <h4>
-            {question.question_text}
+            <LatexRenderer text={question.question_text}></LatexRenderer>
         </h4>
         {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
-
+        <div className="additional_info">
+            {question.additional_info !== '' && <h3>Texto de apoio:</h3>}
+            <p>{question.additional_info}</p>
+        </div>
+        
         <div className={"alternatives"} ref={questionRef}>
             {alternativasRef.current = []} 
             {answers.map((alternative, index) => (
