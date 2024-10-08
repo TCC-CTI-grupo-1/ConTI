@@ -12,9 +12,6 @@ import { questionInterface, respostaInterface } from "../../controllers/interfac
 import { handleGetQuestions } from "../../controllers/questionController.ts";
 import { handleGetAnswersByQuestionId } from "../../controllers/answerController.ts";
 import { useNavigate } from "react-router-dom";
-import simuladoImg from '../../../public/Simulado.png';
-import perfilImg from '../../../public/Perfil.png';
-import bancoImg from '../../../public/banco.png';
 import '../../home.scss';
 
 const Home = () => {
@@ -95,7 +92,7 @@ const Home = () => {
                                     </div>   
                             </div>
 
-                            {/*<div className="simulado_anterior">
+                            <div className="simulado_anterior">
                                 <div className="sim_anteriores"><p>Simulados anteriores</p> </div>
                                     <div className="caixa_sim"> 
                                         <div className="acertos_sim">
@@ -108,13 +105,13 @@ const Home = () => {
                                         <div className="vermais"> ver mais</div>
                                         
                                     </div>
-                            </div>*/}
+                            </div>
                         </div>
                                 
                     </section>
                     
                   </> : <>
-                      {/*<div className="bolhas">
+                      <div className="bolhas">
                           <div className="bolha1"> <h1>  </h1></div>
                           <div className="bolha2"> <h1> </h1></div>
                           
@@ -131,42 +128,39 @@ const Home = () => {
                     <div className="porque"><p>Por que estudar com o conti?</p></div>
 
                     <div className="motivos">
-                        <div>
-                            
+                        <div className="mot_simulados">
+                            <h3> Simulados personalizados</h3>
                             <div className="mot_p01">
-                              <h3> Simulados personalizados</h3>
                               <p>Nosso sistema oferece simulados adaptados á cada dificuldade, proporcionando 
                               uma experiência de estudo progressivo e promovendo uma preparação eficaz.</p>
                             </div>
-                            <img src={simuladoImg} alt="Imagem da equipe" className="mot_img" />                            
+                            <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" />                            
                         </div>
 
-                        <div className="pop">
-                          
+                        <div className="mot_banco">
+                          <h3> Banco de questões gratuito</h3>
                           <div className="mot_p02">
-                            <h3> Banco de questões gratuito</h3>
                             <p> Com um banco de questões que inclui perguntas pertencentes a vestibulinhos de 
                               anos anteriores, os alunos têm acesso a um material de qualidade para praticar 
-                              e se familiarizar com o formato das provas.
-                              </p>   
+                              e se familiarizar com o formato das provas.</p>
+
+                              <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" />
                           </div>
-                          <img src={bancoImg} alt="Imagem da equipe" className="mot_img" />
                         </div>
 
-                        <div className="mot_acompanhamento">
+                        {/*<div className="mot_acompanhamento">
                           <h3> Seja acompanhado por seus professores</h3>
                           <div className="mot_p01">
-                            <h3> Seja acompanhado por seus professores</h3>
                             <p> Professores podem criar simulados, listas de exercícios e adicionar perguntas 
                             ao banco, proporcionando acompanhamento personalizado e enriquecendo a experiência 
-                            de aprendizagem.
-                            </p>
+                            de aprendizagem.</p>
+                            <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" /> 
                           </div>
-                        </div>
+                        </div>*/}
 
                         <div className="mot_resultados">
                           <h3> Acompanhamento de resultados</h3>
-                            <div className="mot_p02">
+                            <div className="mot_p01">
                             <p> Nosso sistema disponibiliza gráficos detalhados de perfil, permitindo visualização 
                               de desempenhos em cada matéria e prova, facilitando a identificação de áreas que 
                               precisam de mais atenção.</p>
@@ -239,7 +233,6 @@ const Home = () => {
                 </div>
             </div>
     </div>
-  )
-}
+  )}
 
 export default Home
