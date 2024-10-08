@@ -36,7 +36,7 @@ export async function signupController(req: Request, res: Response) {
       req.session.profile = sessionProfile;
       
       
-      res.status(201).json({ message: 'Perfil cadastrado com sucesso' });
+      res.status(201).json({ user: sessionProfile });
     } catch (error: any) {
       res.status(409).json({ message: error.message });
     }

@@ -22,7 +22,7 @@ export async function loginController(req: Request, res: Response) {
       }
       req.session.profile = sessionProfile;
       console.log(sessionProfile);
-      res.json(sessionProfile);
+      res.json({user: sessionProfile});
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }

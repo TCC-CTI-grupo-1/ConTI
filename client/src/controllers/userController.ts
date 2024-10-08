@@ -55,7 +55,7 @@ const  validatePassword = (password: string): number[] => {
 
 //Funções assincronas
 
-export async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<string | null> {
+export async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<[boolean, any]> {
 
     //await new Promise(resolve => setTimeout(resolve, 3000));
     //return true;
@@ -81,10 +81,10 @@ export async function handleSignup(name: string, email: string, password: string
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return null;
+            return [true, responseData];
         }
     } catch (err: any) {
-        return err.message;
+        return [false, null];
     }
 }
 
@@ -114,7 +114,7 @@ export async function handleLogin(email: string, password: string, remember: boo
         } else {
             //window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
             //NÃO, NÃO SOFRE
-            return [true, response];
+            return [true, responseData];
         }
     } catch (err: any) {
         return [false, err.message];
@@ -126,7 +126,8 @@ export async function handleLogin(email: string, password: string, remember: boo
 // ^ LoginController
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -198,7 +199,8 @@ export async function handleSaveChanges(profile: profileInterface): Promise<stri
 
 export async function handleLogout() {// userController.ts
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/logout', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/logout/' + userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -212,6 +214,7 @@ export async function handleLogout() {// userController.ts
             localStorage.setItem('isLoggedIn', 'false');
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('username');
+            sessionStorage.removeItem('userId');
             window.location.href = 'http://localhost:5173/';
             // return [true, "Logout bem sucedido"];
         }
@@ -222,7 +225,8 @@ export async function handleLogout() {// userController.ts
 }
 export async function handleDeleteAccount() { // userController.ts
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/'+userId, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -237,7 +241,7 @@ export async function handleDeleteAccount() { // userController.ts
             // return [true, "Conta deletada com sucesso"];
         }
 
-        const responseLogout = await fetch(import.meta.env.VITE_ADDRESS + '/logout', {
+        const responseLogout = await fetch(import.meta.env.VITE_ADDRESS + '/logout/'+userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -259,7 +263,8 @@ export async function handleDeleteAccount() { // userController.ts
 
 export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //profileController.ts
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areaProfile', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areaProfile/'+userId, {
             method: 'GET',
             credentials: 'include',
             headers: {

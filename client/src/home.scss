@@ -1,5 +1,100 @@
 
         //AQUI É A TELA NÃO LOGADA
+
+        section.home{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+          //Bolinhas lindas -  sim cada uma tem que ter seu css :(//
+          /*.bolhas-container {
+            position: absolute;
+            width: 100%;
+            height: 400px; 
+          }*/         
+          
+          .bolhas {
+            //position: absolute;
+            //width: 100%;
+            height: 400px;
+            margin-bottom: 200px; 
+            
+          }
+            .bolhas:hover {
+              transform: scale(0);
+              opacity: 0;
+            }
+          
+          .bolha1 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background-color: #3A87FA;
+            border-radius: 100%;
+
+            top: 250px;
+            left: 300px;
+            margin: 10px;
+            display: inline-block;
+            transition: transform 0.5s, opacity 0.5s;
+          }
+          
+          .bolha2 {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: rgba(109, 166, 255, 0.7);
+            border-radius: 100%;
+
+            top: 280px;
+            left: 280px;
+          }
+          
+          .bolha3 {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-color: rgba(100, 150, 255, 0.7); /* Bolha com cor um pouco diferente */
+            border-radius: 100%;
+         
+            top: 100px;
+            right: 250px;
+            }
+          
+          .bolha4 {
+            position: absolute;
+            width: 120px;
+            height: 120px; 
+            background-color: rgba(100, 150, 255, 0.7); 
+            border-radius: 100%;
+
+            top: 50px;
+            right: 50px;
+          }
+          
+          .bolha5 {
+            position: absolute;
+            width: 60px;
+            height: 60px; 
+            background-color: rgba(100, 150, 255, 0.7);
+            border-radius: 100%;
+         
+            top: 300px;
+            left: 300px;
+          }
+          
+          .bolha6 {
+            position: absolute;
+            width: 90px;
+            height: 90px; 
+            background-color: rgba(100, 150, 255, 0.7);
+            border-radius: 100%;
+         
+            top: 250px;
+            right: 200px;
+          }
+
         .home-container {
           font-family: Arial, sans-serif;
           padding: 20px;
@@ -7,134 +102,56 @@
           text-align: center;
         }
         
-        .bolhas {
-          margin-bottom: 200px;
-        }
-        
         .porque{
-          background-color: #6da6ff;
-          border-radius: 50px;
+          background-color: #0460D5;
+          border-radius: 40px;
           width: 800px;
-          height: 60px;
+          height: 70px;
           display: flex;
           justify-content: center;
           align-items: center;
           color: rgb(255, 255, 255);
-          font-size: 1.5rem;
-          margin-top: 50px;
+          font-size: 30px;
           margin: 0 auto;
+          margin-bottom: 30px;
           
         }
         
         .motivos {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-around;
-          gap: 20px;
-        }
-        
-        .mot_simulados, .mot_banco, .mot_acompanhamento, .mot_resultados { //caxinha padrao com a sombra 
-          background-color: #fff;
-          border: 2px solid #b0d6ff;
-          border-radius: 10px;
-          width: 45%;
-          padding: 20px;
-          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .mot_simulados h3, .mot_banco h3, .mot_acompanhamento h3, .mot_resultados h3 {
-          font-size: 1.5rem;
-          color: #3f3d56;
-          margin-bottom: 10px;
-        }
-        
-        .mot_simulados p, .mot_banco p, .mot_acompanhamento p, .mot_resultados p {
-          font-size: 1rem;
-          color: #4a4a4a;
+          display: flex;  
+          flex-direction: column;
+          gap: 30px;
+
+          & > div{
+            display: flex;
+            border: 1px solid black;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 0px 100px;
+            background-color: white;
+            gap: 15px;
+            & > div p{
+              font-size: 1.2rem;
+            }
+            & > div h3{
+              font-size: 2rem;
+            }
+            & > img{
+              border-radius: 15px;
+            }
+
+            &.pop{
+              flex-direction: row-reverse;
+            }
+          }
+          
         }
         
         .equipe {
           margin-top: 40px;
-        }
-      
+        }    
+                
 
-          //Bolinhas lindas -  sim cada uma tem que ter seu css :(//
-          .bolhas-container {
-            position: relative;
-            width: 100%;
-            height: 400px; 
-          }
-          
-          .bolha {
-            position: absolute;
-            border-radius: 50%;
-            background-color: rgba(109, 166, 255, 0.7);
-            
-            
-            .bolha:hover {
-              transform: scale(0);
-              opacity: 0;
-            }
-            
-        
-          }
-          
-          .bolha1 {
-            width: 100px;
-            height: 100px;
-            top: 200px;
-            left: 100px;
-            margin: 10px;
-            display: inline-block;
-            transition: transform 0.5s, opacity 0.5s;
-          }
-          
-          .bolha2 {
-            width: 200px;
-            height: 200px;
-            top: 200px;
-            left: 150px;
-          }
-          
-          .bolha3 {
-            width: 80px;
-            height: 80px;
-            top: 100px;
-            right: 100px;
-            background-color: rgba(100, 150, 255, 0.7); /* Bolha com cor um pouco diferente */
-          }
-          
-          .bolha4 {
-            width: 120px;
-            height: 120px;
-            top: 50px;
-            right: 50px;
-          }
-          
-          .bolha5 {
-            width: 60px;
-            height: 60px;
-            top: 300px;
-            left: 300px;
-          }
-          
-          .bolha6 {
-            width: 90px;
-            height: 90px;
-            top: 250px;
-            right: 200px;
-          }
-
-
-          
-        
-        
-section.home{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
 //AQUI É A TELA COM USUARIO LOGADO
 .question_graphic{
     display: flex;
