@@ -155,7 +155,7 @@
         .motivos {
           display: grid;
           width: 1500px;
-          height: 3000px;
+          height: 2400px;
           margin-left: 45px;
           //flex-wrap: wrap;
           //justify-content: space-around;
@@ -168,7 +168,7 @@
           border-radius: 50px;
         }
         
-        .mot_simulados, .mot_acompanhamento { //caxinha branca
+        .mot_simulados, .mot_resultados{//.mot_acompanhamento { //caxinha branca
           background-color: #fff;
           border: 2px solid #b0d6ff;
           border-radius: 50px;
@@ -177,7 +177,8 @@
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
           margin-bottom: 30px;
         }
-        .mot_simulados h3, .mot_acompanhamento h3 { //titulo caixa branca
+        .mot_simulados h3,.mot_resultados h3//.mot_acompanhamento h3 { //titulo caixa branca
+          {
           font-size: 40px;
           margin-top: 220px;
           margin-left: 30px;   
@@ -190,15 +191,16 @@
           margin-bottom: 30px;
         }
         .mot_simulados img{
-          top: 1025px;
-          margin-left: 815px;
-        }
-        .mot_acompanhamento img{
-          top:2524px;
+          top: 1095px;
           margin-left: 815px;
         }
 
-        .mot_banco, .mot_resultados { //caxinha azul
+        .mot_resultados img{
+          top:1024px;
+          margin-left: 805px;
+        }
+
+        .mot_banco{//.mot_resultados { //caxinha azul
           background-color: #0c53b0;
           border: 2px solid #b0d6ff;
           border-radius: 50px;
@@ -207,8 +209,9 @@
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
           margin-bottom: 30px;
         }
-        .mot_banco h3, .mot_resultados h3 { //titulo caixa branca
-          font-size: 40px;
+        .mot_banco h3 //,.mot_resultados h3 { //titulo caixa branca
+         {
+        font-size: 40px;
           margin-top: 240px;
           margin-left: 760px;
           margin-bottom: 10px;      
@@ -221,15 +224,14 @@
         }
         
         .mot_banco img{
-          top:1780px;
+          top:1880px;
           left: 250px;
         }
         
         .mot_resultados img{
-          top:3300px;
-          left: 250px;
+          top:2700px;
+          left: 200px;
         }
-
 
         .equipe {
           margin-top: 40px;

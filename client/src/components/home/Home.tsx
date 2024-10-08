@@ -221,7 +221,7 @@ const Home = () => {
                         <div className="rdp_btninsta"> 
                         {/*Botao Simulados*/}
                         {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navegate('/login');}
+                               {navegate('/login');}
                                 }><p>Instagram</p>
                         </Button>
                         </div>
@@ -233,6 +233,7 @@ const Home = () => {
                 </div>
             </div>
     </div>
-  )}
+  )
+}
 
 export default Home
