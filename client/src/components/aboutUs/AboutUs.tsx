@@ -22,12 +22,14 @@ const AboutUs = () => {
                       
                        <div className="dev-container">
                               <img src="./equipe.jpg" alt="Imagem da equipe" className="rounded-image" />
-                              <h3>Somos uma equipe de estudantes apaixonados por tecnologia e educação.
+                              
+                              <div className='somos'><p>Somos uma equipe de estudantes apaixonados por tecnologia e educação.
                                  Criamos o ConTI com o objetivo de utilizar nossas habilidades para facilitar o acesso ao 
                                 ensino de qualidade. Acreditamos que, ao unir tecnologia e educação, podemos causar 
                                 um impacto positivo na vida de muitos jovens. Cada um de nós traz diferentes 
                                 conhecimentos e experiências, mas todos compartilhamos a mesma visão de tornar 
-                                a educação acessível e democrática para todos.</h3>
+                                a educação acessível e democrática para todos.</p>
+                                </div>
                         </div>
                         <h4 >&nbsp;&nbsp;&nbsp;&nbsp;Janaína, Aléxia, Mariana, Igor, Mateus, Gabriel e Fernando</h4>
                     

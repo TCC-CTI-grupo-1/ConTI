@@ -6,7 +6,7 @@
     .dev-container {    
       display: flex;
       align-items: center; // Centraliza verticalmente a imagem e o texto
-      gap: 20px; // Espaçamento entre a imagem e o texto
+      gap: 22px; // Espaçamento entre a imagem e o texto
     }
   
     .rounded-image {
@@ -22,6 +22,17 @@
     text-align: justify;
     flex: 1;
     line-height: 1.6;
+  }
+
+  .aboutUs h3{
+    width: 1560px;
+  }
+
+  .somos{
+    font-size: 25px;
+    width: 800px;
+    height: 300px;
+     margin-left: 40px;
   }
 
   .dev_img{

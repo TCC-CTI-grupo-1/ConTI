@@ -60,7 +60,7 @@ const Home = () => {
                             <div className="taxa_acerto">
                             <p> Taxa de acerto nos simulados</p>
                                 <div className="graph">
-                                    <ProgressBar color="blue" radius={150} filledPercentage={52} animation></ProgressBar>
+                                    <ProgressBar color="blue" radius={100} filledPercentage={52} animation></ProgressBar>
                                 </div> 
                             </div>
                         </div>
