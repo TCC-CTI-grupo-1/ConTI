@@ -363,9 +363,7 @@ const Admistrator = () => {
                                         </Select>
                                         <Button onClick={handlePostNovaArea}>Salvar</Button>
                                     </div>
-                                    
-                                    <LatexRenderer text='Eu chupei <tex>$2^{32}$</tex> paus' />       
-
+                                
                                     <AreaTree onActiveAreasChange={() => {}}/>
                                 </div>}
                     </div>
@@ -570,13 +568,14 @@ const Admistrator = () => {
 
                         </div>
                         <div>
-                            <label htmlFor="info">Tem imagem? </label>
+                            <label htmlFor="info">Tem imagem?</label>
                             <input type="checkbox" name="info" id="info" 
-                            value={novaQst[0].has_image ? 'checked' : ''}
+                            checked={novaQst[0].has_image}
                             onChange={(e) => {
                                 let newQst = {...novaQst[0]};
                                 newQst.has_image = e.target.checked;
                                 setNovaQst([newQst, novaQst[1]]);
+                                console.log(novaQst[0]);
                             }}
                             />
                             
