@@ -80,7 +80,7 @@ const Status = () => {
     function handleSetAreasPai(){
         let areasPaiList: areaInterface[] = [];
         Object.values(areas).forEach(area => {
-            if(area.parent_id == null){
+            if(area.parent_id == 0){
                 areasPaiList.push(area);
             }
         });        
@@ -252,6 +252,21 @@ const Status = () => {
     }
     
 
+    function getAreaImage(areaID: number): string {
+        switch (areaID) {
+            case 1019:
+                return mat;
+            case 1000:
+                return port;
+            case 1072:
+                return naturais;
+            case 1037:
+                return humanas;
+            default:
+                return '';
+        }
+    }
+
     const primaryColor = '#0066FF';
 
     return (
@@ -294,7 +309,9 @@ const Status = () => {
                                     onClick={() => modifyMateriaAtiva(areaPai.id)}
                                 >
                                     <div id="header">
-                                        <img src={logos[areaPai.id-1]} alt={areaPai.name} />
+                                        <img src={
+                                            getAreaImage(areaPai.id)
+                                        } alt={areaPai.name} />
                                         <h4>{areaPai.name}</h4>
                                         <img src={expand} className="expand" alt="expand" />
                                     </div>
