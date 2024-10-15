@@ -5,7 +5,6 @@ import { handleGetArea_Profile } from "../../../controllers/userController";
 import { area_ProfileInterface } from "../../../controllers/interfaces";
 import { areaInterface } from "../../../controllers/interfaces";
 import { handleGetAreas } from "../../../controllers/areasController";
-
 //import { useNavigate } from "react-router-dom";
 
 import mat from '../../../assets/areasIcons/1.png';
@@ -23,8 +22,6 @@ const Status = () => {
     const [profileStatus, setProfileStatus] = useState<{[id:number]: area_ProfileInterface}>({});
     const [areas, setAreas] = useState<{ [id: number]: areaInterface }>({}); //Array chave-valor com todas as areas do usuario
     const [areasPai, setAreasPai] = useState<areaInterface[]>([]); //As areas que não dependem de ninguem
-
-    const logos = [mat, port, naturais, humanas]
     
     const [materiaAtiva, setMateriaAtiva] = useState<number>(1019); //id da materia ativa
 
@@ -291,6 +288,7 @@ const Status = () => {
         }
         {
             !loading && <div id="status">
+
                 <div className="info-area">
                     <div id="header">
                         <h2>Informações por área</h2>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRef } from "react";
 import Status from "./Status";
 import Config from "./Config";
+import Background from "../Background";
 const Profile = () => {
 
     const [tela, setTela] = useState<number>(0);
@@ -27,6 +28,7 @@ const Profile = () => {
     return (
         //Não sei se botar a classe full-screen-size é uma boa ideia
         <div id="profile" className="flex-container full-screen-size">
+            <Background variant="white" />
             <Navbar screen="profile"/>
             <div className="container">
                 <div className="header">

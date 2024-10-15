@@ -1291,8 +1291,9 @@ COMPONENTES GERAIS DO FERNANDO
     gap: var(--padding-1);
 
     &>#header {
+      border: 1px solid black;
+
       padding: var(--padding-2);
-      padding-left: 0;
       background-color: var(--background-color);
       border-radius: var(--border-radius);
     }
