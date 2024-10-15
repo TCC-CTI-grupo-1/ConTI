@@ -65,6 +65,7 @@ const SimuladoFrame = () => {
     }, []);
 
     useEffect(() => {
+        
         const postSimulado = async () => {
             let questionsarray: questionInterface[] = questionsHashMap.map(q => q.question);
             console.log("questionsarray: ");
@@ -82,7 +83,11 @@ const SimuladoFrame = () => {
             }
         }
 
-        postSimulado();
+        if(questionsHashMap && questionsHashMap.length > 0){
+            console.log("POSTING SIMULADO");
+            console.log(questionsHashMap);
+            postSimulado();
+        }
     }, [questionsHashMap]);
 
     const finishSimulado = (respostas: questionMapResultInterface) => {

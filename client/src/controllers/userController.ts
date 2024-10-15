@@ -286,7 +286,8 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
 
 export async function handleIncrementProfileMockTest() {
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS +'/profile/incrementMockTest', {
+        const userID = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS +'/profile/incrementMockTest/'+userID, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -308,12 +309,13 @@ export async function handleIncrementProfileMockTest() {
 
 export async function handleIncrementProfileAnswers(totalCorrectAnswers: number, totalAnswers: number) {
     try {
+        const userID = sessionStorage.getItem('userId');
         const data = {
             total_correct_answers: totalCorrectAnswers,
             total_answers: totalAnswers
         };
 
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/incrementAnswers', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/incrementAnswers/'+userID, {
             method: 'PUT',
             credentials: 'include',
             headers: {
