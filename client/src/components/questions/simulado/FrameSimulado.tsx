@@ -7,6 +7,9 @@ import { handleGetAnswersByQuestionsIds } from "../../../controllers/answerContr
 import { simuladoInterface } from "../../../controllers/interfaces";
 import { showAlert } from "../../../App";
 import { useNavigate } from "react-router-dom";
+import { handleIncrementProfileAnswers, handleIncrementProfileMockTest } from "../../../controllers/userController"
+import { handlePutSimulado } from "../../../controllers/mockTestController";
+import { handleIncrementAnswers } from "../../../controllers/answerController";
 // import date from 'date-and-time'
 // import { useNavigate } from "react-router-dom"
 
@@ -26,13 +29,15 @@ type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
 }[];
+
+type questionMapResultInterface = [number, (number | null)][]; 
 // type questionMapResultInterface = [number, (string | null)][];  
 
 const SimuladoFrame = () => {
 
     const[loading, setLoading] = useState(true);
     const[questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface>([]);
-    const [simulado, setSimulado] = useState<simuladoInterface | null>(null);
+    const[simulado, setSimulado] = useState<simuladoInterface | null>(null);
 
     const navegate = useNavigate();
 
@@ -80,8 +85,51 @@ const SimuladoFrame = () => {
         postSimulado();
     }, [questionsHashMap]);
 
-    const finishSimulado = () => {
-        navegate('/');
+    const finishSimulado = (respostas: questionMapResultInterface) => {
+        if(!simulado){
+            showAlert("Erro ao finalizar simulado", "error");
+            return;
+        };
+        //setIsSimuladoAwaitActive(true);
+        let totalCorrectAnswers = 0;
+        let totalAnswers = 0;
+        const date = new Date();
+        const dateSimulado = new Date(simulado.creation_date_tz);
+        const timeSpentInMinutes = Math.floor((date.getTime() - dateSimulado.getTime()) / 60000);
+        
+        if(questionsHashMap === null) return;
+        
+        respostas.forEach((value, index) => {
+            ++totalAnswers;
+            const question = questionsHashMap[index];
+            if (question !== undefined && value[1] !== null) {
+                const correctAnswer = question.answers.find((answer) => answer.is_correct === true);
+                if (correctAnswer !== undefined && correctAnswer.id === value[1]) {
+                    ++totalCorrectAnswers;
+                }
+            }
+        });
+        
+        const novoSimulado = {
+            ...simulado,
+            total_correct_answers: totalCorrectAnswers,
+            total_answers: totalAnswers,
+            time_spent: timeSpentInMinutes
+        }
+        
+        handlePutSimulado(novoSimulado).then((result) => {
+            if (result !== null) {
+                setSimulado(simulado);
+            }
+            return true;
+        })
+
+        const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
+        handleIncrementAnswers(respostasIds);
+        handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
+        handleIncrementProfileMockTest();
+
+        navegate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");
     }
     // function returnJSXOverlay(): JSX.Element{
