@@ -51,9 +51,9 @@ export async function routes(app: any) {
     app.get('/profileSession', getProfileSessionController);
     app.put('/profile', updateProfileController);
     app.delete('/profile/:uuid', deleteProfileController); 
-    app.put('/profile/incrementMockTest', incrementProfile_MockTestController);
+    app.put('/profile/incrementMockTest/:uuid', incrementProfile_MockTestController);
     app.get('/profile/:uuid', getProfileController);
-    app.put('/profile/incrementAnswers', incrementProfileAnswersController);
+    app.put('/profile/incrementAnswers/:uuid', incrementProfileAnswersController);
 
 
     // '/questions/'
