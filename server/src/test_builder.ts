@@ -223,23 +223,7 @@ export class TestBuilder{
             const key = Number(value);
             normalizeValues(key,key);
         }
-        const produtoria = (lista:number[]) => {
-            let ret = 1;
-            for(const v of lista)
-            {
-                ret*=v;
-            }
-            return ret;
-        }
-        const produt_sum = (lista:number[]) => {
-            let produt = produtoria(lista);
-            let sum = 0;
-            for(const v of lista)
-            {
-                sum+=produt/v;
-            }
-            return sum;
-        }
+        
         const normalizeList = (lista: number[]): number[] => {
             return lista.map(num => num === 0 ? 0.001 : num);
         }
@@ -266,12 +250,16 @@ export class TestBuilder{
             for(const diff in difflist)
             {
                 const list = normalizeList(difflist[diff]);
-                const k = produt_sum(list)/produtoria(list);
                 let sumSoFar = 0;
                 const n = fractionInType[DifficultyType.AREA][diff] * (questionsInArea[parent.area_id] - questionsInChildren);
+                let k = 0;
+                for(const v of list)
+                {
+                    k+=v;
+                }
                 for(let i=0;i<list.length;i++)
                 {
-                    const val = Math.floor(n/(k*list[i]));
+                    const val = Math.floor((list[i]*n)/k);
                     sizeMap[idlist[diff][i]].questionCount_inDifficulty[diff] = Math.floor(val);
                     sumSoFar += val;
                 }
