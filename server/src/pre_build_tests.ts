@@ -66,7 +66,7 @@ export const semana_do_colegio_tests = [
       "total_answers": 0,
       "total_correct_answers": 0,
       "difficulty": "facil",
-      "additional_info": " ",
+      "additional_info": "",
       "area_id": 1019,
       "question_creator": "VUNESP",
       "official_test_name": "CTI",
