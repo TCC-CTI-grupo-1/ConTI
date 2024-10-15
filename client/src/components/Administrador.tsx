@@ -15,6 +15,7 @@ import { useRef } from "react";
 import { handlePostQuestionImage } from "./../controllers/questionController";
 import LoadingScreen from "./LoadingScreen";
 import AreaTree from "./AreaTree";
+import { handleDeleteArea } from "./../controllers/areasController";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -347,7 +348,21 @@ const Admistrator = () => {
                                         <h3>Area pai selecionada: </h3>
                                         <p>{areaPai === null ? "Nenhuma" : areas[Number(areaPai)].name}</p>
                                         <Button onClick={handlePostNovaArea}>Salvar</Button>
-                                    
+                                        <Button colorScheme="red" onClick={() => {
+                                            //checa se a area selecionada não tem filhos
+                                            if(Object.values(areas).find((area) => area.parent_id === Number(areaPai)) !== undefined){
+                                                showAlert("Essa área possui sub-áreas, não pode ser deletada");
+                                                return;
+                                            }
+                                            showAlert("Deletando area...", "warning");
+                                            handleDeleteArea(Number(areaPai)).then((resp) => {
+                                                if(resp){
+                                                    showAlert("Area deletada com sucesso!", "success");
+                                                }else{
+                                                    showAlert("Erro ao deletar area");
+                                                }
+                                            });
+                                        }}>Deletar</Button>
                                     </div>
                                 
                                     

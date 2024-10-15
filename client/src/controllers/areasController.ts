@@ -22,6 +22,28 @@ export async function handleGetAreas(): Promise<areaInterface[]> { //areasContro
     }
 }
 
+export async function handleDeleteArea(id: number): Promise<boolean> { //areasController.ts
+    try {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas/' + id, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
+
 export async function handleGetTopParentAreasByIds(ids: number[]): Promise<areaInterface[]> { //areasController.ts
     try {
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas/top' + JSON.stringify(ids), {

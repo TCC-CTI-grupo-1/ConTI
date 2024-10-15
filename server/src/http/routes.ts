@@ -74,6 +74,7 @@ export async function routes(app: any) {
     app.get('/areas', getAreaController);
     app.get('/areas/tree', getAreaTreeController);
     app.get('/area/:id', getAreaByIdController);
+    app.delete('/area/:id', /*deleteArea*/);
     app.get('/areas/questions', getAreasIdsByQuestionsIdsController);
     app.get('/area/question/:question_id', getAreaIdByQuestionIdController);
 
