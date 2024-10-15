@@ -32,6 +32,7 @@ import { putQuestion_MockTestController } from './controllers/putQuestion_MockTe
 import { putMockTestController } from './controllers/putMockTestController';
 import { postImageController } from './controllers/postImageController';
 import { convertStringToAreaDTOs } from './controllers/addAllAreas';
+import { getAreaTreeController } from './controllers/getAreaController';
 
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
@@ -77,7 +78,7 @@ export async function routes(app: any) {
     app.get('/area/:id', getAreaByIdController);
     app.get('/areas/questions', getAreasIdsByQuestionsIdsController);
     app.get('/area/question/:question_id', getAreaIdByQuestionIdController);
-
+	app.get('/areas/tree', getAreaTreeController);
     app.get('/areas/top/:id', getTopParentAreaByIdController);
 
     app.post('/areas', postAreaController);
