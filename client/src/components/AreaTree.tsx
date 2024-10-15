@@ -12,9 +12,10 @@ interface areaTreeInterface{
 }
 
 interface Props{
-    onActiveAreasChange: (activeAreasIds: number[]) => void
+    onActiveAreasChange: (activeAreasIds: number[]) => void;
+    isRadio?: boolean;
 }
-const AreaTree = ({onActiveAreasChange}: Props) => {
+const AreaTree = ({onActiveAreasChange, isRadio=false}: Props) => {
 
     const [activeAreasIds, setActiveAreasIds] = useState<number[]>([]);
     const [loadingJORGE, setLoading] = useState<boolean>(true);
@@ -47,9 +48,11 @@ const AreaTree = ({onActiveAreasChange}: Props) => {
     const renderAreaTree = (areaTree: areaTreeInterface) => {
         const root = areaTree.areaTree.root;
         return (
-            <div>
-                <div className="Teste active">{renderChildren(root.id)}</div>
-            </div>
+            <form>
+                <div>
+                    <div className="Teste active">{renderChildren(root.id)}</div>
+                </div>
+            </form>
 
         )
     }
@@ -64,7 +67,6 @@ const AreaTree = ({onActiveAreasChange}: Props) => {
                     {children.map((child) => {
                         return (
                             <li>
-                                
                             <div
                                 
                                 className={'text ' + (!activeAreasIds.includes(child.id) && tree[child.id] !== undefined && tree[child.id].length > 0 ? 'togglable' : '')}
@@ -79,13 +81,17 @@ const AreaTree = ({onActiveAreasChange}: Props) => {
                                 }}
                                 
                                 >{child.name}</p>
-                                <input type="checkbox" onClick={() => {
+                                {!isRadio &&<input type="checkbox" onClick={() => {
                                     if(activeAreasIds.includes(child.id)){
                                         setActiveAreasIds(activeAreasIds.filter((id) => id !== child.id));
                                     }else{
                                         setActiveAreasIds([...activeAreasIds, child.id]);
                                     }
-                                }} />
+                                }} />}
+                                
+                                {isRadio &&<input type={'radio'} name="area" onClick={() => {
+                                    setActiveAreasIds([child.id]);
+                                }} />}
                             </div>
                             
                             {!activeAreasIds.includes(child.id) &&
