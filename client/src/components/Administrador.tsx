@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Button from "././Button"
 import Input from "././Input";
 import { handleGetAreasMap } from "./../controllers/areasController";
-import { Select } from '@chakra-ui/react'
 import { handlePostArea } from "./../controllers/areasController";
 import { showAlert } from "./../App";
 import { handleGetQuestions, handleGetQuestion } from "./../controllers/questionController";
@@ -16,7 +15,6 @@ import { useRef } from "react";
 import { handlePostQuestionImage } from "./../controllers/questionController";
 import LoadingScreen from "./LoadingScreen";
 import AreaTree from "./AreaTree";
-import LatexRenderer from "./LatexRenderer";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -39,6 +37,7 @@ const Admistrator = () => {
     const [nomeArea, setNomeArea] = useState<string>('');
     const [areaPai, setAreaPai] = useState<string | null>(null);
     const [areas, setAreas] = useState<{[id: number]: areaInterface}>([]);
+
 
     const {onOpen, onClose, isOpen} = useDisclosure();
 
@@ -338,33 +337,20 @@ const Admistrator = () => {
                                     </div>
                                     
                                     <div>
-                                        <Input name={"Nova Area"} label={"Nova area"} onChange={(e) => {
+                                        <Input name={"Nova Area"} label={"Nome da nova area"} onChange={(e) => {
                                             setNomeArea(e.target.value);
                                         }}></Input>
-                                        <Select placeholder='Selecione a área Pai'
-                                        onChange={(e) => {
-                                            if(e.target.value === 'none'){
-                                                setAreaPai(null);
-                                            }
-                                            setAreaPai(e.target.value);
-                                        }}>
-                                            <option value='none'>Nenhuma</option>
-                                            {
-                                                Object.values(areas).map((area, index) => {
-                                                    return <option key={index} value={area.id}
-                                                    onClick={() => {
-                                                        let newQst = {...novaQst[0]};
-                                                        newQst.area_id = area.id;
-                                                        setNovaQst([newQst, novaQst[1]]);
+                                        <AreaTree onActiveAreasChange={(area) => {
+                                            setAreaPai(area.toString());
+                                        }} isRadio/>
 
-                                                    }}>{area.name}</option>
-                                                })
-                                            }
-                                        </Select>
+                                        <h3>Area pai selecionada: </h3>
+                                        <p>{areaPai === null ? "Nenhuma" : areas[Number(areaPai)].name}</p>
                                         <Button onClick={handlePostNovaArea}>Salvar</Button>
+                                    
                                     </div>
                                 
-                                    <AreaTree onActiveAreasChange={() => {}}/>
+                                    
                                 </div>}
                     </div>
                 </div>}
