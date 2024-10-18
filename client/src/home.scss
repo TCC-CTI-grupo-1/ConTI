@@ -239,6 +239,63 @@
                 
 
 //AQUI É A TELA COM USUARIO LOGADO
+section.home{
+  & h3.daily{
+    margin: var(--padding-1);
+    &::after{
+      content: '';
+      display: block;
+      width: 120%;
+      transform: translateX(-10%);
+      height: 1px;
+      background-color: black;
+    }
+  }
+  & div.daily{
+    width: 90%;
+    border: 1px solid black;
+    border-radius: var(--border-radius);
+  }
+  & > div.btns{
+    display: flex;
+    gap: var(--padding-0);
+    margin: var(--padding-2);
+  }
+  & > div.info{
+    width: 90%;
+    
+    display: flex;
+    gap: var(--padding-0);
+    & > div{
+      background-color: white;
+      border: 1px solid black;
+      padding: var(--padding-2);
+      border-radius: var(--border-radius);
+    }
+    & .acertos_simulado{
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-0);
+      align-items: center;
+    }
+    & .areas_estudar{
+      & > div{
+        display: flex;
+        gap: var(--padding-0);
+      }
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      & span{
+          display: flex;
+          justify-content: space-between;
+          border-bottom: 1px solid black;
+      }
+    }
+  }
+}
+
 .question_graphic{
     display: flex;
     flex-direction: row;

@@ -8,10 +8,13 @@ import NewTestIcon from "../../assets/NewTestIcon.tsx";
 import Background from "../user/Background.tsx";
 import { useState, useEffect } from "react";
 import { questionInterface, respostaInterface } from "../../controllers/interfaces.ts";
-import { handleGetQuestions } from "../../controllers/questionController.ts";
+import { handleGetQuestion } from "../../controllers/questionController.ts";
 import { handleGetAnswersByQuestionId } from "../../controllers/answerController.ts";
 import { useNavigate } from "react-router-dom";
 import '../../home.scss';
+import simulado from '../../../public/Simulado.png';
+import profile from '../../../public/Perfil.png';
+import database from '../../../public/banco.png';
 
 const Home = () => {
 
@@ -20,9 +23,9 @@ const Home = () => {
   const [answer, setAnswer] = useState<respostaInterface[] | null>(null);
   const navigate = useNavigate();
   async function getQuestion(){
-    const questions = await handleGetQuestions()
-    const randomNumber = Math.floor(Math.random() * questions.length);
-    const question = questions[randomNumber];
+    //numero aleatorio de 800 a 1300:
+    const random = Math.floor(Math.random() * (1300 - 800 + 1)) + 800;
+    const question = await handleGetQuestion(random);
     if (question !== null) {
       const answer = await handleGetAnswersByQuestionId(question.id);
       setQuestion(question);
@@ -46,66 +49,39 @@ const Home = () => {
                 <div className="content">
                   {isLoggedIn ? <>
                     <section className="home">
-                    <h3>O que deseja fazer hoje?</h3>
-                        <div className="question_graphic">
-                            <div className="dly_question">
-                                <h3>Deseja fazer uma questão diária? </h3>
-                                {question !== null && answer !== null &&
-                                <QstDetail question={question} answers={answer} 
-                                    type="small" />
-                                }
-                                    
-                            </div> 
-                            <div className="taxa_acerto">
-                            <p> Taxa de acerto nos simulados</p>
-                                <div className="graph">
-                                    <ProgressBar color="blue" radius={100} filledPercentage={52} animation></ProgressBar>
-                                </div> 
-                            </div>
+                      <h2>Olá, {localStorage.getItem('username')}.</h2>
+                      <h3>O que você deseja fazer hoje?</h3>
+                      <div className="btns">
+                        <Button colorScheme="blue" onClick={() => navigate('/newtest')}><NewTestIcon  iconColor="white" backgroundTransparent/> Novo simulado</Button>
+                        <Button onClick={() => navigate('/database')}><DatabaseIcon /> Banco de questões</Button>
+                      </div>
+                      <div className="info">
+                        <div className="acertos_simulado">
+                          <a onClick={() => {
+                            navigate('/profile');
+                          }}><h3>Sua taxa de acerto nos simulados:</h3></a>
+                          <ProgressBar filledPercentage={80} radius={100}/>
+                          
                         </div>
-
-                        <div>
-                            <div className="simuladobanco">
-                                    <div className="simulado">
-                                    <p>Teste suas habilidades com um simulado</p>
-                                    <Button colorScheme="blue" width={315} height={50} variant="solid" onClick={() =>
-                                        {
-                                            navigate('/newtest');
-                                        }
-                                        }>Iniciar simulado <NewTestIcon iconColor="white" onIconClick={() => {}}/>
-                                    </Button>    
-                                    </div>
-
-                                    <div className="ou">
-                                        <p> ou </p>
-                                    </div>
-
-                                    <div className="acessar_questoes"> 
-                                        <p> Veja nosso banco de questões completo</p>
-                                        <Button name="btn_banco" colorScheme="gray" width={315} height={50} variant="solid" onClick={() =>
-                                        {
-                                            navigate('/questions');
-                                        }
-                                        }>Acessar Banco <DatabaseIcon onIconClick={() => {}}/>
-                                        </Button>
-                                    </div>   
-                            </div>
-
-                            <div className="simulado_anterior">
-                                <div className="sim_anteriores"><p>Simulados anteriores</p> </div>
-                                    <div className="caixa_sim"> 
-                                        <div className="acertos_sim">
-                                            37/50 <NewTestIcon onIconClick={() => {}}/>
-                                        </div>
-
-                                        <div className="time">
-                                            tempo: 1h 27min
-                                        </div>
-                                        <div className="vermais"> ver mais</div>
-                                        
-                                    </div>
-                            </div>
+                        <div className="areas_estudar">
+                          <div>
+                            <h3>Suas areas de maior dificuldade:</h3>
+                            <Button onClick={() => navigate('/profile')}><DatabaseIcon /> Ver perfil</Button>
+                          </div>
+                          <span><h4>Fisica</h4><h3>54%</h3></span>
+                          <span><h4>Fisica Geral</h4><h3>31%</h3></span>
+                          <span><h4>Fisica num geral</h4><h3>3%</h3></span>
                         </div>
+                      </div>
+
+                      <h3 className="daily">Que tal fazer uma quesão diária?</h3>
+                      
+                      <div className="daily">
+                        {question ? answer && <QstDetail question={question} answers={answer} /> : <h3>Questão não enconrada</h3>}
+
+                      </div>
+
+
                                 
                     </section>
                     
@@ -133,7 +109,7 @@ const Home = () => {
                               <p>Nosso sistema oferece simulados adaptados á cada dificuldade, proporcionando 
                               uma experiência de estudo progressivo e promovendo uma preparação eficaz.</p>
                             </div>
-                            <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" />                            
+                            <img src={simulado} alt="Imagem da equipe" className="mot_img" />                            
                         </div>
 
                         <div className="mot_banco">
@@ -143,7 +119,7 @@ const Home = () => {
                               anos anteriores, os alunos têm acesso a um material de qualidade para praticar 
                               e se familiarizar com o formato das provas.</p>
 
-                              <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" />
+                              <img src={database} alt="Imagem da equipe" className="mot_img" />
                           </div>
                         </div>
 
@@ -163,69 +139,10 @@ const Home = () => {
                             <p> Nosso sistema disponibiliza gráficos detalhados de perfil, permitindo visualização 
                               de desempenhos em cada matéria e prova, facilitando a identificação de áreas que 
                               precisam de mais atenção.</p>
-                              <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" /> 
+                              <img src={profile} alt="Imagem da equipe" className="mot_img" /> 
                             </div>
                         </div>
-                    {/*
-                    <div className="rodape">
-                      <div className="rdp_logoempresa">
-                       </div>
-
-                      <div className="rdp_logoconti"> </div>
-
-                      <div className="menu">
-                        <h2>Menu</h2>
-                        </div>
-                         <div className="rdp_btnbanco">           
-                        {/*Botao Banco de questoes*/}
-                      {/*  <Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navigate('/questions');}
-                                }><p>Banco de questões</p>
-                        </Button></div>
-                        
-                        <div className="rdp_btnsimulado"> 
-                        {/*Botao Simulados*/}
-                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navigate('/newtest');}
-                                }><p>Simulados</p>
-                        </Button>
-                        </div>
-                        
-                        <div className="rdp_btnperfil"> 
-                        {/*Botao Simulados*/}
-                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navigate('/login');}
-                                }><p>Meu perfil</p>
-                        </Button>
-                        </div>
-                                
-                      <div className="conti">
-                        <h2>ConTI</h2>
-                        </div>
-                         <div className="rdp_btnsobre">           
-                        {/*Botao Banco de questoes*/}
-                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navigate('/aboutUs');}
-                                }><p>Sobre nós</p>
-                        </Button></div>
-                        
-                        <div className="rdp_btncontato"> 
-                        {/*Botao Simulados*/}
-                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navigate('/newtest');}
-                                }><p>Contato</p>
-                        </Button>
-                        </div>
-                        
-                        <div className="rdp_btninsta"> 
-                        {/*Botao Simulados*/}
-                        {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                               {navigate('/login');}
-                                }><p>Instagram</p>
-                        </Button>
-                        </div>
-                    </div></div>
-                    */}
+                   
                     </div>
                   </>}
                   

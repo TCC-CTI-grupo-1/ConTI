@@ -109,8 +109,7 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
             <div className={'box question ' + (type == "small" ? "small" : "")}>
-                {type !== "small" &&
-                <p>*</p>}
+                <p>Questão #{question.id}</p>
 
                 <h4>
                 <LatexRenderer text={question.question_text}></LatexRenderer>
@@ -133,7 +132,7 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
                                 <span>
                                     <p> {alternative.question_letter} </p>
                                 </span>
-                                <p> <LatexRenderer text={question.question_text}></LatexRenderer> </p>           
+                                <p> <LatexRenderer text={alternative.answer}></LatexRenderer> </p>           
                             </div>
                         </div>
                     ))}
