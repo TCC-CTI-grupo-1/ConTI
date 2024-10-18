@@ -40,7 +40,7 @@ const History = () => {
     const [loading, setLoading] = useState(true);
     const [loading2, setLoading2] = useState(true);
 
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     const [areas, setAreas] = useState<{[key: string]: areaInterface}>({});
 
@@ -347,7 +347,7 @@ const History = () => {
                 <ModalFooter>
                     <Button variant='ghost' mr={3} onClick={onClose}>Fechar</Button>
                     <Button colorScheme='blue' onClick={() => {
-                        navegate(`/simulado/${retrurnActiveQuestionId()}`);
+                        navigate(`/simulado/${retrurnActiveQuestionId()}`);
                     }}>
                     Ver prova
                     </Button>   

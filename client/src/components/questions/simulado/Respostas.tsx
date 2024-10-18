@@ -67,7 +67,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
     };
 
 
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     return (
         <>
@@ -83,7 +83,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                     <h3>Pontuação final: {pontuacao.filter((p) => p).length} / {questionsHashMap.length}</h3>
                     <Button colorScheme="blue" variant="solid" onClick={() => {
                         //Voltar para a tela anterior
-                        navegate('/history');
+                        navigate('/history');
 
                     }}>
                         Voltar ao historico

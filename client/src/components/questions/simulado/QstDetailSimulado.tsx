@@ -69,11 +69,14 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
     <div className={'box question'}>
+
         <p id='question-number-container'>{qNumber}</p>
         <h4>
             <LatexRenderer text={question.question_text}></LatexRenderer>
         </h4>
+        
         {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
+
         <div className="additional_info">
             {question.additional_info !== '' && <h3>Texto de apoio:</h3>}
             <p>{question.additional_info}</p>

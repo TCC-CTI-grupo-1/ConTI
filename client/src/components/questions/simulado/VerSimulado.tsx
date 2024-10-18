@@ -18,7 +18,7 @@ const SimuladoFrame = () => {
     const [loading, setLoading] = useState(true);
     const [pontuacao, setPontuacao] = useState<boolean[]>([]);
 
-    //const navegate = useNavigate();
+    //const navigate = useNavigate();
 
     useEffect(() => {
         const getSimulado = async () => {

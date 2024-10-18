@@ -16,7 +16,7 @@ import { showAlert } from "../../../App";
 
 const Status = () => {
 
-    //const navegate = useNavigate();
+    //const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(true);
     const [doesProfileExist, setDoesProfileExist] = useState<boolean>(false);
     const [profileStatus, setProfileStatus] = useState<{[id:number]: area_ProfileInterface}>({});
@@ -50,7 +50,7 @@ const Status = () => {
             return newStatus;
         }
         else{
-            //navegate('/login');
+            //navigate('/login');
             showAlert("Você não está logado");
             return null;
         }

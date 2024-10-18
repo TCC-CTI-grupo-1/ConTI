@@ -78,7 +78,7 @@ export async function handlePutAnswers(answers: respostaInterface[]) {
     }
 }
 
-export async function handleIncrementAnswers(answers_ids: number[]) {
+export async function handleIncrementAnswers(answers_ids: (number | null)[]) {
     try {
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/answers/increment/' + JSON.stringify(answers_ids), {
             method: 'PUT',

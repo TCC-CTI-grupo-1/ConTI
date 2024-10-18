@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { questionInterface, respostaInterface } from '../../../controllers/interfaces';
 import LocalButton from '../../Button';
 import { showAlert } from '../../../App';
+import LatexRenderer from '../../LatexRenderer';
 
 interface Props {
     question: questionInterface;
@@ -110,8 +111,9 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
             <div className={'box question ' + (type == "small" ? "small" : "")}>
                 {type !== "small" &&
                 <p>*</p>}
+
                 <h4>
-                {question.question_text}
+                <LatexRenderer text={question.question_text}></LatexRenderer>
                 </h4>
 
                 {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
@@ -131,7 +133,7 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
                                 <span>
                                     <p> {alternative.question_letter} </p>
                                 </span>
-                                <p> {alternative.answer} </p>           
+                                <p> <LatexRenderer text={question.question_text}></LatexRenderer> </p>           
                             </div>
                         </div>
                     ))}

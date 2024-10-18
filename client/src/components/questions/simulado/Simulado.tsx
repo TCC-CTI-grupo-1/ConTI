@@ -136,7 +136,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
 
 
 
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     return (
         <>
@@ -149,7 +149,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                 <div className="infoTop">
                     {isSimuladoFinished &&
                     <Button colorScheme="blue" size="lg" variant="solid" onClick={() => {
-                        navegate('/');
+                        navigate('/');
                     }}>
                         Voltar ao home
                     </Button>

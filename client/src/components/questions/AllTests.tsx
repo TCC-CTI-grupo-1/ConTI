@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom'
 
 const AllTests = () => {
 
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     function goBack(){
-        navegate('/questions')
+        navigate('/questions')
     };
 
     return (

@@ -39,7 +39,7 @@ const SimuladoFrame = () => {
     const[questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface>([]);
     const[simulado, setSimulado] = useState<simuladoInterface | null>(null);
 
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         let newQuestionMapInterface: questionMapInterface = []; 
@@ -134,7 +134,7 @@ const SimuladoFrame = () => {
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();
 
-        navegate('/history');
+        navigate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");
     }
     // function returnJSXOverlay(): JSX.Element{
@@ -207,7 +207,7 @@ const SimuladoFrame = () => {
             //         <ModalFooter>
             //             {simulado !== null && <>
             //                 <Button variant='ghost' mr={3} onClick={() => {
-            //                     navegate('/');
+            //                     navigate('/');
             //                 }}>Voltar ao home</Button>
             //                 <Button colorScheme='blue' onClick={onClose}>
             //                 Ver prova

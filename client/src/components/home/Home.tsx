@@ -1,6 +1,5 @@
 
 import Navbar from "../Navbar"
-import Logo from "../user/login/Logo.tsx"
 import { Button } from "@chakra-ui/react"
 import QstDetail from "../questions/simulado/QstDetail"
 import { ProgressBar } from "../ProgressBar"
@@ -19,7 +18,7 @@ const Home = () => {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const [question, setQuestion] = useState<questionInterface | null>(null);
   const [answer, setAnswer] = useState<respostaInterface[] | null>(null);
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   async function getQuestion(){
     const questions = await handleGetQuestions()
     const randomNumber = Math.floor(Math.random() * questions.length);
@@ -71,7 +70,7 @@ const Home = () => {
                                     <p>Teste suas habilidades com um simulado</p>
                                     <Button colorScheme="blue" width={315} height={50} variant="solid" onClick={() =>
                                         {
-                                            navegate('/newtest');
+                                            navigate('/newtest');
                                         }
                                         }>Iniciar simulado <NewTestIcon iconColor="white" onIconClick={() => {}}/>
                                     </Button>    
@@ -85,7 +84,7 @@ const Home = () => {
                                         <p> Veja nosso banco de questões completo</p>
                                         <Button name="btn_banco" colorScheme="gray" width={315} height={50} variant="solid" onClick={() =>
                                         {
-                                            navegate('/questions');
+                                            navigate('/questions');
                                         }
                                         }>Acessar Banco <DatabaseIcon onIconClick={() => {}}/>
                                         </Button>
@@ -180,14 +179,14 @@ const Home = () => {
                          <div className="rdp_btnbanco">           
                         {/*Botao Banco de questoes*/}
                       {/*  <Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navegate('/questions');}
+                                {navigate('/questions');}
                                 }><p>Banco de questões</p>
                         </Button></div>
                         
                         <div className="rdp_btnsimulado"> 
                         {/*Botao Simulados*/}
                         {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navegate('/newtest');}
+                                {navigate('/newtest');}
                                 }><p>Simulados</p>
                         </Button>
                         </div>
@@ -195,7 +194,7 @@ const Home = () => {
                         <div className="rdp_btnperfil"> 
                         {/*Botao Simulados*/}
                         {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navegate('/login');}
+                                {navigate('/login');}
                                 }><p>Meu perfil</p>
                         </Button>
                         </div>
@@ -206,14 +205,14 @@ const Home = () => {
                          <div className="rdp_btnsobre">           
                         {/*Botao Banco de questoes*/}
                         {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navegate('/aboutus');}
+                                {navigate('/aboutUs');}
                                 }><p>Sobre nós</p>
                         </Button></div>
                         
                         <div className="rdp_btncontato"> 
                         {/*Botao Simulados*/}
                         {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                                {navegate('/newtest');}
+                                {navigate('/newtest');}
                                 }><p>Contato</p>
                         </Button>
                         </div>
@@ -221,7 +220,7 @@ const Home = () => {
                         <div className="rdp_btninsta"> 
                         {/*Botao Simulados*/}
                         {/*<Button width={315} height={50} fontSize={20} variant="" onClick={() =>
-                               {navegate('/login');}
+                               {navigate('/login');}
                                 }><p>Instagram</p>
                         </Button>
                         </div>

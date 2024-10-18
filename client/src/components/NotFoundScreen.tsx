@@ -1,7 +1,7 @@
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
 const NotFound = () => {
-    const navegate = useNavigate();
+    const navigate = useNavigate();
     return (
         <div id="home" className="flex-container full-screen-size">
                 <Navbar screen="notFound"/>
@@ -13,7 +13,7 @@ const NotFound = () => {
                     <div className="content NotFound">
                         <h3>404 - Pagina não encontrada</h3>
                         <p>Parece que essa pagina não existe, <a
-                        onClick={() => {navegate('/')}}
+                        onClick={() => {navigate('/')}}
                         >clique aqui</a> para ir ao HOME.</p>
                                         
                     </div>
