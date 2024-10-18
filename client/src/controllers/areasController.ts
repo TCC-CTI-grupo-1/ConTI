@@ -135,7 +135,7 @@ export async function handlePostArea(nomeArea: string, areaPai: string | null): 
     try {        
         const data = {
             name: nomeArea,
-            parent: areaPai
+            parent_id: areaPai
         };
 
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas', {

@@ -126,6 +126,26 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
     }
 }
 
+export async function handleDeleteQuestionImage(questionID: number): Promise<boolean>{
+    try{
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/image/' + questionID, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        showAlert(err.message);
+        return false;
+    }
+}
 export async function handlePostQuestionImage(image: File, questionID: number): Promise<boolean> { //questionController.ts
     try {
         const formData = new FormData();
@@ -171,14 +191,6 @@ export async function handlePutQuestion(question: questionInterface, answers: re
             },
             body: JSON.stringify(answers)
         });
-
-
-
-            
-
-            
-           
-
 
         const responseData1 = await response1.json();
         const responseData2 = await response2.json();

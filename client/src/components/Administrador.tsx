@@ -16,6 +16,7 @@ import { handlePostQuestionImage } from "./../controllers/questionController";
 import LoadingScreen from "./LoadingScreen";
 import AreaTree from "./AreaTree";
 import { handleDeleteArea } from "./../controllers/areasController";
+import { handleDeleteQuestionImage } from "./../controllers/questionController";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -603,6 +604,16 @@ const Admistrator = () => {
                                 }
                             }
                         }/>
+                        <button onClick={() => {
+                            showAlert("Deletando imagem...", "warning");
+                            handleDeleteQuestionImage(novaQst[0].id).then((resp) => {
+                                if(resp){
+                                    showAlert("Imagem deletada com sucesso!", "success");
+                                }else{
+                                    showAlert("Erro ao deletar imagem");
+                                }
+                            });
+                        }}>Deeletar imagem</button>
 
                     </div>
                 </div>
