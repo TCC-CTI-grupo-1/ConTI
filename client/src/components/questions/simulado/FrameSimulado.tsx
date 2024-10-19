@@ -68,10 +68,6 @@ const SimuladoFrame = () => {
         
         const postSimulado = async () => {
             let questionsarray: questionInterface[] = questionsHashMap.map(q => q.question);
-            console.log("questionsarray: ");
-            console.log(questionsarray);
-            console.log("questionsHashMap: ");
-            console.log(questionsHashMap);
             const simulado = await handlePostSimulado(questionsarray, "automatico", 50);
             if (simulado !== null) {
                 setSimulado(simulado);
@@ -84,8 +80,6 @@ const SimuladoFrame = () => {
         }
 
         if(questionsHashMap && questionsHashMap.length > 0){
-            console.log("POSTING SIMULADO");
-            console.log(questionsHashMap);
             postSimulado();
         }
     }, [questionsHashMap]);
@@ -130,6 +124,7 @@ const SimuladoFrame = () => {
         })
 
         const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
+        const questionsIds = respostas.map((value) => value[0]);
         handleIncrementAnswers(respostasIds);
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();

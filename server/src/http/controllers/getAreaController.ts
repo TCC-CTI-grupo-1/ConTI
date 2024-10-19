@@ -67,7 +67,6 @@ export async function getAreaIdByQuestionIdController(req: Request, res: Respons
 }
 
 export async function getAreasIdsByQuestionsIdsController(req: Request, res: Response) {
-    console.log("sddawa")
     const questions_ids = JSON.parse(req.body.questions_ids) as number[];
     const questionDAO = new QuestionDAO();
     

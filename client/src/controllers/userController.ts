@@ -176,7 +176,8 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 
 export async function handleSaveChanges(profile: profileInterface): Promise<string | true> {// userController.ts
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile'+userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -287,7 +288,7 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
 export async function handleIncrementProfileMockTest() {
     try {
         const userID = sessionStorage.getItem('userId');
-        const response = await fetch(import.meta.env.VITE_ADDRESS +'/profile/incrementMockTest/'+userID, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS +'/profile/increment/mockTest/'+userID, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -315,7 +316,7 @@ export async function handleIncrementProfileAnswers(totalCorrectAnswers: number,
             total_answers: totalAnswers
         };
 
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/incrementAnswers/'+userID, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/increment/answers/'+userID, {
             method: 'PUT',
             credentials: 'include',
             headers: {

@@ -16,8 +16,6 @@ export async function postQuestion_MockTestController(req: Request, res: Respons
 export async function postQuestions_MockTestController(req: Request, res: Response) {
     const question_mockTestDAO = new Question_MockTestDAO();
     try {
-        console.log('Req.body.questions:');
-        console.log(req.body);
         let data: Question_MockTestDTO[] = [];
         req.body.questions.forEach((question: QuestionDTO) => {
             data.push({
