@@ -24,7 +24,7 @@ export async function handleGetAreas(): Promise<areaInterface[]> { //areasContro
 
 export async function handleDeleteArea(id: number): Promise<boolean> { //areasController.ts
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas/' + id, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/area/' + id, {
             method: 'DELETE',
             credentials: 'include',
             headers: {

@@ -32,6 +32,7 @@ import { putQuestion_MockTestController } from './controllers/putQuestion_MockTe
 import { putMockTestController } from './controllers/putMockTestController';
 import { postImageController, deleteImageController } from './controllers/ImageController';
 import { getAreaTreeController } from './controllers/getAreaController';
+import { deleteAreaController } from './controllers/deleteAreaController';
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World');
@@ -75,7 +76,7 @@ export async function routes(app: any) {
     app.get('/areas', getAreaController);
     app.get('/areas/tree', getAreaTreeController);
     app.get('/area/:id', getAreaByIdController);
-    app.delete('/area/:id', /*deleteArea*/);
+    app.delete('/area/:id', deleteAreaController);
     app.get('/areas/questions', getAreasIdsByQuestionsIdsController);
     app.get('/area/question/:question_id', getAreaIdByQuestionIdController);
 

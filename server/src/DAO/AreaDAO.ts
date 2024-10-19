@@ -102,11 +102,12 @@ export class AreaDAO {
     deleteArea = async (id: number) => {
         try {
             const client = await connectionDAO.getConnection();
-            await client.area.delete({
+            const deletedArea = await client.area.delete({
                 where: {
                     id: id
                 }
             });
+            return deletedArea;
         } catch (error) {
             throw error;
         }
