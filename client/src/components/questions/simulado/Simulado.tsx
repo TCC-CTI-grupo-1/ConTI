@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Numbers from "./Numbers";
 import { handleQuestionNumberClick } from "./Numbers";
 import { respostaInterface } from "../../../controllers/interfaces";
-
+import { showAlert } from "../../../App";
 import {
     Modal,
     ModalOverlay,
@@ -80,22 +80,36 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
     }
 
     useEffect(() => {
+ 
         let AlternativaDaQuestao = resultsHashMap[prevActiveQuestion] == undefined ? null : resultsHashMap[prevActiveQuestion][1];
-        if (AlternativaDaQuestao === null) {
-            setPrevActiveQuestion(activeQuestion);
-            return;
+        if(nQuestoesRestantes() !== questionsHashMap.length)
+        {
+            if(resultsHashMap)
+            {
+                if (AlternativaDaQuestao === null) {
+                    setPrevActiveQuestion(activeQuestion);
+                    return;
+                }
+                const question_MockTest: question_MockTestInterface = {
+                    question_id: questionsHashMap[prevActiveQuestion].question.id,
+                    mockTest_id: mockTestId,
+                    answer_id: AlternativaDaQuestao
+                };
+                handlePutQuestion_MockTestById(question_MockTest);
+            }
         }
-        const question_MockTest: question_MockTestInterface = {
-            question_id: questionsHashMap[prevActiveQuestion].question.id,
-            mockTest_id: mockTestId,
-            answer_id: AlternativaDaQuestao
-        };
-        handlePutQuestion_MockTestById(question_MockTest);
-        setPrevActiveQuestion(activeQuestion);
-
         if(activeQuestion === -1){
+            if(nQuestoesRestantes() === questionsHashMap.length){
+                showAlert("Nenhuma questão foi respondida", "info");
+                showAlert("Caso não queria mais fazer o smulado feche essa aba.", "info");
+                setActiveQuestion(prevActiveQuestion);
+                return;
+            }
             handleFinishSimulado(resultsHashMap);
         }
+        setPrevActiveQuestion(activeQuestion);
+
+     
     }, [activeQuestion]);
 
     const returnQuestionDetail = () => {
@@ -257,6 +271,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
         <ModalFooter>
             <Button colorScheme={nQuestoesRestantes() > 0 ? 'black' : 'blue'} size="lg" variant="outline"
             onClick={()=>{
+                
                     onClose2();
                     onOpen();
                 }}>

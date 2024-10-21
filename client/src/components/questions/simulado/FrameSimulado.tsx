@@ -89,6 +89,7 @@ const SimuladoFrame = () => {
             showAlert("Erro ao finalizar simulado", "error");
             return;
         };
+        showAlert("Finalizando simulado...", "info");
         //setIsSimuladoAwaitActive(true);
         let totalCorrectAnswers = 0;
         let totalAnswers = 0;
