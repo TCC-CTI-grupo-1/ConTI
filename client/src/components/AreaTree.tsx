@@ -14,8 +14,11 @@ interface areaTreeInterface{
 interface Props{
     onActiveAreasChange: (activeAreasIds: number[]) => void;
     isRadio?: boolean;
+    rootID?: number;
+    isBlocks?: boolean;
+    userPercentageAreas?: {[id: number]: number};
 }
-const AreaTree = ({onActiveAreasChange, isRadio=false}: Props) => {
+const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, userPercentageAreas}: Props) => {
 
     const [activeAreasIds, setActiveAreasIds] = useState<number[]>([]);
     const [loadingJORGE, setLoading] = useState<boolean>(true);
@@ -46,11 +49,11 @@ const AreaTree = ({onActiveAreasChange, isRadio=false}: Props) => {
     }, [areaTree]);
 
     const renderAreaTree = (areaTree: areaTreeInterface) => {
-        const root = areaTree.areaTree.root;
+        const localRootID = rootID === undefined ? areaTree.areaTree.root.id : rootID;
         return (
             <form>
-                <div>
-                    <div className="Teste active">{renderChildren(root.id)}</div>
+                <div id={isBlocks ? 'areaTreeBlock' : ''}>
+                    <div className="Teste active">{renderChildren(localRootID)}</div>
                 </div>
             </form>
 
@@ -68,10 +71,10 @@ const AreaTree = ({onActiveAreasChange, isRadio=false}: Props) => {
                         return (
                             <li>
                             <div
-                                
-                                className={'text ' + (!activeAreasIds.includes(child.id) && tree[child.id] !== undefined && tree[child.id].length > 0 ? 'togglable' : '')}
+                                id={isBlocks ? (id === rootID ? 'realChildren' : '') : ''}
+                                className={'text ' + (!activeAreasIds.includes(child.id) && tree[child.id] !== undefined && tree[child.id].length > 0 ? (!isBlocks && 'togglable') : '')}
                             >
-                                <p
+                                {!isBlocks && <p
                                 onClick={(e) => {
                                     // Find the sibling div element with the class 'Teste'
                                     const siblingDiv = e.currentTarget.parentElement!.nextElementSibling;
@@ -80,8 +83,12 @@ const AreaTree = ({onActiveAreasChange, isRadio=false}: Props) => {
                                     }
                                 }}
                                 
-                                >{child.name}</p>
-                                {!isRadio &&<input type="checkbox" onClick={() => {
+                                >{child.name}</p>}
+                                {isBlocks && <span>
+                                    <p>{child.name}</p>
+                                    <p>{userPercentageAreas ? (userPercentageAreas[child.id]) : 'N'}%</p>
+                                </span>}
+                                {!isRadio && !isBlocks && <input type="checkbox" onClick={() => {
                                     if(activeAreasIds.includes(child.id)){
                                         setActiveAreasIds(activeAreasIds.filter((id) => id !== child.id));
                                     }else{
@@ -89,14 +96,14 @@ const AreaTree = ({onActiveAreasChange, isRadio=false}: Props) => {
                                     }
                                 }} />}
                                 
-                                {isRadio &&<input type={'radio'} name="area" onClick={() => {
+                                {isRadio && <input type={'radio'} name="area" onClick={() => {
                                     setActiveAreasIds([child.id]);
                                 }} />}
                             </div>
                             
                             {!activeAreasIds.includes(child.id) &&
                             tree[child.id] !== undefined && tree[child.id].length > 0 && 
-                            <div className="Teste">{renderChildren(child.id)}</div>}
+                            <div className={"Teste " + (isBlocks ? 'active' : '')}>{renderChildren(child.id)}</div>}
                         </li>
 
                         )
