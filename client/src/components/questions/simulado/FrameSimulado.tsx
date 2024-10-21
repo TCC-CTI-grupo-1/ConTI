@@ -124,7 +124,6 @@ const SimuladoFrame = () => {
         })
 
         const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
-        const questionsIds = respostas.map((value) => value[0]);
         handleIncrementAnswers(respostasIds);
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();
