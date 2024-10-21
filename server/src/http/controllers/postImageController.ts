@@ -25,3 +25,15 @@ export async function postImageController(req: Request, res: Response) {
         }
     });
 }
+
+export async function deleteImageController(req: Request, res: Response) {
+    const qstId = req.params.id;
+    const path = 'uploads/' + qstId;
+    fs.unlink(path, (err: any) => {
+        if (err) {
+            res.status(500).json({ message: err.message });
+        } else {
+            res.status(200).json({ message: 'Imagem deletada com sucesso' });
+        }
+    });
+}
