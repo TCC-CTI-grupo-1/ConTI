@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { handleIncrementProfileAnswers, handleIncrementProfileMockTest } from "../../../controllers/userController"
 import { handlePutSimulado } from "../../../controllers/mockTestController";
 import { handleIncrementAnswers } from "../../../controllers/answerController";
+import { handleIncrementAreas_ProfilesByAreasIds } from "../../../controllers/area_ProfileController";
 // import date from 'date-and-time'
 // import { useNavigate } from "react-router-dom"
 
@@ -124,10 +125,12 @@ const SimuladoFrame = () => {
         })
 
         const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
-        const questionsIds = respostas.map((value) => value[0]);
+        const questions: questionInterface[] = questionsHashMap.map(q => q.question);
+        const areasIds = questions.map(q => q.area_id);
         handleIncrementAnswers(respostasIds);
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();
+        handleIncrementAreas_ProfilesByAreasIds(areasIds);
 
         navigate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");

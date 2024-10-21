@@ -80,7 +80,7 @@ export async function routes(app: any) {
     app.get('/areas/questions', getAreasIdsByQuestionsIdsController);
     app.get('/area/question/:question_id', getAreaIdByQuestionIdController);
 
-    app.get('/areas/top/:id', getTopParentAreaByIdController);
+    app.get('/area/top/:id', getTopParentAreaByIdController);
 
     app.post('/areas', postAreaController);
 
