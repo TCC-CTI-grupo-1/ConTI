@@ -223,7 +223,7 @@ const Status = () => {
         const localUserPercentageAreas: { [id: number]: number } = {
             45180: 0.45,
             0: 0.5,
-            1000: 0.7,
+            1000: 0.9,
             1019: 0.8,
             45177: 0.6,
             45178: 0.65,
