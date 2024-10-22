@@ -2264,6 +2264,9 @@ COMPONENTES GERAIS DO FERNANDO
 
 .Teste {
   margin: var(--padding-5) var(--padding-3);
+  
+  //change background opacity
+  
   display: none;
 
   &.active {
@@ -2311,6 +2314,17 @@ COMPONENTES GERAIS DO FERNANDO
     display: flex;
     justify-content: space-between;
     gap: var(--padding-3);
+    width: 100%;
+  }
+
+  & .text{
+    padding: var(--padding-5);
+    border-radius: var(--border-radius);
+    margin: var(--padding-4);
+  }
+
+  & li{
+    list-style-type: none;
   }
 }
 

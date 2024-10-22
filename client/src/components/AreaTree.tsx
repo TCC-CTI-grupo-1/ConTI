@@ -18,6 +18,8 @@ interface Props{
     isBlocks?: boolean;
     userPercentageAreas?: {[id: number]: number};
 }
+
+
 const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, userPercentageAreas}: Props) => {
 
     const [activeAreasIds, setActiveAreasIds] = useState<number[]>([]);
@@ -53,14 +55,23 @@ const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, u
         return (
             <form>
                 <div id={isBlocks ? 'areaTreeBlock' : ''}>
-                    <div className="Teste active">{renderChildren(localRootID)}</div>
+                    <div className="Teste active">{renderChildren(localRootID, 0.8)}</div>
                 </div>
             </form>
 
         )
     }
 
-    const renderChildren = (id: number) => {
+    function getRGB(userPercentage: number | undefined){
+        if(userPercentage === undefined || userPercentage < 0 || userPercentage > 100){
+            return 'rgba(255, 255, 255';
+        }
+        const r = 255 - Math.floor(255 * userPercentage / 100);
+        const g = Math.floor(255 * userPercentage / 100);
+        return `rgba(${r}, ${g}, 0`;
+    }
+
+    const renderChildren = (id: number, treeLevel: number) => {
         if(areaTree){
             const tree = areaTree.areaTree.tree;
             const children = tree[id];
@@ -73,6 +84,13 @@ const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, u
                             <div
                                 id={isBlocks ? (id === rootID ? 'realChildren' : '') : ''}
                                 className={'text ' + (!activeAreasIds.includes(child.id) && tree[child.id] !== undefined && tree[child.id].length > 0 ? (!isBlocks && 'togglable') : '')}
+                                style={{
+                                    backgroundColor: isBlocks ? `${getRGB(userPercentageAreas ? userPercentageAreas[child.id]*100 : undefined)}, ${
+                                        //change based on the tree level
+                                        treeLevel
+                                    })` : 'transparent',
+
+                                }}
                             >
                                 {!isBlocks && <p
                                 onClick={(e) => {
@@ -86,7 +104,7 @@ const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, u
                                 >{child.name}</p>}
                                 {isBlocks && <span>
                                     <p>{child.name}</p>
-                                    <p>{userPercentageAreas ? (userPercentageAreas[child.id]) : 'N'}%</p>
+                                    <p>{userPercentageAreas && (userPercentageAreas[child.id] ? (userPercentageAreas[child.id]*100).toFixed(0) + '%' : '(Não feito)')}</p>
                                 </span>}
                                 {!isRadio && !isBlocks && <input type="checkbox" onClick={() => {
                                     if(activeAreasIds.includes(child.id)){
@@ -103,7 +121,7 @@ const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, u
                             
                             {!activeAreasIds.includes(child.id) &&
                             tree[child.id] !== undefined && tree[child.id].length > 0 && 
-                            <div className={"Teste " + (isBlocks ? 'active' : '')}>{renderChildren(child.id)}</div>}
+                            <div className={"Teste " + (isBlocks ? 'active' : '')}>{renderChildren(child.id, treeLevel-0.15)}</div>}
                         </li>
 
                         )
