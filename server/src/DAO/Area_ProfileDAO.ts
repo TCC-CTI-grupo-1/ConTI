@@ -155,5 +155,33 @@ export class Area_ProfileDAO {
             }
         }
         return tree;
-    }   
+    } 
+
+    incrementAreas_Profile = async (profile_id: number, area_ids: number[]) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            await Promise.all(area_ids.map(async (area_id) => {
+                await client.area_profile.upsert({
+                    where: {
+                        area_id_profile_id: {
+                            profile_id: profile_id,
+                            area_id: area_id
+                        }
+                    },
+                    update: {
+                        total_answers: {
+                            increment: 1
+                        }
+                    },
+                    create: {
+                        profile_id: profile_id,
+                        area_id: area_id,
+                        total_answers: 1
+                    }
+                });
+            }));
+        } catch (error: any) {
+            throw error;
+        }
+    }
 }
