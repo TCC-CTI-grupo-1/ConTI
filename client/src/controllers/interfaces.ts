@@ -89,3 +89,12 @@ export interface profileInterface{
     total_answers: number;
     total_mock_tests: number;
 }
+
+export interface areaTreeInterface{
+    areaTree: {
+        tree: {
+            [key: string]: Array<areaInterface>
+        },
+        root: areaInterface
+    }
+}

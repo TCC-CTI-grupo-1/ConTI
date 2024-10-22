@@ -1,16 +1,10 @@
 import { useState, useEffect } from "react";
 import { Skeleton } from "@chakra-ui/react";
-import { ProgressBar } from "../../ProgressBar";
 import { handleGetArea_Profile } from "../../../controllers/userController";
 import { area_ProfileInterface } from "../../../controllers/interfaces";
 import { areaInterface } from "../../../controllers/interfaces";
 import { handleGetAreas } from "../../../controllers/areasController";
 //import { useNavigate } from "react-router-dom";
-import mat from '../../../assets/areasIcons/1.png';
-import port from '../../../assets/areasIcons/2.png';
-import naturais from '../../../assets/areasIcons/3.png';
-import humanas from '../../../assets/areasIcons/4.png';
-import expand from '../../../assets/expand.png';
 import { showAlert } from "../../../App";
 import AreaTree from "../../AreaTree";
 
@@ -23,18 +17,8 @@ const Status = () => {
     const [areas, setAreas] = useState<{ [id: number]: areaInterface }>({}); //Array chave-valor com todas as areas do usuario
     const [areasPai, setAreasPai] = useState<areaInterface[]>([]); //As areas que não dependem de ninguem
     
-    const [materiaAtiva, setMateriaAtiva] = useState<number>(1019); //id da materia ativa
+    const [materiaAtiva, _] = useState<number>(1019); //id da materia ativa
 
-    function getPercentage(id: number):number
-    {
-        if(profileStatus[id] === undefined)
-        {
-            return 0;
-        }
-        return Math.trunc(((profileStatus[id].total_correct_answers / profileStatus[id].total_answers)*100));
-    }
-
-    const [hasPlayedAnimation, setHasPlayedAnimation] = useState<hasPlayedAnimationI>({});
     //matematica, portugues, ciencias naturais e ciencias humanas
 
 
@@ -86,15 +70,14 @@ const Status = () => {
     }
 
 
-    const updateHasPlayedAnimation = () => {
-        const newHasPlayedAnimation: hasPlayedAnimationI = {};
+    // const updateHasPlayedAnimation = () => {
+    //     const newHasPlayedAnimation: hasPlayedAnimationI = {};
         
-        areasPai.forEach(area => {
-            newHasPlayedAnimation[area.name] = false; // Define o valor padrão para `false`
-        });
+    //     areasPai.forEach(area => {
+    //         newHasPlayedAnimation[area.name] = false; // Define o valor padrão para `false`
+    //     });
 
-        setHasPlayedAnimation(newHasPlayedAnimation);
-    };          
+    // };          
 
     async function loadConfig():Promise<boolean> {
         await new Promise(resolve => setTimeout(resolve, 10));
@@ -105,7 +88,7 @@ const Status = () => {
     async function handleRunOtherFunctions(){
         const profileNew = await handleGetAreasLocalProfile();
         const areasNew = await handleGetAreasLocal();
-        updateHasPlayedAnimation();
+        //updateHasPlayedAnimation();
 
         if(!areasNew){
             console.log("Erro ao renderizar as áreas");
@@ -168,9 +151,9 @@ const Status = () => {
 
     
     
-    interface hasPlayedAnimationI {
-        [name: string]: boolean,
-    } 
+    // interface hasPlayedAnimationI {
+    //     [name: string]: boolean,
+    // } 
 
     /*Valores que serão recebidos pelo banco de dados*/
 

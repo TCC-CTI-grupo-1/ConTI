@@ -74,11 +74,7 @@ export async function routes(app: any) {
     app.get('/question/:id', getQuestionByIdController);
     app.get('/questions/filter/:filter', getQuestionsWithFiltersController);
     app.get('/questions/ids/:ids', getQuestionsByIdsController); //nomeclatura sem "/ids" conflita com "/newMockTest"
-<<<<<<< Updated upstream
-    app.get('/questions/newMockTest/:userid', getQuestionsForNewMockTestByProfileController);
-=======
     app.get('/questions/newMockTest/:uuid', getQuestionsForNewMockTestByProfileController);
->>>>>>> Stashed changes
 
 
 

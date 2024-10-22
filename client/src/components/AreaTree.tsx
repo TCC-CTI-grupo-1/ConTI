@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react'
-import { areaInterface } from '../controllers/interfaces'
 import { handleGetAreasTree } from '../controllers/areasController'
 import { showAlert } from '../App'
-interface areaTreeInterface{
-    areaTree: {
-        tree: {
-            [key: string]: Array<areaInterface>
-        },
-        root: areaInterface
-    }
-}
+import { areaTreeInterface } from '../controllers/interfaces'
 
 interface Props{
     onActiveAreasChange: (activeAreasIds: number[]) => void;
@@ -37,10 +29,11 @@ const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, u
 
     useEffect(() => {
         handleGetAreasTree().then((tree) => {
-            setAreaTree(tree);
-            console.log("AREA TREE: ");
-            console.log(tree);
-            
+            if(tree){
+                setAreaTree(tree);
+                console.log("AREA TREE: ");
+                console.log(tree);
+            }
         })
     }, []);
 

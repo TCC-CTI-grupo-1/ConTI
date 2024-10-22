@@ -53,7 +53,7 @@ const Home = () => {
                       <h3>O que você deseja fazer hoje?</h3>
                       <div className="btns">
                         <Button colorScheme="blue" onClick={() => navigate('/newtest')}><NewTestIcon  iconColor="white" backgroundTransparent/> Novo simulado</Button>
-                        <Button onClick={() => navigate('/database')}><DatabaseIcon /> Banco de questões</Button>
+                        <Button onClick={() => navigate('/questions')}><DatabaseIcon /> Banco de questões</Button>
                       </div>
                       <div className="info">
                         <div className="acertos_simulado">
