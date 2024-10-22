@@ -1,16 +1,10 @@
 import { useState, useEffect } from "react";
 import { Skeleton } from "@chakra-ui/react";
-import { ProgressBar } from "../../ProgressBar";
 import { handleGetArea_Profile } from "../../../controllers/userController";
 import { area_ProfileInterface } from "../../../controllers/interfaces";
 import { areaInterface } from "../../../controllers/interfaces";
 import { handleGetAreas } from "../../../controllers/areasController";
 //import { useNavigate } from "react-router-dom";
-import mat from '../../../assets/areasIcons/1.png';
-import port from '../../../assets/areasIcons/2.png';
-import naturais from '../../../assets/areasIcons/3.png';
-import humanas from '../../../assets/areasIcons/4.png';
-import expand from '../../../assets/expand.png';
 import { showAlert } from "../../../App";
 import AreaTree from "../../AreaTree";
 
@@ -23,18 +17,8 @@ const Status = () => {
     const [areas, setAreas] = useState<{ [id: number]: areaInterface }>({}); //Array chave-valor com todas as areas do usuario
     const [areasPai, setAreasPai] = useState<areaInterface[]>([]); //As areas que não dependem de ninguem
     
-    const [materiaAtiva, setMateriaAtiva] = useState<number>(1019); //id da materia ativa
+    const [materiaAtiva, _] = useState<number>(1019); //id da materia ativa
 
-    function getPercentage(id: number):number
-    {
-        if(profileStatus[id] === undefined)
-        {
-            return 0;
-        }
-        return Math.trunc(((profileStatus[id].total_correct_answers / profileStatus[id].total_answers)*100));
-    }
-
-    const [hasPlayedAnimation, setHasPlayedAnimation] = useState<hasPlayedAnimationI>({});
     //matematica, portugues, ciencias naturais e ciencias humanas
 
 
@@ -86,15 +70,14 @@ const Status = () => {
     }
 
 
-    const updateHasPlayedAnimation = () => {
-        const newHasPlayedAnimation: hasPlayedAnimationI = {};
+    // const updateHasPlayedAnimation = () => {
+    //     const newHasPlayedAnimation: hasPlayedAnimationI = {};
         
-        areasPai.forEach(area => {
-            newHasPlayedAnimation[area.name] = false; // Define o valor padrão para `false`
-        });
+    //     areasPai.forEach(area => {
+    //         newHasPlayedAnimation[area.name] = false; // Define o valor padrão para `false`
+    //     });
 
-        setHasPlayedAnimation(newHasPlayedAnimation);
-    };          
+    // };          
 
     async function loadConfig():Promise<boolean> {
         await new Promise(resolve => setTimeout(resolve, 10));
@@ -105,7 +88,7 @@ const Status = () => {
     async function handleRunOtherFunctions(){
         const profileNew = await handleGetAreasLocalProfile();
         const areasNew = await handleGetAreasLocal();
-        updateHasPlayedAnimation();
+        //updateHasPlayedAnimation();
 
         if(!areasNew){
             console.log("Erro ao renderizar as áreas");
@@ -168,9 +151,9 @@ const Status = () => {
 
     
     
-    interface hasPlayedAnimationI {
-        [name: string]: boolean,
-    } 
+    // interface hasPlayedAnimationI {
+    //     [name: string]: boolean,
+    // } 
 
     /*Valores que serão recebidos pelo banco de dados*/
 
@@ -220,7 +203,121 @@ const Status = () => {
         }  
     }*/
 
-
+        const localUserPercentageAreas: { [id: number]: number } = {
+            45180: 0.45,
+            0: 0.5,
+            1000: 0.9,
+            1019: 0.8,
+            45177: 0.6,
+            45178: 0.65,
+            45179: 0.55,
+            1001: 0.75,
+            1002: 0.7,
+            1003: 0.6,
+            1004: 0.68,
+            1005: 0.72,
+            1006: 0.66,
+            1007: 0.64,
+            1008: 0.69,
+            1009: 0.61,
+            1010: 0.62,
+            1011: 0.67,
+            1012: 0.71,
+            1013: 0.63,
+            1014: 0.65,
+            1015: 0.73,
+            1016: 0.77,
+            1017: 0.7,
+            1018: 0.74,
+            1020: 0.68,
+            1021: 0.7,
+            1022: 0.69,
+            1023: 0.72,
+            1024: 0.64,
+            1025: 0.66,
+            1026: 0.75,
+            1027: 0.68,
+            1028: 0.67,
+            1029: 0.7,
+            1030: 0.62,
+            1031: 0.76,
+            1032: 0.65,
+            1033: 0.69,
+            1034: 0.71,
+            1035: 0.63,
+            1036: 0.67,
+            1038: 0.74,
+            1039: 0.69,
+            1040: 0.65,
+            1041: 0.72,
+            1042: 0.7,
+            1043: 0.68,
+            1044: 0.73,
+            1045: 0.71,
+            1046: 0.64,
+            1047: 0.67,
+            1048: 0.75,
+            1049: 0.66,
+            1050: 0.7,
+            1051: 0.69,
+            1052: 0.72,
+            1053: 0.65,
+            1054: 0.68,
+            1055: 0.74,
+            1056: 0.7,
+            1057: 0.72,
+            1058: 0.67,
+            1059: 0.71,
+            1060: 0.66,
+            1061: 0.73,
+            1062: 0.75,
+            1063: 0.69,
+            1064: 0.64,
+            1065: 0.68,
+            1066: 0.67,
+            1067: 0.71,
+            1068: 0.66,
+            1069: 0.74,
+            1070: 0.7,
+            1071: 0.72,
+            1073: 0.69,
+            1074: 0.65,
+            1075: 0.68,
+            1076: 0.72,
+            1077: 0.64,
+            1079: 0.67,
+            1080: 0.7,
+            1081: 0.73,
+            1082: 0.75,
+            1083: 0.69,
+            1084: 0.66,
+            1085: 0.68,
+            1086: 0.67,
+            1087: 0.71,
+            1088: 0.74,
+            1089: 0.7,
+            1090: 0.72,
+            1091: 0.69,
+            1092: 0.65,
+            1093: 0.68,
+            1094: 0.67,
+            1095: 0.73,
+            1096: 0.66,
+            1097: 0.71,
+            1098: 0.64,
+            1099: 0.75,
+            1100: 0.72,
+            1101: 0.69,
+            1102: 0.68,
+            1103: 0.67,
+            1104: 0.71,
+            1105: 0.74,
+            1106: 0.7,
+            1107: 0.72,
+            1037: 0.73,
+            1072: 0.75,
+          };
+          
     return (
         <>
         {loading && <div id="status">
@@ -279,6 +376,7 @@ const Status = () => {
                         <div id="info"  style={{width: '100%'}}>
                             <AreaTree onActiveAreasChange={() => {}}
                             rootID={0}
+                            userPercentageAreas={localUserPercentageAreas}
                             isBlocks
                             />
                             {/*<div id="header">

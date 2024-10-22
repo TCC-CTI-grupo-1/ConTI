@@ -132,7 +132,9 @@ export async function handleGetAreasMap(): Promise<{[id: number]: areaInterface}
     }
 }
 
-export async function handleGetAreasTree(): Promise<any> {
+import {areaTreeInterface} from './interfaces';
+
+export async function handleGetAreasTree(): Promise<areaTreeInterface | null> { //areasController.ts
     try {
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas/tree', {
             method: 'GET',
@@ -153,6 +155,42 @@ export async function handleGetAreasTree(): Promise<any> {
         return null;
     }
 }
+
+export function getAreaPaiID(area: areaInterface, tree: areaInterface[]): number | null {
+    //Encontra a area pai (area que tem parent id 0). ex, eu paso o id 1043, ele acha a area pai 1024, que, por sua vez, acha a area pai 1000, que acha a area pai 0, e portanto retorna 1000
+    let areaFilha = area.id;
+    let areaPai = area.parent_id;
+
+    while(areaPai !== null && areaPai !== 0){
+        const parent = tree.find((area) => area.id === areaPai);
+        if(parent){
+            areaPai = parent.parent_id;
+            areaFilha = parent.id;
+        }
+        else{
+            return null;
+        }
+    }
+    return areaFilha;
+} //areasController.ts
+
+export function getAreaPaiID(area: areaInterface, tree: areaInterface[]): number | null {
+    //Encontra a area pai (area que tem parent id 0). ex, eu paso o id 1043, ele acha a area pai 1024, que, por sua vez, acha a area pai 1000, que acha a area pai 0, e portanto retorna 1000
+    let areaFilha = area.id;
+    let areaPai = area.parent_id;
+
+    while(areaPai !== null && areaPai !== 0){
+        const parent = tree.find((area) => area.id === areaPai);
+        if(parent){
+            areaPai = parent.parent_id;
+            areaFilha = parent.id;
+        }
+        else{
+            return null;
+        }
+    }
+    return areaFilha;
+} //areasController.ts
 
 export async function handlePostArea(nomeArea: string, areaPai: string | null): Promise<boolean>{
     try {        

@@ -88,6 +88,7 @@
 
 //     //
 //     //OiFernando
+//     //eu vou descobrir quem você é, e eu vou te pegar.
 //     return (
 //     <>
 //         {question === undefined ? <h1>Erro ao carregar questão</h1> : 
