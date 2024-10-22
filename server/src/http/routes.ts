@@ -30,9 +30,14 @@ import { putAnswerController, putAnswersController, putAnswersIncrementControlle
 import { postQuestions_MockTestController } from './controllers/postQuestions_MockTestController';
 import { putQuestion_MockTestController } from './controllers/putQuestion_MockTestController';
 import { putMockTestController } from './controllers/putMockTestController';
+<<<<<<< Updated upstream
 import { postImageController, deleteImageController } from './controllers/ImageController';
 import { getAreaTreeController } from './controllers/getAreaController';
 import { deleteAreaController } from './controllers/deleteAreaController';
+=======
+import { postImageController } from './controllers/postImageController';
+
+>>>>>>> Stashed changes
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World');
@@ -41,7 +46,7 @@ export async function routes(app: any) {
 
     app.post('/signup', signupController);
     app.post('/login', loginController);
-    app.post('/logout', logoutController);
+    app.post('/logout/:uuid', logoutController);
 
     app.post('/image', postImageController);
     app.delete('/image/:id', deleteImageController);
@@ -49,11 +54,19 @@ export async function routes(app: any) {
     // '/user/'
     //Recebe (sabe qual é) o usuario pela sessão
     app.get('/profileSession', getProfileSessionController);
+<<<<<<< Updated upstream
     app.put('/profile/:id', updateProfileController);
     app.delete('/profile/:id', deleteProfileController); 
     app.put('/profile/increment/mockTest/:id', incrementProfile_MockTestController);
     app.get('/profile/:id', getProfileController);
     app.put('/profile/increment/answers/:id', incrementProfileAnswersController);
+=======
+    app.put('/profile', updateProfileController);
+    app.delete('/profile/:uuid', deleteProfileController); 
+    app.put('/profile/incrementMockTest', incrementProfile_MockTestController);
+    app.get('/profile/:uuid', getProfileController);
+    app.put('/profile/incrementAnswers', incrementProfileAnswersController);
+>>>>>>> Stashed changes
 
 
     // '/questions/'
@@ -61,7 +74,11 @@ export async function routes(app: any) {
     app.get('/question/:id', getQuestionByIdController);
     app.get('/questions/filter/:filter', getQuestionsWithFiltersController);
     app.get('/questions/ids/:ids', getQuestionsByIdsController); //nomeclatura sem "/ids" conflita com "/newMockTest"
+<<<<<<< Updated upstream
     app.get('/questions/newMockTest/:userid', getQuestionsForNewMockTestByProfileController);
+=======
+    app.get('/questions/newMockTest/:uuid', getQuestionsForNewMockTestByProfileController);
+>>>>>>> Stashed changes
 
 
 
@@ -74,7 +91,6 @@ export async function routes(app: any) {
 
     // '/area/'
     app.get('/areas', getAreaController);
-    app.get('/areas/tree', getAreaTreeController);
     app.get('/area/:id', getAreaByIdController);
     app.delete('/area/:id', deleteAreaController);
     app.get('/areas/questions', getAreasIdsByQuestionsIdsController);
@@ -94,6 +110,7 @@ export async function routes(app: any) {
 
     // '/mockTest/'
     app.get('/mockTests', getMockTestsController);
+<<<<<<< Updated upstream
     app.get('/mockTests/date/:date/:userid', getMockTestsByDateAndProfileController);
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
     app.put('/mockTest/:id', putMockTestController);
@@ -101,10 +118,19 @@ export async function routes(app: any) {
 
     // '/areaProfile/'
     app.get('/areaProfile/:userid', getArea_ProfileController);
+=======
+    app.get('/mockTests/date/:date/:uuid', getMockTestsByDateAndProfileController);
+    app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
+    app.put('/mockTest/:id', putMockTestController);
+    app.post('/mockTest/:uuid', postMockTestController);
+
+    // '/areaProfile/'
+    app.get('/areaProfile/:uuid', getArea_ProfileController);
+>>>>>>> Stashed changes
 
     // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
     app.post('/questions_MockTest', postQuestions_MockTestController);
-    app.put('/question_MockTest', putQuestion_MockTestController);
+    app.put('/question_MockTest/', putQuestion_MockTestController);
 
 }
