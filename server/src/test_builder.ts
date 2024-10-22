@@ -162,19 +162,12 @@ export class TestBlueprint implements ITestBlueprint{
     questionsInArea: {[key:number]:number};
     difficulty:{[difficulty_type:number]:DifficultyLevel}
     user_id:number;
-    constructor(totalQuestions=50,questionsInArea={1:15,2:15,3:15,4:5},difficulty:{1:DifficultyLevel.MEDIUM,2:DifficultyLevel.MEDIUM},user_id:number)
+    constructor(totalQuestions=50,questionsInArea:{[key:number]:number}={},difficulty:{1:DifficultyLevel.MEDIUM,2:DifficultyLevel.MEDIUM},user_id:number)
     {
         this.totalQuestions = totalQuestions;
         this.questionsInArea = questionsInArea;
+        this.questionsInArea[0] = totalQuestions;
         this.difficulty = difficulty;
-        let totalSum = 0;
-        for (const key in questionsInArea) {
-            const value = this.questionsInArea[Number(key)];
-            totalSum+=value;
-        }
-        if(totalSum != totalQuestions) {
-            console.error("Erro na construção da planta da prova: Número de questões por matéria deve ser igual ao número total");
-        }
         this.user_id = user_id;
     }
 }
@@ -214,8 +207,15 @@ export class TestBuilder{
             fractionInType[type] = this.helper.proportionToFraction(this.helper.difficultyToProportions(blueprint.difficulty[type]));
         }
         const normalizeValues = (node:number,sender:number) => {
-            if(marked[node] && node != sender) return;
-            questionsInArea[node] +=questionsInArea[sender];
+            if(marked[node] && node !== sender) return;
+            console.log(`node: ${node}, sender: ${sender}`);
+            if(node!==sender) 
+            {
+                if(!questionsInArea[node]) questionsInArea[node] = 0;
+                
+                questionsInArea[node] +=questionsInArea[sender];
+            }
+            if(!inverted_tree[node]) return;
             normalizeValues(inverted_tree[node].area_id,sender);
         }
         for(const value in questionsInArea)
@@ -223,6 +223,7 @@ export class TestBuilder{
             const key = Number(value);
             normalizeValues(key,key);
         }
+        console.log("Estamos aqui já")
         
         const normalizeList = (lista: number[]): number[] => {
             return lista.map(num => num === 0 ? 0.001 : num);
@@ -233,6 +234,8 @@ export class TestBuilder{
         {
             const parent = queue.shift();
             if(!parent) break;
+            if(!questionsInArea[parent.area_id]) questionsInArea[parent.area_id] = 0;
+            console.log(`O pai é ${parent.area_id}\n`);
             for(const child of tree[parent.area_id])
             {
                 queue.push(child);
@@ -242,16 +245,28 @@ export class TestBuilder{
             let questionsInChildren = 0;
             for(const child of queue)
             {
+                console.log("child: ",child);
                 const difficulty = this.helper.classifyAreaRatio(child.total_correct_answers,child.total_answers);
-                difflist[difficulty].push(child.total_answers===0? 0.001 : child.total_correct_answers/child.total_answers);
+                console.log(difficulty);
+                if(!difflist[difficulty]) difflist[difficulty] = [];
+                if(!idlist[difficulty]) idlist[difficulty] = [];
+                difflist[difficulty].push(child.total_answers===0? 0.01 : child.total_correct_answers/child.total_answers);
                 idlist[difficulty].push(child.area_id);
+                
+                if(!questionsInArea[child.area_id]) questionsInArea[child.area_id] = 0;
                 questionsInChildren += questionsInArea[child.area_id];
             }
+            console.log("-----------------\n\n");
+            let nsofar = 0;
             for(const diff in difflist)
             {
                 const list = normalizeList(difflist[diff]);
-                let sumSoFar = 0;
-                const n = fractionInType[DifficultyType.AREA][diff] * (questionsInArea[parent.area_id] - questionsInChildren);
+                let sumSoFar = 0; 
+                console.log("diff: ",diff);
+                console.log(`fraction: ${fractionInType[DifficultyType.AREA][diff]} * ${questionsInArea[parent.area_id]} - ${questionsInChildren}`);
+                const n = Math.floor(fractionInType[DifficultyType.AREA][diff] * (questionsInArea[parent.area_id] - questionsInChildren));
+                nsofar+=n;
+                console.log(n);
                 let k = 0;
                 for(const v of list)
                 {
@@ -259,6 +274,7 @@ export class TestBuilder{
                 }
                 for(let i=0;i<list.length;i++)
                 {
+                    console.log(sumSoFar)
                     const val = Math.floor((list[i]*n)/k);
                     sizeMap[idlist[diff][i]].questionCount_inDifficulty[diff] = Math.floor(val);
                     sumSoFar += val;
@@ -342,8 +358,9 @@ export class TestBuilder{
     } 
 
     buildTest = async(blueprint:TestBlueprint):Promise<QuestionDTO[]> => {
+        //console.log("Test blueprint:",blueprint);
         const instance = new Area_ProfileDAO();
-        const rooted_tree = await instance.buildRootedAreaProfileTree(blueprint.user_id);
+        const rooted_tree = await instance.buildRootedAreaProfileTree(blueprint.user_id); 
         const sizeMap = await this.buildSizeMap(rooted_tree,blueprint);
         const questionList = await this.getQuestionList(rooted_tree,sizeMap);
         return questionList;

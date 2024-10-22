@@ -56,7 +56,6 @@ export async function getQuestionsWithFiltersController(req: Request, res: Respo
 }
 
 
-import { semana_do_colegio_tests } from "../../pre-build_tests";
 
 export async function getQuestionsForNewMockTestByProfileController(req: Request, res: Response) {
     if(req.session === undefined) {
@@ -70,11 +69,10 @@ export async function getQuestionsForNewMockTestByProfileController(req: Request
     }
     
     try {
-        // const profileId = req.session.profile.id;
-        // const test_blueprint = new TestBlueprint(50, {1:15,2:15,3:15,4:5}, {1:DifficultyLevel.MEDIUM,2:DifficultyLevel.MEDIUM}, profileId);
-        // const test_builder = new TestBuilder([]);
-        // const questions = await test_builder.buildTest(test_blueprint);
-        const questions = semana_do_colegio_tests;
+        const profileId = req.session.profile.id;
+        const test_blueprint = new TestBlueprint(50, {}, {1:DifficultyLevel.MEDIUM,2:DifficultyLevel.MEDIUM}, profileId);
+        const test_builder = new TestBuilder([]);
+        const questions = await test_builder.buildTest(test_blueprint);
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
