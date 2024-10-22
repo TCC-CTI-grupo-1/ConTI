@@ -8,7 +8,9 @@ import { incrementProfile_MockTestController, incrementProfileAnswersController,
 import { getProfileController } from './controllers/getProfileController';
 import { getAreaController, getTopParentAreaByIdController,
          getAreaByIdController, getAreasIdsByQuestionsIdsController,
-         getAreaIdByQuestionIdController
+         getAreaIdByQuestionIdController,
+         getTopParentAreasByIdsController,
+         getAllParentAreasByIdsController
  } from './controllers/getAreaController';
 import { postAreaController } from './controllers/postAreaController';
 import { getMockTestsController, getMockTestsByDecrescentDateController,
@@ -33,6 +35,7 @@ import { putMockTestController } from './controllers/putMockTestController';
 import { postImageController, deleteImageController } from './controllers/ImageController';
 import { getAreaTreeController } from './controllers/getAreaController';
 import { deleteAreaController } from './controllers/deleteAreaController';
+import { incrementArea_ProfileController, incrementAreas_ProfileController } from './controllers/putArea_ProfileController';
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World');
@@ -79,8 +82,9 @@ export async function routes(app: any) {
     app.delete('/area/:id', deleteAreaController);
     app.get('/areas/questions', getAreasIdsByQuestionsIdsController);
     app.get('/area/question/:question_id', getAreaIdByQuestionIdController);
+    app.get('/areas/allparents/:ids', getAllParentAreasByIdsController);
 
-    app.get('/areas/top/:id', getTopParentAreaByIdController);
+    app.get('/areas/top/:id', getTopParentAreasByIdsController);
 
     app.post('/areas', postAreaController);
 
@@ -99,8 +103,9 @@ export async function routes(app: any) {
     app.put('/mockTest/:id', putMockTestController);
     app.post('/mockTest/:userid', postMockTestController);
 
-    // '/areaProfile/'
-    app.get('/areaProfile/:userid', getArea_ProfileController);
+    // '/area_Profile/'
+    app.get('/area_Profile/:userid', getArea_ProfileController);
+    app.put('/areas_Profile/increment/:userid', incrementAreas_ProfileController);
 
     // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
