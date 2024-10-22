@@ -8,9 +8,10 @@ interface Props{
     changeScreen: () => void
     loading: boolean
     onRemember: (remember: boolean) => void
+    forgorPasswordClick: () => void
 }
 
-const Options = ({type, onClick, changeScreen, loading, onRemember}: Props) => {
+const Options = ({type, onClick, changeScreen, loading, onRemember, forgorPasswordClick}: Props) => {
     return (
         <div id="options">
                     <div className="moreOptions">
@@ -18,7 +19,7 @@ const Options = ({type, onClick, changeScreen, loading, onRemember}: Props) => {
                         onChange={(e) => {
                             onRemember(e.target.checked)
                         }}>Lembrar de mim</Checkbox>
-                        <a>Esqueceu a senha?</a>
+                        <a onClick={forgorPasswordClick}>Esqueceu a senha?</a>
                     </div>
                     <Button onClick={onClick} 
                     loading={loading}

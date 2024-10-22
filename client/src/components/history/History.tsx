@@ -249,7 +249,8 @@ const History = () => {
                         </div>
                         <div className="inversed-border"></div>
                         <div className="content">
-                            <h3>Veja seus simulados anteriores e quais são os pontos com mais dificuldade.</h3>
+                            <h3>Veja seus simulados anteriores e quais são os pontos em que você tem mais dificuldade.</h3>
+                            <p>Clique em um simulado para abrir um painel com mais informações</p>
                             <DaySelector handleChangeDay={setActiveDate} />
                             <div>
                                 {

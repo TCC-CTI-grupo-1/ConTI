@@ -1,4 +1,3 @@
-import React from 'react'
 import { simuladoInterface } from '../../controllers/interfaces'
 
 interface Props{

@@ -1313,10 +1313,8 @@ COMPONENTES GERAIS DO FERNANDO
   & .info-area {
     display: flex;
     flex-direction: column;
-    gap: var(--padding-1);
 
     &>#header {
-      border: 1px solid black;
 
       padding: var(--padding-2);
       background-color: var(--background-color);
@@ -1391,7 +1389,6 @@ COMPONENTES GERAIS DO FERNANDO
         padding: var(--padding-1);
         border-radius: var(--border-radius);
         z-index: 2;
-        border: 1px solid black;
         height: fit-content;
 
         display: flex;
@@ -2263,8 +2260,7 @@ COMPONENTES GERAIS DO FERNANDO
 }
 
 .Teste {
-  margin: var(--padding-5) var(--padding-3);
-  
+  margin-left: var(--padding-2);  
   //change background opacity
   
   display: none;
