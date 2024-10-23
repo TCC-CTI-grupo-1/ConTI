@@ -17,6 +17,7 @@ import LoadingScreen from "./LoadingScreen";
 import AreaTree from "./AreaTree";
 import { handleDeleteArea } from "./../controllers/areasController";
 import { handleDeleteQuestionImage } from "./../controllers/questionController";
+import { handlePostAnswers } from "../controllers/answerController";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -46,7 +47,7 @@ const Admistrator = () => {
     let novaQstLimpa: questionInterface = {
         id: 0,
         question_text: '',
-        area_id: 1,
+        area_id: 1000,
         additional_info: '',
         has_image: false,
         has_latex: false,
@@ -625,15 +626,42 @@ const Admistrator = () => {
                     <Button onClick={() => {
                         onClose();
                         showAlert("Cadastrando questão...", "warning");
-                        handlePostQuestion(novaQst[0]).then((resp) => {
+                        handlePostQuestion(novaQst[0], novaQst[1]).then((resp) => {   
                             if(resp){
-                                showAlert("Questão cadastrada com sucesso! Por favor, atualize a página [f5]", "success");
+                                showAlert("Questão editada com sucesso!", "success");
+                                if(img !== null){
+                                    handlePostQuestionImage(img, novaQst[0].id).then((resp) => {
+                                        if(resp){
+                                            showAlert("Imagem adicionada com sucesso!", "success");
+                                        }
+                                        else{
+                                            showAlert("Erro ao adicionar imagem");
+                                        }
+                                    });
+                                }
                             }
                             else{
-                                showAlert("Erro ao cadastrar questão");
+                                showAlert("Erro ao editar questão");
                             }
-                        });
-                    }}>Nova questão</Button>
+                            //Pega a nova questão atualizada do banco de dados
+                            handleGetQuestion(novaQst[0].id).then((resp) => {
+                                if(resp){
+                                    let newQuestionsMap = [...questionsMap];
+                                    let index = newQuestionsMap.findIndex((question) => question.question.id === novaQst[0].id);
+                                    newQuestionsMap[index].question = resp;
+                                    setQuestionsMap(newQuestionsMap);
+                                }
+                                else{
+                                    showAlert("Erro ao pegar questão atualizada");
+                                }
+                            });
+
+                        },
+
+                        
+
+                        )}}
+                        >Nova questão</Button>
                     :
                     <>
                         <Button colorScheme='blue' onClick={() => {
