@@ -8,7 +8,9 @@ import { incrementProfile_MockTestController, incrementProfileAnswersController,
 import { getProfileController } from './controllers/getProfileController';
 import { getAreaController, getTopParentAreaByIdController,
          getAreaByIdController, getAreasIdsByQuestionsIdsController,
-         getAreaIdByQuestionIdController
+         getAreaIdByQuestionIdController,
+         getTopParentAreasByIdsController,
+         getAllParentAreasByIdsController
  } from './controllers/getAreaController';
 import { postAreaController } from './controllers/postAreaController';
 import { getMockTestsController, getMockTestsByDecrescentDateController,
@@ -78,8 +80,9 @@ export async function routes(app: any) {
     app.delete('/area/:id', deleteAreaController);
     app.get('/areas/questions', getAreasIdsByQuestionsIdsController);
     app.get('/area/question/:question_id', getAreaIdByQuestionIdController);
+    app.get('/areas/allparents/:ids', getAllParentAreasByIdsController);
 
-    app.get('/areas/top/:id', getTopParentAreaByIdController);
+    app.get('/areas/top/:id', getTopParentAreasByIdsController);
 
     app.post('/areas', postAreaController);
 
@@ -100,8 +103,14 @@ export async function routes(app: any) {
 
     // '/areaProfile/'
     app.get('/areaProfile/:uuid', getArea_ProfileController);
+    app.get('/mockTests/date/:date/:userid', getMockTestsByDateAndProfileController);
+    app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
+    app.put('/mockTest/:id', putMockTestController);
+    app.post('/mockTest/:userid', postMockTestController);
 
-    // '/question_MockTest/'
+    // '/area_Profile/'
+    app.get('/area_Profile/:userid', getArea_ProfileController);
+
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
     app.post('/questions_MockTest', postQuestions_MockTestController);
     app.put('/question_MockTest/', putQuestion_MockTestController);

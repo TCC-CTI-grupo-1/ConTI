@@ -265,7 +265,7 @@ export async function handleDeleteAccount() { // userController.ts
 export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //profileController.ts
     try {
         const userId = sessionStorage.getItem('userId');
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areaProfile/'+userId, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/area_Profile/'+userId, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -282,6 +282,34 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
 
     } catch (err: any) {
         return null;
+    }
+}
+
+export async function handleIncrementAreas_Profile(areaIds: number[]) {
+    try {
+        const userId = sessionStorage.getItem('userId');
+        const data = {
+            area_ids: areaIds
+        };
+        console.log(areaIds)
+
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas_profile/increment/'+userId, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        return false;
     }
 }
 

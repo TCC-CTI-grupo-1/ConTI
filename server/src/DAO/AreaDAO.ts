@@ -122,6 +122,10 @@ export class AreaDAO {
                 }
             });
 
+            if (result.length === 0) {
+                throw new Error('Área não encontrada');
+            }
+
             const areas: AreaDTO[] = [];
 
             result.forEach((result: any) => {
@@ -165,6 +169,10 @@ export class AreaDAO {
                 }
             });
 
+            if (result.length === 0) {
+                throw new Error('Área não encontrada');
+            }
+
             const areas: AreaDTO[] = [];
 
             result.forEach((result: any) => {
@@ -196,14 +204,15 @@ export class AreaDAO {
                     id: id
                 }
             });
-            if (result) {
-                if (result.parent_id !== CTI_ID && result.parent_id) {
-                    return this.searchTopParentAreaById(result.parent_id);
-                } else {
-                    return result as AreaDTO;
-                }
-            } else {
+
+            if (!result) {
                 throw new Error('Área não encontrada');
+            }
+
+            if (result.parent_id !== CTI_ID && result.parent_id) {
+                return this.searchTopParentAreaById(result.parent_id);
+            } else {
+                return result as AreaDTO;
             }
         } catch (error) {
             throw error;
@@ -220,6 +229,11 @@ export class AreaDAO {
                     }
                 }
             });
+            console.log(result);
+
+            if (result.length === 0) {
+                throw new Error('Área não encontrada');
+            }
 
             const areas: AreaDTO[] = [];
 
@@ -229,12 +243,65 @@ export class AreaDAO {
                         areas.push(area);
                     });
             });
+            console.log(areas)
 
             return areas;
         } catch (error) {
             throw error;
         }
     }
+    
+    listParentAreasByIds = async (ids: number[]): Promise<AreaDTO[]> => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.area.findMany({
+                where: {
+                    id: {
+                        in: ids
+                    }
+                }
+            });
+
+            if (result.length === 0) {
+                throw new Error('Área não encontrada');
+            }
+
+            const areas: AreaDTO[] = [];
+
+            result.forEach((result: any) => {
+                if(result.parent_id!==null)
+                {
+                    this.searchAreaById(result.parent_id).
+                        then((area) => {
+                            areas.push(area);
+                        });
+                }
+            });
+
+            return areas;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    listAllParentAreasByIds = async (ids: number[]): Promise<AreaDTO[]> => {
+        try {
+            let parents: AreaDTO[] = [];
+
+            parents = await this.listParentAreasByIds(ids);
+            console.log(parents);
+            parents.forEach(async (parent) => {
+                parents = parents.concat(await this.listAllParentAreasByIds([parent.id]));
+            });
+            console.log(parents)
+            return parents;
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
 
     buildAreaTree = async() :Promise<AreaTree> => {
         const instance = new AreaDAO();
