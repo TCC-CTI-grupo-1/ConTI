@@ -285,13 +285,12 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
     }
 }
 
-export async function handleIncrementAreas_Profile(areaIds: number[]) {
+export async function handleIncrementAreas_Profile(areasAndAnswers: {[key: number]: {total_correct_answers: number, total_answers: number}}) {
     try {
         const userId = sessionStorage.getItem('userId');
         const data = {
-            area_ids: areaIds
+            areasAndAnswers: areasAndAnswers
         };
-        console.log(areaIds)
 
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas_profile/increment/'+userId, {
             method: 'PUT',
