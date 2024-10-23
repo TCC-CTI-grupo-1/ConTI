@@ -157,26 +157,30 @@ export class Area_ProfileDAO {
         return tree;
     } 
 
-    incrementAreas_Profile = async (profile_id: number, area_ids: number[]) => {
+    incrementAreas_Profile = async (profile_id: number, areasAndAnswers: {[key: number]: {total_correct_answers: number, total_answers: number}}) => {
         try {
             const client = await connectionDAO.getConnection();
-            await Promise.all(area_ids.map(async (area_id) => {
+            await Promise.all(Object.entries(areasAndAnswers).map(async ([area_id, {total_correct_answers, total_answers}]) => {
                 await client.area_profile.upsert({
                     where: {
                         area_id_profile_id: {
                             profile_id: profile_id,
-                            area_id: area_id
+                            area_id: Number(area_id)
                         }
                     },
                     update: {
+                        total_correct_answers: {
+                            increment: total_correct_answers
+                        },
                         total_answers: {
-                            increment: 1
+                            increment: total_answers
                         }
                     },
                     create: {
+                        area_id: Number(area_id),
                         profile_id: profile_id,
-                        area_id: area_id,
-                        total_answers: 1
+                        total_correct_answers: total_correct_answers,
+                        total_answers: total_answers
                     }
                 });
             }));

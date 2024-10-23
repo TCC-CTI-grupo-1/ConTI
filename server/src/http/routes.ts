@@ -36,7 +36,6 @@ import { getAreaTreeController } from './controllers/getAreaController';
 import { deleteAreaController } from './controllers/deleteAreaController';
 import { incrementArea_ProfileController, incrementAreas_ProfileController } from './controllers/putArea_ProfileController';
 
-
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World');
@@ -105,9 +104,7 @@ export async function routes(app: any) {
 
     // '/area_Profile/'
     app.get('/area_Profile/:userid', getArea_ProfileController);
-    app.put('/areas_Profile/increment/:userid', incrementAreas_ProfileController);
 
-    // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
     app.post('/questions_MockTest', postQuestions_MockTestController);
     app.put('/question_MockTest/', putQuestion_MockTestController);

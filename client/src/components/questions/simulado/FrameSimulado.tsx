@@ -100,6 +100,7 @@ const SimuladoFrame = () => {
         const timeSpentInMinutes = Math.floor((date.getTime() - dateSimulado.getTime()) / 60000);
         
         if(questionsHashMap === null) return;
+        const areasAndAnswers: {[key: number]: {total_correct_answers: number, total_answers: number}} = {};
         
         respostas.forEach((value, index) => {
             ++totalAnswers;
@@ -109,6 +110,13 @@ const SimuladoFrame = () => {
                 if (correctAnswer !== undefined && correctAnswer.id === value[1]) {
                     ++totalCorrectAnswers;
                 }
+                if(areasAndAnswers[question.question.area_id] === undefined){
+                    areasAndAnswers[question.question.area_id] = {total_correct_answers: 0, total_answers: 0};
+                }
+                else if(correctAnswer !== undefined && correctAnswer.id === value[1]){
+                    ++areasAndAnswers[question.question.area_id].total_correct_answers;
+                }
+                ++areasAndAnswers[question.question.area_id].total_answers;
             }
         });
         
@@ -127,9 +135,8 @@ const SimuladoFrame = () => {
         })
 
         const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
-        const areasIds = questionsHashMap.map((question) => question.question.area_id).concat(parentAreas.map(area => area.id));
         
-        handleIncrementAreas_Profile(areasIds);
+        handleIncrementAreas_Profile(areasAndAnswers);
         handleIncrementAnswers(respostasIds);
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();

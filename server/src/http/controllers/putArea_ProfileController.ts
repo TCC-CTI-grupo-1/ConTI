@@ -34,7 +34,7 @@ export async function incrementAreas_ProfileController(req: Request, res: Respon
         return res.status(404).json({ message: 'Perfil não encontrado' });
     }
     try {
-        await area_profileDAO.incrementAreas_Profile(req.session.profile.id, req.body.area_ids);
+        await area_profileDAO.incrementAreas_Profile(req.session.profile.id, req.body.areasAndAnswers);
         res.json({ message: 'Áreas incrementadas com sucesso' });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
