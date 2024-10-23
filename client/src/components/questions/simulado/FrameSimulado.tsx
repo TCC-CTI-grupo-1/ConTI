@@ -105,18 +105,18 @@ const SimuladoFrame = () => {
         respostas.forEach((value, index) => {
             ++totalAnswers;
             const question = questionsHashMap[index];
+            if(areasAndAnswers[question.question.area_id] === undefined){
+                areasAndAnswers[question.question.area_id] = {total_correct_answers: 0, total_answers: 0};
+            }
+            ++areasAndAnswers[question.question.area_id].total_answers;
             if (question !== undefined && value[1] !== null) {
                 const correctAnswer = question.answers.find((answer) => answer.is_correct === true);
                 if (correctAnswer !== undefined && correctAnswer.id === value[1]) {
                     ++totalCorrectAnswers;
                 }
-                if(areasAndAnswers[question.question.area_id] === undefined){
-                    areasAndAnswers[question.question.area_id] = {total_correct_answers: 0, total_answers: 0};
-                }
                 else if(correctAnswer !== undefined && correctAnswer.id === value[1]){
                     ++areasAndAnswers[question.question.area_id].total_correct_answers;
                 }
-                ++areasAndAnswers[question.question.area_id].total_answers;
             }
         });
         

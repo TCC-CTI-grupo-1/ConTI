@@ -292,6 +292,8 @@ export async function handleIncrementAreas_Profile(areasAndAnswers: {[key: numbe
             areasAndAnswers: areasAndAnswers
         };
 
+        console.log(data);
+
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas_profile/increment/'+userId, {
             method: 'PUT',
             credentials: 'include',
