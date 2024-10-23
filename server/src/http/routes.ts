@@ -105,7 +105,9 @@ export async function routes(app: any) {
 
     // '/area_Profile/'
     app.get('/area_Profile/:userid', getArea_ProfileController);
+    app.put('/areas_Profile/increment/:userid', incrementAreas_ProfileController);
 
+    // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
     app.post('/questions_MockTest', postQuestions_MockTestController);
     app.put('/question_MockTest/', putQuestion_MockTestController);
