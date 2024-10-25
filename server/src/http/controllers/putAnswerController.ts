@@ -27,7 +27,6 @@ export async function putAnswerController(req: Request, res: Response) {
         });
         res.status(200).json({ message: 'Respostas atualizadas com sucesso' });
     } catch (error: any) {
-        console.log(error);
         res.status(500).json({ message: error.message });
     }
 }

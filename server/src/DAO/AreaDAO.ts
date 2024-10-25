@@ -229,7 +229,6 @@ export class AreaDAO {
                     }
                 }
             });
-            console.log(result);
 
             if (result.length === 0) {
                 throw new Error('Área não encontrada');
@@ -243,7 +242,6 @@ export class AreaDAO {
                         areas.push(area);
                     });
             });
-            console.log(areas)
 
             return areas;
         } catch (error) {
@@ -265,18 +263,16 @@ export class AreaDAO {
             if (result.length === 0) {
                 throw new Error('Área não encontrada');
             }
-
+            const results = result;
             const areas: AreaDTO[] = [];
-
-            result.forEach((result: any) => {
-                if(result.parent_id!==null)
-                {
-                    this.searchAreaById(result.parent_id).
-                        then((area) => {
-                            areas.push(area);
-                        });
+            for (const result of results) {
+                if (result.parent_id !== null || result.parent_id === 0) {
+                    const area = await this.searchAreaById(result.parent_id);
+                    if (areas.find((a) => a.id === area.id) === undefined) {
+                        areas.push(area);
+                    }
                 }
-            });
+            }
 
             return areas;
         } catch (error) {
@@ -289,11 +285,9 @@ export class AreaDAO {
             let parents: AreaDTO[] = [];
 
             parents = await this.listParentAreasByIds(ids);
-            console.log(parents);
             parents.forEach(async (parent) => {
                 parents = parents.concat(await this.listAllParentAreasByIds([parent.id]));
             });
-            console.log(parents)
             return parents;
 
         } catch (error) {

@@ -16,7 +16,6 @@ export async function deleteQuestionByIdController(req: Request, res: Response) 
         await questionDAO.deleteQuestion(Number(req.params.id));
         res.status(200).json({ message: 'Questão deletada com sucesso' });
     } catch (error: any) {
-        console.log(error);
         res.status(500).json({ message: error.message });
     }
 }

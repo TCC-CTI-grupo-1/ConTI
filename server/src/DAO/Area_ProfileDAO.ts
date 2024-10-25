@@ -70,7 +70,6 @@ export class Area_ProfileDAO {
         const areaProfileList = await this.listArea_ProfileByProfileId(profile_id);
         for(const area of areaProfileList)
         {
-            console.log(area)
             areaMap[area.area_id] = area;
         }
         let tree:AreaProfileTree = {};
@@ -160,12 +159,13 @@ export class Area_ProfileDAO {
     incrementAreas_Profile = async (profile_id: number, areasAndAnswers: {[key: number]: {total_correct_answers: number, total_answers: number}}) => {
         try {
             const client = await connectionDAO.getConnection();
-            await Promise.all(Object.entries(areasAndAnswers).map(async ([area_id, {total_correct_answers, total_answers}]) => {
+    
+            const incrementArea = async (area_id: number, total_correct_answers: number, total_answers: number) => {
                 await client.area_profile.upsert({
                     where: {
                         area_id_profile_id: {
                             profile_id: profile_id,
-                            area_id: Number(area_id)
+                            area_id: area_id
                         }
                     },
                     update: {
@@ -177,12 +177,28 @@ export class Area_ProfileDAO {
                         }
                     },
                     create: {
-                        area_id: Number(area_id),
+                        area_id: area_id,
                         profile_id: profile_id,
                         total_correct_answers: total_correct_answers,
                         total_answers: total_answers
                     }
                 });
+            };
+    
+            const getParentAreas = async (area_id: number): Promise<number[]> => {
+                const areaDAO = new AreaDAO();
+                const parentAreas = await areaDAO.listAllParentAreasByIds([area_id]);
+                return parentAreas.map((parent: { id: number }) => parent.id);
+            };
+    
+            await Promise.all(Object.entries(areasAndAnswers).map(async ([area_id, {total_correct_answers, total_answers}]) => {
+                const areaIdNumber = Number(area_id);
+                await incrementArea(areaIdNumber, total_correct_answers, total_answers);
+    
+                const parentAreas = await getParentAreas(areaIdNumber);
+                await Promise.all(parentAreas.map(async (parentAreaId) => {
+                    await incrementArea(parentAreaId, total_correct_answers, total_answers);
+                }));
             }));
         } catch (error: any) {
             throw error;

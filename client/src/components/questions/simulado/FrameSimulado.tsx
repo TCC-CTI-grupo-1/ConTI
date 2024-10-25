@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { handleIncrementAreas_Profile, handleIncrementProfileAnswers, handleIncrementProfileMockTest } from "../../../controllers/userController"
 import { handlePutSimulado } from "../../../controllers/mockTestController";
 import { handleIncrementAnswers } from "../../../controllers/answerController";
-import { handleIncrementAreas_ProfilesByAreasIds } from "../../../controllers/area_ProfileController";
 import { handleGetAllParentAreasByIds } from "../../../controllers/areasController";
 // import date from 'date-and-time'
 // import { useNavigate } from "react-router-dom"
@@ -40,7 +39,6 @@ const SimuladoFrame = () => {
     const[loading, setLoading] = useState(true);
     const[questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface>([]);
     const[simulado, setSimulado] = useState<simuladoInterface | null>(null);
-    const[parentAreas, setParentAreas] = useState<areaInterface[]>([]);
 
     const navigate = useNavigate();
 
@@ -61,7 +59,6 @@ const SimuladoFrame = () => {
                 }); 
                 setQuestionsHashMap(newQuestionMapInterface);
                 if(questions.length === 0) return;
-                setParentAreas(await handleGetAllParentAreasByIds(questions.map(q => q.area_id)));
         }
         
         getQuestions();
@@ -106,17 +103,24 @@ const SimuladoFrame = () => {
         respostas.forEach((value, index) => {
             ++totalAnswers;
             const question = questionsHashMap[index];
+            if (question === undefined) {
+                return;
+            }
             if(areasAndAnswers[question.question.area_id] === undefined){
                 areasAndAnswers[question.question.area_id] = {total_correct_answers: 0, total_answers: 0};
             }
             ++areasAndAnswers[question.question.area_id].total_answers;
-            if (question !== undefined && value[1] !== null) {
+
+            if (value[1] !== null) {
                 const correctAnswer = question.answers.find((answer) => answer.is_correct === true);
-                if (correctAnswer !== undefined && correctAnswer.id === value[1]) {
-                    ++totalCorrectAnswers;
+                if (correctAnswer === undefined) {
+                    showAlert("Erro na questão " + question.question.id, "error");
+                    return;
                 }
-                else if(correctAnswer !== undefined && correctAnswer.id === value[1]){
+                
+                if (correctAnswer.id === value[1]) {
                     ++areasAndAnswers[question.question.area_id].total_correct_answers;
+                    ++totalCorrectAnswers;
                 }
             }
         });
@@ -136,14 +140,10 @@ const SimuladoFrame = () => {
         })
 
         const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
-        const questions: questionInterface[] = questionsHashMap.map(q => q.question);
-        const areasIds = questions.map(q => q.area_id);
-        
         handleIncrementAreas_Profile(areasAndAnswers);
         handleIncrementAnswers(respostasIds);
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();
-        handleIncrementAreas_ProfilesByAreasIds(areasIds);
 
         navigate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");
