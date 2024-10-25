@@ -17,7 +17,7 @@ import { getMockTestsController, getMockTestsByDecrescentDateController,
             getMockTestsByDateAndProfileController
  } from './controllers/getMockTestController';
 import { postMockTestController } from './controllers/postMockTestController';
-import { getArea_ProfileController } from './controllers/getArea_ProfileController';
+import { getAreas_ProfileController } from './controllers/getArea_ProfileController';
 import { getQuestionsWithFiltersController, getQuestionsForNewMockTestByProfileController,
         getQuestionByIdController, getQuestionController,
         getQuestionsByIdsController
@@ -104,7 +104,7 @@ export async function routes(app: any) {
     app.post('/mockTest/:userid', postMockTestController);
 
     // '/area_Profile/'
-    app.get('/area_Profile/:userid', getArea_ProfileController);
+    app.get('/areas_Profile/:userid', getAreas_ProfileController);
     app.put('/areas_Profile/increment/:userid', incrementAreas_ProfileController);
 
     // '/question_MockTest/'
