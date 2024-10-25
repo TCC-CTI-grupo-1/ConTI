@@ -3,6 +3,8 @@ import Input from "../../Input";
 import Options from "./Options";
 import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 
 import { handleLogin } from "../../../controllers/userController";
 import { showAlert } from "../../../App";
@@ -13,11 +15,13 @@ interface Props {
 
 const Login = ({ changeLoginPage }: Props) => {
   //Change URL
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
   //Fetch options
   const [loading, setLoading] = useState(false);
 
+  const [forgotEmail, setForgotEmail] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
@@ -69,6 +73,7 @@ const Login = ({ changeLoginPage }: Props) => {
   //Ver se pode ficar na window
 
   return (
+    <>
     <div
       id="inputArea"
       onKeyUp={(e) => {
@@ -115,8 +120,42 @@ const Login = ({ changeLoginPage }: Props) => {
         changeScreen={changeLoginPage}
         loading={loading}
         onRemember={setRemember}
+        forgorPasswordClick={onOpen}
       />
     </div>
+    
+      <Modal onClose={onClose} isOpen={isOpen} isCentered
+      closeOnOverlayClick={false}
+      >
+                    <ModalOverlay />
+                    <ModalContent>
+                    <ModalHeader>Esqueceu sua senha?</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <h3>Digite seu e-mail abaixo</h3>
+                        <p>Enviaremos um código para seu e-mail para a redefinição de senha</p>
+
+                        <Input
+                            name="email"
+                            label="Email"
+                            onChange={(e) => {
+                              setForgotEmail(e.target.value);
+                            }}
+                            value={forgotEmail}
+                            valid={undefined}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} onClick={() => {
+                            onClose();
+
+                        }}>Enviar código</Button>
+                        <Button onClick={onClose}>Fechar</Button>
+                    </ModalFooter>
+                    </ModalContent>
+                    </Modal>
+
+    </>
   );
 };
 

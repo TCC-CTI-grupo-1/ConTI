@@ -8,7 +8,9 @@ import { incrementProfile_MockTestController, incrementProfileAnswersController,
 import { getProfileController } from './controllers/getProfileController';
 import { getAreaController, getTopParentAreaByIdController,
          getAreaByIdController, getAreasIdsByQuestionsIdsController,
-         getAreaIdByQuestionIdController
+         getAreaIdByQuestionIdController,
+         getTopParentAreasByIdsController,
+         getAllParentAreasByIdsController
  } from './controllers/getAreaController';
 import { postAreaController } from './controllers/postAreaController';
 import { getMockTestsController, getMockTestsByDecrescentDateController,
@@ -23,7 +25,6 @@ import { getQuestionsWithFiltersController, getQuestionsForNewMockTestByProfileC
 import { putQuestionByIdController } from './controllers/putQuestionController';
 import { deleteQuestionByIdController } from './controllers/deleteQuestionController';
 import { getAnswersByQuestionIdController, getAnswersByQuestionsIdsController } from './controllers/getAnswerController';
-
 import { postQuestionController } from './controllers/postQuestionController';
 import { getQuestion_MockTestsController } from './controllers/getQuestion_MockTest';
 import { putAnswerController, putAnswersController, putAnswersIncrementController } from './controllers/putAnswerController';
@@ -33,6 +34,8 @@ import { putMockTestController } from './controllers/putMockTestController';
 import { postImageController, deleteImageController } from './controllers/ImageController';
 import { getAreaTreeController } from './controllers/getAreaController';
 import { deleteAreaController } from './controllers/deleteAreaController';
+import { incrementArea_ProfileController, incrementAreas_ProfileController } from './controllers/putArea_ProfileController';
+
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World');
@@ -41,7 +44,7 @@ export async function routes(app: any) {
 
     app.post('/signup', signupController);
     app.post('/login', loginController);
-    app.post('/logout', logoutController);
+    app.post('/logout/:uuid', logoutController);
 
     app.post('/image', postImageController);
     app.delete('/image/:id', deleteImageController);
@@ -49,11 +52,11 @@ export async function routes(app: any) {
     // '/user/'
     //Recebe (sabe qual é) o usuario pela sessão
     app.get('/profileSession', getProfileSessionController);
-    app.put('/profile/:id', updateProfileController);
-    app.delete('/profile/:id', deleteProfileController); 
-    app.put('/profile/increment/mockTest/:id', incrementProfile_MockTestController);
-    app.get('/profile/:id', getProfileController);
-    app.put('/profile/increment/answers/:id', incrementProfileAnswersController);
+    app.put('/profile', updateProfileController);
+    app.delete('/profile/:uuid', deleteProfileController); 
+    app.put('/profile/incrementMockTest', incrementProfile_MockTestController);
+    app.get('/profile/:uuid', getProfileController);
+    app.put('/profile/incrementAnswers', incrementProfileAnswersController);
 
 
     // '/questions/'
@@ -61,7 +64,7 @@ export async function routes(app: any) {
     app.get('/question/:id', getQuestionByIdController);
     app.get('/questions/filter/:filter', getQuestionsWithFiltersController);
     app.get('/questions/ids/:ids', getQuestionsByIdsController); //nomeclatura sem "/ids" conflita com "/newMockTest"
-    app.get('/questions/newMockTest/:userid', getQuestionsForNewMockTestByProfileController);
+    app.get('/questions/newMockTest/:uuid', getQuestionsForNewMockTestByProfileController);
 
 
 
@@ -74,13 +77,14 @@ export async function routes(app: any) {
 
     // '/area/'
     app.get('/areas', getAreaController);
-    app.get('/areas/tree', getAreaTreeController);
     app.get('/area/:id', getAreaByIdController);
     app.delete('/area/:id', deleteAreaController);
     app.get('/areas/questions', getAreasIdsByQuestionsIdsController);
     app.get('/area/question/:question_id', getAreaIdByQuestionIdController);
+    app.get('/areas/allparents/:ids', getAllParentAreasByIdsController);
 
     app.get('/area/top/:id', getTopParentAreaByIdController);
+    app.get('/areas/top/:id', getTopParentAreasByIdsController);
 
     app.post('/areas', postAreaController);
 
@@ -99,12 +103,13 @@ export async function routes(app: any) {
     app.put('/mockTest/:id', putMockTestController);
     app.post('/mockTest/:userid', postMockTestController);
 
-    // '/areaProfile/'
-    app.get('/areaProfile/:userid', getArea_ProfileController);
+    // '/area_Profile/'
+    app.get('/area_Profile/:userid', getArea_ProfileController);
+    app.put('/areas_Profile/increment/:userid', incrementAreas_ProfileController);
 
     // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
     app.post('/questions_MockTest', postQuestions_MockTestController);
-    app.put('/question_MockTest', putQuestion_MockTestController);
+    app.put('/question_MockTest/', putQuestion_MockTestController);
 
 }

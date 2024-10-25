@@ -1,16 +1,17 @@
 import Simulado from "./Simulado"
 import {  useEffect, useState } from "react"
-import { questionInterface } from "../../../controllers/interfaces"
+import { areaInterface, questionInterface } from "../../../controllers/interfaces"
 import { handlePostSimulado, generateNewSimulado } from "../../../controllers/mockTestController";
 import { respostaInterface } from "../../../controllers/interfaces";
 import { handleGetAnswersByQuestionsIds } from "../../../controllers/answerController";
 import { simuladoInterface } from "../../../controllers/interfaces";
 import { showAlert } from "../../../App";
 import { useNavigate } from "react-router-dom";
-import { handleIncrementProfileAnswers, handleIncrementProfileMockTest } from "../../../controllers/userController"
+import { handleIncrementAreas_Profile, handleIncrementProfileAnswers, handleIncrementProfileMockTest } from "../../../controllers/userController"
 import { handlePutSimulado } from "../../../controllers/mockTestController";
 import { handleIncrementAnswers } from "../../../controllers/answerController";
 import { handleIncrementAreas_ProfilesByAreasIds } from "../../../controllers/area_ProfileController";
+import { handleGetAllParentAreasByIds } from "../../../controllers/areasController";
 // import date from 'date-and-time'
 // import { useNavigate } from "react-router-dom"
 
@@ -39,6 +40,7 @@ const SimuladoFrame = () => {
     const[loading, setLoading] = useState(true);
     const[questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface>([]);
     const[simulado, setSimulado] = useState<simuladoInterface | null>(null);
+    const[parentAreas, setParentAreas] = useState<areaInterface[]>([]);
 
     const navigate = useNavigate();
 
@@ -58,8 +60,8 @@ const SimuladoFrame = () => {
 
                 }); 
                 setQuestionsHashMap(newQuestionMapInterface);
-                console.log("newQuestionMapInterface: ");
-                console.log(newQuestionMapInterface);
+                if(questions.length === 0) return;
+                setParentAreas(await handleGetAllParentAreasByIds(questions.map(q => q.area_id)));
         }
         
         getQuestions();
@@ -99,14 +101,22 @@ const SimuladoFrame = () => {
         const timeSpentInMinutes = Math.floor((date.getTime() - dateSimulado.getTime()) / 60000);
         
         if(questionsHashMap === null) return;
+        const areasAndAnswers: {[key: number]: {total_correct_answers: number, total_answers: number}} = {};
         
         respostas.forEach((value, index) => {
             ++totalAnswers;
             const question = questionsHashMap[index];
+            if(areasAndAnswers[question.question.area_id] === undefined){
+                areasAndAnswers[question.question.area_id] = {total_correct_answers: 0, total_answers: 0};
+            }
+            ++areasAndAnswers[question.question.area_id].total_answers;
             if (question !== undefined && value[1] !== null) {
                 const correctAnswer = question.answers.find((answer) => answer.is_correct === true);
                 if (correctAnswer !== undefined && correctAnswer.id === value[1]) {
                     ++totalCorrectAnswers;
+                }
+                else if(correctAnswer !== undefined && correctAnswer.id === value[1]){
+                    ++areasAndAnswers[question.question.area_id].total_correct_answers;
                 }
             }
         });
@@ -128,6 +138,8 @@ const SimuladoFrame = () => {
         const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
         const questions: questionInterface[] = questionsHashMap.map(q => q.question);
         const areasIds = questions.map(q => q.area_id);
+        
+        handleIncrementAreas_Profile(areasAndAnswers);
         handleIncrementAnswers(respostasIds);
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();
