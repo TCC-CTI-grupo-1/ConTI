@@ -34,7 +34,7 @@ if(isRemote) {
 
     const urlLocal = 'http://localhost:5173';
     const urlRemoto = 'https://projetoscti.com.br';
-    const urlCloud = 'http://cti.4edge.cloud:3000';
+    const urlCloud = 'http://cti.4edge.cloud:1945';
 
     app.use(cors({
         origin: [urlLocal, urlRemoto, urlCloud],
@@ -64,7 +64,7 @@ if(isRemote) {
 
     routes(app);
 
-    const port = 3000;
+    const port = 1945;
     app.listen(port, () => {
         console.log("Server is running on port " + port);
     });
@@ -91,7 +91,7 @@ else {
             sameSite: 'lax'
         }
     }));
-    const port = process.env.PORT || 3001;
+    const port = process.env.PORT || 1939;
     app.use(cookieParser());
     app.use(express.static('uploads'));
     // const options = {
@@ -103,5 +103,5 @@ else {
 
     routes(app);
 
-    app.listen(port, () => { console.log("Server is running on port 3001")} );
+    app.listen(port, () => { console.log("Server is running on port " + port) });
 }
