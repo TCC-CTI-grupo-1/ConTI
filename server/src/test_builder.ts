@@ -320,7 +320,7 @@ export class TestBuilder{
             else return a/b;
         }
         //console.log("\n\n\n\n", tree, "\n\n\n\n");
-        console.log(tree[1000]);
+        console.log("Chegando na queue");
         while(queue.length!==0)
         {
             const parent = queue.shift();
@@ -430,6 +430,7 @@ export class TestBuilder{
     }
     private getQuestionList = async(rooted_tree:Rooted_AreaProfileTree, testMap:{[key:number]:AreaData}):Promise<QuestionDTO[]> => 
     {
+        console.log("Chegando no getquestion list")
         let questionMap: {[key:number]:Boolean} = {};
         let questionList: QuestionDTO[] = [];
         const instance = new QuestionDAO();
@@ -437,7 +438,7 @@ export class TestBuilder{
         const helper = this.helper;
         const f = (a:number, c:number) =>
         {
-            if(a>c)
+            if(c>a)
                 return c;
             else
                 return a;
@@ -446,10 +447,31 @@ export class TestBuilder{
             if(b>a) return [0,a];
             else return [a-b,b]; 
         }
+        if(!testMap[0])
+            {
+                testMap[0] = {questionCount_inDifficulty:{}};
+                const marcos = (node:Area_ProfileDTO) => {
+                    for(const dif in testMap[node.area_id])
+                        {
+                            if(!testMap[0].questionCount_inDifficulty[dif])
+                            {
+                                testMap[0].questionCount_inDifficulty[dif] = 0;
+                            }
+                            testMap[0].questionCount_inDifficulty[dif] += testMap[node.area_id].questionCount_inDifficulty[dif];
+
+                        }
+                        for(const child of tree[node.area_id])
+                        {
+                            marcos(child);
+                        }
+                }
+            }
         const dfs = async(node:Area_ProfileDTO):Promise<{[diff:string]:number}> =>
         {
+            console.log("Dfs daora: ", node, tree[node.area_id]);        
             const tm = testMap[node.area_id].questionCount_inDifficulty;
-            const suc:{[key:string]:number} = {};
+            
+            let suc:{[key:string]:number};
             const children_suc:{[key:string]:number} = {};
             const filter:questionFilters = {};
             if(tree[node.area_id]) {
@@ -467,8 +489,11 @@ export class TestBuilder{
                     }
                 }
             }
-            let leftover = 0;
+            suc = children_suc;
+            console.log("Agora o pau vai comer");
+            let leftover = -1;
             filter.disciplina = [node.area_id];
+            console.log(filter);
             const rawlist = await instance.listQuestionByFilters(filter);
             const manualFilter = (list: QuestionDTO[], difficulty: DifficultyLevel): QuestionDTO[] => {
                 return list.filter(question => {
@@ -483,11 +508,19 @@ export class TestBuilder{
                     return true;
                 });
             };
+            console.log("Vivos!");
+
             for(const diff in testMap[node.area_id].questionCount_inDifficulty)
             {
+                if(!suc[diff])
+                    {
+                        suc[diff] = 0;
+                    }
+                console.log("Dificuldade: ", diff);
                 if(diff === DifficultyLevel.IRRELEVANT) continue;
                 const amount:number = testMap[node.area_id].questionCount_inDifficulty[diff] - children_suc[diff];
                 const list =  manualFilter(rawlist,diff as DifficultyLevel);
+                console.log("Fitered list: ", list);
                 const good = f(list.length,amount);
                 shuffle(list);
                 let upperBound = good;
@@ -510,9 +543,17 @@ export class TestBuilder{
             if (DifficultyLevel.IRRELEVANT in testMap[node.area_id].questionCount_inDifficulty || leftover >0){
                 const list = rawlist;
                 shuffle(list);
-                const good = f(rawlist.length,leftover);
+                let good;
+                if(leftover===-1) 
+                    {
+                        good = list.length;
+                        leftover = 0;
+                    }
+                else
+                    good = leftover;
                 let upperBound = good;
                 let hit = 0;
+                console.log("good: ", good, "upperBound: ", rawlist.length);
                 for(let i=0;i<upperBound;i++)
                 {
                     if(upperBound > list.length) break;
@@ -526,12 +567,17 @@ export class TestBuilder{
                 }
                 for(const dif in tm)
                 {
+                    if(!suc[dif])
+                    {
+                        suc[dif] = 0;
+                    }
                     const need = tm[dif] - suc[dif];
                     const res = g(leftover,need);
                     leftover = res[0];
                     suc[dif] += res[1];
 
                 }
+                console.log("suc[dif]", suc);
             }
             return suc;
 

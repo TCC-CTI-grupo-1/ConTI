@@ -221,7 +221,6 @@ export class QuestionDAO {
                 };
                 questions.push(question);
             });
-            console.log(questions.length)
             return questions;
 
         } catch (error) {

@@ -85,11 +85,11 @@ export async function getQuestionsForNewMockTestByProfileController(req: Request
             return res.status(404).json({ message: 'Sessão não inicializada' });
         }
 
-        // const profileId = profile.id;
-        // const test_blueprint = new TestBlueprint(50, {1:15,2:15,3:15,4:5}, DifficultyLevel.MEDIUM, DifficultyType.INDIVIDUAL, profileId);
-        // const test_builder = new TestBuilder([]);
-        // const questions = await test_builder.buildTest(test_blueprint);
-        const questions = semana_do_colegio_tests;
+        const profileId = profile.id;
+        const test_blueprint = new TestBlueprint(50, {1:15,2:15,3:15,4:5}, {1: DifficultyLevel.MEDIUM, 2: DifficultyLevel.MEDIUM}, profileId);
+        const test_builder = new TestBuilder([]);
+        const questions = await test_builder.buildTest(test_blueprint);
+        //const questions = semana_do_colegio_tests;
         res.json({ questions: questions });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
