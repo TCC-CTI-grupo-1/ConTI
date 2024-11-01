@@ -127,12 +127,16 @@ export async function handleLogin(email: string, password: string, remember: boo
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
         const userId = sessionStorage.getItem('userId');
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId , {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             }
+            //send data by GET method
+
+
+
         });
         const responseData = await response.json();
         if (!response.ok) {
@@ -227,7 +231,7 @@ export async function handleLogout() {// userController.ts
 export async function handleDeleteAccount() { // userController.ts
     try {
         const userId = sessionStorage.getItem('userId');
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/'+userId, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId,{
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -242,7 +246,7 @@ export async function handleDeleteAccount() { // userController.ts
             // return [true, "Conta deletada com sucesso"];
         }
 
-        const responseLogout = await fetch(import.meta.env.VITE_ADDRESS + '/logout/'+userId, {
+        const responseLogout = await fetch(import.meta.env.VITE_ADDRESS + '/logout/' + userId, {
             method: 'POST',
             credentials: 'include',
             headers: {

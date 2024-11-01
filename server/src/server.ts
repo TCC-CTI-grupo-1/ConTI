@@ -46,22 +46,6 @@ if(isRemote) {
         console.error('SECRET_KEY não definida');
         process.exit(1);
     }
-
-    app.use(session({
-        store: redisStore,
-        secret: process.env.SECRET_KEY,
-        resave: false,
-        saveUninitialized: false,
-        name: 'sid',
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 12,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none'
-        }
-    }));
-    app.use(cookieParser());
-    app.use(express.static('uploads'));
-
     routes(app);
 
     const port = 1945;

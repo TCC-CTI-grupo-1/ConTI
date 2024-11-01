@@ -2,6 +2,20 @@ import { mock } from "node:test";
 import { MockTestDAO } from "../../DAO/MockTestDAO";
 import { Request, Response } from "express";
 
+import { createClient } from 'redis';
+
+const passRedis = process.env.REDIS_PASS;
+const hostRedis = process.env.REDIS_HOST;
+const portRedis = parseInt(process.env.REDIS_PORT as string);
+let redisClient = createClient({
+    password: passRedis,
+    socket: {
+        host: hostRedis,
+        port: portRedis
+    }
+});
+redisClient.connect();
+
 export async function getMockTestsController(req: Request, res: Response) {
     const mockTestDAO = new MockTestDAO();
     try {
@@ -22,17 +36,22 @@ export async function getMockTestsByDecrescentDateController(req: Request, res: 
 }
 
 export async function getMockTestsByDateAndProfileController(req: Request, res: Response) {
-    if(req.session === undefined) {
-        return res.status(404).json({ message: 'Sessão não inicializada' });
-    }
-    if (!req.session.isLoggedIn) {
-        return res.status(401).json({ message: 'Usuário não logado' });
-    }
-    if(req.session.profile === undefined) {
-        return res.status(404).json({ message: 'Perfil não encontrado' });
-    }
     const mockTestDAO = new MockTestDAO();
     try {
+
+        const userId = req.params.uuid;
+    
+        const profileString = await redisClient.get(`profile:${userId}`);
+    
+        let profile = null;
+        if (profileString) {
+          profile = JSON.parse(profileString); // Parse the string into an object
+        }
+
+        if(profile === null) {
+            return res.status(404).json({ message: 'Sessão não inicializada' });
+        }
+
         const dateString = req.params.date;
         let date = new Date(dateString);
         const regex = /GMT\s*((-|)\d{2})\d+/;
@@ -43,7 +62,7 @@ export async function getMockTestsByDateAndProfileController(req: Request, res: 
         date = new Date(date.getTime() + (Number(gmt) * 60 * 60 * 1000));
         date.setHours(0, 0, 0, 0);
 
-        const mockTests = await mockTestDAO.listMockTestsByCreationDateAscendentAndProfileId(date, req.session.profile.id);
+        const mockTests = await mockTestDAO.listMockTestsByCreationDateAscendentAndProfileId(date, profile.id);
         
         res.json({ mockTests });
     } catch (error: any) {

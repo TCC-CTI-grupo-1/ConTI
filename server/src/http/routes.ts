@@ -54,9 +54,9 @@ export async function routes(app: any) {
     app.get('/profileSession', getProfileSessionController);
     app.put('/profile', updateProfileController);
     app.delete('/profile/:uuid', deleteProfileController); 
-    app.put('/profile/increment/mockTest/:userid', incrementProfile_MockTestController);
+    app.put('/profile/incrementMockTest/:uuid', incrementProfile_MockTestController);
     app.get('/profile/:uuid', getProfileController);
-    app.put('/profile/increment/answers/:userid', incrementProfileAnswersController);
+    app.put('/profile/incrementAnswers/:uuid', incrementProfileAnswersController);
 
 
     // '/questions/'
@@ -84,8 +84,7 @@ export async function routes(app: any) {
     app.get('/areas/allparents/:ids', getAllParentAreasByIdsController);
 
     app.get('/area/top/:id', getTopParentAreaByIdController);
-    app.get('/areas/top/:id', getTopParentAreasByIdsController);
-
+	app.get('/areas/tree', getAreaTreeController);
     app.post('/areas', postAreaController);
 
     // '/answers/'
@@ -101,11 +100,18 @@ export async function routes(app: any) {
     app.get('/mockTests/date/:date/:userid', getMockTestsByDateAndProfileController);
     app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
     app.put('/mockTest/:id', putMockTestController);
-    app.post('/mockTest/:userid', postMockTestController);
+    app.post('/mockTest/:uuid', postMockTestController);
 
     // '/area_Profile/'
-    app.get('/areas_Profile/:userid', getAreas_ProfileController);
+    app.get('/areas_Profile/:uuid', getAreas_ProfileController);
     app.put('/areas_Profile/increment/:userid', incrementAreas_ProfileController);
+    app.get('/mockTests/date/:date/:uuid', getMockTestsByDateAndProfileController);
+    app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
+    app.put('/mockTest/:id', putMockTestController);
+    app.post('/mockTest/:uuid', postMockTestController);
+
+    // '/areaProfile/'
+    app.get('/areaProfile/:uuid', getAreas_ProfileController);
 
     // '/question_MockTest/'
     app.get('/question_MockTests/:id', getQuestion_MockTestsController);
