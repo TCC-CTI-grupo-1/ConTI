@@ -102,6 +102,7 @@ export async function handleGetQuestions(): Promise<questionInterface[]> { //que
 
 export async function handleGetFilteredQuestions(filters: questionFilters): Promise<questionInterface[]> { // -> //questionController
     try {
+        console.log(JSON.stringify(filters));
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/filter/' + JSON.stringify(filters), {
             method: 'GET',
             credentials: 'include',

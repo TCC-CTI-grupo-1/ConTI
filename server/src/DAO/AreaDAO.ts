@@ -163,6 +163,7 @@ export class AreaDAO {
     listAllSubAreasByParentId = async (parent_id: number): Promise<AreaDTO[]> => {
         try {
             const client = await connectionDAO.getConnection();
+            console.log(parent_id);
             const result = await client.area.findMany({
                 where: {
                     parent_id: parent_id
@@ -170,7 +171,7 @@ export class AreaDAO {
             });
 
             if (result.length === 0) {
-                throw new Error('Área não encontrada');
+                return [];
             }
 
             const areas: AreaDTO[] = [];
