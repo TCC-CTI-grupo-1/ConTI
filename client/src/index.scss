@@ -147,7 +147,7 @@ H4 {
     flex-direction: column;
 
     &>.header {
-      z-index: 2;
+      z-index: 3;
       padding: var(--padding-3);
     }
 
@@ -2343,6 +2343,108 @@ COMPONENTES GERAIS DO FERNANDO
 
 #Admistrator>div {
   width: 100%;
+}
+
+
+//HOME não LOGADO
+
+
+
+#homeNotLogged{
+  &.content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & .header{
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-4);
+      width: 50%;
+      & p, h2{
+        mix-blend-mode: color-burn;
+      }
+
+      & .elementos-absolutos{
+        position: absolute;
+        & > *{
+          position: absolute;
+        }
+        z-index: -1;
+  
+        & .bolha1{
+          top: -30px;
+          left: -40px;
+          width: 150px;
+          height: 150px;
+          background-color: var(--primary-color-50);
+          border-radius: 50%;
+        }
+        & .bolha2{
+          width: 200px;
+          height: 200px;
+          top: 60px;
+          left: 400px;
+          background-color: var(--primary-color-30);
+          border-radius: 50%;
+        }
+        & .bolha3{
+          width: 100px;
+          height: 100px;
+          left: 200px;
+          top: 20px;
+          background-color: var(--primary-color-10);
+          border-radius: 50%;
+        }
+        & .bolha4{
+          width: 80px;
+          height: 80px;
+          left: 80px;
+          top: 150px;
+          background-color: var(--primary-color-10);
+          border-radius: 50%;
+        }
+        & .bolha5{
+          width: 300px;
+          height: 300px;
+          left: 300px;
+          top: -300px;
+          background-color: var(--primary-color-10);
+          border-radius: 50%;
+        }
+      }
+    }
+
+    & .options{
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-0);
+      padding: var(--padding-0);
+      margin: var(--margin-medium);
+      & > div:nth-child(even){
+        display: flex;
+        flex-direction: row;
+        background-color: var(--primary-color-10);
+        border-radius: var(--border-radius);
+      }
+      & > div{
+        display: flex;
+        flex-direction: row-reverse;
+        gap: var(--padding-3);
+        align-items: center;
+        padding: var(--padding-3);
+        & > div{
+          display: flex;
+          width: 100%;
+          flex-direction: column;
+          align-items: center;
+          gap: var(--padding-3);
+        }
+      }
+    }
+
+    
+  }
 }
 
 @media (max-width: 1500px) {

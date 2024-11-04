@@ -11,8 +11,8 @@ import { questionInterface, respostaInterface } from "../../controllers/interfac
 import { handleGetQuestion } from "../../controllers/questionController.ts";
 import { handleGetAnswersByQuestionId } from "../../controllers/answerController.ts";
 import { useNavigate } from "react-router-dom";
-import '../../home.scss';
 import simulado from '../../../public/Simulado.png';
+import '../../home.scss';
 import profile from '../../../public/Perfil.png';
 import database from '../../../public/banco.png';
 
@@ -86,64 +86,62 @@ const Home = () => {
                     </section>
                     
                   </> : <>
-                      <div className="bolhas">
-                          <div className="bolha1"> <h1>  </h1></div>
-                          <div className="bolha2"> <h1> </h1></div>
+                      <div className="content" id="homeNotLogged">
+                        
+                        <div className="header">
+                          <h2>Quer estudar para o CTI mas não sabe por onde começar?</h2>
+                          <p>Use o ConTI! uma solução criada para ajudar os ajudos do CTI a estudar para o vestibulinho usando <strong>simulados personalizados</strong> baseados em suas difficuldades.</p>
+                          <div className="elementos-absolutos">
+                            <div className="bolha1"></div>
+                            <div className="bolha2"></div>
+                            <div className="bolha3"></div>
+                            <div className="bolha4"></div>
+                            <div className="bolha5"></div>
+                          </div>
+                        </div>
+
+                        <div className="options">
+                          <div>
+                            <img src={simulado}></img>
+                            <div>
+                              <h3>Teste nossos simulados personalizados! basta fazer o login.</h3>
+                              <Button
+                              colorScheme="blue"
+                              size={'lg'}
+                              onClick={() => navigate('/login')}
+                              >Faça o login!</Button>
+                              <p>É de graça, não guardamos nenhuma informação pessoas sua alem do seu e-mail, seus simulados anteriores ficarão armazenados em sua conta.</p>
+                            </div>
+                          </div>
+
+                          <div>
+                            <img src={database}></img>
+                            <div>
+                              <h3>Veja nosso banco de questões!</h3>
+                              <Button
+                              colorScheme="blue"
+                              size={'lg'}
+                              onClick={() => navigate('/questions')}
+                              >Ver o banco de questões!</Button>
+                              <p>Não é necessario login, use os filtros como desejar e tente resolver as questões.</p>
+                            </div>
+                          </div>
+
+                          <div>
+                            <img src={simulado}></img>
+                            <div>
+                              <h3>Perfil completo com sua taxa de acerto em cada matéria!</h3>
+                              <Button
+                              colorScheme="blue"
+                              size={'lg'}
+                              onClick={() => navigate('/login')}
+                              >Faça o login!</Button>
+                              <p>Graças a essas informações, conseguimos criar um simulado mais voltado para suas dificuldades.</p>
+                            </div>
+                          </div>
                           
-                      
-                     
-                          <div className="bolha3"> <h1>  </h1></div>
-                          <div className="bolha4"> <h1>  </h1></div> 
-                          <div className="quer"><h2>Quer estudar no CTI mas não sabe como se preparar?</h2></div>
-                          <div className="conheca"><h1> Conheça o ConTI! </h1> </div>
-                          <div className="bolha5"> <h1>  </h1></div>
-                          <div className="bolha6"> <h1>  </h1></div>
                         </div>
-                     
-                    <div className="porque"><p>Por que estudar com o conti?</p></div>
-
-                    <div className="motivos">
-                        <div className="mot_simulados">
-                            <h3> Simulados personalizados</h3>
-                            <div className="mot_p01">
-                              <p>Nosso sistema oferece simulados adaptados á cada dificuldade, proporcionando 
-                              uma experiência de estudo progressivo e promovendo uma preparação eficaz.</p>
-                            </div>
-                            <img src={simulado} alt="Imagem da equipe" className="mot_img" />                            
                         </div>
-
-                        <div className="mot_banco">
-                          <h3> Banco de questões gratuito</h3>
-                          <div className="mot_p02">
-                            <p> Com um banco de questões que inclui perguntas pertencentes a vestibulinhos de 
-                              anos anteriores, os alunos têm acesso a um material de qualidade para praticar 
-                              e se familiarizar com o formato das provas.</p>
-
-                              <img src={database} alt="Imagem da equipe" className="mot_img" />
-                          </div>
-                        </div>
-
-                        {/*<div className="mot_acompanhamento">
-                          <h3> Seja acompanhado por seus professores</h3>
-                          <div className="mot_p01">
-                            <p> Professores podem criar simulados, listas de exercícios e adicionar perguntas 
-                            ao banco, proporcionando acompanhamento personalizado e enriquecendo a experiência 
-                            de aprendizagem.</p>
-                            <img src="./equipe.jpg" alt="Imagem da equipe" className="mot_img" /> 
-                          </div>
-                        </div>*/}
-
-                        <div className="mot_resultados">
-                          <h3> Acompanhamento de resultados</h3>
-                            <div className="mot_p01">
-                            <p> Nosso sistema disponibiliza gráficos detalhados de perfil, permitindo visualização 
-                              de desempenhos em cada matéria e prova, facilitando a identificação de áreas que 
-                              precisam de mais atenção.</p>
-                              <img src={profile} alt="Imagem da equipe" className="mot_img" /> 
-                            </div>
-                        </div>
-                   
-                    </div>
                   </>}
                   
                 </div>
