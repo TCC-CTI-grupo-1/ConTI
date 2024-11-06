@@ -4,7 +4,7 @@ import { Area_ProfileDTO } from "./DTO/Area_ProfileDTO";
 import { AreaProfileTree, Area_ProfileDAO, Rooted_AreaProfileTree } from "./DAO/Area_ProfileDAO";
 import { QuestionDAO } from "./DAO/QuestionDAO";
 import { questionFilters } from "./types/client/interfaces";
-import { difficulty as Difficulty , question } from "@prisma/client";
+import { difficulty, difficulty as Difficulty , question } from "@prisma/client";
 import internal from "stream";
 import { DiffieHellman } from "crypto";
 import { AreaDTO } from "./DTO/AreaDTO";
@@ -41,7 +41,22 @@ class ProportionHandler {
         if(difficulty === DifficultyLevel.HARD) return this.buildProportions(1,2,3);
         return this.buildProportions(1,1,1);
     }
-
+    divideWithinDifficulties = (fractions:{[dif:string]:number},value:number) =>
+    {
+        const retobj:{[key:string]:number} = {};
+        let sofar = 0;
+        let last:string = "medium";
+        for(const dif in fractions)
+        {
+            last = dif;
+            retobj[dif] = Math.floor(value * fractions[dif]);
+            sofar += retobj[dif];
+        }
+        if(value !==sofar){
+            retobj[last] += value-sofar;
+        }
+        return retobj;
+    }
     classifyRatio = (a:number,b:number):string =>
     {
         if(b<4) return DifficultyLevel.IRRELEVANT    
@@ -77,6 +92,18 @@ class ProportionHandler {
         if(difficulty === DifficultyLevel.HARD) return function(a:number,b:number){return innerFunc(b)? true : a/b <= 0.5};
         if(difficulty === DifficultyLevel.MEDIUM) return function(a:number,b:number){return innerFunc(b)? true : a/b > 0.5 && a/b <= 0.75};
         return trueFunc;
+    }
+    addMaps = (m1:{[key:string]:number},m2:{[key:string]:number}) => {
+        const retobj:{[key:string]:number} = {};
+        for(const key in m1)
+        {
+            if(!m2[key])
+            {
+                m2[key] = 0;
+            }
+            retobj[key] = m1[key] + m2[key];
+        }
+        return retobj;
     }
 }
 
@@ -425,7 +452,28 @@ export class TestBuilder{
             }           
             
         }
-        console.log(sizeMap)
+        const ph = new ProportionHandler();
+        const fractions = ph.proportionToFraction(ph.difficultyToProportions(blueprint.difficulty[DifficultyType.AREA]));
+
+        if (!sizeMap[0]) {
+            sizeMap[0] = {questionCount_inDifficulty:{}};
+            sizeMap[0].questionCount_inDifficulty = ph.divideWithinDifficulties(fractions,blueprint.totalQuestions);
+        }
+        if(blueprint.difficulty[DifficultyType.INDIVIDUAL] !== DifficultyLevel.IRRELEVANT)
+        {
+            for(const area in sizeMap){
+                if(DifficultyLevel.IRRELEVANT in sizeMap[area].questionCount_inDifficulty)
+                {
+                    const val = sizeMap[area].questionCount_inDifficulty[DifficultyLevel.IRRELEVANT];
+                    const retobj = ph.divideWithinDifficulties(fractions,val);
+                    sizeMap[area].questionCount_inDifficulty = ph.addMaps(retobj,sizeMap[area].questionCount_inDifficulty);
+                }
+            }
+        }
+        console.log(sizeMap);
+        
+
+        console.log = function(){}
         return sizeMap;
     }
     private getQuestionList = async(rooted_tree:Rooted_AreaProfileTree, testMap:{[key:number]:AreaData}):Promise<QuestionDTO[]> => 
@@ -468,7 +516,7 @@ export class TestBuilder{
             }
         const dfs = async(node:Area_ProfileDTO):Promise<{[diff:string]:number}> =>
         {
-            console.log("Dfs daora: ", node, tree[node.area_id]);        
+            //console.log("Dfs daora: ", node, tree[node.area_id]);        
             const tm = testMap[node.area_id].questionCount_inDifficulty;
             
             let suc:{[key:string]:number};
@@ -490,10 +538,9 @@ export class TestBuilder{
                 }
             }
             suc = children_suc;
-            console.log("Agora o pau vai comer");
+           // console.log("Agora o pau vai comer");
             let leftover = -1;
             filter.disciplina = [node.area_id];
-            console.log(filter);
             const rawlist = await instance.listQuestionByFilters(filter);
             const manualFilter = (list: QuestionDTO[], difficulty: DifficultyLevel): QuestionDTO[] => {
                 return list.filter(question => {

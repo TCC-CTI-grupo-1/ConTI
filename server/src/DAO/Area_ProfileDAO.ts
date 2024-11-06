@@ -90,44 +90,84 @@ export class Area_ProfileDAO {
     }
 
     
-    buildRootedAreaProfileTree = async(profile_id:number):Promise<Rooted_AreaProfileTree> => {
+    buildRootedAreaProfileTree = async (profile_id: number): Promise<Rooted_AreaProfileTree> => {
         const areadao = new AreaDAO();
         const rooted_areatree = await areadao.buildRootedAreaTree();
         const areatree = rooted_areatree.tree;
         const arearoot = rooted_areatree.root;
         const areaProfile_list = await this.listArea_ProfileByProfileId(profile_id);
-        let tree:AreaProfileTree = {};
-        let root:Area_ProfileDTO|null = null;
-        let areaMap:{[id:number]:Area_ProfileDTO} = {};
-        for(const node of areaProfile_list)
-        {
+        
+        let tree: AreaProfileTree = {};
+        let root: Area_ProfileDTO | null = null;
+        let areaMap: { [id: number]: Area_ProfileDTO } = {};
+    
+        // Populate areaMap for easy access
+        for (const node of areaProfile_list) {
             areaMap[node.area_id] = node;
         }
-        if(areaMap[arearoot.id])
-        {
+    
+        // Set the root
+        if (areaMap[arearoot.id]) {
             root = areaMap[arearoot.id];
+        } else {
+            root = {
+                area_id: arearoot.id,
+                profile_id: profile_id,
+                total_answers: 0,
+                total_correct_answers: 0,
+            };
         }
-        else {
-            root = {area_id:arearoot.id,profile_id:profile_id,total_answers:0,total_correct_answers:0};
-        }
-        for(const key in areatree)
-        {
+    
+        // Build the tree
+        for (const key in areatree) {
             const id = Number(key);
-            tree[id] = [];
-            for(const node of areatree[id])
-            {
-                if(!node.parent_id && node.parent_id !==0) continue;
-                if(areaMap[node.parent_id])
-                {
-                    tree[id].push(areaMap[node.parent_id])
+            tree[id] = []; // Initialize the array for this id
+    
+            // Loop over the nodes in this branch of the tree
+            for (const node of areatree[id]) {
+                if (node.parent_id === null || node.parent_id === undefined) continue; // Skip invalid parent_id
+    
+                let parentNode = areaMap[node.parent_id];
+    
+                // If the parent doesn't exist in areaMap, create a new one
+                if (!parentNode) {
+                    parentNode = {
+                        area_id: node.parent_id,
+                        profile_id: profile_id,
+                        total_answers: 0,
+                        total_correct_answers: 0,
+                    };
                 }
-                else{
-                    tree[id].push({area_id:node.id, profile_id:profile_id, total_answers:0, total_correct_answers:0});
+    
+                if (!tree[parentNode.area_id]) {
+                    tree[parentNode.area_id] = [];
                 }
-            }            
+    
+                if (!tree[parentNode.area_id].some(child => child.area_id === node.id)) {
+                    tree[parentNode.area_id].push({
+                        area_id: node.id,
+                        profile_id: profile_id,
+                        total_answers: 0,
+                        total_correct_answers: 0,
+                    });
+                }
+    
+                if (!tree[id]) {
+                    tree[id] = [];
+                }
+    
+                if (!tree[id].some(child => child.area_id === node.id)) {
+                    tree[id].push({
+                        area_id: node.id,
+                        profile_id: profile_id,
+                        total_answers: 0,
+                        total_correct_answers: 0,
+                    });
+                }
+            }
         }
-        return {tree:tree, root:root}
-    }
+        return { tree: tree, root: root };
+    };
     buildInverted_AreaProfileTree = async(profile_id:number):Promise<Inverted_AreaProfileTree> => {
         const instance = new Area_ProfileDAO();
         const areaInstance = new AreaDAO();
