@@ -7,7 +7,19 @@ import { AreaDAO, Rooted_AreaTree } from "./AreaDAO";
 import { Area_ProfileDAO, Inverted_AreaProfileTree } from "./Area_ProfileDAO";
 import { Area_ProfileDTO } from "../DTO/Area_ProfileDTO";
 
-const assert = require('assert');
+const EmptyQuestion = new QuestionDTO(0,'SEU IMBECIL',0,69,69,'easy','Você tem que inicializar primeiro',-123123,'Fernando','Não é o CTI',-11111,false,false);
+const shuffle = function(array:any[])
+{
+    let count = array.length,
+    randomnumber,
+    temp;
+    while( count ){
+    randomnumber = Math.random() * count-- | 0;
+    temp = array[count];
+    array[count] = array[randomnumber];
+    array[randomnumber] = temp
+    }
+}
 export class OptimizedQuestionDAO {
     hashedQuestionList: QuestionDTO[];
     hashedTree: RootedTree<AreaDTO>;
@@ -42,21 +54,23 @@ export class OptimizedQuestionDAO {
         this.hashedInvertedTree = this.invertTree(this.hashedTree.tree, this.hashedTree.root);
     }
 
-    async optimizedGetQuestionList(): Promise<QuestionDTO[]> {
-        if (this.hashedQuestionList.length > 0) {
-            return this.hashedQuestionList;
-        } else {
-            const instance = new QuestionDAO();
-            return this.hashedQuestionList = await instance.listQuestions();
-        }
+    optimizedGetQuestionList(): QuestionDTO[] {
+        if(this.hashedQuestionList.length > 0)
+        return this.hashedQuestionList;
+    else {
+        console.error("Seu imbecil. Você tem que rodar initalize primeiro");
+        return [EmptyQuestion];
+    }
     }
 
-    async optimizedGetFilteredQuestions(filters: questionFilters): Promise<QuestionDTO[]> {
+     optimizedGetFilteredQuestions(filters: questionFilters):QuestionDTO[] {
         if (this.hashedQuestionList.length > 0) {
             return this.filter_question(filters, this.hashedQuestionList);
-        } else {
-            const instance = new QuestionDAO();
-            return await instance.listQuestionByFilters(filters);
+        }
+        else {
+            console.error("Seu imbecil. Você tem que rodar initalize primeiro");
+            return [EmptyQuestion];
+            
         }
     }
 
@@ -95,10 +109,8 @@ export class OptimizedQuestionDAO {
         if (filters.disciplina) {
             for (let i = 0; i < filters.disciplina.length; i++) {
                 let retsub: AreaDTO[] = [];
-                assert(typeof filters.disciplina[i] === "number");
                 if (typeof filters.disciplina[i] === 'number') {
                     let node = this.findNodeWithId(filters.disciplina[i] as number, this.hashedTree.tree, this.hashedTree.root);
-                    assert(node);
                     if (node) {
                         retsub = this.optimizedListAllSubAreas(node, this.hashedTree.tree);
                         for (const child of retsub) {
@@ -114,7 +126,6 @@ export class OptimizedQuestionDAO {
             if (filters.dificuldade && !filters.dificuldade.includes(question.difficulty)) continue;
             filteredQuestionList.push(question);
         }
-
         return filteredQuestionList;
     }
 }
