@@ -154,11 +154,18 @@ export class QuestionDAO {
     listQuestionByFilters = async (filters: questionFilters) => {
 
         try {
+            console.warn("chegamos em listquestionbyfilters");
+            console.log("Filtros recebidos: ", filters);
             const areaDAO: AreaDAO = new AreaDAO();
             const client = await connectionDAO.getConnection();
             const difficulties: difficulty[] = filters.dificuldade ? filters.dificuldade : [];
             const years: number[] = filters.ano ? filters.ano.map(Number) : [];
             let areasIDs: number[] = [];
+            const translate = (a:string)=>{
+                if(a==="easy") return "facil";
+                if(a==="medium") return "medio";
+                if(a==="hard") return "dificil";
+            }
             if(typeof filters.disciplina === 'string') {
                 const areaNames: string[] = filters.disciplina ? filters.disciplina : [];
                 for (const areaName of areaNames) {
@@ -221,9 +228,11 @@ export class QuestionDAO {
                 };
                 questions.push(question);
             });
+            console.log(questions);
             return questions;
 
         } catch (error) {
+            console.error(error);
             throw error;
         }
     }

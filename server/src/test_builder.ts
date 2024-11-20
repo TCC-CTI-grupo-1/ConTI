@@ -9,13 +9,14 @@ import internal from "stream";
 import { DiffieHellman } from "crypto";
 import { AreaDTO } from "./DTO/AreaDTO";
 import { AreaDAO } from "./DAO/AreaDAO";
+import { OptimizedQuestionDAO } from "./DAO/OptimizedQuestionDAO";
 const conn = new ConnectionDAO();
 
 
 export enum DifficultyLevel{
-    EASY = "easy",
-    MEDIUM = "medium",
-    HARD = "hard",
+    EASY = "facil",
+    MEDIUM = "medio",
+    HARD = "dificil",
     MIMIC = "mimic",
     IRRELEVANT = "irrelevant"
 };
@@ -473,163 +474,83 @@ export class TestBuilder{
         console.log(sizeMap);
         
 
-        console.log = function(){}
         return sizeMap;
     }
     private getQuestionList = async(rooted_tree:Rooted_AreaProfileTree, testMap:{[key:number]:AreaData}):Promise<QuestionDTO[]> => 
     {
         console.log("Chegando no getquestion list")
-        let questionMap: {[key:number]:Boolean} = {};
+        let questionMap: Set<number> = new Set();
         let questionList: QuestionDTO[] = [];
-        const instance = new QuestionDAO();
+        const optimizedInstance = new OptimizedQuestionDAO();
+        await optimizedInstance.initialize();
         const tree = rooted_tree.tree;
+        const root = rooted_tree.root;
         const helper = this.helper;
-        const f = (a:number, c:number) =>
-        {
-            if(c>a)
-                return c;
-            else
-                return a;
-        }
-        const g = (a:number, b:number) => {
-            if(b>a) return [0,a];
-            else return [a-b,b]; 
-        }
-        if(!testMap[0])
+        const dfs = async(node:Area_ProfileDTO) => {
+            try {
+            console.log(node);
+            const sucessos:{[key:string]:number} = {};
+            const id = node.area_id;
+            for(const diff in testMap[id])
             {
-                testMap[0] = {questionCount_inDifficulty:{}};
-                const marcos = (node:Area_ProfileDTO) => {
-                    for(const dif in testMap[node.area_id])
-                        {
-                            if(!testMap[0].questionCount_inDifficulty[dif])
-                            {
-                                testMap[0].questionCount_inDifficulty[dif] = 0;
-                            }
-                            testMap[0].questionCount_inDifficulty[dif] += testMap[node.area_id].questionCount_inDifficulty[dif];
-
-                        }
-                        for(const child of tree[node.area_id])
-                        {
-                            marcos(child);
-                        }
-                }
+                sucessos[diff] = 0;
             }
-        const dfs = async(node:Area_ProfileDTO):Promise<{[diff:string]:number}> =>
-        {
-            //console.log("Dfs daora: ", node, tree[node.area_id]);        
-            const tm = testMap[node.area_id].questionCount_inDifficulty;
-            
-            let suc:{[key:string]:number};
-            const children_suc:{[key:string]:number} = {};
-            const filter:questionFilters = {};
-            if(tree[node.area_id]) {
-                for(const area of tree[node.area_id])
-                {
-                    const child = await dfs(area);
-                    for(const dif in child)
-                    {
-                        
-                        if(!children_suc[dif])
-                        {
-                            children_suc[dif] = 0;
-                        }
-                        children_suc[dif] += child[dif];
-                    }
-                }
-            }
-            suc = children_suc;
-           // console.log("Agora o pau vai comer");
-            let leftover = -1;
-            filter.disciplina = [node.area_id];
-            const rawlist = await instance.listQuestionByFilters(filter);
-            const manualFilter = (list: QuestionDTO[], difficulty: DifficultyLevel): QuestionDTO[] => {
-                return list.filter(question => {
-                    const ratio = question.total_correct_answers / question.total_answers;
-                    if (difficulty === DifficultyLevel.EASY) {
-                        return ratio > 0.75;
-                    } else if (difficulty === DifficultyLevel.MEDIUM) {
-                        return ratio > 0.50 && ratio <= 0.75;
-                    } else if (difficulty === DifficultyLevel.HARD) {
-                        return ratio <= 0.50;
-                    }
-                    return true;
-                });
-            };
-            console.log("Vivos!");
-
-            for(const diff in testMap[node.area_id].questionCount_inDifficulty)
+            if(tree[id])
+            for(const child of tree[id])
             {
-                if(!suc[diff])
-                    {
-                        suc[diff] = 0;
-                    }
-                console.log("Dificuldade: ", diff);
-                if(diff === DifficultyLevel.IRRELEVANT) continue;
-                const amount:number = testMap[node.area_id].questionCount_inDifficulty[diff] - children_suc[diff];
-                const list =  manualFilter(rawlist,diff as DifficultyLevel);
-                console.log("Fitered list: ", list);
-                const good = f(list.length,amount);
-                shuffle(list);
-                let upperBound = good;
-                let hit = 0;
-                for(let i=0;i<upperBound;i++){
-                    if(upperBound > list.length) break;
-                    if(questionMap[list[i].id])
-                    {
-                        upperBound++;
-                        continue;
-                    }
-                    else {
-                        hit++;
-                        questionMap[list[i].id] = true;
-                        questionList.push(list[i]);
-                    }
-                }
-                leftover = tm[diff] - suc[diff]  
-            }
-            if (DifficultyLevel.IRRELEVANT in testMap[node.area_id].questionCount_inDifficulty || leftover >0){
-                const list = rawlist;
-                shuffle(list);
-                let good;
-                if(leftover===-1) 
-                    {
-                        good = list.length;
-                        leftover = 0;
-                    }
-                else
-                    good = leftover;
-                let upperBound = good;
-                let hit = 0;
-                console.log("good: ", good, "upperBound: ", rawlist.length);
-                for(let i=0;i<upperBound;i++)
+                const suc_child = await dfs(child);
+                for(const dif in suc_child)
                 {
-                    if(upperBound > list.length) break;
-                    if(questionMap[list[i].id]) {
-                        upperBound++;
-                        continue;
-                    }
-                    questionMap[list[i].id] = true;
-                    questionList.push(list[i]);
-                    hit++;
+                    sucessos[dif] = suc_child[dif];
                 }
-                for(const dif in tm)
-                {
-                    if(!suc[dif])
-                    {
-                        suc[dif] = 0;
-                    }
-                    const need = tm[dif] - suc[dif];
-                    const res = g(leftover,need);
-                    leftover = res[0];
-                    suc[dif] += res[1];
-
-                }
-                console.log("suc[dif]", suc);
             }
-            return suc;
+            console.log("EU SOU GAY");
+            //ATRIBUIR QUESTÕES
 
+            if(testMap[id].questionCount_inDifficulty)
+            for(const dif in testMap[id].questionCount_inDifficulty){
+                const priorityList:string[] = [DifficultyLevel.EASY,DifficultyLevel.MEDIUM,DifficultyLevel.HARD,DifficultyLevel.IRRELEVANT];
+                let index = priorityList.indexOf(dif);
+                const numerodequestoesqueagentetemquepegar = testMap[id].questionCount_inDifficulty[dif] - sucessos[dif];
+                let agentepegounquestoes = 0;
+                for(let a=0;a<4;a++)
+                {
+                    let i = (a+index)%4;
+                    let filtros:questionFilters = {};
+                    filtros.dificuldade = [priorityList[i] as difficulty];
+                    filtros.disciplina = [id];
+                    let filtered_list = await optimizedInstance.optimizedGetQuestionList();
+                    if(priorityList[i] !== DifficultyLevel.IRRELEVANT)
+                        filtered_list = await optimizedInstance.optimizedGetFilteredQuestions(filtros);
+                    shuffle(filtered_list);
+                    for(const question of filtered_list)
+                    {
+                        console.log(question.official_test_name + '\n');
+                        if(questionMap.has(question.id))
+                        {
+                            continue;
+                        }
+                        else{
+                            questionMap.add(question.area_id);
+                            questionList.push(question);
+                            agentepegounquestoes++;
+                            if(agentepegounquestoes >= numerodequestoesqueagentetemquepegar) break
+                        }
+                    }
+                sucessos[dif] = sucessos[dif] + agentepegounquestoes;
+                if(agentepegounquestoes >= numerodequestoesqueagentetemquepegar) break;
+                } 
+            }
+            return sucessos;
         }
-        await dfs(rooted_tree.root);
+        catch(error)
+        {
+            console.log(error);
+        }
+        }
+        console.log("CHEGAMOS NO FINAL!!!!!!");
+        await dfs(root);
+        shuffle(questionList);
         return questionList;
     } 
 

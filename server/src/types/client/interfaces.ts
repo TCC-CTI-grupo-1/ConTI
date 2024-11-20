@@ -27,3 +27,4 @@ export interface RootedTree<T>{
     tree:Tree<T>,
     root:T
 }
+export type InvertedTree<T> = {[key:number]:T};
