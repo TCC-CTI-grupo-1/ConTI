@@ -124,25 +124,7 @@ const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, u
                                         borderColor: `rgba(0,0,0,${treeLevel})`,
                                         transition: '0.25s',
                                     },
-                                    onMouseEnter: (e) => {
-                                        e.currentTarget.style.borderColor = getRGB(
-                                        userPercentageAreas ? userPercentageAreas[child.id] * 100 : undefined
-                                        );
-                                        e.currentTarget.style.color = getRGB(
-                                        userPercentageAreas ? userPercentageAreas[child.id] * 100 : undefined
-                                        );
-                                        e.currentTarget.style.backgroundColor = `rgba(0,0,0,0.8)`;
-                                    },
-                                    onMouseLeave: (e) => {
-                                        const currentTarget = e.currentTarget as HTMLDivElement;
-                                        setTimeout(() => {
-                                        if (currentTarget) {
-                                            currentTarget.style.borderColor = `rgba(0,0,0,${treeLevel})`;
-                                            currentTarget.style.color = 'black';
-                                            currentTarget.style.backgroundColor = `rgba(217,217,217,0.5)`;
-                                        }
-                                        }, 100);
-                                    },
+                                    
                                     })}
                                 >
                                     {!isBlocks && (

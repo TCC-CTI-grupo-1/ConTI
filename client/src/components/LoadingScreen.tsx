@@ -1,10 +1,14 @@
+import { Spinner } from "@chakra-ui/react";
+
 const LoadingScreen = () => {
 
   return (
     <>
     <section className="loading"> 
         <div>
-            <h1>Carregando, por favor aguarde...</h1>
+          <div style={{display: 'flex', gap: '15px'}}><h1>Carregando, por favor aguarde...</h1><Spinner size="xl" /></div>
+            
+            
             <p>Caso demore demais, <a
             onClick={
                 () => {
