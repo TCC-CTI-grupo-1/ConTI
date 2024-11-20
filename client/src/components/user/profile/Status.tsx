@@ -337,7 +337,6 @@ const Status = () => {
                 <div className="info-area">
                     <div id="header">
                         <h2>Informações por área</h2>
-                        <p>Clique para receber informação específica de cada uma das áreas exigidas no vestibulinho do CTI</p>
                     </div>
                     {doesProfileExist ?
                     <>
