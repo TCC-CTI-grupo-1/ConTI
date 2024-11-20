@@ -3,7 +3,7 @@ import { useState } from "react";
 
 interface Props{
     iconColor?: 'white' | 'black',
-    onIconClick: () => void
+    onIconClick?: () => void
 }
 
 const DatabaseIcon = ({iconColor = 'black', onIconClick}:Props) => {

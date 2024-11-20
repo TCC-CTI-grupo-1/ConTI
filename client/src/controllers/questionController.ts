@@ -102,6 +102,7 @@ export async function handleGetQuestions(): Promise<questionInterface[]> { //que
 
 export async function handleGetFilteredQuestions(filters: questionFilters): Promise<questionInterface[]> { // -> //questionController
     try {
+        console.log(JSON.stringify(filters));
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/filter/' + JSON.stringify(filters), {
             method: 'GET',
             credentials: 'include',
@@ -126,6 +127,26 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
     }
 }
 
+export async function handleDeleteQuestionImage(questionID: number): Promise<boolean>{
+    try{
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/image/' + questionID, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        showAlert(err.message);
+        return false;
+    }
+}
 export async function handlePostQuestionImage(image: File, questionID: number): Promise<boolean> { //questionController.ts
     try {
         const formData = new FormData();
@@ -172,14 +193,6 @@ export async function handlePutQuestion(question: questionInterface, answers: re
             body: JSON.stringify(answers)
         });
 
-
-
-            
-
-            
-           
-
-
         const responseData1 = await response1.json();
         const responseData2 = await response2.json();
 
@@ -205,10 +218,11 @@ export async function handlePutQuestion_withImage(question:questionInterface,ans
         return false;
     }
 }
-export async function handlePostQuestion(question: questionInterface): Promise<boolean> { //questionController.ts
+export async function handlePostQuestion(question: questionInterface, answers: respostaInterface[]): Promise<boolean> { //questionController.ts
     try {
-        //await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions', {
+
+        //console.log("PUT QUESTION");        
+        const response1 = await fetch(import.meta.env.VITE_ADDRESS + '/questions/' + question.id, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -217,30 +231,41 @@ export async function handlePostQuestion(question: questionInterface): Promise<b
             body: JSON.stringify(question)
         });
 
-        const responseData = await response.json();
-        if (!response.ok) {
-            throw new Error(responseData.message);
+        const response2 = await fetch(import.meta.env.VITE_ADDRESS + '/answers', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(answers)
+        });
+
+        const responseData1 = await response1.json();
+        const responseData2 = await response2.json();
+
+        if (!response1.ok || !response2.ok) {
+            console.log(responseData1.message, responseData2.message);
+            throw new Error(responseData1.message + ' ' + responseData2.message); 
         } else {
             return true;
         }
 
     } catch (err: any) {
-        showAlert(err.message);
         return false;
     }
 }
 
-export async function handlePostQuestion_withImage(question:questionInterface, image:FormData)
-{
-    try{
-        handleAddImage(image,false);
-        return handlePostQuestion(question);
-    } catch(err:any)
-    {
-        showAlert(err.message);
-        return false;
-    }
-}
+// export async function handlePostQuestion_withImage(question:questionInterface, image:FormData)
+// {
+//     try{
+//         handleAddImage(image,false);
+//         return handlePostQuestion(question);
+//     } catch(err:any)
+//     {
+//         showAlert(err.message);
+//         return false;
+//     }
+// }
 
 export async function handleDeleteQuestion(id: number): Promise<boolean> { //questionController.ts
     try {

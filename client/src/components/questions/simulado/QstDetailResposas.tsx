@@ -24,6 +24,7 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
                 <h4>
                 <LatexRenderer text={question.question_text}></LatexRenderer>
                 </h4>
+                
                 {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
                 
                 <div className="additional_info">

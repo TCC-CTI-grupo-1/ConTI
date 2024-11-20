@@ -30,7 +30,7 @@ import QuestionBox from "./QuestionBox";
 import AreaTree from "../AreaTree";
 
 const Filters = () => {
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const anos:number[] = [];
@@ -278,7 +278,7 @@ const Filters = () => {
             colorScheme="gray"
             variant={"outline"}
             onClick={() => {
-              navegate("/alltests");
+              navigate("/alltests");
             }}
           >
             Ver todas as provas

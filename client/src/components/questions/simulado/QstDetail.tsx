@@ -109,10 +109,10 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
             <div className={'box question ' + (type == "small" ? "small" : "")}>
-                {type !== "small" &&
-                <p>*</p>}
+                <p>Questão #{question.id}</p>
+
                 <h4>
-                <LatexRenderer text={question.question_text} />
+                <LatexRenderer text={question.question_text}></LatexRenderer>
                 </h4>
 
                 {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
@@ -132,7 +132,7 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
                                 <span>
                                     <p> {alternative.question_letter} </p>
                                 </span>
-                                <LatexRenderer text={alternative.answer} />           
+                                <p> <LatexRenderer text={alternative.answer}></LatexRenderer> </p>           
                             </div>
                         </div>
                     ))}

@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Button from "././Button"
 import Input from "././Input";
 import { handleGetAreasMap } from "./../controllers/areasController";
-import { Select } from '@chakra-ui/react'
 import { handlePostArea } from "./../controllers/areasController";
 import { showAlert } from "./../App";
 import { handleGetQuestions, handleGetQuestion } from "./../controllers/questionController";
@@ -16,7 +15,9 @@ import { useRef } from "react";
 import { handlePostQuestionImage } from "./../controllers/questionController";
 import LoadingScreen from "./LoadingScreen";
 import AreaTree from "./AreaTree";
-import LatexRenderer from "./LatexRenderer";
+import { handleDeleteArea } from "./../controllers/areasController";
+import { handleDeleteQuestionImage } from "./../controllers/questionController";
+import { handlePostAnswers } from "../controllers/answerController";
 type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
@@ -40,12 +41,13 @@ const Admistrator = () => {
     const [areaPai, setAreaPai] = useState<string | null>(null);
     const [areas, setAreas] = useState<{[id: number]: areaInterface}>([]);
 
+
     const {onOpen, onClose, isOpen} = useDisclosure();
 
     let novaQstLimpa: questionInterface = {
         id: 0,
         question_text: '',
-        area_id: 1,
+        area_id: 1000,
         additional_info: '',
         has_image: false,
         has_latex: false,
@@ -338,35 +340,34 @@ const Admistrator = () => {
                                     </div>
                                     
                                     <div>
-                                        <Input name={"Nova Area"} label={"Nova area"} onChange={(e) => {
+                                        <Input name={"Nova Area"} label={"Nome da nova area"} onChange={(e) => {
                                             setNomeArea(e.target.value);
                                         }}></Input>
-                                        <Select placeholder='Selecione a área Pai'
-                                        onChange={(e) => {
-                                            if(e.target.value === 'none'){
-                                                setAreaPai(null);
-                                            }
-                                            setAreaPai(e.target.value);
-                                        }}>
-                                            <option value='none'>Nenhuma</option>
-                                            {
-                                                Object.values(areas).map((area, index) => {
-                                                    return <option key={index} value={area.id}
-                                                    onClick={() => {
-                                                        let newQst = {...novaQst[0]};
-                                                        newQst.area_id = area.id;
-                                                        setNovaQst([newQst, novaQst[1]]);
+                                        <AreaTree onActiveAreasChange={(area) => {
+                                            setAreaPai(area.toString());
+                                        }} isRadio/>
 
-                                                    }}>{area.name}</option>
-                                                })
-                                            }
-                                        </Select>
+                                        <h3>Area pai selecionada: </h3>
+                                        <p>{areaPai === null ? "Nenhuma" : areas[Number(areaPai)].name}</p>
                                         <Button onClick={handlePostNovaArea}>Salvar</Button>
+                                        <Button colorScheme="red" onClick={() => {
+                                            //checa se a area selecionada não tem filhos
+                                            if(Object.values(areas).find((area) => area.parent_id === Number(areaPai)) !== undefined){
+                                                showAlert("Essa área possui sub-áreas, não pode ser deletada");
+                                                return;
+                                            }
+                                            showAlert("Deletando area...", "warning");
+                                            handleDeleteArea(Number(areaPai)).then((resp) => {
+                                                if(resp){
+                                                    showAlert("Area deletada com sucesso!", "success");
+                                                }else{
+                                                    showAlert("Erro ao deletar area");
+                                                }
+                                            });
+                                        }}>Deletar</Button>
                                     </div>
+                                
                                     
-                                    <LatexRenderer text='Eu chupei <tex>$2^{32}$</tex> paus' />       
-
-                                    <AreaTree onActiveAreasChange={() => {}}/>
                                 </div>}
                     </div>
                 </div>}
@@ -570,13 +571,14 @@ const Admistrator = () => {
 
                         </div>
                         <div>
-                            <label htmlFor="info">Tem imagem? </label>
+                            <label htmlFor="info">Tem imagem?</label>
                             <input type="checkbox" name="info" id="info" 
-                            value={novaQst[0].has_image ? 'checked' : ''}
+                            checked={novaQst[0].has_image}
                             onChange={(e) => {
                                 let newQst = {...novaQst[0]};
                                 newQst.has_image = e.target.checked;
                                 setNovaQst([newQst, novaQst[1]]);
+                                console.log(novaQst[0]);
                             }}
                             />
                             
@@ -603,6 +605,16 @@ const Admistrator = () => {
                                 }
                             }
                         }/>
+                        <button onClick={() => {
+                            showAlert("Deletando imagem...", "warning");
+                            handleDeleteQuestionImage(novaQst[0].id).then((resp) => {
+                                if(resp){
+                                    showAlert("Imagem deletada com sucesso!", "success");
+                                }else{
+                                    showAlert("Erro ao deletar imagem");
+                                }
+                            });
+                        }}>Deeletar imagem</button>
 
                     </div>
                 </div>
@@ -614,15 +626,42 @@ const Admistrator = () => {
                     <Button onClick={() => {
                         onClose();
                         showAlert("Cadastrando questão...", "warning");
-                        handlePostQuestion(novaQst[0]).then((resp) => {
+                        handlePostQuestion(novaQst[0], novaQst[1]).then((resp) => {   
                             if(resp){
-                                showAlert("Questão cadastrada com sucesso! Por favor, atualize a página [f5]", "success");
+                                showAlert("Questão editada com sucesso!", "success");
+                                if(img !== null){
+                                    handlePostQuestionImage(img, novaQst[0].id).then((resp) => {
+                                        if(resp){
+                                            showAlert("Imagem adicionada com sucesso!", "success");
+                                        }
+                                        else{
+                                            showAlert("Erro ao adicionar imagem");
+                                        }
+                                    });
+                                }
                             }
                             else{
-                                showAlert("Erro ao cadastrar questão");
+                                showAlert("Erro ao editar questão");
                             }
-                        });
-                    }}>Nova questão</Button>
+                            //Pega a nova questão atualizada do banco de dados
+                            handleGetQuestion(novaQst[0].id).then((resp) => {
+                                if(resp){
+                                    let newQuestionsMap = [...questionsMap];
+                                    let index = newQuestionsMap.findIndex((question) => question.question.id === novaQst[0].id);
+                                    newQuestionsMap[index].question = resp;
+                                    setQuestionsMap(newQuestionsMap);
+                                }
+                                else{
+                                    showAlert("Erro ao pegar questão atualizada");
+                                }
+                            });
+
+                        },
+
+                        
+
+                        )}}
+                        >Nova questão</Button>
                     :
                     <>
                         <Button colorScheme='blue' onClick={() => {

@@ -26,7 +26,7 @@ export async function postQuestionController(req: Request, res: Response) {
 
         for (let key in data) {
             if (typeof data[key as keyof typeof data] === 'string') {
-                if(data[key as keyof typeof data] === '') {
+                if(data[key as keyof typeof data] === '' && key !== 'additional_info') {
                     console.log("Preencher isso: " + key + " " + data[key as keyof typeof data]);
                     tudoPreenchido = false;
                     break;

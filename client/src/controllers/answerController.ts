@@ -56,6 +56,28 @@ export async function handleGetAnswersByQuestionsIds(questions_ids: number[]): P
     }
 }
 
+export async function handlePostAnswers(answers: respostaInterface[]): Promise<boolean> {
+    try {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/answers', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(answers)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        return false;
+    }
+}
+
 export async function handlePutAnswers(answers: respostaInterface[]) {
     try {
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/answers', {
@@ -78,7 +100,7 @@ export async function handlePutAnswers(answers: respostaInterface[]) {
     }
 }
 
-export async function handleIncrementAnswers(answers_ids: number[]) {
+export async function handleIncrementAnswers(answers_ids: (number | null)[]) {
     try {
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/answers/increment/' + JSON.stringify(answers_ids), {
             method: 'PUT',

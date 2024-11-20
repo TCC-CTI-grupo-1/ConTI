@@ -1,12 +1,16 @@
 import Simulado from "./Simulado"
 import {  useEffect, useState } from "react"
-import { questionInterface } from "../../../controllers/interfaces"
+import { areaInterface, questionInterface } from "../../../controllers/interfaces"
 import { handlePostSimulado, generateNewSimulado } from "../../../controllers/mockTestController";
 import { respostaInterface } from "../../../controllers/interfaces";
 import { handleGetAnswersByQuestionsIds } from "../../../controllers/answerController";
 import { simuladoInterface } from "../../../controllers/interfaces";
 import { showAlert } from "../../../App";
 import { useNavigate } from "react-router-dom";
+import { handleIncrementAreas_Profile, handleIncrementProfileAnswers, handleIncrementProfileMockTest } from "../../../controllers/userController"
+import { handlePutSimulado } from "../../../controllers/mockTestController";
+import { handleIncrementAnswers } from "../../../controllers/answerController";
+import { handleGetAllParentAreasByIds } from "../../../controllers/areasController";
 // import date from 'date-and-time'
 // import { useNavigate } from "react-router-dom"
 
@@ -26,15 +30,17 @@ type questionMapInterface = {
     question: questionInterface;
     answers: respostaInterface[];
 }[];
+
+type questionMapResultInterface = [number, (number | null)][]; 
 // type questionMapResultInterface = [number, (string | null)][];  
 
 const SimuladoFrame = () => {
 
     const[loading, setLoading] = useState(true);
     const[questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface>([]);
-    const [simulado, setSimulado] = useState<simuladoInterface | null>(null);
+    const[simulado, setSimulado] = useState<simuladoInterface | null>(null);
 
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         let newQuestionMapInterface: questionMapInterface = []; 
@@ -52,20 +58,16 @@ const SimuladoFrame = () => {
 
                 }); 
                 setQuestionsHashMap(newQuestionMapInterface);
-                console.log("newQuestionMapInterface: ");
-                console.log(newQuestionMapInterface);
+                if(questions.length === 0) return;
         }
         
         getQuestions();
     }, []);
 
     useEffect(() => {
+        
         const postSimulado = async () => {
             let questionsarray: questionInterface[] = questionsHashMap.map(q => q.question);
-            console.log("questionsarray: ");
-            console.log(questionsarray);
-            console.log("questionsHashMap: ");
-            console.log(questionsHashMap);
             const simulado = await handlePostSimulado(questionsarray, "automatico", 50);
             if (simulado !== null) {
                 setSimulado(simulado);
@@ -77,11 +79,73 @@ const SimuladoFrame = () => {
             }
         }
 
-        postSimulado();
+        if(questionsHashMap && questionsHashMap.length > 0){
+            postSimulado();
+        }
     }, [questionsHashMap]);
 
-    const finishSimulado = () => {
-        navegate('/');
+    const finishSimulado = (respostas: questionMapResultInterface) => {
+        if(!simulado){
+            showAlert("Erro ao finalizar simulado", "error");
+            return;
+        };
+        showAlert("Finalizando simulado...", "info");
+        //setIsSimuladoAwaitActive(true);
+        let totalCorrectAnswers = 0;
+        let totalAnswers = 0;
+        const date = new Date();
+        const dateSimulado = new Date(simulado.creation_date_tz);
+        const timeSpentInMinutes = Math.floor((date.getTime() - dateSimulado.getTime()) / 60000);
+        
+        if(questionsHashMap === null) return;
+        const areasAndAnswers: {[key: number]: {total_correct_answers: number, total_answers: number}} = {};
+        
+        respostas.forEach((value, index) => {
+            ++totalAnswers;
+            const question = questionsHashMap[index];
+            if (question === undefined) {
+                return;
+            }
+            if(areasAndAnswers[question.question.area_id] === undefined){
+                areasAndAnswers[question.question.area_id] = {total_correct_answers: 0, total_answers: 0};
+            }
+            ++areasAndAnswers[question.question.area_id].total_answers;
+
+            if (value[1] !== null) {
+                const correctAnswer = question.answers.find((answer) => answer.is_correct === true);
+                if (correctAnswer === undefined) {
+                    showAlert("Erro na questão " + question.question.id, "error");
+                    return;
+                }
+                
+                if (correctAnswer.id === value[1]) {
+                    ++areasAndAnswers[question.question.area_id].total_correct_answers;
+                    ++totalCorrectAnswers;
+                }
+            }
+        });
+        
+        const novoSimulado = {
+            ...simulado,
+            total_correct_answers: totalCorrectAnswers,
+            total_answers: totalAnswers,
+            time_spent: timeSpentInMinutes
+        }
+        
+        handlePutSimulado(novoSimulado).then((result) => {
+            if (result !== null) {
+                setSimulado(simulado);
+            }
+            return true;
+        })
+
+        const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
+        handleIncrementAreas_Profile(areasAndAnswers);
+        handleIncrementAnswers(respostasIds);
+        handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
+        handleIncrementProfileMockTest();
+
+        navigate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");
     }
     // function returnJSXOverlay(): JSX.Element{
@@ -154,7 +218,7 @@ const SimuladoFrame = () => {
             //         <ModalFooter>
             //             {simulado !== null && <>
             //                 <Button variant='ghost' mr={3} onClick={() => {
-            //                     navegate('/');
+            //                     navigate('/');
             //                 }}>Voltar ao home</Button>
             //                 <Button colorScheme='blue' onClick={onClose}>
             //                 Ver prova

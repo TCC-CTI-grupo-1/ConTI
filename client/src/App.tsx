@@ -6,7 +6,6 @@ import Profile from './components/user/profile/Profile';
 import History from './components/history/History';
 import SimuladoVer from './components/questions/simulado/VerSimulado';
 import QuestionDatabase from './components/questions/QuestionDatabase';
-import AllTests from './components/questions/AllTests';
 import NewTest from './components/newtest/NewTest';
 import Admnistrador from './components/Administrador';
 import { handleGetUser } from './controllers/userController';
@@ -78,13 +77,12 @@ function App() {
                   <Route path='/profile' element={middleware.routeToDisplay(['isLoggedIn'], <Profile />)} />
                   <Route path='/history' element={middleware.routeToDisplay(['isLoggedIn'], <History />) } />
 
-                  <Route path='/alltests' element={ <AllTests /> } />   
+                  {/*<Route path='/alltests' element={ <AllTests /> } /> */}  
                   <Route path='/questions' element={<QuestionDatabase />} />
                   <Route path='/questions/:id' element={<QuestionDatabase />} />
                   <Route path='/test' element={<SimuladoFrame />} />
                   <Route path='/simulado/:id' element={<SimuladoVer />} />
                   <Route path='/adm' element={<Admnistrador />} />
-                  <Route path='/aboutus' element={<AboutUs />} />
                   <Route path='*' element={<NotFound />} />
                 </Routes>
           }

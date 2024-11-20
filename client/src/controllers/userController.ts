@@ -127,12 +127,16 @@ export async function handleLogin(email: string, password: string, remember: boo
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
         const userId = sessionStorage.getItem('userId');
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId , {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             }
+            //send data by GET method
+
+
+
         });
         const responseData = await response.json();
         if (!response.ok) {
@@ -176,7 +180,8 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 
 export async function handleSaveChanges(profile: profileInterface): Promise<string | true> {// userController.ts
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile'+userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -226,7 +231,7 @@ export async function handleLogout() {// userController.ts
 export async function handleDeleteAccount() { // userController.ts
     try {
         const userId = sessionStorage.getItem('userId');
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/'+userId, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId,{
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -241,7 +246,7 @@ export async function handleDeleteAccount() { // userController.ts
             // return [true, "Conta deletada com sucesso"];
         }
 
-        const responseLogout = await fetch(import.meta.env.VITE_ADDRESS + '/logout/'+userId, {
+        const responseLogout = await fetch(import.meta.env.VITE_ADDRESS + '/logout/' + userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -264,7 +269,7 @@ export async function handleDeleteAccount() { // userController.ts
 export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //profileController.ts
     try {
         const userId = sessionStorage.getItem('userId');
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areaProfile/'+userId, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/area_Profile/'+userId, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -284,9 +289,39 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
     }
 }
 
+export async function handleIncrementAreas_Profile(areasAndAnswers: {[key: number]: {total_correct_answers: number, total_answers: number}}) {
+    try {
+        const userId = sessionStorage.getItem('userId');
+        const data = {
+            areasAndAnswers: areasAndAnswers
+        };
+
+        console.log(data);
+
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas_Profile/increment/'+userId, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        return false;
+    }
+}
+
 export async function handleIncrementProfileMockTest() {
     try {
-        const response = await fetch(import.meta.env.VITE_ADDRESS +'/profile/incrementMockTest', {
+        const userID = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS +'/profile/increment/mockTest/'+userID, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -308,12 +343,13 @@ export async function handleIncrementProfileMockTest() {
 
 export async function handleIncrementProfileAnswers(totalCorrectAnswers: number, totalAnswers: number) {
     try {
+        const userID = sessionStorage.getItem('userId');
         const data = {
             total_correct_answers: totalCorrectAnswers,
             total_answers: totalAnswers
         };
 
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/incrementAnswers', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/increment/answers/'+userID, {
             method: 'PUT',
             credentials: 'include',
             headers: {

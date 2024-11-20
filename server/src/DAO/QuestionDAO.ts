@@ -88,7 +88,6 @@ export class QuestionDAO {
                 }
             });
             if (!area) {
-                console.log("Área não encontrada");
                 return;
             }
             await client.question.create({
@@ -222,7 +221,6 @@ export class QuestionDAO {
                 };
                 questions.push(question);
             });
-            console.log(questions.length)
             return questions;
 
         } catch (error) {
