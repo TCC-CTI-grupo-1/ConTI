@@ -89,7 +89,7 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
                         <span> 
                             <p> {alternative.question_letter} </p>
                         </span>
-                        <p> {alternative.answer} </p>
+                        <LatexRenderer text={alternative.answer} />
                         
                     </div>
                     <img src={scissors} onClick={(e) => {
@@ -99,7 +99,6 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
                 </div>
             ))}
         </div>
-        <a>Marcar questão</a>
 
         <div className="options">               
         </div>

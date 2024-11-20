@@ -8,12 +8,14 @@ import { handleGetAreas } from "../../../controllers/areasController";
 
 //import { useNavigate } from "react-router-dom";
 
-import mat from '../../../assets/areasIcons/1.png';
-import port from '../../../assets/areasIcons/2.png';
-import naturais from '../../../assets/areasIcons/3.png';
-import humanas from '../../../assets/areasIcons/4.png';
 import expand from '../../../assets/expand.png';
 import { showAlert } from "../../../App";
+
+
+import matIcon from '../../../assets/areasIcons/1.png';
+import portIcon from '../../../assets/areasIcons/2.png';
+import cieIcon from '../../../assets/areasIcons/3.png';
+import humIcon from '../../../assets/areasIcons/4.png';
 
 const Status = () => {
 
@@ -23,8 +25,6 @@ const Status = () => {
     const [profileStatus, setProfileStatus] = useState<{[id:number]: area_ProfileInterface}>({});
     const [areas, setAreas] = useState<{ [id: number]: areaInterface }>({}); //Array chave-valor com todas as areas do usuario
     const [areasPai, setAreasPai] = useState<areaInterface[]>([]); //As areas que não dependem de ninguem
-
-    const logos = [mat, port, naturais, humanas]
     
     const [materiaAtiva, setMateriaAtiva] = useState<number>(1019); //id da materia ativa
 
@@ -252,6 +252,21 @@ const Status = () => {
     }
     
 
+    function getImage(id: number): string {
+        switch(id){
+            case 1019:
+                return matIcon;
+            case 1000:
+                return portIcon;
+            case 1072:
+                return cieIcon;
+            case 1032:
+                return humIcon;
+            default:
+                return '';
+        }
+    }
+
     const primaryColor = '#0066FF';
 
     return (
@@ -294,7 +309,7 @@ const Status = () => {
                                     onClick={() => modifyMateriaAtiva(areaPai.id)}
                                 >
                                     <div id="header">
-                                        <img src={logos[areaPai.id-1]} alt={areaPai.name} />
+                                        {getImage(areaPai.id) !== '' && <img src={getImage(areaPai.id)} alt={areaPai.name} />}
                                         <h4>{areaPai.name}</h4>
                                         <img src={expand} className="expand" alt="expand" />
                                     </div>

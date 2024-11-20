@@ -11,9 +11,9 @@ import { questionInterface, respostaInterface } from "../../controllers/interfac
 import { handleGetQuestions } from "../../controllers/questionController.ts";
 import { handleGetAnswersByQuestionId } from "../../controllers/answerController.ts";
 import { useNavigate } from "react-router-dom";
-import simuladoImg from '../../../public/Simulado.png';
-import perfilImg from '../../../public/Perfil.png';
-import bancoImg from '../../../public/banco.png';
+import simuladoImg from '/Simulado.png?url';
+import perfilImg from '/Perfil.png?url';
+import bancoImg from '/banco.png?url';
 import '../../home.scss';
 
 //TEM QUE TER A DIVISÃO DO LOGADO E NÃO LOGADO
