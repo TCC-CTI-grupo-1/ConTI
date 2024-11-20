@@ -473,6 +473,9 @@ export class TestBuilder{
         }
         console.log(sizeMap);
         
+        console.log = function(){};
+        console.warn = console.log;
+        console.error = console.warn;
 
         return sizeMap;
     }
@@ -482,7 +485,7 @@ export class TestBuilder{
         let questionMap: Set<number> = new Set();
         let questionList: QuestionDTO[] = [];
         const optimizedInstance = new OptimizedQuestionDAO();
-        await optimizedInstance.initialize();
+        optimizedInstance.initialize();
         const tree = rooted_tree.tree;
         const root = rooted_tree.root;
         const helper = this.helper;
@@ -506,40 +509,31 @@ export class TestBuilder{
             }
             console.log("EU SOU GAY");
             //ATRIBUIR QUESTÕES
-
             if(testMap[id].questionCount_inDifficulty)
             for(const dif in testMap[id].questionCount_inDifficulty){
-                const priorityList:string[] = [DifficultyLevel.EASY,DifficultyLevel.MEDIUM,DifficultyLevel.HARD,DifficultyLevel.IRRELEVANT];
-                let index = priorityList.indexOf(dif);
+                let filtros:questionFilters = {};
+                filtros.dificuldade = [dif as difficulty];
+                filtros.disciplina = [id];
+                const filtered_list = await optimizedInstance.optimizedGetFilteredQuestions(filtros);
+                shuffle(filtered_list);
                 const numerodequestoesqueagentetemquepegar = testMap[id].questionCount_inDifficulty[dif] - sucessos[dif];
                 let agentepegounquestoes = 0;
-                for(let a=0;a<4;a++)
+                for(const question of filtered_list)
                 {
-                    let i = (a+index)%4;
-                    let filtros:questionFilters = {};
-                    filtros.dificuldade = [priorityList[i] as difficulty];
-                    filtros.disciplina = [id];
-                    let filtered_list = await optimizedInstance.optimizedGetQuestionList();
-                    if(priorityList[i] !== DifficultyLevel.IRRELEVANT)
-                        filtered_list = await optimizedInstance.optimizedGetFilteredQuestions(filtros);
-                    shuffle(filtered_list);
-                    for(const question of filtered_list)
+                    console.log(question.official_test_name + '\n');
+                    if(questionMap.has(question.id))
                     {
-                        console.log(question.official_test_name + '\n');
-                        if(questionMap.has(question.id))
-                        {
-                            continue;
-                        }
-                        else{
-                            questionMap.add(question.area_id);
-                            questionList.push(question);
-                            agentepegounquestoes++;
-                            if(agentepegounquestoes >= numerodequestoesqueagentetemquepegar) break
-                        }
+                        continue;
                     }
+                    else{
+                        if(agentepegounquestoes >= numerodequestoesqueagentetemquepegar) break
+                        questionMap.add(question.area_id);
+                        questionList.push(question);
+                        agentepegounquestoes++;
+
+                    }
+                }
                 sucessos[dif] = sucessos[dif] + agentepegounquestoes;
-                if(agentepegounquestoes >= numerodequestoesqueagentetemquepegar) break;
-                } 
             }
             return sucessos;
         }
