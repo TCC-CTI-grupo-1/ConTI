@@ -63,7 +63,8 @@ const Home = () => {
                           <a onClick={() => {
                             navigate('/profile');
                           }}><h3>Sua taxa de acerto nos simulados:</h3></a>
-                          <ProgressBar filledPercentage={80} radius={100}/>
+                          <ProgressBar filledPercentage={Number((Number(localStorage.getItem("total_correct_answers")) *100 /
+                          Number(localStorage.getItem("total_answers"))).toFixed(2))} radius={100}/>
                           
                         </div>
                         <div className="areas_estudar">
@@ -71,9 +72,9 @@ const Home = () => {
                             <h3>Suas areas de maior dificuldade:</h3>
                             <Button onClick={() => navigate('/profile')}><DatabaseIcon /> Ver perfil</Button>
                           </div>
-                          <span><h4>Fisica</h4><h3>54%</h3></span>
-                          <span><h4>Fisica Geral</h4><h3>31%</h3></span>
-                          <span><h4>Fisica num geral</h4><h3>3%</h3></span>
+                          <span><h4>Total de questões já respondidas</h4><h3>{localStorage.getItem("total_correct_answers")}</h3></span>
+                          <span><h4>Total de acertos</h4><h3>{localStorage.getItem("total_answers")}</h3></span>
+                          <span><h4>Total de simulados já feitos</h4><h3>{localStorage.getItem('total_mock_tests')}</h3></span>
                         </div>
                       </div>
 

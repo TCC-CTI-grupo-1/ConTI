@@ -60,6 +60,9 @@ const Login = ({ changeLoginPage }: Props) => {
         localStorage.setItem("isLoggedIn", "true");
         sessionStorage.setItem('userId', loginData.user.id.toString());
         localStorage.setItem('username', loginData.user.name.toString());
+        localStorage.setItem('total_answers', loginData.user.total_answers.toString());
+        localStorage.setItem('total_correct_answers', loginData.user.total_correct_answers.toString());
+        localStorage.setItem('total_mock_tests', loginData.user.total_mock_tests.toString());
         navigate("/");
         //refresh the page
         window.location.reload();

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Skeleton } from "@chakra-ui/react";
-import { handleGetArea_Profile } from "../../../controllers/userController";
-import { area_ProfileInterface } from "../../../controllers/interfaces";
+import { handleGetAreas_Profile, handleGetUser } from "../../../controllers/userController";
+import { area_ProfileInterface, profileInterface } from "../../../controllers/interfaces";
 import { areaInterface } from "../../../controllers/interfaces";
 import { handleGetAreas } from "../../../controllers/areasController";
 //import { useNavigate } from "react-router-dom";
@@ -19,9 +19,11 @@ import humIcon from '../../../assets/areasIcons/4.png';
 const Status = () => {
 
     //const navigate = useNavigate();
+    const [profile, setProfile] = useState<profileInterface | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [doesProfileExist, setDoesProfileExist] = useState<boolean>(false);
     const [profileStatus, setProfileStatus] = useState<{[id:number]: area_ProfileInterface}>({});
+    const [userPercentageAreas, setUserPercentageAreas] = useState<{ [id: number]: number }>({});
     const [areas, setAreas] = useState<{ [id: number]: areaInterface }>({}); //Array chave-valor com todas as areas do usuario
     const [areasPai, setAreasPai] = useState<areaInterface[]>([]); //As areas que não dependem de ninguem
     
@@ -32,7 +34,7 @@ const Status = () => {
 
     async function handleGetAreasLocalProfile(): Promise<{[id:number]: area_ProfileInterface} | null>{
         await loadConfig();
-        const status = await handleGetArea_Profile();
+        const status = await handleGetAreas_Profile();
         if(status)
         {
             let newStatus: {[id:number]: area_ProfileInterface} = {};
@@ -94,8 +96,10 @@ const Status = () => {
 
 
     async function handleRunOtherFunctions(){
-        const profileNew = await handleGetAreasLocalProfile();
-        const areasNew = await handleGetAreasLocal();
+        const statusNew = await handleGetAreasLocalProfile();
+        const areasNew = await handleGetAreasLocal()
+        const newProfile = await handleGetUser();
+        setProfile(newProfile);
         //updateHasPlayedAnimation();
 
         if(!areasNew){
@@ -103,13 +107,13 @@ const Status = () => {
             return;
         }
 
-        if(!profileNew){
+        if(!statusNew){
             console.log("Erro ao renderizar o perfil");
             return;
         }
 
         setAreas(areasNew);
-        setProfileStatus(profileNew);     
+        setProfileStatus(statusNew);     
     }
 
     useEffect(() => {
@@ -157,59 +161,17 @@ const Status = () => {
         }
     }, [areasPai])
 
-    
-    
-    // interface hasPlayedAnimationI {
-    //     [name: string]: boolean,
-    // } 
-
-    /*Valores que serão recebidos pelo banco de dados*/
-
-
-
-
-    /*useEffect(() => {
-        //alert('Materia Ativa: ' + materiaAtiva);
-
-        const materias = document.querySelectorAll('#status > .info-area > #content > #materias > div');
-        console.log(materias);
-        materias?.forEach((materia) => {
-            console.log(materia);
-            materia.id = '';
-        });
-        
-        materias?.forEach((materia) => {
-            console.log(materia);
-            if(materia.classList.contains(materiaAtiva)){
-                materia.id = 'active';
-            }
-        });
-
-        for (const [key, value] of Object.entries(profileInformation.subjects)) {
-            if(key === materiaAtiva){
-                setMateriaAtivaDados(value);
-            }
-        }
-        
-    }, [materiaAtiva]);*/
-
-    /*function modifyMateriaAtiva(materiaAtiva: number):void
-    {
-        if(profileStatus[materiaAtiva] === undefined ||
-            Object.values(profileStatus[materiaAtiva]).length <= 0)
+    useEffect(() => {
+        if(profileStatus)
         {
-            showAlert("Você não fez atividade dessa matéria!", "warning");
-            return;
+            const newUserPercentageAreas: { [id: number]: number } = {};
+            Object.values(profileStatus).forEach((status) => {
+                newUserPercentageAreas[status.area_id] = (status.total_correct_answers / status.total_answers);
+            });
+            setUserPercentageAreas(newUserPercentageAreas);
         }
+    }, [profileStatus]);
 
-        setMateriaAtiva(materiaAtiva);
-
-        if(!hasPlayedAnimation[materiaAtiva]){
-            let newHPA = hasPlayedAnimation;
-            newHPA[materiaAtiva] = true;
-            setHasPlayedAnimation(newHPA);
-        }  
-    }*/
 
         const localUserPercentageAreas: { [id: number]: number } = {
             45180: 0.45,
@@ -328,7 +290,7 @@ const Status = () => {
           
     return (
         <>
-        {loading && <div id="status">
+        {(loading || !profile) && <div id="status">
             <div className="info-geral">
                     <Skeleton>
                         <div id="porcentagem">
@@ -347,28 +309,28 @@ const Status = () => {
         </div>
         }
         {
-            !loading && <div id="status">
+            (!loading && profile) && <div id="status">
                 <div className="info-user">
                     <span>
-                        <h1>Mateus</h1>
+                        <h1>{profile.name}</h1>
                         <h3>(Taxa geral de acertos)</h3>
-                        <h2>70%</h2>
+                        <h2>{(profile.total_correct_answers * 100 / profile.total_answers).toFixed(2)}%</h2>
                     </span>
                     <div className="progress">
-                        <div style={{width: `70%`}}></div>
+                        <div style={{width: `${(profile.total_correct_answers * 100 / profile.total_answers).toFixed(2)}%`}}></div>
                     </div>
                     <div className="more">
                         <div>
-                            <h3>213</h3>
+                            <h3>{profile.total_mock_tests}</h3>
                             <p>Simulados á feitos</p>
                         </div>
                         <div>
-                            <h3>764326</h3>
+                            <h3>{profile.total_answers}</h3>
                             <p>Questões respondidas</p>
                         </div>
                         <div>
-                            <h3>1/30</h3>
-                            <p>Acertos em física</p>
+                            <h3>{profile.total_correct_answers}</h3>
+                            <p>Acertos totais</p>
                         </div>
                     </div>
                 </div>
@@ -384,7 +346,7 @@ const Status = () => {
                         <div id="info"  style={{width: '100%'}}>
                             <AreaTree onActiveAreasChange={() => {}}
                             rootID={0}
-                            userPercentageAreas={localUserPercentageAreas}
+                            userPercentageAreas={userPercentageAreas}
                             isBlocks
                             />
                             {/*<div id="header">

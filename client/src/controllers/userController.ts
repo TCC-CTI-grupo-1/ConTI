@@ -133,10 +133,6 @@ export async function handleGetUser(): Promise<profileInterface | null> {
             headers: {
                 'Content-Type': 'application/json'
             }
-            //send data by GET method
-
-
-
         });
         const responseData = await response.json();
         if (!response.ok) {
@@ -266,10 +262,10 @@ export async function handleDeleteAccount() { // userController.ts
     }
 }
 
-export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //profileController.ts
+export async function handleGetAreas_Profile(): Promise<area_ProfileInterface[] | null> { //profileController.ts
     try {
         const userId = sessionStorage.getItem('userId');
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/area_Profile/'+userId, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas_Profile/'+userId, {
             method: 'GET',
             credentials: 'include',
             headers: {

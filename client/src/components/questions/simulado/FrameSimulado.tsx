@@ -11,6 +11,7 @@ import { handleIncrementAreas_Profile, handleIncrementProfileAnswers, handleIncr
 import { handlePutSimulado } from "../../../controllers/mockTestController";
 import { handleIncrementAnswers } from "../../../controllers/answerController";
 import { handleGetAllParentAreasByIds } from "../../../controllers/areasController";
+import LoadingScreen from "../../LoadingScreen";
 // import date from 'date-and-time'
 // import { useNavigate } from "react-router-dom"
 
@@ -193,7 +194,7 @@ const SimuladoFrame = () => {
 
   
     return (
-        loading ? <h2>Aguarde enquanto finalizamos o seu simulado... </h2> :
+        loading ? <LoadingScreen /> :
         <>
             {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
                 <Simulado questionsHashMap={questionsHashMap} handleFinishSimulado={finishSimulado} 

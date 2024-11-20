@@ -163,13 +163,6 @@ const Config = () => {
                     <Button colorScheme='red' width="auto" onClick={handleDeleteAccount} >Deletar conta </Button>
                 </div>
 
-                
-
-                <div>
-                    <h2>Vamos ocupar espaço</h2>
-                    <p>Precisava ver como o scroll se comporta</p>
-                    <p>E para tal feito, necessito ocupar mais espaço</p>
-                </div>
             </div>}
             <PopupBottom 
                 enabled={updates.length > 0}

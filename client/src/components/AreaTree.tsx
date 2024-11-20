@@ -96,6 +96,7 @@ const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, u
 
         return `rgba(${r}, ${g}, ${b}, 1)`;    
     }
+    
 
     const renderChildren = (id: number, treeLevel: number) => {
         if(areaTree){
@@ -109,28 +110,40 @@ const AreaTree = ({onActiveAreasChange, isRadio=false, rootID, isBlocks=false, u
                             <li>
                                 <div
                                     id={isBlocks ? (id === rootID ? 'realChildren' : '') : ''}
-                                    className={'text ' + (!activeAreasIds.includes(child.id) && tree[child.id] !== undefined && tree[child.id].length > 0 ? (!isBlocks && 'togglable') : '')}
-                                    style={{
+                                    className={
+                                    'text ' +
+                                    (!activeAreasIds.includes(child.id) &&
+                                    tree[child.id] !== undefined &&
+                                    tree[child.id].length > 0
+                                        ? !isBlocks && 'togglable'
+                                        : '')
+                                    }
+                                    {...(isBlocks && {
+                                    style: {
                                         backgroundColor: `rgba(217,217,217,0.5)`,
                                         borderColor: `rgba(0,0,0,${treeLevel})`,
                                         transition: '0.25s',
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.borderColor = getRGB(userPercentageAreas ? userPercentageAreas[child.id] * 100 : undefined);
-                                        e.currentTarget.style.color = getRGB(userPercentageAreas ? userPercentageAreas[child.id] * 100 : undefined);
+                                    },
+                                    onMouseEnter: (e) => {
+                                        e.currentTarget.style.borderColor = getRGB(
+                                        userPercentageAreas ? userPercentageAreas[child.id] * 100 : undefined
+                                        );
+                                        e.currentTarget.style.color = getRGB(
+                                        userPercentageAreas ? userPercentageAreas[child.id] * 100 : undefined
+                                        );
                                         e.currentTarget.style.backgroundColor = `rgba(0,0,0,0.8)`;
-                                    }}
-                                    onMouseLeave={(e) => {
+                                    },
+                                    onMouseLeave: (e) => {
                                         const currentTarget = e.currentTarget as HTMLDivElement;
                                         setTimeout(() => {
-                                            
-                                            if (currentTarget) {
-                                                currentTarget.style.borderColor = `rgba(0,0,0,${treeLevel})`;
-                                                currentTarget.style.color = 'black';
-                                                currentTarget.style.backgroundColor = `rgba(217,217,217,0.5)`;
-                                            }
+                                        if (currentTarget) {
+                                            currentTarget.style.borderColor = `rgba(0,0,0,${treeLevel})`;
+                                            currentTarget.style.color = 'black';
+                                            currentTarget.style.backgroundColor = `rgba(217,217,217,0.5)`;
+                                        }
                                         }, 100);
-                                    }}
+                                    },
+                                    })}
                                 >
                                     {!isBlocks && (
                                         <p
