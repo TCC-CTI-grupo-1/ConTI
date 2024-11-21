@@ -150,7 +150,6 @@ export class QuestionDAO {
             throw error;
         }
     }
-
     listQuestionByFilters = async (filters: questionFilters) => {
 
         try {
@@ -236,6 +235,7 @@ export class QuestionDAO {
             throw error;
         }
     }
+    
 
     listQuestionsByArea = async (areaID: number) => {
         try {
