@@ -64,6 +64,8 @@ export async function routes(app: any) {
     app.get('/question/:id', getQuestionByIdController);
     app.get('/questions/filter/:filter', getQuestionsWithFiltersController);
     app.get('/questions/ids/:ids', getQuestionsByIdsController); //nomeclatura sem "/ids" conflita com "/newMockTest"
+
+    //NEW SIMULADO AQUI
     app.get('/questions/newMockTest/:uuid', getQuestionsForNewMockTestByProfileController);
 
 
@@ -97,19 +99,14 @@ export async function routes(app: any) {
 
     // '/mockTest/'
     app.get('/mockTests', getMockTestsController);
-    app.get('/mockTests/date/:date/:userid', getMockTestsByDateAndProfileController);
-    app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
+    app.get('/mockTests/date/:date/:uuid', getMockTestsByDateAndProfileController);
+    // app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
     app.put('/mockTest/:id', putMockTestController);
     app.post('/mockTest/:uuid', postMockTestController);
 
     // '/area_Profile/'
     app.get('/areas_Profile/:uuid', getAreas_ProfileController);
     app.put('/areas_Profile/increment/:userid', incrementAreas_ProfileController);
-    app.get('/mockTests/date/:date/:uuid', getMockTestsByDateAndProfileController);
-    app.get('/mockTests/date', getMockTestsByDecrescentDateController); //sem funcionamento
-    app.put('/mockTest/:id', putMockTestController);
-    app.post('/mockTest/:uuid', postMockTestController);
-
     // '/areaProfile/'
     app.get('/areaProfile/:uuid', getAreas_ProfileController);
 

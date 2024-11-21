@@ -80,7 +80,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
     }
 
     useEffect(() => {
- 
+
         let AlternativaDaQuestao = resultsHashMap[prevActiveQuestion] == undefined ? null : resultsHashMap[prevActiveQuestion][1];
         if(nQuestoesRestantes() !== questionsHashMap.length)
         {
@@ -88,8 +88,9 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             {
                 if (AlternativaDaQuestao === null) {
                     setPrevActiveQuestion(activeQuestion);
-                    return;
+                    //return;
                 }
+                
                 const question_MockTest: question_MockTestInterface = {
                     question_id: questionsHashMap[prevActiveQuestion].question.id,
                     mockTest_id: mockTestId,
@@ -98,6 +99,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                 handlePutQuestion_MockTestById(question_MockTest);
             }
         }
+
         if(activeQuestion === -1){
             if(nQuestoesRestantes() === questionsHashMap.length){
                 showAlert("Nenhuma questão foi respondida", "info");

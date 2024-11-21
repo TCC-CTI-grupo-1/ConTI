@@ -86,7 +86,7 @@ export async function getQuestionsForNewMockTestByProfileController(req: Request
         }
 
         const profileId = profile.id;
-        const test_blueprint = new TestBlueprint(50, {1:15,2:15,3:15,4:5}, {1: DifficultyLevel.MEDIUM, 2: DifficultyLevel.MEDIUM}, profileId);
+        const test_blueprint = new TestBlueprint(50, {1000: 15, 1019:15, 1072:15, 1037 : 5}, {1: DifficultyLevel.MEDIUM, 2: DifficultyLevel.MEDIUM}, profileId);
         const test_builder = new TestBuilder([]);
         const questions = await test_builder.buildTest(test_blueprint);
         //const questions = semana_do_colegio_tests;

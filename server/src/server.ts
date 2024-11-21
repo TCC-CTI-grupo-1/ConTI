@@ -40,8 +40,12 @@ if(isRemote) {
         origin: [urlLocal, urlRemoto, urlCloud],
         credentials: true
     }));
+
+    
     app.use(express.json());
 
+    
+  
     if (process.env.SECRET_KEY === undefined) {
         console.error('SECRET_KEY não definida');
         process.exit(1);
@@ -87,5 +91,9 @@ else {
 
     routes(app);
 
+    var bodyParser = require('body-parser');
+    app.use(bodyParser.json({limit: "50mb"}));
+    app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+    
     app.listen(port, () => { console.log("Server is running on port " + port) });
 }

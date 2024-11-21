@@ -14,6 +14,9 @@ import {
   } from '@chakra-ui/react'
 import { useState } from "react"
 import LoadingScreen from "../LoadingScreen"
+import { generateNewSimulado } from "../../controllers/mockTestController"
+import { handlePostSimulado } from "../../controllers/mockTestController"
+import { showAlert } from "../../App"
 
 const NewTest = () => {
 
@@ -25,7 +28,26 @@ const NewTest = () => {
 
     async function handlegenerateNewSimulado(){
         setLoading(true);
-        navigate('/test');
+        const questions_simulado = await generateNewSimulado();
+        if(questions_simulado === null || questions_simulado.length == 0){
+            showAlert("Erro ao carregar o seu simulado.");
+            showAlert("Por favor tente novamente.");
+            setLoading(false);
+            onClose2();
+            return;
+        }
+        const simulado = await handlePostSimulado(questions_simulado, "automatico", 50);
+        if(simulado === null){
+            showAlert("Erro ao carregar o seu simulado.");
+            showAlert("Por favor tente novamente.");
+            setLoading(false);
+            onClose2();
+            return;
+        }
+        localStorage.setItem('questoes_simulado_'+simulado.id, JSON.stringify(questions_simulado));
+        localStorage.setItem('simulado_'+simulado.id, JSON.stringify(simulado));
+        showAlert("Simulado carregado com sucesso!", "success");
+        navigate('/test/'+simulado.id);
     }
 
     return (

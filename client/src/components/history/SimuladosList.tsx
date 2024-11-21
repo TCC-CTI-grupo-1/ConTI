@@ -21,7 +21,7 @@ const SimuladosList = ({simulados, openOverlay}: Props) => {
                     
                     openOverlay(number);
                 }}>
-                    <h3>[ {simulado.title} ] - {simulado.total_correct_answers}/{simulado.total_answers}</h3>
+                    <h3>[ Simulado {simulado.id} ] - {simulado.total_correct_answers}/{simulado.total_answers}</h3>
                     <div className="progress">
                         <div style={{width: `${(simulado.total_correct_answers/simulado.total_answers)*100}%`}}></div>
                     </div>
