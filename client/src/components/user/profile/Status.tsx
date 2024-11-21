@@ -345,7 +345,7 @@ const Status = () => {
                         <div id="info"  style={{width: '100%'}}>
                             <AreaTree onActiveAreasChange={() => {}}
                             rootID={0}
-                            userPercentageAreas={userPercentageAreas}
+                            userPercentageAreas={localUserPercentageAreas}
                             isBlocks
                             />
                             {/*<div id="header">
