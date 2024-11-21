@@ -97,7 +97,6 @@ const Navbar = ({screen}:Props) => {
                             navigate('/aboutUs');
                         }
                     }>Sobre</h3>
-                    <h3>Contato</h3>
 
 
                     {isLoggedIn &&<div className="icon">

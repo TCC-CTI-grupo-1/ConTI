@@ -137,6 +137,8 @@ const SimuladoFrame = () => {
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();
 
+        localStorage.removeItem("questoes_simulado_"+id);
+        localStorage.removeItem("simulado_"+id);
         navigate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");
     }
