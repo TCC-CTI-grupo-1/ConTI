@@ -85,7 +85,7 @@ export async function getQuestionsForNewMockTestByProfileController(req: Request
             return res.status(404).json({ message: 'Sessão não inicializada' });
         }
 
-        const profileId = profile.id;
+        const profileId = profile.id; //1000: 15, 1019:15, 1072:15, 1037 : 5
         const test_blueprint = new TestBlueprint(50, {1000: 15, 1019:15, 1072:15, 1037 : 5}, {1: DifficultyLevel.MEDIUM, 2: DifficultyLevel.MEDIUM}, profileId);
         const test_builder = new TestBuilder([]);
         const questions = await test_builder.buildTest(test_blueprint);

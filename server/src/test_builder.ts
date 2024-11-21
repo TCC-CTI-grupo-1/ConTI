@@ -10,8 +10,8 @@ import { DiffieHellman } from "crypto";
 import { AreaDTO } from "./DTO/AreaDTO";
 import { AreaDAO, AreaTree } from "./DAO/AreaDAO";
 import { OptimizedQuestionDAO } from "./DAO/OptimizedQuestionDAO";
+import { makeTypedQueryFactory } from "@prisma/client/runtime/library";
 const conn = new ConnectionDAO();
-
 
 export enum DifficultyLevel{
     EASY = "facil",
@@ -290,48 +290,55 @@ export class TestBuilder{
         }
         let sizeMap:{[key:number]:AreaData} = {};
         let questionsInArea = blueprint.questionsInArea;
-        let marked:{[key:string]:boolean} = {};
+        let marked = new Set();
         for(const key in questionsInArea)
         {
-            marked[key] = true;
+            marked.add(Number(key));
         }
         const tree = rooted_tree.tree;
         const root = rooted_tree.root;
+        const fractions = this.helper.proportionToFraction(this.helper.difficultyToProportions(blueprint.difficulty[DifficultyType.INDIVIDUAL]));
+
         const instance = new Area_ProfileDAO();
         console.log(tree);
         const inverted_tree = await instance.buildInverted_AreaProfileTree(root.area_id);
         const fractionInType:{[key:number]:{[key:string]:number}} = {};
         questionsInArea[root.area_id] = blueprint.totalQuestions;
-        marked[root.area_id] = true;
+        marked.add(root.area_id);
+        const afetados = new Set();
+
         for(const type in blueprint.difficulty)
         {
             fractionInType[type] = this.helper.proportionToFraction(this.helper.difficultyToProportions(blueprint.difficulty[type]));
         }
         const normalizeValues = (node:number,sender:number) => {
-            if(marked[node] && node !== sender) return;
-            console.log(`node: ${node}, sender: ${sender}`);
-            if(node!==sender) 
-            {
-                if(!questionsInArea[node]) questionsInArea[node] = 0;
-                
-                questionsInArea[node] +=questionsInArea[sender];
-            }
-            if(!inverted_tree[node]) return;
-            normalizeValues(inverted_tree[node].area_id,sender);
-        }
-        /*
-            Se o usuário definiu áreas que ele quer que tenha na prova, sobe a árvore para levar isso em consideração
-            em outras áreas. 
-            a->b
-            |->c
-            se tem c=3 e b=2, a = b+c=5, no mínimo.
 
-        */
-        for(const value in questionsInArea)
-        {
-            const key = Number(value);
-            normalizeValues(key,key);
+            let tosplit;
+            if(node===sender)
+                tosplit = this.helper.divideWithinDifficulties(fractions,questionsInArea[node])
+            else
+                tosplit = sizeMap[sender].questionCount_inDifficulty;
+            if(!marked.has(node) || node === sender)
+            for(const dif in tosplit)
+            {
+                if(!sizeMap[node]){
+                    sizeMap[node] = {questionCount_inDifficulty:{}};
+                }
+                if(!sizeMap[node].questionCount_inDifficulty[dif]){
+                    sizeMap[node].questionCount_inDifficulty[dif] = 0;
+                }
+                sizeMap[node].questionCount_inDifficulty[dif] += tosplit[dif];
+            }
+            if(inverted_tree[node]) normalizeValues(inverted_tree[node].area_id,sender);
         }
+        for(const area in blueprint.questionsInArea)
+        {
+            const id = Number(area);
+            
+            normalizeValues(id,id);
+        }
+        
+        
         console.log("Normalização passada");
         /*
             Se ele não liga para área, a gente só retorna as áreas definidas pelo usuário
@@ -420,67 +427,84 @@ export class TestBuilder{
             const id = node.area_id;
 
             if(!tree[id]) break; // Os valores são sempre definidos pelo pai. 
-
             //Setup individual
             if(!questionsInArea[id]) questionsInArea[id] = 0;
             if(!sizeMap[id])
             {
                 sizeMap[id] = {questionCount_inDifficulty:{}};
             }
-            if(sizeMap[id].questionCount_inDifficulty && id===root.area_id){
+            /*if(sizeMap[id].questionCount_inDifficulty && id===root.area_id){
                 for(const dif in sizeMap[id].questionCount_inDifficulty)
                 {
                     questionsInArea[id] += sizeMap[id].questionCount_inDifficulty[dif];
                 }
             }
-            const fractions = this.helper.proportionToFraction(this.helper.difficultyToProportions(blueprint.difficulty[DifficultyType.INDIVIDUAL]));
             if(id === root.area_id) {
                 const dlist = this.helper.divideWithinDifficulties(fractions,questionsInArea[id]);
                 sizeMap[id].questionCount_inDifficulty = dlist;
-            }
+            }*/
             //Fim do setup individual
 
             //Classificação entre filhos 
+            let updated_qcid = {...sizeMap[id].questionCount_inDifficulty};
+            let updated_qia = questionsInArea[id];
+            console.warn(updated_qcid,updated_qia);
             const childrenInDiff:{[diff:string]:Area_ProfileDTO[]} = {}; //Refere-se a dificuldade de área
             if(tree[id]) {
                 for(const child of tree[id]){
-                    if(!sizeMap[child.area_id])
+                    if(sizeMap[child.area_id])
                     {
-                        sizeMap[child.area_id] = {questionCount_inDifficulty:{}};
+                        for(const dif in sizeMap[child.area_id].questionCount_inDifficulty)
+                        {
+                            updated_qcid[dif] -= sizeMap[child.area_id].questionCount_inDifficulty[dif]
+                            updated_qia -= sizeMap[child.area_id].questionCount_inDifficulty[dif];
+                            console.warn(updated_qcid, updated_qia);
+                        }
+                        queue.push(child);
+                        continue;
                     }
                     queue.push(child);
+                    sizeMap[child.area_id] = {questionCount_inDifficulty:{}};
                     const individual_diff = this.helper.classifyAreaRatio(child.total_correct_answers,child.total_answers);
                     console.log("NOTA: Individual_diff é ", individual_diff);
                     if(!childrenInDiff[individual_diff]) childrenInDiff[individual_diff] = [];
                     childrenInDiff[individual_diff].push(child);
                 }
             }
+            
             //Fim da classificação
 
             //Divisão de valores entre áreas
             const areaFractions = this.helper.proportionToFraction(this.helper.difficultyToProportions(blueprint.difficulty[DifficultyType.INDIVIDUAL]));
-            console.log("Valor de questions in area: ", questionsInArea[node.area_id]);
-            const countin_areadiff = this.helper.divideWithinDifficulties(areaFractions,questionsInArea[node.area_id]);
-            console.log("Countinareadiff: ",countin_areadiff);
-            const done:{[key:string]:boolean} = {};
-            for(const areadiff in childrenInDiff)
-            {
-                if(areadiff === DifficultyLevel.IRRELEVANT) continue;
-                done[areadiff] = true;
-                console.log("AREADIFF É: ",areadiff)
-                const lookingfor = countin_areadiff[areadiff];
-
-                let countin_childarea = this.helper.divideWithinArea(areadiff,childrenInDiff[areadiff],lookingfor);
-                for(const area in countin_childarea)
-                {
-                    const child_id = Number(area);
-                    console.log("Countin childarea: ",countin_childarea);
-                    sizeMap[child_id].questionCount_inDifficulty = this.helper.divideWithinDifficulties(fractions,countin_childarea[child_id]);
-                }
+            console.log("Valor de questions in area: ", updated_qia);
+            const countin_individualDiff_areaDiff:{[diff:string]:{[individual_diff:string]:number}} = {};
+            for(const diff in updated_qcid) {   
+                const countin_areadiff = this.helper.divideWithinDifficulties(areaFractions,updated_qcid[diff]);
+                console.log("Countinareadiff: ",countin_areadiff);
+                countin_individualDiff_areaDiff[diff] = countin_areadiff;
             }
+            const done:{[key:string]:boolean} = {};
+            for(const individual_diff in countin_individualDiff_areaDiff) {
+                const countin_areadiff = countin_individualDiff_areaDiff[individual_diff];
+                for(const areadiff in childrenInDiff)
+                {
+                    if(areadiff === DifficultyLevel.IRRELEVANT) continue;
+                    done[areadiff] = true;
+                    console.log("AREADIFF É: ",areadiff)
+                    const lookingfor = countin_areadiff[areadiff];
+
+                    let countin_childarea = this.helper.divideWithinArea(areadiff,childrenInDiff[areadiff],lookingfor);
+                    for(const area in countin_childarea)
+                    {
+                        const child_id = Number(area);
+                        console.log("Countin childarea: ",countin_childarea);
+                        sizeMap[child_id].questionCount_inDifficulty[individual_diff] = countin_childarea[child_id];
+                    }
+                }
             if(childrenInDiff[DifficultyLevel.IRRELEVANT])
             {
                 let total =0;
+                
                 for(const diff in countin_areadiff)
                 {
                     if(!done[diff])
@@ -494,9 +518,10 @@ export class TestBuilder{
                         const child_id = Number(area);
                         console.log("Countin childarea: ",countin_childarea);
                         console.log(total);
-                        sizeMap[child_id].questionCount_inDifficulty = this.helper.divideWithinDifficulties(fractions,countin_childarea[child_id]);
+                        sizeMap[child_id].questionCount_inDifficulty[individual_diff] = countin_childarea[child_id]
                 }
             }
+        }
             //Fim da divisão
 
         }
@@ -505,10 +530,7 @@ export class TestBuilder{
     {
         console.log(error);
     }
-        console.log(sizeMap);
-        
-        console.log = function(){};
-        console.warn = console.log;
+
         return sizeMap;
     }
 
@@ -613,8 +635,9 @@ export class TestBuilder{
         {
             cachedTestInformation = await this.helper.getTestProportions("CTI");
         }
-        console.error = () => {};
-        console.log = console.error;
+        console.log = ()=>{};
+        console.error = console.log;
+        console.warn("Teste");
         const instance = new Area_ProfileDAO();
         const rooted_tree = await instance.buildRootedAreaProfileTree(blueprint.user_id); 
         const sizeMap = await this.buildSizeMap(rooted_tree,blueprint);
