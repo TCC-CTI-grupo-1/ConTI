@@ -96,7 +96,6 @@ const Home = () => {
                           <h2>Quer estudar para o CTI mas não sabe por onde começar?</h2>
                           <p>Use o ConTI! uma solução criada para ajudar os ajudos do CTI a estudar para o vestibulinho usando <strong>simulados personalizados</strong> baseados em suas difficuldades.</p>
                           <div className="elementos-absolutos">
-                            <div className="bolha1"></div>
                             <div className="bolha2"></div>
                             <div className="bolha3"></div>
                             <div className="bolha4"></div>

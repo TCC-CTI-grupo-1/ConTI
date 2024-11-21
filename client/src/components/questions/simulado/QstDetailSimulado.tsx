@@ -70,7 +70,7 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
     <div className={'box question'}>
 
-        <p id='question-number-container'>{question.id}</p>
+        <p id='question-number-container'>{qNumber}</p>
         <h4>
             <LatexRenderer text={question.question_text}></LatexRenderer>
         </h4>

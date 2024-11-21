@@ -6,6 +6,7 @@ import { routes } from './http/routes';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import bodyParser from "body-parser";
 const session = require('express-session');
 const fs = require('fs');
 const https = require('https');
@@ -41,7 +42,8 @@ if(isRemote) {
         credentials: true
     }));
     app.use(express.json());
-
+    app.use(bodyParser.json({limit: '100mb'})); 
+    app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
     if (process.env.SECRET_KEY === undefined) {
         console.error('SECRET_KEY não definida');
         process.exit(1);

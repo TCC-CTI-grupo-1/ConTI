@@ -12,6 +12,7 @@ import { handlePutSimulado } from "../../../controllers/mockTestController";
 import { handleIncrementAnswers } from "../../../controllers/answerController";
 import { handleGetAllParentAreasByIds } from "../../../controllers/areasController";
 import LoadingScreen from "../../LoadingScreen";
+import { useParams } from "react-router-dom";
 // import date from 'date-and-time'
 // import { useNavigate } from "react-router-dom"
 
@@ -35,11 +36,16 @@ type questionMapInterface = {
 type questionMapResultInterface = [number, (number | null)][]; 
 // type questionMapResultInterface = [number, (string | null)][];  
 
+
 const SimuladoFrame = () => {
 
+    const { id } = useParams();
+
+    const questionsParams = JSON.parse(localStorage.getItem("questoes_simulado_"+id) || '[]') as questionInterface[];
+    const simuladoParams = JSON.parse(localStorage.getItem("simulado_"+id) || 'null') as simuladoInterface;
     const[loading, setLoading] = useState(true);
     const[questionsHashMap, setQuestionsHashMap] = useState<questionMapInterface>([]);
-    const[simulado, setSimulado] = useState<simuladoInterface | null>(null);
+    const[simulado, setSimulado] = useState<simuladoInterface | null>(simuladoParams);
 
     const navigate = useNavigate();
 
@@ -47,7 +53,7 @@ const SimuladoFrame = () => {
         let newQuestionMapInterface: questionMapInterface = []; 
         const getQuestions = async () => {
             
-                let questions = await generateNewSimulado();
+                let questions: questionInterface[] = questionsParams;
                 
                 const answers = await handleGetAnswersByQuestionsIds(questions.map(q => q.id));
 
@@ -66,22 +72,8 @@ const SimuladoFrame = () => {
     }, []);
 
     useEffect(() => {
-        
-        const postSimulado = async () => {
-            let questionsarray: questionInterface[] = questionsHashMap.map(q => q.question);
-            const simulado = await handlePostSimulado(questionsarray, "automatico", 50);
-            if (simulado !== null) {
-                setSimulado(simulado);
-                setLoading(false);
-            }
-            else{
-                showAlert("Erro ao Iniciar simulado", "error");
-                showAlert("Por favor, tente novamente", "error");
-            }
-        }
-
         if(questionsHashMap && questionsHashMap.length > 0){
-            postSimulado();
+            setLoading(false);
         }
     }, [questionsHashMap]);
 
@@ -135,9 +127,8 @@ const SimuladoFrame = () => {
         
         handlePutSimulado(novoSimulado).then((result) => {
             if (result !== null) {
-                setSimulado(simulado);
+                setSimulado(novoSimulado);
             }
-            return true;
         })
 
         const respostasIds = respostas.map((value) => value[1]).filter((id) => id !== null);
