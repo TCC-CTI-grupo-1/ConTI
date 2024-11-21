@@ -448,7 +448,6 @@ export class TestBuilder{
             //Classificação entre filhos 
             let updated_qcid = {...sizeMap[id].questionCount_inDifficulty};
             let updated_qia = questionsInArea[id];
-            console.warn(updated_qcid,updated_qia);
             const childrenInDiff:{[diff:string]:Area_ProfileDTO[]} = {}; //Refere-se a dificuldade de área
             if(tree[id]) {
                 for(const child of tree[id]){
@@ -458,7 +457,6 @@ export class TestBuilder{
                         {
                             updated_qcid[dif] -= sizeMap[child.area_id].questionCount_inDifficulty[dif]
                             updated_qia -= sizeMap[child.area_id].questionCount_inDifficulty[dif];
-                            console.warn(updated_qcid, updated_qia);
                         }
                         queue.push(child);
                         continue;
@@ -530,7 +528,7 @@ export class TestBuilder{
     {
         console.log(error);
     }
-
+        console.warn(sizeMap);
         return sizeMap;
     }
 
