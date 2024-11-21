@@ -110,9 +110,10 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             handleFinishSimulado(resultsHashMap);
         }
         setPrevActiveQuestion(activeQuestion);
-
+        
      
     }, [activeQuestion]);
+
 
     const returnQuestionDetail = () => {
         let cont = 0;

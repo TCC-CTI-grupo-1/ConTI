@@ -190,7 +190,9 @@ const SimuladoFrame = () => {
         loading ? <LoadingScreen /> :
         <>
             {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
-                <Simulado questionsHashMap={questionsHashMap} handleFinishSimulado={finishSimulado} 
+                <Simulado questionsHashMap={
+                    questionsHashMap.sort((a, b) => a.question.id - b.question.id)
+                } handleFinishSimulado={finishSimulado} 
                 mockTestId={simulado!.id}     
                 /> 
             }

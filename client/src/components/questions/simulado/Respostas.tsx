@@ -46,8 +46,9 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
     const returnQuestionDetail = () => {
         let cont = 0;
         const questionsDetail: JSX.Element[] = [];
-
         questionsHashMap.forEach((questionMap, index) => {
+            
+            console.error(questionMap);
             cont++;
             questionsDetail.push(
                 <div
@@ -56,7 +57,9 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                 >
                     <QstDetailRespostas 
                         answers={questionMap[2]}
-                        question={questionMap[0]} 
+                        question={
+                            questionMap[0]
+                        } 
                         selectedAnswer={questionMap[1] ? questionMap[1].id : -1}
                     />
                 </div>
