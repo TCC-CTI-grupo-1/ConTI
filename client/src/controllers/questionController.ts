@@ -290,3 +290,28 @@ export async function handleDeleteQuestion(id: number): Promise<boolean> { //que
         return false;
     }
 }
+
+export async function handleIncrementQuestionsAnswers(answersIds: number[]): Promise<boolean> { //putQuestionController.ts
+    try {
+        console.log("Aqui!")
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/increment/' + JSON.stringify(answersIds), {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        console.log(responseData)
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        showAlert(err.message);
+        return false;
+    }
+}

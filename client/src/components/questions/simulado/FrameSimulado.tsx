@@ -15,6 +15,7 @@ import LoadingScreen from "../../LoadingScreen";
 import { useParams } from "react-router-dom";
 import { handleGetUser } from "../../../controllers/userController";
 
+import { handleIncrementQuestionsAnswers } from "../../../controllers/questionController";
 // import date from 'date-and-time'
 // import { useNavigate } from "react-router-dom"
 
@@ -138,6 +139,7 @@ const SimuladoFrame = () => {
         handleIncrementAnswers(respostasIds);
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();
+        handleIncrementQuestionsAnswers(respostasIds);
 
         localStorage.removeItem("questoes_simulado_"+id);
         localStorage.removeItem("simulado_"+id);
@@ -148,7 +150,6 @@ const SimuladoFrame = () => {
             console.log(user);
             console.log(user.total_answers);
             localStorage.setItem("total_answers", user.total_answers.toString());
-            localStorage.setItem("total_answers", "200");
             localStorage.setItem("total_correct_answers", user.total_correct_answers.toString());
             localStorage.setItem("total_mock_tests", user.total_mock_tests.toString());
         }

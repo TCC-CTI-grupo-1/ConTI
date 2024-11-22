@@ -390,6 +390,53 @@ export class QuestionDAO {
         }
     }
 
+    incrementQuestionAnswers = async (questionsAndAnswers: { [key: number]: { total_correct_answers: number, total_answers: number } }) => {
+        try {
+            const client = await connectionDAO.getConnection();
+        
+            const incrementQuestion = async (question_id: number, total_correct_answers: number, total_answers: number) => {
+                try {
+                    await client.question.update({
+                        where: {
+                            id: question_id
+                        },
+                        data: {
+                            total_correct_answers: {
+                                increment: total_correct_answers
+                            },
+                            total_answers: {
+                                increment: total_answers
+                            }
+                        }
+                    });
+                } catch (error: any) {
+                    throw error;
+                }
+            };
+        
+            await Promise.all(Object.entries(questionsAndAnswers).map(async ([question_id, { total_correct_answers, total_answers }]) => {
+                const questionIdNumber = Number(question_id);
+                await incrementQuestion(questionIdNumber, total_correct_answers, total_answers);
+            }));
+        } catch (error: any) {
+            throw error;
+        }
+    }
+
+    changeQuestionDifficulty = async (totalAnswers: number, totalCorrectAnswers: number) => {
+        if (totalAnswers === 0) {
+            return "easy";
+        }
+        const hitRate = totalCorrectAnswers / totalAnswers;
+        if (hitRate >= 0.75) {
+            return "easy";
+        } else if (hitRate >= 0.5) {
+            return "medium";
+        } else {
+            return "hard";
+        }
+    }
+
     // searchQuestionParentArea = async (areaID: number) => {
     //     try {
     //         const areaDAO: AreaDAO = new AreaDAO();
