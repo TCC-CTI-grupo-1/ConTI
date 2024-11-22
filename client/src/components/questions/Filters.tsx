@@ -296,16 +296,7 @@ const Filters = () => {
               ? "Nenhuma questão encontrada com os filtros selecionados"
               : filteredQuestions.length + " questões encontradas"}
           </p>
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Ordenar por:
-            </MenuButton>
-            <MenuList>
-              <MenuItem>Ordem alfabética</MenuItem>
-              <MenuItem>Difículdade</MenuItem>
-              <MenuItem>Não sei acentuar</MenuItem>
-            </MenuList>
-          </Menu>
+
         </div>
         <div className="content">
           {loading ? (

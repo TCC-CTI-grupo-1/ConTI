@@ -73,9 +73,9 @@ const Home = () => {
                             <h3>Suas estatisticas:</h3>
                             <Button onClick={() => navigate('/profile')}><DatabaseIcon /> Ver perfil</Button>
                           </div>
-                          <span><h4>Total de acertos</h4><h3>{localStorage.getItem("total_correct_answers")}</h3></span>
-                          <span><h4>Total de questões já respondidas</h4><h3>{localStorage.getItem("total_answers")}</h3></span>
-                          <span><h4>Total de simulados já feitos</h4><h3>{localStorage.getItem('total_mock_tests')}</h3></span>
+                          <span><h4>Total de acertos</h4><h3>{JSON.parse(localStorage.getItem("user") || "{}").total_correct_answers}</h3></span>
+                          <span><h4>Total de questões já respondidas</h4><h3>{JSON.parse(localStorage.getItem("user") || "{}").total_answers}</h3></span>
+                          <span><h4>Total de simulados já feitos</h4><h3>{JSON.parse(localStorage.getItem("user") || "{}").total_mock_tests}</h3></span>
                         </div>
                       </div>
 
