@@ -271,19 +271,22 @@ const Filters = () => {
           }>
             Aplicar filtros
           </LocalButton>
-
-
-          <p>ou</p>
-          <LocalButton
-            colorScheme="gray"
-            variant={"outline"}
-            onClick={() => {
-              navigate("/alltests");
-            }}
-          >
-            Ver todas as provas
-          </LocalButton>
         </div>
+        {options.ano.length === 0 && options.dificuldade.length === 0 && options.disciplina.length === 0 ? null : (
+          <div className="filtros-ativos">
+            <p>Filtros ativos:</p>
+            <ul>
+              {options.ano.length > 0 && <li><strong>Ano:</strong> {options.ano.join(", ")}</li>}
+              {options.dificuldade.length > 0 && <li><strong>Dificuldade:</strong> {options.dificuldade.join(", ")}</li>}
+              {options.disciplina.length > 0 && <li><strong>Disciplina:</strong> {
+                options.disciplina.map((id) => {
+                  return areas[id] ? areas[id].name : "Area não encontrada";
+                }).join(", ")
+              }</li>}
+            </ul>
+          </div>
+        )}
+
       </div>
       <div className="results">
         <div className="header box">

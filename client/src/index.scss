@@ -1682,29 +1682,29 @@ COMPONENTES GERAIS DO FERNANDO
     }
 
     &>.difficulty {
-      background-color: var(--color-red-50);
-      color: white;
-      border: 1px solid var(--color-red);
-      padding: var(--padding-4);
-      border-top-right-radius: var(--border-radius);
-      border-bottom-right-radius: var(--border-radius);
-      width: 10%;
-      text-align: center;
-
-      &.easy {
-        background-color: var(--color-green-50);
-        border: 1px solid var(--color-green);
-      }
-
-      &.medium {
-        background-color: var(--primary-color-50);
-        border: 1px solid var(--primary-color);
-      }
-
-      &.hard {
         background-color: var(--color-red-50);
+        color: white;
         border: 1px solid var(--color-red);
-      }
+        padding: var(--padding-4);
+        border-top-right-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+        width: 10%;
+        text-align: center;
+
+        &.facil {
+          background-color: var(--color-green-50);
+          border: 1px solid var(--color-green);
+        }
+
+        &.medio {
+          background-color: var(--primary-color-50);
+          border: 1px solid var(--primary-color);
+        }
+
+        &.dificil {
+          background-color: var(--color-red-50);
+          border: 1px solid var(--color-red);
+        }
     }
 
   }

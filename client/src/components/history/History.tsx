@@ -91,9 +91,7 @@ const History = () => {
     }
 
     useEffect(() => {
-        if(simulados.length !== 0 && listas.length !== 0){
-            setLoading2(false);
-        } 
+        setLoading2(false);
     }, [simulados, listas]);
 
 
@@ -257,6 +255,7 @@ const History = () => {
                                     loading2 ?
                                     <h1>Carregando...</h1>
                                     :
+                                    (simulados.length === 0 && listas.length === 0) ? <h2>Nenhum simulado nem lista feita nesse dia</h2> : 
                                     <>
                                         <div id="simulados">
                                             <h2>Simulados</h2>

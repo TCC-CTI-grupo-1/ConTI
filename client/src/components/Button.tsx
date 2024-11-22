@@ -6,7 +6,7 @@ interface Props {
     onClick: () => void;
     loading?: boolean;
     colorScheme?: 'blue' | 'red' | 'gray'
-    width?: '100%' | 'auto' | 'fit-content'
+    width?: string
     rightIcon?: any
     size?: 'xs' | 'sm' | 'md' | 'lg'
 

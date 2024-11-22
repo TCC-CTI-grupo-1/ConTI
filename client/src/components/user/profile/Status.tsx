@@ -15,6 +15,7 @@ import matIcon from '../../../assets/areasIcons/1.png';
 import portIcon from '../../../assets/areasIcons/2.png';
 import cieIcon from '../../../assets/areasIcons/3.png';
 import humIcon from '../../../assets/areasIcons/4.png';
+import Background from "../Background";
 
 const Status = () => {
 
@@ -290,6 +291,7 @@ const Status = () => {
           
     return (
         <>
+
         {(loading || !profile) && <div id="status">
             <div className="info-geral">
                     <Skeleton>
@@ -310,7 +312,9 @@ const Status = () => {
         }
         {
             (!loading && profile) && <div id="status">
+                
                 <div className="info-user">
+
                     <span>
                         <h1>{profile.name}</h1>
                         <h3>(Taxa geral de acertos)</h3>

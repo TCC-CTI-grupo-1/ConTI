@@ -17,6 +17,8 @@ import LoadingScreen from "../LoadingScreen"
 import { generateNewSimulado } from "../../controllers/mockTestController"
 import { handlePostSimulado } from "../../controllers/mockTestController"
 import { showAlert } from "../../App"
+import AreaTree from "../AreaTree"
+import { generateNewLista } from "../../controllers/mockTestController"
 
 const NewTest = () => {
 
@@ -26,9 +28,35 @@ const NewTest = () => {
     const navigate = useNavigate();    
     const [loading, setLoading] = useState(false);
 
+    const [materiasLista, setMateriasLista] = useState<number[]>([]);
+
     async function handlegenerateNewSimulado(){
         setLoading(true);
         const questions_simulado = await generateNewSimulado();
+        if(questions_simulado === null || questions_simulado.length == 0){
+            showAlert("Erro ao carregar o seu simulado.");
+            showAlert("Por favor tente novamente.");
+            setLoading(false);
+            onClose2();
+            return;
+        }
+        const simulado = await handlePostSimulado(questions_simulado, "automatico", 50);
+        if(simulado === null){
+            showAlert("Erro ao carregar o seu simulado.");
+            showAlert("Por favor tente novamente.");
+            setLoading(false);
+            onClose2();
+            return;
+        }
+        localStorage.setItem('questoes_simulado_'+simulado.id, JSON.stringify(questions_simulado));
+        localStorage.setItem('simulado_'+simulado.id, JSON.stringify(simulado));
+        showAlert("Simulado carregado com sucesso!", "success");
+        navigate('/test/'+simulado.id);
+    }
+
+    async function handleGenerateNewLista(materias: number[]) {
+        setLoading(true);
+        const questions_simulado = await generateNewLista(materias);
         if(questions_simulado === null || questions_simulado.length == 0){
             showAlert("Erro ao carregar o seu simulado.");
             showAlert("Por favor tente novamente.");
@@ -148,11 +176,14 @@ const NewTest = () => {
                     <ModalHeader>Deseja iniciar uma lista de exercicios?</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <p>Listas de exercicios são personalizadas conforme você deseja, por favor selecione as opções da sua lista de esercicios abaixo:</p>
+                        <p>Listas de exercicios são personalizadas conforme você deseja, por favor selecione as opções da sua lista de exercicios abaixo:</p>
+                        <AreaTree onActiveAreasChange={(materia) => {
+                            setMateriasLista(materia);
+                        }}/>
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme="blue" mr={3} onClick={() => {
-                            handlegenerateNewSimulado();
+                            handleGenerateNewLista(materiasLista);
                             onClose();
                             onOpen2();
                             

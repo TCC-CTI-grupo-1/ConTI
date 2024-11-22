@@ -122,6 +122,30 @@ export async function generateNewSimulado(): Promise<questionInterface[]>{ //moc
     }
 }
 
+export async function generateNewLista(materias:number[]) {
+    try {        
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/newMockList/' + userId +'/' + JSON.stringify(materias), {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return responseData.questions;
+        }
+    }
+    catch (err: any) {
+        return err.message;
+    }
+}
+
 export async function handlePutSimulado(simulado: simuladoInterface): Promise<boolean> {//mockTestController.ts
     try {
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTest/' + simulado.id, {

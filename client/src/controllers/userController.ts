@@ -200,6 +200,7 @@ export async function handleSaveChanges(profile: profileInterface): Promise<stri
 
 export async function handleLogout() {// userController.ts
     try {
+        localStorage.clear();
         const userId = sessionStorage.getItem('userId');
         const response = await fetch(import.meta.env.VITE_ADDRESS + '/logout/' + userId, {
             method: 'POST',

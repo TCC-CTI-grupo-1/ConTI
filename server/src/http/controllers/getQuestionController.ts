@@ -96,6 +96,40 @@ export async function getQuestionsForNewMockTestByProfileController(req: Request
     }
 }
 
+export async function getQuestionsForNewMockListByProfileController(req: Request, res: Response) {
+
+    try {
+        const userId = req.params.uuid;
+        const materias = JSON.parse(req.params.materias);
+
+        const profileString = await redisClient.get(`profile:${userId}`);
+
+        let profile = null;
+        if (profileString) {
+            profile = JSON.parse(profileString); // Parse the string into an object
+        }
+
+        if (profile === null) {
+            return res.status(404).json({ message: 'Sessão não inicializada' });
+        }
+
+        const nQuestaoPorMateira = Math.floor(50 / materias.length);
+        //const nQuestoesFaltando = 50 - (nQuestaoPorMateira * materias.length);
+        const materiasObjeto = materias.map((materia: number) => {
+            return { [materia]: nQuestaoPorMateira };
+        });
+
+        const profileId = profile.id;
+        const test_blueprint = new TestBlueprint(50, materiasObjeto, {1: DifficultyLevel.MEDIUM, 2: DifficultyLevel.MEDIUM}, profileId);
+        const test_builder = new TestBuilder([]);
+        const questions = await test_builder.buildTest(test_blueprint);
+        //const questions = semana_do_colegio_tests;
+        res.json({ questions: questions });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 export async function getQuestionsByIdsController(req: Request, res: Response) {
     const questionDAO = new QuestionDAO();
     try {

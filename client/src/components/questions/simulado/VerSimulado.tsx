@@ -66,6 +66,7 @@ const SimuladoFrame = () => {
                     console.error("Erro ao carregar alternativa marcada");
                     console.error(respostas);
                     console.error(simuladoAlternativaMarcada);
+                    newQuestionsHashMap.push([question, null, respostas]);
 
                     return;
                 }

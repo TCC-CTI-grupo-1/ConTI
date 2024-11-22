@@ -35,7 +35,7 @@ import { postImageController, deleteImageController } from './controllers/ImageC
 import { getAreaTreeController } from './controllers/getAreaController';
 import { deleteAreaController } from './controllers/deleteAreaController';
 import { incrementArea_ProfileController, incrementAreas_ProfileController } from './controllers/putArea_ProfileController';
-
+import { getQuestionsForNewMockListByProfileController } from './controllers/getQuestionController';
 export async function routes(app: any) {
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World');
@@ -67,6 +67,7 @@ export async function routes(app: any) {
 
     //NEW SIMULADO AQUI
     app.get('/questions/newMockTest/:uuid', getQuestionsForNewMockTestByProfileController);
+    app.get('/questions/newMockList/:uuid/:materias', getQuestionsForNewMockListByProfileController);
 
 
 
