@@ -178,16 +178,9 @@ const NewTest = () => {
                     <ModalCloseButton />
                     <ModalBody className="modal-body">
                         <p className="modal-body-description">
-                            Listas de exercícios são personalizadas conforme você deseja, por favor selecione as opções da sua lista de exercícios abaixo:
+                            Listas de exercícios são personalizadas conforme você deseja, por favor selecione o numero de questões em sua lista de exercicios:
                         </p>
                         
-                        <div className="modal-body-section">
-                            <AreaTree
-                            onActiveAreasChange={(materia) => {
-                                setMateriasLista(materia);
-                            }}
-                            />
-                        </div>
                         
                         <div className="modal-body-section">
                             <input
