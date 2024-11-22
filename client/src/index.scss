@@ -2353,6 +2353,36 @@ COMPONENTES GERAIS DO FERNANDO
   width: 100%;
 }
 
+.modal-body {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.modal-body-description {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.modal-body-section {
+  margin-bottom: 20px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.modal-input:focus {
+  border-color: #007bff;
+}
 
 //HOME não LOGADO
 

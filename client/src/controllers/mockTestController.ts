@@ -122,10 +122,10 @@ export async function generateNewSimulado(): Promise<questionInterface[]>{ //moc
     }
 }
 
-export async function generateNewLista(materias:number[]) {
+export async function generateNewLista(materias:number[], nQuestoes: number) {
     try {        
         const userId = sessionStorage.getItem('userId');
-        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/newMockList/' + userId +'/' + JSON.stringify(materias), {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/newMockList/' + userId +'/' + nQuestoes + '/' + JSON.stringify(materias), {
             method: 'GET',
             credentials: 'include',
             headers: {

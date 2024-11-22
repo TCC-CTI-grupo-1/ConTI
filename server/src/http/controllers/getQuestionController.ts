@@ -101,6 +101,7 @@ export async function getQuestionsForNewMockListByProfileController(req: Request
     try {
         const userId = req.params.uuid;
         const materias = JSON.parse(req.params.materias);
+        const nqst = parseInt(req.params.nqst);
 
         const profileString = await redisClient.get(`profile:${userId}`);
 
@@ -113,14 +114,14 @@ export async function getQuestionsForNewMockListByProfileController(req: Request
             return res.status(404).json({ message: 'Sessão não inicializada' });
         }
 
-        const nQuestaoPorMateira = Math.floor(50 / materias.length);
+        const nQuestaoPorMateira = Math.floor(nqst / materias.length);
         //const nQuestoesFaltando = 50 - (nQuestaoPorMateira * materias.length);
         const materiasObjeto = materias.map((materia: number) => {
             return { [materia]: nQuestaoPorMateira };
         });
 
         const profileId = profile.id;
-        const test_blueprint = new TestBlueprint(50, materiasObjeto, {1: DifficultyLevel.MEDIUM, 2: DifficultyLevel.MEDIUM}, profileId);
+        const test_blueprint = new TestBlueprint(nqst, materiasObjeto, {1: DifficultyLevel.MEDIUM, 2: DifficultyLevel.MEDIUM}, profileId);
         const test_builder = new TestBuilder([]);
         const questions = await test_builder.buildTest(test_blueprint);
         //const questions = semana_do_colegio_tests;

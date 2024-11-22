@@ -55,7 +55,9 @@ export async function routes(app: any) {
     app.put('/profile', updateProfileController);
     app.delete('/profile/:uuid', deleteProfileController); 
     app.put('/profile/increment/mockTest/:uuid', incrementProfile_MockTestController);
+    app.put('/profile/increment/mockTest/:uuid', incrementProfile_MockTestController);
     app.get('/profile/:uuid', getProfileController);
+    app.put('/profile/increment/answers/:uuid', incrementProfileAnswersController);
     app.put('/profile/increment/answers/:uuid', incrementProfileAnswersController);
 
 
@@ -67,8 +69,8 @@ export async function routes(app: any) {
 
     //NEW SIMULADO AQUI
     app.get('/questions/newMockTest/:uuid', getQuestionsForNewMockTestByProfileController);
-    app.get('/questions/newMockList/:uuid/:materias', getQuestionsForNewMockListByProfileController);
     app.put('/questions/increment/:answersIds', incrementQuestionAnswersController);
+    app.get('/questions/newMockList/:uuid/:nqst/:materias', getQuestionsForNewMockListByProfileController);
 
 
 

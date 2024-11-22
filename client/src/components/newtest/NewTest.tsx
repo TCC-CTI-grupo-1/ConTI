@@ -29,6 +29,7 @@ const NewTest = () => {
     const [loading, setLoading] = useState(false);
 
     const [materiasLista, setMateriasLista] = useState<number[]>([]);
+    const [nqstLista, setNqstLista] = useState<number>(10);
 
     async function handlegenerateNewSimulado(){
         setLoading(true);
@@ -54,9 +55,9 @@ const NewTest = () => {
         navigate('/test/'+simulado.id);
     }
 
-    async function handleGenerateNewLista(materias: number[]) {
+    async function handleGenerateNewLista(materias: number[], nQuestoes: number) {
         setLoading(true);
-        const questions_simulado = await generateNewLista(materias);
+        const questions_simulado = await generateNewLista(materias, nQuestoes);
         if(questions_simulado === null || questions_simulado.length == 0){
             showAlert("Erro ao carregar o seu simulado.");
             showAlert("Por favor tente novamente.");
@@ -175,15 +176,53 @@ const NewTest = () => {
                     <ModalContent>
                     <ModalHeader>Deseja iniciar uma lista de exercicios?</ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody>
-                        <p>Listas de exercicios são personalizadas conforme você deseja, por favor selecione as opções da sua lista de exercicios abaixo:</p>
-                        <AreaTree onActiveAreasChange={(materia) => {
-                            setMateriasLista(materia);
-                        }}/>
-                    </ModalBody>
+                    <ModalBody className="modal-body">
+                        <p className="modal-body-description">
+                            Listas de exercícios são personalizadas conforme você deseja, por favor selecione as opções da sua lista de exercícios abaixo:
+                        </p>
+                        
+                        <div className="modal-body-section">
+                            <AreaTree
+                            onActiveAreasChange={(materia) => {
+                                setMateriasLista(materia);
+                            }}
+                            />
+                        </div>
+                        
+                        <div className="modal-body-section">
+                            <input
+                            className="modal-input"
+                            type="number"
+                            placeholder="Número de questões"
+                            value={nqstLista}
+                            onChange={(e) => {
+                                let nQuestoes = parseInt(e.target.value);
+
+                                setNqstLista(nQuestoes);
+                              }}
+                            />
+                        </div>
+                        </ModalBody>
+
                     <ModalFooter>
                         <Button colorScheme="blue" mr={3} onClick={() => {
-                            handleGenerateNewLista(materiasLista);
+                            if (isNaN(nqstLista)) {
+                                showAlert("Por favor, insira um número válido.");
+                                return;
+                            }
+                        
+                            // Verificar se o número é maior que 0 e menor que 101
+                            if (nqstLista <= 0 || nqstLista > 100) {
+                                showAlert("O número de questões deve ser maior que 0 e menor ou igual a 100.");
+                                return;
+                            }
+                        
+                            // Verificar se o número é múltiplo da quantidade de matérias
+                            if (materiasLista.length > 0 && nqstLista % materiasLista.length !== 0) {
+                                showAlert(`O número de questões deve ser múltiplo da quantidade de matérias (${materiasLista.length}).`);
+                                return;
+                            }
+                            handleGenerateNewLista(materiasLista, nqstLista);
                             onClose();
                             onOpen2();
                             
