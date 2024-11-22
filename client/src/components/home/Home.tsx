@@ -63,9 +63,9 @@ const Home = () => {
                           <a onClick={() => {
                             navigate('/profile');
                           }}><h3>Sua taxa de acerto nos simulados:</h3></a>
-                          {isNaN(Number((Number(localStorage.getItem("total_correct_answers")) *100 /
-                          Number(localStorage.getItem("total_answers"))).toFixed(2))) ? <><br></br><p>Nenhum simulado feito</p><br></br></> : <ProgressBar filledPercentage={Number((Number(localStorage.getItem("total_correct_answers")) *100 /
-                          Number(localStorage.getItem("total_answers"))).toFixed(2))} radius={100}/>}
+                          {isNaN(Number((Number(JSON.parse(localStorage.getItem("user") || "{}").total_correct_answers) *100 /
+                          Number(JSON.parse(localStorage.getItem("user") || "{}").total_answers)).toFixed(2))) ? <><br></br><p>Nenhum simulado feito</p><br></br></> : <ProgressBar filledPercentage={Number((Number(JSON.parse(localStorage.getItem("user") || "{}").total_correct_answers) *100 /
+                          Number(JSON.parse(localStorage.getItem("user") || "{}").total_answers)).toFixed(2))} radius={100}/>}
                           
                         </div>
                         <div className="areas_estudar">
