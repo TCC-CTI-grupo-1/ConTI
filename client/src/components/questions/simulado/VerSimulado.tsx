@@ -16,9 +16,8 @@ const SimuladoFrame = () => {
 
     const [questionsHashMap, setQuestionsHashMap] = useState<questionResultsInterface | null>(null);
     const [loading, setLoading] = useState(true);
-    const [pontuacao, setPontuacao] = useState<boolean[]>([]);
+    const [pontuacao, setPontuacao] = useState<Record<number, boolean>>([]);
 
-    //const navigate = useNavigate();
 
     useEffect(() => {
         const getSimulado = async () => {
@@ -35,7 +34,7 @@ const SimuladoFrame = () => {
                 return;
             }
 
-            let newPontuacao: boolean[] = [];
+            let newPontuacao: Record<number, boolean> = [];
 
             const allQuestions = await handleGetQuestionsByIds(simulado.map((q) => q.question_id));
             const allAnswers = await handleGetAnswersByQuestionsIds(simulado.map((q) => q.question_id));
@@ -72,6 +71,13 @@ const SimuladoFrame = () => {
                 }
 
                 newQuestionsHashMap.push([question, alternativaMarcada, respostas]);
+
+                if(correctAnswer.id === simuladoAlternativaMarcada.answer_id){
+                    newPontuacao[question.id] = true;
+                }
+                else{
+                    newPontuacao[question.id] = false;
+                }
             });
 
             /*await Promise.all(simulado.map(async (question) => {

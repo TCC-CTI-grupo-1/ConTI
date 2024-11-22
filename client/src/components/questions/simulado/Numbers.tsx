@@ -5,7 +5,7 @@ interface Props{
     questionsHashMap: number[];
     setActiveQuestion: (questionNumber: number) => void;
     defaultQuestion?: number;
-    respostasCorretas?: boolean[] | null;
+    respostasCorretas?: Record<number, boolean> | null;
     onMenuIconClick: () => void;
 }
 
@@ -22,7 +22,6 @@ export function handleQuestionNumberClick(questionNumber: number, setActiveQuest
 
 const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0, 
     respostasCorretas = null, onMenuIconClick}: Props) => {
-
     const getQuestionsNumbers = (questionsHashMap: number[]) => {
         const questions: JSX.Element[] = [];
 
@@ -31,7 +30,7 @@ const Numbers = ({questionsHashMap, setActiveQuestion, defaultQuestion = 0,
                 <span
                     key={question}
                     id={`question-${index}`}
-                    className={`${respostasCorretas ? respostasCorretas[index] ? "correct" : "incorrect" : ""}`}
+                    className={respostasCorretas ? respostasCorretas[question] ? "correct" : "incorrect" : ""}
                     onClick={() => {
                         handleQuestionNumberClick(index, setActiveQuestion);
                     }}

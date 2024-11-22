@@ -21,7 +21,7 @@ type questionResultsInterface = [questionInterface, (respostaInterface | null), 
 
 interface Props {
     questionsHashMap: questionResultsInterface;
-    pontuacao: boolean[];
+    pontuacao: Record<number, boolean>;
 }
 
 //Tudo aqui dentro é baseado no número da questão, e não no ID.
@@ -83,7 +83,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
             <div id="allQuestionsMargin"></div>
             <div className="content">
                 <div className="infoTop">
-                    <h3>Pontuação final: {pontuacao.filter((p) => p).length} / {questionsHashMap.length}</h3>
+                    <h3>Pontuação final: {Object.values(pontuacao).filter((p: boolean) => p).length} / {questionsHashMap.length}</h3>
                     <Button colorScheme="blue" variant="solid" onClick={() => {
                         //Voltar para a tela anterior
                         navigate('/history');
