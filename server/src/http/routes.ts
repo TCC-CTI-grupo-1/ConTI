@@ -67,7 +67,7 @@ export async function routes(app: any) {
 
     //NEW SIMULADO AQUI
     app.get('/questions/newMockTest/:uuid', getQuestionsForNewMockTestByProfileController);
-    app.get('/questions/newMockList/:uuid/:materias', getQuestionsForNewMockListByProfileController);
+    app.get('/questions/newMockList/:uuid/:nqst/:materias', getQuestionsForNewMockListByProfileController);
 
 
 
