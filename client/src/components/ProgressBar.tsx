@@ -1,6 +1,6 @@
 import {useState,useEffect} from 'react';
 interface Props{
-    color: string;
+    color?: string;
     radius: number;
     filledPercentage: number;
     animation?: boolean | false;
@@ -12,7 +12,7 @@ function percentageToCircle(percentage: number, radius: number){
     return radius * PI * 2 * percentage/100;
 }
 
-const ProgressBar = ({color, radius, filledPercentage, animation = false}: Props) =>  {
+const ProgressBar = ({color="#0066ff", radius, filledPercentage, animation = false}: Props) =>  {
     const [currentPercentage, setCurrentPercentage] = useState(0);
     const progressSize = radius*2+20;
 

@@ -24,11 +24,9 @@ export class Question_MockTestDAO {
     registerQuestions_MockTest = async (question_MockTests: Question_MockTestDTO[]) => {
         try {
             const client = await connectionDAO.getConnection();
-            console.log(question_MockTests[0])
             const createdQuestion_MockTests = await client.question_mockTest.createMany({
                 data: question_MockTests
             });
-            console.log(createdQuestion_MockTests)
             return createdQuestion_MockTests;
         } catch (error: any) {
             throw error;
@@ -46,6 +44,8 @@ export class Question_MockTestDAO {
                     }
                 },
                 data: {
+                    question_id: question_MockTest.question_id,
+                    mockTest_id: question_MockTest.mockTest_id,
                     answer_id: question_MockTest.answer_id
                 }
             });

@@ -1,9 +1,26 @@
 import { questionInterface, respostaInterface} from './interfaces';
 import { questionFilters } from './interfaces';
 import { showAlert } from '../App';
+
+async function handleAddImage(image:FormData, editing:boolean)
+{
+    image.append("editing",editing.toString())
+    const response = await fetch('client\\addImage.php', {
+        method:'POST',
+        body:image
+    })
+    const result = await response.json();
+    if(response.ok)
+    {
+        console.log("Upload feito com sucesso: ",result.filePath)
+    }
+    else {
+        showAlert("Erro ao enviar imagem: " + result.message,"error");
+    }
+}
 export async function handleGetQuestion(questionID: number): Promise<questionInterface | null> { //questionController
     try{
-        const response = await fetch('http://localhost:3001/questions/' + questionID, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/question/' + questionID, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -12,6 +29,11 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
         });
 
         const responseData = await response.json();
+        // responseData.questions.forEach((question: questionInterface) => {
+        //     // question.difficulty = question.difficulty.replace("facil", "Fácil")
+        //     //                       .replace("medio", "Médio")
+        //     //                       .replace("dificil", "Difícil");
+        // });
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
@@ -25,8 +47,8 @@ export async function handleGetQuestion(questionID: number): Promise<questionInt
 
 export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<questionInterface[]> {
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questions/ids/' + JSON.stringify(questions_ids), {
+        //await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/ids/' + JSON.stringify(questions_ids), {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -35,6 +57,11 @@ export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<
         });
 
         const responseData = await response.json();
+        // responseData.questions.forEach((question: questionInterface) => {
+        //     // question.difficulty = question.difficulty.replace("facil", "Fácil")
+        //     //                       .replace("medio", "Médio")
+        //     //                       .replace("dificil", "Difícil");
+        // });
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
@@ -48,7 +75,7 @@ export async function handleGetQuestionsByIds(questions_ids: number[]): Promise<
 
 export async function handleGetQuestions(): Promise<questionInterface[]> { //questionController
     try {
-        const response = await fetch('http://localhost:3001/questions/', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -57,6 +84,11 @@ export async function handleGetQuestions(): Promise<questionInterface[]> { //que
         });
 
         const responseData = await response.json();
+        // responseData.questions.forEach((question: questionInterface) => {
+        //     // question.difficulty = question.difficulty.replace("facil", "Fácil")
+        //     //                       .replace("medio", "Médio")
+        //     //                       .replace("dificil", "Difícil");
+        // });
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
@@ -70,7 +102,8 @@ export async function handleGetQuestions(): Promise<questionInterface[]> { //que
 
 export async function handleGetFilteredQuestions(filters: questionFilters): Promise<questionInterface[]> { // -> //questionController
     try {
-        const response = await fetch('http://localhost:3001/questions/filter/' + JSON.stringify(filters), {
+        console.log(JSON.stringify(filters));
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/filter/' + JSON.stringify(filters), {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -78,6 +111,11 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
             }
         });
         const responseData = await response.json();
+        // responseData.questions.forEach((question: questionInterface) => {
+        //     // question.difficulty = question.difficulty.replace("facil", "Fácil")
+        //     //                       .replace("medio", "Médio")
+        //     //                       .replace("dificil", "Difícil");
+        // });
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
@@ -89,55 +127,38 @@ export async function handleGetFilteredQuestions(filters: questionFilters): Prom
     }
 }
 
-
-export async function handlePutQuestion(question: questionInterface, answers: respostaInterface[]): Promise<boolean> { //questionController.ts
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response1 = await fetch('http://localhost:3001/questions/'+question.id, {
-            method: 'PUT',
+export async function handleDeleteQuestionImage(questionID: number): Promise<boolean>{
+    try{
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/image/' + questionID, {
+            method: 'DELETE',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(question)
+            }
         });
-
-        const response2 = await fetch('http://localhost:3001/answers/question/'+question.id, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(answers)
-        });
-
-        const responseData1 = await response1.json();
-        const responseData2 = await response2.json();
-
-        if (!response1.ok && !response2.ok) {
-            console.log(responseData1.message);
-            throw new Error(responseData1.message + ' ' + responseData2.message); 
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
         } else {
             return true;
         }
-
     } catch (err: any) {
+        showAlert(err.message);
         return false;
     }
 }
-
-export async function handlePostQuestion(question: questionInterface): Promise<boolean> { //questionController.ts
+export async function handlePostQuestionImage(image: File, questionID: number): Promise<boolean> { //questionController.ts
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questions', {
+        const formData = new FormData();
+        const newImage = new File([image], `${questionID}.png`, { type: image.type });
+        formData.append('image', newImage);
+        formData.append('questionID', questionID.toString());
+
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/image', {
             method: 'POST',
             credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(question)
+            body: formData
         });
-
         const responseData = await response.json();
         if (!response.ok) {
             throw new Error(responseData.message);
@@ -150,11 +171,106 @@ export async function handlePostQuestion(question: questionInterface): Promise<b
         return false;
     }
 }
+export async function handlePutQuestion(question: questionInterface, answers: respostaInterface[]): Promise<boolean> { //questionController.ts
+    try {
+
+        console.log("PUT QUESTION");        
+        const response1 = await fetch(import.meta.env.VITE_ADDRESS + '/questions/' + question.id, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(question)
+        });
+
+        const response2 = await fetch(import.meta.env.VITE_ADDRESS + '/answers', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(answers)
+        });
+
+        const responseData1 = await response1.json();
+        const responseData2 = await response2.json();
+
+        if (!response1.ok || !response2.ok) {
+            console.log(responseData1.message, responseData2.message);
+            throw new Error(responseData1.message + ' ' + responseData2.message); 
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
+
+export async function handlePutQuestion_withImage(question:questionInterface,answers:respostaInterface[], image:FormData)
+{
+    try{
+        handleAddImage(image,true);
+        return handlePutQuestion(question,answers); //ultimo pedaço antes não existia, remover caso necessario
+    }catch(err:any)
+    {
+        return false;
+    }
+}
+export async function handlePostQuestion(question: questionInterface, answers: respostaInterface[]): Promise<boolean> { //questionController.ts
+    try {
+
+        //console.log("PUT QUESTION");        
+        const response1 = await fetch(import.meta.env.VITE_ADDRESS + '/questions/' + question.id, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(question)
+        });
+
+        const response2 = await fetch(import.meta.env.VITE_ADDRESS + '/answers', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(answers)
+        });
+
+        const responseData1 = await response1.json();
+        const responseData2 = await response2.json();
+
+        if (!response1.ok || !response2.ok) {
+            console.log(responseData1.message, responseData2.message);
+            throw new Error(responseData1.message + ' ' + responseData2.message); 
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
+
+// export async function handlePostQuestion_withImage(question:questionInterface, image:FormData)
+// {
+//     try{
+//         handleAddImage(image,false);
+//         return handlePostQuestion(question);
+//     } catch(err:any)
+//     {
+//         showAlert(err.message);
+//         return false;
+//     }
+// }
 
 export async function handleDeleteQuestion(id: number): Promise<boolean> { //questionController.ts
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/questionsById/'+id, {
+        //await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questionsById/'+id, {
             method: 'DELETE',
             credentials: 'include',
             headers: {

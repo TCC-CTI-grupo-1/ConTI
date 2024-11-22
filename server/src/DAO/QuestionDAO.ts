@@ -88,7 +88,6 @@ export class QuestionDAO {
                 }
             });
             if (!area) {
-                console.log("Área não encontrada");
                 return;
             }
             await client.question.create({
@@ -151,22 +150,32 @@ export class QuestionDAO {
             throw error;
         }
     }
-
     listQuestionByFilters = async (filters: questionFilters) => {
 
         try {
+            console.warn("chegamos em listquestionbyfilters");
+            console.log("Filtros recebidos: ", filters);
             const areaDAO: AreaDAO = new AreaDAO();
             const client = await connectionDAO.getConnection();
-            const areaNames: string[] = filters.disciplina ? filters.disciplina : [];
             const difficulties: difficulty[] = filters.dificuldade ? filters.dificuldade : [];
             const years: number[] = filters.ano ? filters.ano.map(Number) : [];
-
             let areasIDs: number[] = [];
-            for (const areaName of areaNames) {
-                const area: (AreaDTO | undefined) = await areaDAO.searchAreaByName(areaName);
-                if (area !== undefined) {
-                    areasIDs.push(area.id);
-                } 
+            const translate = (a:string)=>{
+                if(a==="easy") return "facil";
+                if(a==="medium") return "medio";
+                if(a==="hard") return "dificil";
+            }
+            if(typeof filters.disciplina === 'string') {
+                const areaNames: string[] = filters.disciplina ? filters.disciplina : [];
+                for (const areaName of areaNames) {
+                    const area: (AreaDTO | undefined) = await areaDAO.searchAreaByName(areaName);
+                    if (area !== undefined) {
+                        areasIDs.push(area.id);
+                    } 
+                }
+            }
+            else {
+                areasIDs = filters.disciplina ? filters.disciplina.map(Number) : [];
             }
 
             for (const areaID of areasIDs) {
@@ -218,13 +227,15 @@ export class QuestionDAO {
                 };
                 questions.push(question);
             });
-            console.log(questions.length)
+            console.log(questions);
             return questions;
 
         } catch (error) {
+            console.error(error);
             throw error;
         }
     }
+    
 
     listQuestionsByArea = async (areaID: number) => {
         try {

@@ -18,7 +18,7 @@ const SimuladoFrame = () => {
     const [loading, setLoading] = useState(true);
     const [pontuacao, setPontuacao] = useState<boolean[]>([]);
 
-    //const navegate = useNavigate();
+    //const navigate = useNavigate();
 
     useEffect(() => {
         const getSimulado = async () => {
@@ -48,34 +48,29 @@ const SimuladoFrame = () => {
             allQuestions.forEach((question) => {
                 let respostas = allAnswers.filter((a) => a.question_id === question.id);
                 let correctAnswer = respostas.find((a) => a.is_correct === true);
-                let alternativaMarcadaID = simulado.find((s) => s.question_id === question.id);
-                if(alternativaMarcadaID === undefined){
+
+                if(correctAnswer === undefined || respostas === undefined){
                     console.error("Erro ao carregar questão " + question.id);
-                    newPontuacao.push(false);
-                    newQuestionsHashMap.push([question, null, respostas]);
+                    return;
+                }
+                
+                let simuladoAlternativaMarcada = simulado.find((s) => s.question_id === question.id);
+                if(simuladoAlternativaMarcada === undefined){
+                    console.error("Erro ao carregar questionMockTest " + question.id);
                     return;
                 }
 
-                let alternativaMarcada = respostas.find((a) => a.id === alternativaMarcadaID.answer_id);
+                let alternativaMarcada = respostas.find((a) => a.id === simuladoAlternativaMarcada.answer_id);
 
-                if(correctAnswer === undefined){
-                    console.error("Erro ao carregar questão " + question.id);
-                }
-                else{
-                    if(alternativaMarcada !== undefined){
-                        if(correctAnswer.id === alternativaMarcadaID.answer_id){
-                            newPontuacao.push(true);
-                        }
-                        else{
-                            newPontuacao.push(false);
-                        }
-                    }
-                    else{
-                        newPontuacao.push(false);
-                    }
+                if(alternativaMarcada === undefined){
+                    console.error("Erro ao carregar alternativa marcada");
+                    console.error(respostas);
+                    console.error(simuladoAlternativaMarcada);
+
+                    return;
                 }
 
-                newQuestionsHashMap.push([question, alternativaMarcada ? alternativaMarcada : null, respostas]);
+                newQuestionsHashMap.push([question, alternativaMarcada, respostas]);
             });
 
             /*await Promise.all(simulado.map(async (question) => {
@@ -116,12 +111,14 @@ const SimuladoFrame = () => {
 
         getSimulado();
     }, []);
-  
+
     return (
         loading ? <h2>Aguarde enquanto finalizamos o seu simulado... </h2> :
         <>
             {questionsHashMap === null ? <h1>Erro ao carregar simulado</h1> :
-                <Simulado questionsHashMap={questionsHashMap} pontuacao={pontuacao}    
+                <Simulado questionsHashMap={
+                    questionsHashMap.sort((a, b) => a[0].id - b[0].id)
+                } pontuacao={pontuacao}    
                 /> 
             }
         </>

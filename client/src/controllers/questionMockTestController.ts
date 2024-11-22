@@ -2,7 +2,7 @@ import { question_MockTestInterface} from './interfaces';
 
 export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number): Promise<question_MockTestInterface[]> {//questionmockTestController.ts
     try {
-        const response = await fetch('http://localhost:3001/question_MockTests/' + mockTestId, {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/question_MockTests/' + mockTestId, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -24,7 +24,9 @@ export async function handleGetQuestion_MockTestsByMockTestId(mockTestId: number
 
 export async function handlePutQuestion_MockTestById(question_mockTest: question_MockTestInterface): Promise<string> {
     try {
-        const response = await fetch('http://localhost:3001/question_MockTests/', {
+        console.log("PUT QUESTION_MOCKTEST");
+        console.log(question_mockTest);
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/question_MockTest/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -41,6 +43,8 @@ export async function handlePutQuestion_MockTestById(question_mockTest: question
         }
 
     } catch (err: any) {
+        console.log(err.message);
         return err.message;
+        
     }
 }

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { questionInterface, respostaInterface } from '../../../controllers/interfaces';
 import LocalButton from '../../Button';
 import { showAlert } from '../../../App';
+import LatexRenderer from '../../LatexRenderer';
 
 interface Props {
     question: questionInterface;
@@ -108,19 +109,31 @@ const QstDetail = ({question, answers, type="small"}: Props) => {
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
             <div className={'box question ' + (type == "small" ? "small" : "")}>
-                {type !== "small" &&
-                <p>CTI &gt; 2023 &gt; Ciências Humanas &gt; Fontes Energéticas </p>}
+                <p>Questão #{question.id}</p>
+
                 <h4>
-                {question.question_text}
+                <LatexRenderer text={question.question_text}></LatexRenderer>
                 </h4>
+
+                {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
+                
+                <div className="additional_info">
+                    {question.additional_info !== '' && <h3>Texto de apoio:</h3>}
+                    <p>{question.additional_info}</p>
+                </div>
+
                 <div className={"alternatives " + (showAnswer ? 'showCorrect' : '')} ref={questionRef}>
                     
                     {answers.map((alternative, index) => (
-                        <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)}>
-                            <span>
-                                <p> {alternative.question_letter} </p>
-                            </span>
-                            <p> {alternative.answer} </p>
+                        <div className="item">
+                            <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)
+                                + ' ' + (alternative.is_correct ? 'correct' : '')
+                            }>
+                                <span>
+                                    <p> {alternative.question_letter} </p>
+                                </span>
+                                <p> <LatexRenderer text={alternative.answer}></LatexRenderer> </p>           
+                            </div>
                         </div>
                     ))}
     

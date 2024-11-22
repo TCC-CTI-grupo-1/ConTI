@@ -1,7 +1,7 @@
+import { Request, Response } from "express";
 import { AreaDAO } from "../../DAO/AreaDAO";
 import { AreaDTO } from "../../DTO/AreaDTO";
 import { QuestionDAO } from "../../DAO/QuestionDAO";
-import { Request, Response } from "express";
 
 export async function getAreaController(req: Request, res: Response) {
     const areaDAO = new AreaDAO();
@@ -50,6 +50,30 @@ export async function getTopParentAreaByIdController(req: Request, res: Response
     }
 }
 
+export async function getAllParentAreasByIdsController(req: Request, res: Response) {
+    const ids = JSON.parse(req.params.ids) as number[];
+    const areaDAO = new AreaDAO();
+
+    try {
+        const areas: AreaDTO[] = await areaDAO.listAllParentAreasByIds(ids);
+        res.json({ areas: areas });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getTopParentAreasByIdsController(req: Request, res: Response) {
+    const ids = JSON.parse(req.params.ids) as number[];
+    const areaDAO = new AreaDAO();
+    
+    try {
+        const areas: AreaDTO[] = await areaDAO.listTopParentAreasByIds(ids);
+        res.json({ areas: areas });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 export async function getAreaIdByQuestionIdController(req: Request, res: Response) {
     const question_id = req.params.question_id;
     const questionDAO = new QuestionDAO();
@@ -67,13 +91,22 @@ export async function getAreaIdByQuestionIdController(req: Request, res: Respons
 }
 
 export async function getAreasIdsByQuestionsIdsController(req: Request, res: Response) {
-    console.log("sddawa")
     const questions_ids = JSON.parse(req.body.questions_ids) as number[];
     const questionDAO = new QuestionDAO();
     
     try {
         const areas_ids: number[] = await questionDAO.listAreasIdsByQuestionsIds(questions_ids);
         res.json({ areas_ids: areas_ids });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getAreaTreeController(req: Request, res: Response) {
+    const areaDAO = new AreaDAO();
+    try {
+        const areaTree = await areaDAO.buildRootedAreaTree();
+        res.json({ areaTree: areaTree });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }

@@ -1,0 +1,43 @@
+
+
+
+.desenvolvedores {
+  
+    .dev-container {    
+      display: flex;
+      align-items: center; // Centraliza verticalmente a imagem e o texto
+      gap: 22px; // Espaçamento entre a imagem e o texto
+    }
+  
+    .rounded-image {
+      width: 700px;
+      height: auto;
+      border-radius: 30px; 
+      object-fit: cover; 
+    }
+  }
+  
+  .aboutUs{
+    padding-top: 0 !important;
+    text-align: justify;
+    flex: 1;
+    line-height: 1.6;
+  }
+
+  .aboutUs h3{
+    width: 1560px;
+  }
+
+  .somos{
+    font-size: 25px;
+    width: 800px;
+    height: 300px;
+     margin-left: 40px;
+  }
+
+  .dev_img{
+    padding-left: 5px;
+  }
+  .desenvolvedores{
+    margin-left: 1px;
+  }

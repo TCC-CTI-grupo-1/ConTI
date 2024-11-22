@@ -7,7 +7,7 @@ export interface SubjectCategory {
 export interface questionFilters{
     ano: number[];
     dificuldade: string[];
-    disciplina: string[];
+    disciplina: number[];
     alreadyAnswered?: boolean;
     myMockTests: boolean;
 }
@@ -16,7 +16,7 @@ export interface questionInterface{
     area_id: number;
     has_image: boolean;
     has_latex: boolean;
-    difficulty: string,
+    difficulty: 'facil' | 'medio' | 'dificil',
     id: number,
     official_test_name: string;
     question_creator: string;
@@ -30,14 +30,14 @@ export interface questionInterface{
 
 export interface question_MockTestInterface{
     question_id: number,
-    mocktest_id: number,
+    mockTest_id: number,
     answer_id: number | null
 }
 
 //Usado para mostrar o histórico de simulados
 export interface simuladoInterface{
     UUID: string,
-    creation_date: Date,
+    creation_date_tz: Date,
     id: number,
     profile_id: number,
     test_type: string,
@@ -54,7 +54,6 @@ export interface simuladoInterface{
         }
     },
 }
-
 // NÃO DÁ PRA SÓ PEGAR DO DTO? EM SERVER... MELHOR, NÃO?...
 
 export interface areaInterface{
@@ -89,4 +88,13 @@ export interface profileInterface{
     total_correct_answers: number;
     total_answers: number;
     total_mock_tests: number;
+}
+
+export interface areaTreeInterface{
+    areaTree: {
+        tree: {
+            [key: string]: Array<areaInterface>
+        },
+        root: areaInterface
+    }
 }

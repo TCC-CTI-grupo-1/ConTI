@@ -2,7 +2,6 @@ import { ConnectionDAO } from "./ConnectionDAO";
 import { AnswerDTO } from "../DTO/AnswerDTO";
 
 const connectionDAO = new ConnectionDAO();
-
 export class AnswerDAO {
     registerAnswer = async (answer: AnswerDTO) => {
         try {
@@ -37,6 +36,61 @@ export class AnswerDAO {
                     total_answers: answer.total_answers
                 }
             });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    updateAnswers = async (answers: AnswerDTO[]) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            answers.forEach(async (answer) => {
+                await client.answer.update({
+                    where: {
+                        id: answer.id
+                    },
+                    data: {
+                        question_id: answer.question_id,
+                        answer: answer.answer,
+                        is_correct: answer.is_correct,
+                        question_letter: answer.question_letter,
+                        total_answers: answer.total_answers
+                    }
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    incrementAnswers = async (answers: AnswerDTO[]) => {
+        try {
+            const client = await connectionDAO.getConnection();
+            for (const answer of answers) {
+                const existingAnswer = await client.answer.findUnique({
+                    where: {
+                        id: answer.id
+                    }
+                });
+                if (existingAnswer) {
+                    try {
+                        const result = await client.answer.update({
+                            where: {
+                                id: answer.id
+                            },
+                            data: {
+                                total_answers: {
+                                    increment: 1
+                                }
+                            }
+                        });
+                    } catch (updateError) {
+                        console.error('Error during update:', updateError);
+                    }
+                } else {
+                    throw new Error('Resposta não encontrada');
+                }
+            }
         } catch (error) {
             throw error;
         }

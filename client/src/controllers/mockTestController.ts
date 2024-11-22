@@ -2,9 +2,9 @@ import { questionInterface, simuladoInterface} from './interfaces';
 import { handleGetUser } from './userController';
 export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<simuladoInterface[]> { //mockTestController.ts
     try {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const response = await fetch('http://localhost:3001/mockTests/date/' + date, {
+       // await new Promise(resolve => setTimeout(resolve, 500));
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTests/date/' + date + '/' + userId, {
             method: 'GET',
             credentials: 'include', 
             headers: {
@@ -25,6 +25,7 @@ export async function handleGetMockTestsByDateAndProfile(date: Date): Promise<si
 
 }
 
+
 export async function handlePostSimulado(questionsList: questionInterface[], tipo: string, time_limit: number): Promise<simuladoInterface | null> { //mockTestController.ts
     //Código PLACEHOLDER.
     try {
@@ -42,7 +43,8 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             title: name
         };
         console.log(dataForMockTest);
-        const response = await fetch('http://localhost:3001/mockTest/', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTest/' + userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -58,7 +60,7 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
             questions: questionsList
         };
 
-        const responseQuestions = await fetch('http://localhost:3001/questions_MockTest/', {
+        const responseQuestions = await fetch(import.meta.env.VITE_ADDRESS + '/questions_MockTest', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -81,10 +83,10 @@ export async function handlePostSimulado(questionsList: questionInterface[], tip
 }
 
 //NN FEITO
-export async function handleGetSimulado(id: number): Promise<simuladoInterface | null> {//mockTestController.ts
+export async function handleGetSimulado(): Promise<simuladoInterface | null> {//mockTestController.ts
     //Atenção, no backend checar se foi o usuario quem fez o simulado, se não foi retornar nulo.
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000 * id/100));
+        //await new Promise(resolve => setTimeout(resolve, 1000 * id/100));
         return null;
     } catch (err: any) {
         return null;
@@ -96,11 +98,10 @@ export async function handleGetSimulado(id: number): Promise<simuladoInterface |
 //Essa função parece muito errada
 
 // não é 'generate', tá mais pra 'get'
-export async function generateNewSimulado(amount: number): Promise<questionInterface[]>{ //mockTestController.ts
-    try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        
-        const response = await fetch('http://localhost:3001/questions/newMockTest/', {
+export async function generateNewSimulado(): Promise<questionInterface[]>{ //mockTestController.ts
+    try {        
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/questions/newMockTest/' + userId, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -118,5 +119,27 @@ export async function generateNewSimulado(amount: number): Promise<questionInter
     }
     catch (err: any) {
         return err.message;
+    }
+}
+
+export async function handlePutSimulado(simulado: simuladoInterface): Promise<boolean> {//mockTestController.ts
+    try {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/mockTest/' + simulado.id, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(simulado)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        return false;
     }
 }

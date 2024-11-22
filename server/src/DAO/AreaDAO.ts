@@ -5,6 +5,10 @@ const connectionDAO = new ConnectionDAO();
 const CTI_ID:number = 0;
 
 export type AreaTree = {[key:number]:AreaDTO[]};
+export interface Rooted_AreaTree{
+    tree:AreaTree,
+    root:AreaDTO
+}
 
 export class AreaDAO {
     registerArea = async (area: AreaDTO) => {
@@ -98,11 +102,12 @@ export class AreaDAO {
     deleteArea = async (id: number) => {
         try {
             const client = await connectionDAO.getConnection();
-            await client.area.delete({
+            const deletedArea = await client.area.delete({
                 where: {
                     id: id
                 }
             });
+            return deletedArea;
         } catch (error) {
             throw error;
         }
@@ -116,6 +121,10 @@ export class AreaDAO {
                     parent_id: parent_id
                 }
             });
+
+            if (result.length === 0) {
+                throw new Error('Área não encontrada');
+            }
 
             const areas: AreaDTO[] = [];
 
@@ -154,11 +163,16 @@ export class AreaDAO {
     listAllSubAreasByParentId = async (parent_id: number): Promise<AreaDTO[]> => {
         try {
             const client = await connectionDAO.getConnection();
+            console.log(parent_id);
             const result = await client.area.findMany({
                 where: {
                     parent_id: parent_id
                 }
             });
+
+            if (result.length === 0) {
+                return [];
+            }
 
             const areas: AreaDTO[] = [];
 
@@ -191,14 +205,15 @@ export class AreaDAO {
                     id: id
                 }
             });
-            if (result) {
-                if (result.parent_id !== CTI_ID && result.parent_id) {
-                    return this.searchTopParentAreaById(result.parent_id);
-                } else {
-                    return result as AreaDTO;
-                }
-            } else {
+
+            if (!result) {
                 throw new Error('Área não encontrada');
+            }
+
+            if (result.parent_id !== CTI_ID && result.parent_id) {
+                return this.searchTopParentAreaById(result.parent_id);
+            } else {
+                return result as AreaDTO;
             }
         } catch (error) {
             throw error;
@@ -216,6 +231,10 @@ export class AreaDAO {
                 }
             });
 
+            if (result.length === 0) {
+                throw new Error('Área não encontrada');
+            }
+
             const areas: AreaDTO[] = [];
 
             result.forEach((result: any) => {
@@ -230,6 +249,54 @@ export class AreaDAO {
             throw error;
         }
     }
+    
+    listParentAreasByIds = async (ids: number[]): Promise<AreaDTO[]> => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const result = await client.area.findMany({
+                where: {
+                    id: {
+                        in: ids
+                    }
+                }
+            });
+
+            if (result.length === 0) {
+                throw new Error('Área não encontrada');
+            }
+            const results = result;
+            const areas: AreaDTO[] = [];
+            for (const result of results) {
+                if (result.parent_id !== null || result.parent_id === 0) {
+                    const area = await this.searchAreaById(result.parent_id);
+                    if (areas.find((a) => a.id === area.id) === undefined) {
+                        areas.push(area);
+                    }
+                }
+            }
+
+            return areas;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    listAllParentAreasByIds = async (ids: number[]): Promise<AreaDTO[]> => {
+        try {
+            let parents: AreaDTO[] = [];
+
+            parents = await this.listParentAreasByIds(ids);
+            parents.forEach(async (parent) => {
+                parents = parents.concat(await this.listAllParentAreasByIds([parent.id]));
+            });
+            return parents;
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
 
     buildAreaTree = async() :Promise<AreaTree> => {
         const instance = new AreaDAO();
@@ -248,6 +315,30 @@ export class AreaDAO {
             }
         }
         return tree;
+    }
+    buildRootedAreaTree = async() : Promise<Rooted_AreaTree> => {
+        const instance = new AreaDAO();
+        const areaList:AreaDTO[] = await instance.listAreas();
+        let tree:AreaTree = {0:[]};
+        let root:AreaDTO = {id:0, name:"root", parent_id:null};
+        for(const area of areaList)
+            {
+                if(area.parent_id!==null && area.parent_id!==undefined)
+                {
+                    if(tree[area.parent_id] !== undefined)
+                    {
+                        tree[area.parent_id].push(area);
+                    }
+                    else {
+                        tree[area.parent_id] = [];
+                        tree[area.parent_id].push(area);
+                    }
+                }
+                else {
+                    root = area;
+                }
+            }
+        return {tree:tree, root:root};
     }
 
     // listAreasWithoutSubAreas = async () => {

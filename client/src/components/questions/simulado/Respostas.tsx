@@ -46,8 +46,9 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
     const returnQuestionDetail = () => {
         let cont = 0;
         const questionsDetail: JSX.Element[] = [];
-
         questionsHashMap.forEach((questionMap, index) => {
+            
+            console.error(questionMap);
             cont++;
             questionsDetail.push(
                 <div
@@ -56,7 +57,9 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                 >
                     <QstDetailRespostas 
                         answers={questionMap[2]}
-                        question={questionMap[0]} 
+                        question={
+                            questionMap[0]
+                        } 
                         selectedAnswer={questionMap[1] ? questionMap[1].id : -1}
                     />
                 </div>
@@ -67,7 +70,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
     };
 
 
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     return (
         <>
@@ -83,7 +86,7 @@ const Simulado = ({ questionsHashMap, pontuacao }: Props) => {
                     <h3>Pontuação final: {pontuacao.filter((p) => p).length} / {questionsHashMap.length}</h3>
                     <Button colorScheme="blue" variant="solid" onClick={() => {
                         //Voltar para a tela anterior
-                        navegate('/history');
+                        navigate('/history');
 
                     }}>
                         Voltar ao historico

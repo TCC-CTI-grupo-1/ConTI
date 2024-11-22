@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import Navbar from '../Navbar'
 import DaySelector from './DaySelector'
 import { useState } from 'react'
-import date from 'date-and-time'
 import { handleGetAnswersByQuestionsIds } from '../../controllers/answerController';
 import { handleGetQuestion_MockTestsByMockTestId } from '../../controllers/questionMockTestController'
 import { handleGetMockTestsByDateAndProfile } from '../../controllers/mockTestController'
 import { handleGetQuestionsByIds } from '../../controllers/questionController'
 import { handleGetAreasMap } from '../../controllers/areasController'
-
-import { areaInterface, questionInterface, simuladoInterface } from '../../controllers/interfaces'
+import SimuladosList from './SimuladosList';
+import { getAreaPaiID } from '../../controllers/areasController';
+import { areaInterface, simuladoInterface } from '../../controllers/interfaces'
 import { useNavigate } from 'react-router-dom'
 
+import LoadingScreen from '../LoadingScreen';
 
 import {
     Modal,
@@ -23,7 +24,6 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
-    Spinner
   } from '@chakra-ui/react'
 import { showAlert } from '../../App'
 
@@ -41,11 +41,9 @@ const History = () => {
     const [loading, setLoading] = useState(true);
     const [loading2, setLoading2] = useState(true);
 
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     const [areas, setAreas] = useState<{[key: string]: areaInterface}>({});
-
-    const [questionsGlobal, setQuestionsGlobal] = useState<questionInterface[]>([]);
 
     async function handleSetAreasMap(){
         const areasMap = await handleGetAreasMap();
@@ -90,9 +88,14 @@ const History = () => {
         let response2 = await getListas(activeDate);
 
         setListas(response2);
-
-        setLoading2(false);
     }
+
+    useEffect(() => {
+        if(simulados.length !== 0 && listas.length !== 0){
+            setLoading2(false);
+        } 
+    }, [simulados, listas]);
+
 
     //[simulados, listas]
     async function getSimulados(date: Date): Promise<simuladoInterface[]>{
@@ -116,7 +119,11 @@ const History = () => {
             questions.forEach(question => {
                 const areaID = question.area_id;
                 const area = areas[areaID];
-                const areaName = area.name;
+                const areaPai = getAreaPaiID(area, Object.values(areas));
+                if(areaPai === null){
+                    return;
+                }
+                const areaName = areas[areaPai].name;
                 if(subjects[areaName] === undefined){
                     subjects[areaName] = {total_answers: 0, total_correct_answers: 0};
                 }
@@ -125,7 +132,6 @@ const History = () => {
                     subjects[areaName].total_correct_answers++;
                 }
             })
-            console.log("subjects", subjects);
             simulado.subjects = subjects
         });
         return responseSimulados;
@@ -151,7 +157,11 @@ const History = () => {
             questions.forEach(question => {
                 const areaID = question.area_id;
                 const area = areas[areaID];
-                const areaName = area.name;
+                const areaPai = getAreaPaiID(area, Object.values(areas));
+                if(areaPai === null){
+                    return;
+                }
+                const areaName = areas[areaPai].name;
                 if(subjects[areaName] === undefined){
                     subjects[areaName] = {total_answers: 0, total_correct_answers: 0};
                 }
@@ -160,7 +170,6 @@ const History = () => {
                     subjects[areaName].total_correct_answers++;
                 }
             })
-            console.log("subjects", subjects);
             simulado.subjects = subjects
         });
         return responseSimulados;
@@ -190,7 +199,7 @@ const History = () => {
             return (
                 <div id="historyOverlay">
                     <h2>Simulado #{i === 0 ? simulados[j].id : listas[j].id}</h2>
-                    <p>Tempo consumudo: {i === 0 ? simulados[j].time_spent : listas[j].time_spent} minutos</p>
+                    <p>Tempo consumido: {i === 0 ? simulados[j].time_spent : listas[j].time_spent} minutos</p>
 
                     <h3>{i === 0 ? simulados[j].total_correct_answers : listas[j].total_correct_answers}
                         /
@@ -201,7 +210,7 @@ const History = () => {
                     <div className="materias">
                         {
                             (i === 0 ? simulados[j].subjects : listas[j].subjects) &&
-                            Object.keys(i === 0 ? simulados[j].subjects : listas[j].subjects).map((subject, index) => {
+                            (Object.keys(i === 0 ? simulados[j].subjects : listas[j].subjects).map((subject, index) => {
                                 
                                 let subjectts = i === 0 ? simulados[j].subjects : listas[j].subjects;
 
@@ -213,7 +222,7 @@ const History = () => {
                                         </div>
                                     </div>
                                 )
-                            })
+                            }))
                         }
                     </div>
                 </div>
@@ -230,21 +239,18 @@ const History = () => {
 
     }
 
-    function showDate(){
-        let date = new Date(activeDate);
-    }
-
     return (
-        <>{loading ? <h1>Carrregando</h1> :
+        <>{loading ? <LoadingScreen /> :
             <div id="history" className="flex-container full-screen-size">
                     <Navbar screen="history"/>
                     <div className="container">
                         <div className="header">
-                            <h1 onClick={showDate}>Histórico</h1>
+                            <h1>Histórico</h1>
                         </div>
                         <div className="inversed-border"></div>
                         <div className="content">
-                            <h3>Veja seus simulados anteriores e quais são os pontos com mais dificuldade.</h3>
+                            <h3>Veja seus simulados anteriores e quais são os pontos em que você tem mais dificuldade.</h3>
+                            <p>Clique em um simulado para abrir um painel com mais informações</p>
                             <DaySelector handleChangeDay={setActiveDate} />
                             <div>
                                 {
@@ -254,88 +260,23 @@ const History = () => {
                                     <>
                                         <div id="simulados">
                                             <h2>Simulados</h2>
-                                            <div>        
-                                                {
-                                                    simulados.length === 0 ? <p>Nenhum simulado feito nesse dia</p> :
-                                                    simulados.map((simulado, index) => {
-                                                        return (
-                                                            <div key={index} className="provaCard"
-                                                            onClick={() => {
-                                                                let number = (index + 1) * 10 + 1;
-                                                                openOverlay(number);
-                                                            }}>
-                                                                <h3>[ {simulado.id} ] - {simulado.total_correct_answers}/{simulado.total_answers}</h3>
-                                                                <div className="progress">
-                                                                    <div style={{width: `${(simulado.total_correct_answers/simulado.total_answers)*100}%`}}></div>
-                                                                </div>
-                                                                <p>Tempo consumido: {simulado.time_spent}min</p>
-                                                                <div className="materias">
-                                                                    {
-                                                                        (simulado.subjects) &&
-                                                                        Object.keys(simulado.subjects).map((subject, index) => {
-                                                                            return (
-                                                                                <div key={index}>
-                                                                                    <p>{subject}</p>
-                                                                                    <h4>{simulado.subjects![subject].total_correct_answers}/{simulado.subjects![subject].total_answers}</h4>
-                                                                                    <div className="progress">
-                                                                                        <div style={{width: `${(simulado.subjects![subject].total_correct_answers/simulado.subjects![subject].total_answers)*100}%`}}></div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            )
-                                                                        })
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    })
+                                            <div> 
+                                                { 
+                                                    <SimuladosList simulados={simulados} openOverlay={openOverlay} />
+                                                    
                                                 }
-
-                                                
                                             </div>
                                         </div>
-                                        <div id="listas">
+                                        {/* <div id="listas">
                                             <h2>Listas</h2>
                                             <div>
-                                                {
-                                                    listas.length === 0 ? <p>Nenhuma lista feita nesse dia</p> :
-                                                    listas.map((lista, index) => {
-                                                        return (
-                                                            <div key={index} className="provaCard"
-                                                            onClick={() => {
-                                                                let number = (index + 1) * 10 + 2;
-                                                                openOverlay(number);
-                                                            }}>
-                                                                <h3>[ {lista.id} ] - {lista.total_correct_answers}/{lista.total_answers}</h3>
-                                                                <div className="progress">
-                                                                    <div style={{width: `${(lista.total_correct_answers/lista.total_answers)*100}%`}}></div>
-                                                                </div>
-                                                                <p>Tempo consumido: {lista.time_spent}min</p>
-                                                                <div className="materias">
-                                                                    {
-                                                                        (lista.subjects) &&
-                                                                        Object.keys(lista.subjects).map((subject, index) => {
-                                                                            return (
-                                                                                <div key={index}>
-                                                                                    <p>{subject}</p>
-                                                                                    <h4>{lista.subjects![subject].total_correct_answers}/{lista.subjects![subject].total_answers}</h4>
-                                                                                    <div className="progress">
-                                                                                        <div style={{width: `${(lista.subjects![subject].total_correct_answers/lista.subjects![subject].total_answers)*100}%`}}></div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            )
-                                                                        })
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    })
-                                                }
+                                                <SimuladosList simulados={listas} openOverlay={openOverlay} />
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </>
                                 }
                             </div>
-                        </div>
+                        </div>  
 
                     </div>
             </div>
@@ -356,7 +297,7 @@ const History = () => {
                 <ModalFooter>
                     <Button variant='ghost' mr={3} onClick={onClose}>Fechar</Button>
                     <Button colorScheme='blue' onClick={() => {
-                        navegate(`/simulado/${retrurnActiveQuestionId()}`);
+                        navigate(`/simulado/${retrurnActiveQuestionId()}`);
                     }}>
                     Ver prova
                     </Button>   

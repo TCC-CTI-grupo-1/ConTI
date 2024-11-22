@@ -2,16 +2,18 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { questionInterface, respostaInterface } from '../../../controllers/interfaces';
 import { showAlert } from '../../../App';
 
+import scissors from '../../../assets/scissors.png';
+import LatexRenderer from '../../LatexRenderer';
 interface Props {
     question: questionInterface;
     answers: respostaInterface[];
-    isAnswersSelected: (value: string | null) => void
+    isAnswersSelected: (value: number | null) => void
     qNumber: number; //Numero da questão no simulado
 }
 
 const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Props) => {
 
-    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
     useEffect(() => {
         isAnswersSelected && isAnswersSelected(selectedAnswer);
@@ -33,12 +35,17 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
             const alternativeLetter = alternative.querySelector('p')?.textContent;
             if (alternativeLetter === letter) {
                 alternative.classList.add('active');  
-                setSelectedAnswer(letter);
+                if(isNaN(Number(alternative.id)))
+                {
+                    setSelectedAnswer(null);
+                }else{
+                    setSelectedAnswer(Number(alternative.id));
+                }
             }
         });
     }, []);
 
-    const handleClick = useCallback((event: Event) => {
+    const handleClick = useCallback((event: any) => {
         const target = event.currentTarget as HTMLElement;
 
         if (questionRef.current === null) return showAlert('Ocorreu um erro ao encontrar a alternativa. Tente novamente.');
@@ -51,45 +58,51 @@ const QstDetailSimulado = ({question, answers, isAnswersSelected, qNumber}: Prop
         }
     }, [addClassToAlternative]);
 
-
-    function checkAlternativas(){
-        if(alternativasRef.current.length === 0) return showAlert('Ocorreu um erro ao encontrar as alternativas. Tente novamente. [0]');    
-        alternativasRef.current.forEach((alternativa) => {
-            //console.log("alternativa");
-            if(alternativa === null || alternativa === undefined) return;   
-            
-            //console.log(alternativa.current);
-            alternativa.addEventListener('click', handleClick);         
-        });
-    }
-
-    useEffect(() => {
-        
-        checkAlternativas();
-
-        // Cleanup function to remove event listeners when the component unmounts or when showAnswer changes
-        
-    }, [handleClick]);
+    const handleScissorsClick = useCallback((event: any) => {
+        const target = event.currentTarget as HTMLElement;
+        const parent = target.parentElement as HTMLElement;
+        const div = parent.querySelector('div') as HTMLElement;
+        div.classList.toggle('cut');
+    }, [addClassToAlternative]);
 
     return (
         <>
             {question === undefined ? <h1>Erro ao carregar questão</h1> : 
     <div className={'box question'}>
+
         <p id='question-number-container'>{qNumber}</p>
         <h4>
-            {question.question_text}
+            <LatexRenderer text={question.question_text}></LatexRenderer>
         </h4>
+
+        {question.has_image && <img src={import.meta.env.VITE_ADDRESS + "/" + question.id + '.png'} alt="Imagem da questão" />}
+
+        <div className="additional_info">
+            {question.additional_info !== '' && <h3>Texto de apoio:</h3>}
+            <p>{question.additional_info}</p>
+        </div>
+        
         <div className={"alternatives"} ref={questionRef}>
             {alternativasRef.current = []} 
             {answers.map((alternative, index) => (
-                <div key={index} ref={(element) => alternativasRef.current.push(element)} className={String(index)} >
-                    <span> 
-                        <p> {alternative.question_letter} </p>
-                    </span>
-                    <p> {alternative.answer} </p>
+                <div className='item'>
+                    <div key={index} onClick={(e)=> {
+                        handleClick(e);
+                    }} className={String(index)} id={String(alternative.id)}>
+                        <span> 
+                            <p> {alternative.question_letter} </p>
+                        </span>
+                        <LatexRenderer text={alternative.answer} />
+                        
+                    </div>
+                    <img src={scissors} onClick={(e) => {
+                        handleScissorsClick(e);
+                    }}> 
+                    </img>
                 </div>
             ))}
         </div>
+
         <div className="options">               
         </div>
     </div>

@@ -1,33 +1,99 @@
+import RedisStore from "connect-redis";
+import { createClient } from 'redis';
 import express from 'express';
 import cors from 'cors';
 import { routes } from './http/routes';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-
+import path from 'path';
 const session = require('express-session');
-
+const fs = require('fs');
+const https = require('https');
 const app = express();
 
-dotenv.config();
+const isRemote = false;
 
-app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true
-}));
-app.use(express.json());
+if(isRemote) {
+    dotenv.config();
 
-app.use(session({
-    secret: process.env.SECRET_KEY,
-    resave: false,
-    saveUninitialized: false,
-    name: 'sid',
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 12
+    const app = express();
+    const passRedis = process.env.REDIS_PASS;
+    const hostRedis = process.env.REDIS_HOST;
+    const portRedis = parseInt(process.env.REDIS_PORT as string);
+    let redisClient = createClient({
+        password: passRedis,
+        socket: {
+            host: hostRedis,
+            port: portRedis
+        }
+    });
+    redisClient.connect().catch(console.error);
+    let redisStore = new RedisStore({
+        client: redisClient
+    });
+
+    const urlLocal = 'http://localhost:5173';
+    const urlRemoto = 'https://projetoscti.com.br';
+    const urlCloud = 'http://cti.4edge.cloud:1945';
+
+    app.use(cors({
+        origin: [urlLocal, urlRemoto, urlCloud],
+        credentials: true
+    }));
+
+    
+    app.use(express.json());
+
+    
+  
+    if (process.env.SECRET_KEY === undefined) {
+        console.error('SECRET_KEY não definida');
+        process.exit(1);
     }
-}))
+    routes(app);
 
-app.use(cookieParser());
+    const port = 1945;
+    app.listen(port, () => {
+        console.log("Server is running on port " + port);
+    });
 
-routes(app);
+    }
+else {
+    dotenv.config();
+    const urlLocal = 'http://localhost:5173';
+    const urlRemoto = 'https://projetoscti.com.br';
+    app.use(cors({
+        origin: [urlLocal, urlRemoto],
+        credentials: true
+    }));
+    app.use(express.json());
 
-app.listen(3001, () => { console.log("Server is running on port 3001")} );
+    app.use(session({
+        secret: process.env.SECRET_KEY,
+        resave: false,
+        saveUninitialized: false,
+        name: 'sid',
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 12,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax'
+        }
+    }));
+    const port = process.env.PORT || 1939;
+    app.use(cookieParser());
+    app.use(express.static('uploads'));
+    // const options = {
+    //     key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+    //     cert: fs.readFileSync('cert.pem')
+    // };
+
+    // https.createServer(options, app).listen(3001);
+
+    routes(app);
+
+    var bodyParser = require('body-parser');
+    app.use(bodyParser.json({limit: "50mb"}));
+    app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+    
+    app.listen(port, () => { console.log("Server is running on port " + port) });
+}

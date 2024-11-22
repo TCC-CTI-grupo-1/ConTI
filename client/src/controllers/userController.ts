@@ -1,6 +1,5 @@
 
 //import { json } from 'react-router-dom';
-import { Profile } from '../../../server/src/types/express-session';
 import { area_ProfileInterface, profileInterface } from './interfaces';
 
 
@@ -56,7 +55,7 @@ const  validatePassword = (password: string): number[] => {
 
 //Funções assincronas
 
-export async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<string | null> {
+export async function handleSignup(name: string, email: string, password: string, remember: boolean): Promise<[boolean, any]> {
 
     //await new Promise(resolve => setTimeout(resolve, 3000));
     //return true;
@@ -69,7 +68,7 @@ export async function handleSignup(name: string, email: string, password: string
             remember: remember
         };
 
-        const response = await fetch('http://localhost:3001/signup', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/signup', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -82,22 +81,24 @@ export async function handleSignup(name: string, email: string, password: string
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
-            return null;
+            return [true, responseData];
         }
     } catch (err: any) {
-        return err.message;
+        return [false, null];
     }
 }
 
-export async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, string]> {
+export async function handleLogin(email: string, password: string, remember: boolean): Promise<[boolean, any]> {
     try {
         const data = {
             email: email,
             password: password,
             remember: remember
         };
+        console.log(JSON.stringify(data));
 
-        const response = await fetch('http://localhost:3001/login', {
+
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/login', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -113,7 +114,7 @@ export async function handleLogin(email: string, password: string, remember: boo
         } else {
             //window.location.href = 'https://projetoscti.com.br/projetoscti24/TCC_TEMP';
             //NÃO, NÃO SOFRE
-            return [true, "Login bem sucedido"];
+            return [true, responseData];
         }
     } catch (err: any) {
         return [false, err.message];
@@ -125,7 +126,8 @@ export async function handleLogin(email: string, password: string, remember: boo
 // ^ LoginController
 export async function handleGetUser(): Promise<profileInterface | null> {
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId , {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -151,7 +153,7 @@ export async function handleGetUser(): Promise<profileInterface | null> {
             email: email
         };
 
-        const response = await fetch('http://localhost:3001/user', {
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/user', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -172,9 +174,10 @@ export async function handleGetUser(): Promise<profileInterface | null> {
 }*/
 
 
-export async function handleSaveChanges(Profile: Profile): Promise<string | true> {// userController.ts
+export async function handleSaveChanges(profile: profileInterface): Promise<string | true> {// userController.ts
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile'+userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -197,7 +200,8 @@ export async function handleSaveChanges(Profile: Profile): Promise<string | true
 
 export async function handleLogout() {// userController.ts
     try {
-        const response = await fetch('http://localhost:3001/logout', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/logout/' + userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -209,6 +213,9 @@ export async function handleLogout() {// userController.ts
             throw new Error(responseData.message);
         } else {
             localStorage.setItem('isLoggedIn', 'false');
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            sessionStorage.removeItem('userId');
             window.location.href = 'http://localhost:5173/';
             // return [true, "Logout bem sucedido"];
         }
@@ -219,7 +226,8 @@ export async function handleLogout() {// userController.ts
 }
 export async function handleDeleteAccount() { // userController.ts
     try {
-        const response = await fetch('http://localhost:3001/user', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/' + userId,{
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -234,7 +242,7 @@ export async function handleDeleteAccount() { // userController.ts
             // return [true, "Conta deletada com sucesso"];
         }
 
-        const responseLogout = await fetch('http://localhost:3001/logout', {
+        const responseLogout = await fetch(import.meta.env.VITE_ADDRESS + '/logout/' + userId, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -254,24 +262,10 @@ export async function handleDeleteAccount() { // userController.ts
     }
 }
 
-
-
-//GET QUESTIONS
-
-
-
-//ID e Alternativa (O index é o número da questão na prova.)
-type questionMapResultInterface = [number, (number | null)][];  
-
-
-
-//Retorna o simulado que foi adicionado (NN FEITO)
-
-
-export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] | null> { //userController.ts
+export async function handleGetAreas_Profile(): Promise<area_ProfileInterface[] | null> { //profileController.ts
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch('http://localhost:3001/areaProfile', {
+        const userId = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas_Profile/'+userId, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -291,7 +285,85 @@ export async function handleGetArea_Profile(): Promise<area_ProfileInterface[] |
     }
 }
 
+export async function handleIncrementAreas_Profile(areasAndAnswers: {[key: number]: {total_correct_answers: number, total_answers: number}}) {
+    try {
+        const userId = sessionStorage.getItem('userId');
+        const data = {
+            areasAndAnswers: areasAndAnswers
+        };
 
+        console.log(data);
 
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/areas_Profile/increment/'+userId, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+    } catch (err: any) {
+        return false;
+    }
+}
+
+export async function handleIncrementProfileMockTest() {
+    try {
+        const userID = sessionStorage.getItem('userId');
+        const response = await fetch(import.meta.env.VITE_ADDRESS +'/profile/increment/mockTest/'+userID, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
+
+export async function handleIncrementProfileAnswers(totalCorrectAnswers: number, totalAnswers: number) {
+    try {
+        const userID = sessionStorage.getItem('userId');
+        const data = {
+            total_correct_answers: totalCorrectAnswers,
+            total_answers: totalAnswers
+        };
+
+        const response = await fetch(import.meta.env.VITE_ADDRESS + '/profile/increment/answers/'+userID, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message);
+        } else {
+            return true;
+        }
+
+    } catch (err: any) {
+        return false;
+    }
+}
 
 export {  validateEmail,  validatePassword }

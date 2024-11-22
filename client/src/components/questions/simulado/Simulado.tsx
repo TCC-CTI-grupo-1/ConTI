@@ -1,13 +1,13 @@
 import QstDetailSimulado from "./QstDetailSimulado";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@chakra-ui/react";
 import ArrowIcon from "../../../assets/ArrowIcon";
-import { questionInterface } from "../../../controllers/interfaces";
+import { question_MockTestInterface, questionInterface } from "../../../controllers/interfaces";
 import { useNavigate } from "react-router-dom";
 import Numbers from "./Numbers";
 import { handleQuestionNumberClick } from "./Numbers";
 import { respostaInterface } from "../../../controllers/interfaces";
-
+import { showAlert } from "../../../App";
 import {
     Modal,
     ModalOverlay,
@@ -25,6 +25,7 @@ import {
     AlertDialogCloseButton,
     useDisclosure,
   } from '@chakra-ui/react'
+import { handlePutQuestion_MockTestById } from "../../../controllers/questionMockTestController";
   
 type questionMapInterface = {
     question: questionInterface;
@@ -42,13 +43,11 @@ interface Props {
 
 //Tudo aqui dentro é baseado no número da questão, e não no ID.
 
-const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=false }: Props) => {
-
-    console.log("SIMULADO!!!");
-    console.log(questionsHashMap);
+const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=false, mockTestId }: Props) => {
 
 
     const [activeQuestion, setActiveQuestion] = useState(0);
+    const [prevActiveQuestion, setPrevActiveQuestion] = useState(-1);
 
     //Mapa que vai guardar as respostas do usuário (ou as respostas para vizualização)
     const [resultsHashMap, setResultsHashMap] = useState<questionMapResultInterface>([]);
@@ -80,6 +79,42 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
         }
     }
 
+    useEffect(() => {
+
+        let AlternativaDaQuestao = resultsHashMap[prevActiveQuestion] == undefined ? null : resultsHashMap[prevActiveQuestion][1];
+        if(nQuestoesRestantes() !== questionsHashMap.length)
+        {
+            if(resultsHashMap)
+            {
+                if (AlternativaDaQuestao === null) {
+                    setPrevActiveQuestion(activeQuestion);
+                    //return;
+                }
+                
+                const question_MockTest: question_MockTestInterface = {
+                    question_id: questionsHashMap[prevActiveQuestion].question.id,
+                    mockTest_id: mockTestId,
+                    answer_id: AlternativaDaQuestao
+                };
+                handlePutQuestion_MockTestById(question_MockTest);
+            }
+        }
+
+        if(activeQuestion === -1){
+            if(nQuestoesRestantes() === questionsHashMap.length){
+                showAlert("Nenhuma questão foi respondida", "info");
+                showAlert("Caso não queria mais fazer o smulado feche essa aba.", "info");
+                setActiveQuestion(prevActiveQuestion);
+                return;
+            }
+            handleFinishSimulado(resultsHashMap);
+        }
+        setPrevActiveQuestion(activeQuestion);
+        
+     
+    }, [activeQuestion]);
+
+
     const returnQuestionDetail = () => {
         let cont = 0;
         const questionsDetail: JSX.Element[] = [];
@@ -94,9 +129,9 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                     <QstDetailSimulado 
                         question={questionMap.question}
                         answers={questionMap.answers} 
-                        isAnswersSelected={(value: string | null) => {
+                        isAnswersSelected={(value: number | null) => {
                             const newResultsHashMap = resultsHashMap;
-                            newResultsHashMap[index] = [questionMap.question.id, Number(value)];
+                            newResultsHashMap[index] = [questionMap.question.id, value == null ? null : value];
                             if(value != null)
                             {
                                 markQuestionAsSelected(index, true);
@@ -118,7 +153,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
 
 
 
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     return (
         <>
@@ -129,10 +164,9 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
             <div id="allQuestionsMargin"></div>
             <div className="content">
                 <div className="infoTop">
-                    <h3>43:22</h3>
                     {isSimuladoFinished &&
                     <Button colorScheme="blue" size="lg" variant="solid" onClick={() => {
-                        navegate('/');
+                        navigate('/');
                     }}>
                         Voltar ao home
                     </Button>
@@ -160,6 +194,8 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                         onClick={() => {
                             if (activeQuestion < questionsHashMap.length - 1) {
                                 handleQuestionNumberClick(activeQuestion + 1, setActiveQuestion);
+                            }else{
+                                onOpen();
                             }
                         }}
                     >
@@ -193,7 +229,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
                             onClose();
                             if(!isSimuladoFinished)
                             {
-                                handleFinishSimulado(resultsHashMap);
+                                setActiveQuestion(-1);
                             }   
                         }}    
                         >
@@ -238,6 +274,7 @@ const Simulado = ({ questionsHashMap, handleFinishSimulado, isSimuladoFinished=f
         <ModalFooter>
             <Button colorScheme={nQuestoesRestantes() > 0 ? 'black' : 'blue'} size="lg" variant="outline"
             onClick={()=>{
+                
                     onClose2();
                     onOpen();
                 }}>

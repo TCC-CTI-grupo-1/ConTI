@@ -4,10 +4,10 @@ import Navbar from '../Navbar'
 import Filters from './Filters'
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import QuestionDetail from './simulado/QuestionDetail';
 import { useNavigate } from 'react-router-dom';
 import { questionInterface } from '../../controllers/interfaces';
 import { handleGetQuestion } from '../../controllers/questionController';
+import LoadingScreen from '../LoadingScreen';
 
 const QuestionDatabase = () => {
     const { id } = useParams(); // Acessando o ID da pergunta da rota
@@ -32,7 +32,7 @@ const QuestionDatabase = () => {
         chechQuestion();
     }, [id]);
 
-    return (<> {loading ? <h1>Carregando...</h1> :
+    return (<> {loading ? <LoadingScreen /> :
         <div id="database" className="flex-container full-screen-size">
                 <Background variant='white'/>
                 <Navbar screen="database"/>
@@ -53,7 +53,7 @@ const QuestionDatabase = () => {
                     </div>
                     <div className="inversed-border"></div>
                     <div className="content">
-                        {hasQuestion ? <QuestionDetail question={hasQuestion} /> : <Filters />}
+                        <Filters />
                     </div>
                 </div>
             </div>

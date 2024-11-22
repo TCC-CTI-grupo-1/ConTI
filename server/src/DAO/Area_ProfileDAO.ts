@@ -1,10 +1,20 @@
 import { ConnectionDAO } from "./ConnectionDAO";
 import { Area_ProfileDTO } from "../DTO/Area_ProfileDTO";
 import { AreaDAO, AreaTree } from "./AreaDAO";
+import { AreaDTO } from "../DTO/AreaDTO";
+import { profile } from "node:console";
 const connectionDAO = new ConnectionDAO();
-export type AreaProfileTree = {[key:number]:Area_ProfileDTO[]}
+export interface Rooted_AreaProfileTree{
+    tree:{[key:number]:Area_ProfileDTO[]},
+    root:Area_ProfileDTO
+}
+export type AreaProfileTree = {[key:number]:Area_ProfileDTO[]};
+export type Inverted_AreaProfileTree = {[key:number]:Area_ProfileDTO};
 
 export class Area_ProfileDAO {
+    private toAreaProfileDTO = (areaDTO:AreaDTO,profile_id:number) => {
+        return {area_id:areaDTO.id,profile_id:profile_id,total_answers:0,total_correct_answers:0} as Area_ProfileDTO
+    }
     registerArea_Profile = async (area_profile: Area_ProfileDTO) => {
         try {
             const client = await connectionDAO.getConnection();
@@ -16,6 +26,7 @@ export class Area_ProfileDAO {
                     total_answers: area_profile.total_answers
                 }
             });
+            
             return createdAreaProfile;
         } catch (error: any) {
             if (error.code === 'P2002') {
@@ -78,4 +89,159 @@ export class Area_ProfileDAO {
         return tree;
     }
 
+    
+    buildRootedAreaProfileTree = async (profile_id: number): Promise<Rooted_AreaProfileTree> => {
+        const areadao = new AreaDAO();
+        const rooted_areatree = await areadao.buildRootedAreaTree();
+        const areatree = rooted_areatree.tree;
+        const arearoot = rooted_areatree.root;
+        const areaProfile_list = await this.listArea_ProfileByProfileId(profile_id);
+        
+        let tree: AreaProfileTree = {};
+        let root: Area_ProfileDTO | null = null;
+        let areaMap: { [id: number]: Area_ProfileDTO } = {};
+    
+        // Populate areaMap for easy access
+        for (const node of areaProfile_list) {
+            areaMap[node.area_id] = node;
+        }
+    
+        // Set the root
+        if (areaMap[arearoot.id]) {
+            root = areaMap[arearoot.id];
+        } else {
+            root = {
+                area_id: arearoot.id,
+                profile_id: profile_id,
+                total_answers: 0,
+                total_correct_answers: 0,
+            };
+        }
+    
+        // Build the tree
+        for (const key in areatree) {
+            const id = Number(key);
+            tree[id] = []; // Initialize the array for this id
+    
+            // Loop over the nodes in this branch of the tree
+            for (const node of areatree[id]) {
+                if (node.parent_id === null || node.parent_id === undefined) continue; // Skip invalid parent_id
+    
+                let parentNode = areaMap[node.parent_id];
+    
+                // If the parent doesn't exist in areaMap, create a new one
+                if (!parentNode) {
+                    parentNode = {
+                        area_id: node.parent_id,
+                        profile_id: profile_id,
+                        total_answers: 0,
+                        total_correct_answers: 0,
+                    };
+                }
+    
+                if (!tree[parentNode.area_id]) {
+                    tree[parentNode.area_id] = [];
+                }
+    
+                if (!tree[parentNode.area_id].some(child => child.area_id === node.id)) {
+                    tree[parentNode.area_id].push({
+                        area_id: node.id,
+                        profile_id: profile_id,
+                        total_answers: 0,
+                        total_correct_answers: 0,
+                    });
+                }
+    
+                if (!tree[id]) {
+                    tree[id] = [];
+                }
+    
+                if (!tree[id].some(child => child.area_id === node.id)) {
+                    tree[id].push({
+                        area_id: node.id,
+                        profile_id: profile_id,
+                        total_answers: 0,
+                        total_correct_answers: 0,
+                    });
+                }
+            }
+        }
+        return { tree: tree, root: root };
+    };
+    buildInverted_AreaProfileTree = async(profile_id:number):Promise<Inverted_AreaProfileTree> => {
+        const instance = new Area_ProfileDAO();
+        const areaInstance = new AreaDAO();
+        const areaList = await areaInstance.listAreas();
+        const area_profilelist = await instance.listArea_ProfileByProfileId(profile_id);
+        const areaMap:{[id:number]:Area_ProfileDTO} = {};
+        for(const area of area_profilelist)
+        {
+            areaMap[area.area_id] = area;
+        }
+        for(const area of areaList)
+        {
+            if(!areaMap[area.id])
+            {
+                areaMap[area.id] = this.toAreaProfileDTO(area,profile_id);
+            }
+        }
+        let tree:Inverted_AreaProfileTree = {};
+        for(const area of areaList)
+        {
+            if(area.parent_id || area.parent_id===0)
+            {
+                tree[area.id] = areaMap[area.parent_id];
+            }
+        }
+        return tree;
+    } 
+
+    incrementAreas_Profile = async (profile_id: number, areasAndAnswers: {[key: number]: {total_correct_answers: number, total_answers: number}}) => {
+        try {
+            const client = await connectionDAO.getConnection();
+    
+            const incrementArea = async (area_id: number, total_correct_answers: number, total_answers: number) => {
+                await client.area_profile.upsert({
+                    where: {
+                        area_id_profile_id: {
+                            profile_id: profile_id,
+                            area_id: area_id
+                        }
+                    },
+                    update: {
+                        total_correct_answers: {
+                            increment: total_correct_answers
+                        },
+                        total_answers: {
+                            increment: total_answers
+                        }
+                    },
+                    create: {
+                        area_id: area_id,
+                        profile_id: profile_id,
+                        total_correct_answers: total_correct_answers,
+                        total_answers: total_answers
+                    }
+                });
+            };
+    
+            const getParentAreas = async (area_id: number): Promise<number[]> => {
+                const areaDAO = new AreaDAO();
+                const parentAreas = await areaDAO.listAllParentAreasByIds([area_id]);
+                return parentAreas.map((parent: { id: number }) => parent.id);
+            };
+    
+            await Promise.all(Object.entries(areasAndAnswers).map(async ([area_id, {total_correct_answers, total_answers}]) => {
+                const areaIdNumber = Number(area_id);
+                await incrementArea(areaIdNumber, total_correct_answers, total_answers);
+    
+                const parentAreas = await getParentAreas(areaIdNumber);
+                await Promise.all(parentAreas.map(async (parentAreaId) => {
+                    await incrementArea(parentAreaId, total_correct_answers, total_answers);
+                }));
+            }));
+        } catch (error: any) {
+            throw error;
+        }
+    }
 }

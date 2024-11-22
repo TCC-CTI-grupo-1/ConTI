@@ -12,11 +12,11 @@ import { useState } from "react";
 
 
 interface Props{
-    screen: 'home' | 'profile' | 'database' | 'history' | 'newtest' | 'adm' | 'aboutUs';
+    screen: 'home' | 'profile' | 'database' | 'history' | 'newtest' | 'adm' | 'aboutUs' | 'notFound';
 }
 
 const Navbar = ({screen}:Props) => {
-    const navegate = useNavigate();
+    const navigate = useNavigate();
 
     const [active, setActive] = useState(false);
 
@@ -47,61 +47,73 @@ const Navbar = ({screen}:Props) => {
 
             </div>
             <nav className={active ? 'active' : ''}>
-                <div className="icon">
-                    <MenuIcon
-                    onClick={() => {
-                        setActive(!active);
-                        }} />
-                </div>
-                
-                <div className="icon">
-                    <HomeIcon iconColor={checkActiveScreen('home')}
-                    onIconClick={() => {navegate('/')}}/>
-                    <p  className={checkActiveScreen('home')}>Home</p>
-                </div>
+                <div>
 
-                {/*<div className="icon">
-                    <HomeIcon iconColor={checkActiveScreen('aboutUs')}
-                    onIconClick={() => {navegate('/aboutUs')}}/>
-                    <p  className={checkActiveScreen('aboutUs')}>Sobre Nós</p>
-                </div>*/}
+                    <div className="icon">
+                        <MenuIcon
+                        onClick={() => {
+                            setActive(!active);
+                            }} />
+                    </div>
+                    
                                         
-                {isLoggedIn &&<div className="icon">
-                    <NewTestIcon iconColor={checkActiveScreen('newtest')}
-                    onIconClick={() => {navegate('/newtest')}}/>
-                    <p className={checkActiveScreen('newtest')}>Novo teste</p>
-                </div>}
-
-                <div className="icon">
-                    <DatabaseIcon iconColor={checkActiveScreen('database')}
-                    onIconClick={() => {navegate('/questions')}}/>
-                    <p className={checkActiveScreen('database')}>Banco de questões</p>
-                </div>
-                
-                {isLoggedIn &&<div className="icon">
-                    <UserIcon iconColor={checkActiveScreen('profile')}
-                    onIconClick={() => {navegate('/profile')}}/>
-                    <p className={checkActiveScreen('profile')}>Perfil</p>
-                </div>}
-                
-                {isLoggedIn &&<div className="icon">
-                        <HistoryIcon iconColor={checkActiveScreen('history')}
-                        onIconClick={() => {navegate('/history')}}/>
-                        <p className={checkActiveScreen('history')}>Histórico</p>
-                </div>}
-
-                {!isLoggedIn &&<div className="icon">
+                    {!isLoggedIn &&<div className="icon">
                         <UserIcon iconColor={checkActiveScreen('profile')}
-                        onIconClick={() => {navegate('/login')}}/>
+                        onIconClick={() => {navigate('/login')}}/>
                         <p className={checkActiveScreen('profile')}>Login</p>
-                </div>}
+                    </div>}
 
-                <div className="icon">
-                        <AdminIcon iconColor={checkActiveScreen('adm')}
-                        onIconClick={() => {navegate('/adm')}}/>
-                        <p className={checkActiveScreen('adm')}>Histórico</p>
+                    <div className="icon">
+                        <HomeIcon iconColor={checkActiveScreen('home')}
+                        onIconClick={() => {navigate('/')}}/>
+                        <p  className={checkActiveScreen('home')}>Home</p>
+                    </div>
+                                            
+                    {isLoggedIn &&<div className="icon">
+                        <NewTestIcon iconColor={checkActiveScreen('newtest')}
+                        onIconClick={() => {navigate('/newtest')}}/>
+                        <p className={checkActiveScreen('newtest')}>Novo teste</p>
+                    </div>}
+
+                    <div className="icon">
+                        <DatabaseIcon iconColor={checkActiveScreen('database')}
+                        onIconClick={() => {navigate('/questions')}}/>
+                        <p className={checkActiveScreen('database')}>Banco de questões</p>
+                    </div>
+                    
+                    
+                    
+                    {isLoggedIn &&<div className="icon">
+                            <HistoryIcon iconColor={checkActiveScreen('history')}
+                            onIconClick={() => {navigate('/history')}}/>
+                            <p className={checkActiveScreen('history')}>Histórico</p>
+                    </div>}
+
                 </div>
+                
+                <div className="options">
+                    <h3 onClick={
+                        () => {
+                            navigate('/aboutUs');
+                        }
+                    }>Sobre</h3>
 
+
+                    {isLoggedIn &&<div className="icon">
+                        <UserIcon iconColor={checkActiveScreen('profile')}
+                        onIconClick={() => {navigate('/profile')}}/>
+                        <p className={checkActiveScreen('profile')}>Perfil</p>
+                    </div>}
+
+                    <div className="icon">
+                            <AdminIcon iconColor={checkActiveScreen('adm')}
+                            onIconClick={() => {navigate('/adm')}}/>
+                            <p className={checkActiveScreen('adm')}>Administrador</p>
+                    </div>
+                </div>
+                
+
+                
 
             </nav>
 
