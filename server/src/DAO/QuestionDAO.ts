@@ -423,6 +423,20 @@ export class QuestionDAO {
         }
     }
 
+    changeQuestionDifficulty = async (totalAnswers: number, totalCorrectAnswers: number) => {
+        if (totalAnswers === 0) {
+            return "easy";
+        }
+        const hitRate = totalCorrectAnswers / totalAnswers;
+        if (hitRate >= 0.75) {
+            return "easy";
+        } else if (hitRate >= 0.5) {
+            return "medium";
+        } else {
+            return "hard";
+        }
+    }
+
     // searchQuestionParentArea = async (areaID: number) => {
     //     try {
     //         const areaDAO: AreaDAO = new AreaDAO();
