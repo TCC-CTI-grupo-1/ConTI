@@ -13,6 +13,7 @@ import { handleIncrementAnswers } from "../../../controllers/answerController";
 import { handleGetAllParentAreasByIds } from "../../../controllers/areasController";
 import LoadingScreen from "../../LoadingScreen";
 import { useParams } from "react-router-dom";
+import { handleIncrementQuestionsAnswers } from "../../../controllers/questionController";
 // import date from 'date-and-time'
 // import { useNavigate } from "react-router-dom"
 
@@ -136,6 +137,7 @@ const SimuladoFrame = () => {
         handleIncrementAnswers(respostasIds);
         handleIncrementProfileAnswers(totalCorrectAnswers, totalAnswers);
         handleIncrementProfileMockTest();
+        handleIncrementQuestionsAnswers(respostasIds);
 
         localStorage.removeItem("questoes_simulado_"+id);
         localStorage.removeItem("simulado_"+id);
