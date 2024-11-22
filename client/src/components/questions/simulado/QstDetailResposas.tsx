@@ -48,11 +48,6 @@ const QstDetailRespostas = ({question, answers, selectedAnswer}: Props) => {
                     {selectedAnswer === -1 && <p>Questão não respondida.</p>}
     
                 </div>
-                <div className="options">
-                        <LocalButton colorScheme="blue" variant='outline'
-                        onClick={() => {showAlert("Em construção", "warning")}}>Ver resolução comentada</LocalButton>
-                    
-                </div>
             </div>
             }
         </>

@@ -235,13 +235,7 @@ const Filters = () => {
             De meus simulados
           </Checkbox>*/
           }
-          <Checkbox
-            onChange={(e) => {
-              setOptions({ ...options, alreadyAnswered: e.target.checked });
-            }}
-          >
-            Já respondidas
-          </Checkbox>
+          
           
 
           <LocalButton
