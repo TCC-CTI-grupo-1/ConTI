@@ -26,12 +26,6 @@ const Options = ({type, onClick, changeScreen, loading, onRemember, forgorPasswo
                     width="100%">
                         {type == 'login' ? 'LOGIN' : 'CADASTRAR-SE'}
                     </Button>
-                    
-                    <p>ou</p>
-                    <Button variant='outline' onClick={() => {showAlert('GOOGLE!', 'success')}} 
-                    width="100%">
-                        Login com o google
-                    </Button>
 
                     <div className="noAccount">
                         <a onClick={changeScreen}>{type=='signup' ? 'Já tem uma conta? Faça o login!' : 'Não tem uma conta? Faça o Cadastro!'}</a>

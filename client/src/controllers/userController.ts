@@ -362,7 +362,9 @@ export async function handleIncrementProfileAnswers(totalCorrectAnswers: number,
             throw new Error(responseData.message);
         } else {
             localStorage.setItem('total_answers', responseData.total_answers.toString());
-            localStorage.setItem('total_correct_answers', responseData.total_correct_answers.toString());
+            const antigoTotalCorrectAnswers = localStorage.getItem('total_correct_answers');
+            const newE = responseData.total_correct_answers + parseInt(antigoTotalCorrectAnswers ? antigoTotalCorrectAnswers : '0');
+            localStorage.setItem('total_correct_answers', newE);
             return true;
         }
 

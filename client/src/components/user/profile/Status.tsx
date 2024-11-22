@@ -33,6 +33,8 @@ const Status = () => {
     //matematica, portugues, ciencias naturais e ciencias humanas
 
 
+    const [showRealValues, setShowRealValues] = useState<boolean>(true);
+
     async function handleGetAreasLocalProfile(): Promise<{[id:number]: area_ProfileInterface} | null>{
         await loadConfig();
         const status = await handleGetAreas_Profile();
@@ -341,17 +343,24 @@ const Status = () => {
                 <div className="info-area">
                     <div id="header">
                         <h2>Informações por área</h2>
+                        <p onClick={() => {
+                            setShowRealValues(!showRealValues);
+                        }}>Mostrar possiveis valores</p>
                     </div>
                     {doesProfileExist ?
                     <>
                     <div id="content">
                         
                         <div id="info"  style={{width: '100%'}}>
-                            <AreaTree onActiveAreasChange={() => {}}
+                            {showRealValues ? <AreaTree onActiveAreasChange={() => {}}
+                            rootID={0}
+                            userPercentageAreas={userPercentageAreas}
+                            isBlocks
+                            /> : <AreaTree onActiveAreasChange={() => {}}
                             rootID={0}
                             userPercentageAreas={localUserPercentageAreas}
                             isBlocks
-                            />
+                            />}
                             {/*<div id="header">
                                 <div id="title">
                                     <h2 className="title">{areas[materiaAtiva].name}</h2>

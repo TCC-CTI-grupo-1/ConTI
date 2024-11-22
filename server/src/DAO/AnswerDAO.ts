@@ -156,4 +156,20 @@ export class AnswerDAO {
             throw error;
         }
     }
+
+    listAnswersByIds = async (ids: number[]): Promise<AnswerDTO[]> => {
+        try {
+            const client = await connectionDAO.getConnection();
+            const answers = await client.answer.findMany({
+                where: {
+                    id: {
+                        in: ids
+                    }
+                }
+            });
+            return answers as AnswerDTO[];
+        } catch (error) {
+            throw error;
+        }
+    }
 }
