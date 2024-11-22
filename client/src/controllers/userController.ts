@@ -330,6 +330,7 @@ export async function handleIncrementProfileMockTest() {
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
+            localStorage.setItem('total_mock_tests', responseData.total_mock_tests.toString());
             return true;
         }
 
@@ -355,10 +356,13 @@ export async function handleIncrementProfileAnswers(totalCorrectAnswers: number,
             body: JSON.stringify(data)
         });
 
+
         const responseData = await response.json();
         if (!response.ok) {
             throw new Error(responseData.message);
         } else {
+            localStorage.setItem('total_answers', responseData.total_answers.toString());
+            localStorage.setItem('total_correct_answers', responseData.total_correct_answers.toString());
             return true;
         }
 

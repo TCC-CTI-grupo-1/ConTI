@@ -54,9 +54,9 @@ export async function routes(app: any) {
     app.get('/profileSession', getProfileSessionController);
     app.put('/profile', updateProfileController);
     app.delete('/profile/:uuid', deleteProfileController); 
-    app.put('/profile/incrementMockTest/:uuid', incrementProfile_MockTestController);
+    app.put('/profile/increment/mockTest/:uuid', incrementProfile_MockTestController);
     app.get('/profile/:uuid', getProfileController);
-    app.put('/profile/incrementAnswers/:uuid', incrementProfileAnswersController);
+    app.put('/profile/increment/answers/:uuid', incrementProfileAnswersController);
 
 
     // '/questions/'
@@ -107,7 +107,7 @@ export async function routes(app: any) {
 
     // '/area_Profile/'
     app.get('/areas_Profile/:uuid', getAreas_ProfileController);
-    app.put('/areas_Profile/increment/:userid', incrementAreas_ProfileController);
+    app.put('/areas_Profile/increment/:uuid', incrementAreas_ProfileController);
     // '/areaProfile/'
     app.get('/areaProfile/:uuid', getAreas_ProfileController);
 

@@ -139,6 +139,8 @@ const SimuladoFrame = () => {
 
         localStorage.removeItem("questoes_simulado_"+id);
         localStorage.removeItem("simulado_"+id);
+
+        
         navigate('/history');
         showAlert("Simulado finalizado com sucesso!", "success");
     }

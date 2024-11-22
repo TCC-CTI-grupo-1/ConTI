@@ -62,7 +62,7 @@ export async function incrementProfile_MockTestController(req: Request, res: Res
         await profileDAO.incrementProfile_MockTest(profile.id);
         ++profile.total_mock_tests;
         await redisClient.set(`profile:${profile.id}`, JSON.stringify(profile), { EX: 1000 * 60 * 60 * 12 });
-        res.status(200).json({ message: 'Simulado incrementado com sucesso' });
+        res.status(200).json({ message: 'Simulado incrementado com sucesso', total_mock_tests: profile.total_mock_tests });
     } catch (error: any) {
 		console.log(error);
         res.status(400).json({ message: error.message });
@@ -88,7 +88,7 @@ export async function incrementProfileAnswersController(req: Request, res: Respo
         await profileDAO.incrementProfileAnswers(profile.id, req.body.total_correct_answers, req.body.total_answers);
         ++profile.total_answers;
         await redisClient.set(`profile:${profile.id}`, JSON.stringify(profile), { EX: 1000 * 60 * 60 * 12 });
-        res.status(200).json({ message: 'Respostas incrementadas com sucesso' });
+        res.status(200).json({ message: 'Respostas incrementadas com sucesso', total_answers: profile.total_answers, total_correct_answers: profile.total_correct_answers });
     } catch (error: any) {
 		console.log(error);
         res.status(400).json({ message: error.message });
