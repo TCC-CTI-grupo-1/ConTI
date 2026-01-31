@@ -1,5 +1,4 @@
-# Título do Projeto
-**ConTI**
+# ConTI
 
 ## Descrição
 O ConTI é uma aplicação web que visa democratizar o acesso ao ensino ao facilitar a entrada de alunos no vestibulinho do Colégio Técnico Industrial de Bauru, um colégio público de excelência da Unesp. Por meio de um algoritmo que personaliza os simulados para os alunos e uma interface intuitiva, o ConTI ajuda na preparação de alunos que queiram ingressar no colégio.
