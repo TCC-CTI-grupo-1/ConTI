@@ -1,2 +1,16 @@
-- name: typos-action
-  uses: crate-ci/typos@v1.43.4
+name: Security and Typos
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  spellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Check for Typos
+        uses: crate-ci/typos@v1.29.0
